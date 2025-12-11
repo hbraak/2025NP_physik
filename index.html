@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lernliste: Impuls, Kraft und Newton'sche Axiome</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 900px; margin: 0 auto; background: white; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+        header { background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%); color: white; padding: 30px; text-align: center; }
+        header h1 { font-size: 1.8em; margin-bottom: 10px; }
+        header p { opacity: 0.9; font-size: 1.1em; }
+        .progress-container { background: #f1f5f9; padding: 20px; border-bottom: 1px solid #e2e8f0; }
+        .progress-header { display: flex; justify-content: space-between; margin-bottom: 10px; font-weight: 600; color: #475569; }
+        .progress-bar { height: 12px; background: #e2e8f0; border-radius: 6px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #059669, #10b981); border-radius: 6px; transition: width 0.5s ease; width: 0%; }
+        .formel-box { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #f59e0b; border-radius: 12px; padding: 20px; margin: 20px; }
+        .formel-box h3 { color: #92400e; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .formel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
+        .formel-item { background: white; padding: 12px 15px; border-radius: 8px; border-left: 4px solid #f59e0b; }
+        .formel-item .formel { font-size: 1.1em; margin-bottom: 5px; }
+        .formel-item .beschreibung { font-size: 0.85em; color: #64748b; }
+        .info-banner { background: #f0f9ff; border-left: 4px solid #0891B2; padding: 15px 20px; margin: 20px; border-radius: 0 8px 8px 0; }
+        .info-banner p { color: #0c4a6e; font-size: 0.95em; }
+        .kompetenz-section { margin: 20px; border: 2px solid #e2e8f0; border-radius: 12px; overflow: hidden; }
+        .section-header { background: #f8fafc; padding: 15px 20px; border-bottom: 2px solid #e2e8f0; display: flex; align-items: center; gap: 10px; }
+        .section-header.basis { border-left: 5px solid #6b7280; }
+        .section-header.impuls { border-left: 5px solid #2563EB; }
+        .section-header.erhaltung { border-left: 5px solid #7C3AED; }
+        .section-header.newton { border-left: 5px solid #059669; }
+        .section-header.kraft { border-left: 5px solid #D97706; }
+        .section-header.rueckstoss { border-left: 5px solid #DC2626; }
+        .section-header h2 { font-size: 1.2em; color: #1e293b; }
+        .section-header .icon { font-size: 1.5em; }
+        .kompetenz-list { padding: 15px 20px; }
+        .kompetenz-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 15px; margin: 8px 0; background: #f8fafc; border-radius: 8px; transition: all 0.2s ease; border: 2px solid transparent; }
+        .kompetenz-item:hover { background: #e0f2fe; border-color: #0891B2; }
+        .kompetenz-item.checked { background: #dcfce7; border-color: #059669; }
+        .kompetenz-item input[type="checkbox"] { width: 20px; height: 20px; margin-top: 2px; cursor: pointer; accent-color: #059669; }
+        .kompetenz-text { flex: 1; color: #334155; line-height: 1.5; }
+        .kompetenz-item .btn-ueben { 
+            display: inline-block;
+            background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%); 
+            color: white; 
+            border: none; 
+            padding: 14px 24px; 
+            border-radius: 20px; 
+            font-size: 1.1em; 
+            font-weight: 600;
+            cursor: pointer; 
+            white-space: nowrap; 
+            -webkit-tap-highlight-color: rgba(0,0,0,0.1); 
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+            text-decoration: none;
+            min-width: 80px;
+            min-height: 48px;
+            text-align: center;
+            line-height: 1;
+        }
+        .kompetenz-item .btn-ueben:active { 
+            transform: scale(0.95); 
+            background: linear-gradient(135deg, #1d4ed8 0%, #6d28d9 100%);
+        }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: white; border-radius: 16px; max-width: 700px; width: 100%; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 80px rgba(0,0,0,0.4); animation: modalIn 0.3s ease; }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.9) translateY(-20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .modal-header { background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%); color: white; padding: 20px 25px; display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h3 { font-size: 1.2em; }
+        .btn-close { background: rgba(255,255,255,0.2); border: none; color: white; width: 36px; height: 36px; border-radius: 50%; font-size: 1.2em; cursor: pointer; transition: background 0.2s; }
+        .btn-close:hover { background: rgba(255,255,255,0.3); }
+        .modal-body { padding: 25px; }
+        .tab-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { flex: 1; padding: 12px 20px; border: 2px solid #e2e8f0; background: white; border-radius: 8px; font-size: 1em; cursor: pointer; transition: all 0.2s; }
+        .tab-btn:hover { border-color: #2563EB; }
+        .tab-btn.active { background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%); color: white; border-color: transparent; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .aufgabe-box { background: #f0f9ff; border: 2px solid #0891B2; border-radius: 12px; padding: 20px; margin-bottom: 15px; }
+        .aufgabe-box h4 { color: #0e7490; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .aufgabe-box .content { color: #334155; line-height: 1.8; white-space: pre-line; }
+        .loesung-toggle { background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 1em; cursor: pointer; width: 100%; margin-bottom: 15px; transition: transform 0.2s; }
+        .loesung-toggle:hover { transform: scale(1.02); }
+        .loesung-box { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .loesung-box.visible { max-height: 2000px; }
+        .loesung-content { background: #f0fdf4; border: 2px solid #059669; border-radius: 12px; padding: 20px; }
+        .loesung-content h4 { color: #047857; margin-bottom: 15px; }
+        .loesung-content .content { color: #334155; line-height: 1.8; white-space: pre-line; }
+        .prompt-box { background: #fefce8; border: 2px solid #ca8a04; border-radius: 12px; padding: 20px; }
+        .prompt-box h4 { color: #a16207; margin-bottom: 10px; }
+        .prompt-text { background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 15px; font-family: monospace; font-size: 0.9em; line-height: 1.6; white-space: pre-wrap; margin: 15px 0; max-height: 200px; overflow-y: auto; }
+        .button-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
+        .btn-copy { background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 0.95em; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: transform 0.2s; }
+        .btn-copy:hover { transform: scale(1.02); }
+        .btn-copy.copied { background: #059669; }
+        .btn-google { background: linear-gradient(135deg, #4285F4 0%, #34A853 50%, #FBBC05 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 0.95em; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: transform 0.2s, box-shadow 0.2s; }
+        .btn-google:hover { transform: scale(1.02); box-shadow: 0 4px 15px rgba(66, 133, 244, 0.4); }
+        .btn-chatgpt { background: linear-gradient(135deg, #10a37f 0%, #1a7f64 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 0.95em; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: transform 0.2s, box-shadow 0.2s; }
+        .btn-chatgpt:hover { transform: scale(1.02); box-shadow: 0 4px 15px rgba(16, 163, 127, 0.4); }
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: linear-gradient(135deg, #059669 0%, #10b981 100%); color: white; padding: 16px 28px; border-radius: 12px; font-weight: 600; font-size: 1em; box-shadow: 0 10px 40px rgba(0,0,0,0.3); z-index: 2000; opacity: 0; transition: all 0.3s ease; }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        footer { text-align: center; padding: 20px; color: #64748b; font-size: 0.9em; border-top: 1px solid #e2e8f0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Lernliste: Impuls, Kraft & Newton</h1>
+            <p>Klausurvorbereitung Physik-LK 11NP</p>
+        </header>
+        
+        <div class="progress-container">
+            <div class="progress-header">
+                <span>Ihr Fortschritt</span>
+                <span><span id="progress-count">0</span> von <span id="total-count">0</span> Kompetenzen</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+        
+        <div class="formel-box">
+            <h3>📐 Wichtige Formeln</h3>
+            <div class="formel-grid">
+                <div class="formel-item"><div class="formel" id="f1"></div><div class="beschreibung">Impuls</div></div>
+                <div class="formel-item"><div class="formel" id="f2"></div><div class="beschreibung">Kraft (Newton 2)</div></div>
+                <div class="formel-item"><div class="formel" id="f3"></div><div class="beschreibung">Impulserhaltung</div></div>
+                <div class="formel-item"><div class="formel" id="f4"></div><div class="beschreibung">Kraftstoß</div></div>
+                <div class="formel-item"><div class="formel" id="f5"></div><div class="beschreibung">Inelastischer Stoß</div></div>
+                <div class="formel-item"><div class="formel" id="f6"></div><div class="beschreibung">Umrechnung</div></div>
+            </div>
+        </div>
+        
+        <div class="info-banner">
+            <p>💡 <strong>Tipp:</strong> Haken Sie die Kompetenzen ab, die Sie beherrschen. Klicken Sie auf "Üben" für Beispielaufgaben im Klausurstil.</p>
+        </div>
+        
+        <div class="kompetenz-section">
+            <div class="section-header basis"><span class="icon">🔧</span><h2>Basiskompetenzen</h2></div>
+            <div class="kompetenz-list">
+                <div class="kompetenz-item" data-id="basis-1"><input type="checkbox"><span class="kompetenz-text">Ich kann physikalische Größen in SI-Einheiten umrechnen und ordnen.</span><a href="#" class="btn-ueben" data-modal="basis-1">Üben</a></div>
+                <div class="kompetenz-item" data-id="basis-2"><input type="checkbox"><span class="kompetenz-text">Ich kann Geschwindigkeiten von km/h in m/s umrechnen und umgekehrt.</span><a href="#" class="btn-ueben" data-modal="basis-2">Üben</a></div>
+                <div class="kompetenz-item" data-id="basis-3"><input type="checkbox"><span class="kompetenz-text">Ich kann Formeln umstellen und Variablen eliminieren.</span><a href="#" class="btn-ueben" data-modal="basis-3">Üben</a></div>
+            </div>
+        </div>
+        
+        <div class="kompetenz-section">
+            <div class="section-header impuls"><span class="icon">🎱</span><h2>Impuls</h2></div>
+            <div class="kompetenz-list">
+                <div class="kompetenz-item" data-id="impuls-1"><input type="checkbox"><span class="kompetenz-text">Ich kann den Impuls eines Körpers mit <span class="fm" data-tex="p = m \cdot v"></span> berechnen.</span><a href="#" class="btn-ueben" data-modal="impuls-1">Üben</a></div>
+                <div class="kompetenz-item" data-id="impuls-2"><input type="checkbox"><span class="kompetenz-text">Ich kann erklären, was der Impuls über die "Bewegungswirkung" aussagt.</span><a href="#" class="btn-ueben" data-modal="impuls-2">Üben</a></div>
+                <div class="kompetenz-item" data-id="impuls-3"><input type="checkbox"><span class="kompetenz-text">Ich kann Impulse verschiedener Objekte vergleichen und ordnen.</span><a href="#" class="btn-ueben" data-modal="impuls-3">Üben</a></div>
+            </div>
+        </div>
+        
+        <div class="kompetenz-section">
+            <div class="section-header erhaltung"><span class="icon">⚖️</span><h2>Impulserhaltung</h2></div>
+            <div class="kompetenz-list">
+                <div class="kompetenz-item" data-id="erhaltung-1"><input type="checkbox"><span class="kompetenz-text">Ich kann den Impulserhaltungssatz formulieren und anwenden.</span><a href="#" class="btn-ueben" data-modal="erhaltung-1">Üben</a></div>
+                <div class="kompetenz-item" data-id="erhaltung-2"><input type="checkbox"><span class="kompetenz-text">Ich kann die Geschwindigkeit nach einem inelastischen Stoß berechnen.</span><a href="#" class="btn-ueben" data-modal="erhaltung-2">Üben</a></div>
+                <div class="kompetenz-item" data-id="erhaltung-3"><input type="checkbox"><span class="kompetenz-text">Ich kann verkettete Stöße (Kolonnenunfall) schrittweise berechnen.</span><a href="#" class="btn-ueben" data-modal="erhaltung-3">Üben</a></div>
+            </div>
+        </div>
+        
+        <div class="kompetenz-section">
+            <div class="section-header newton"><span class="icon">🍎</span><h2>Newton'sche Axiome</h2></div>
+            <div class="kompetenz-list">
+                <div class="kompetenz-item" data-id="newton-1"><input type="checkbox"><span class="kompetenz-text">Ich kann das Trägheitsgesetz (Newton 1) erklären und anwenden.</span><a href="#" class="btn-ueben" data-modal="newton-1">Üben</a></div>
+                <div class="kompetenz-item" data-id="newton-2"><input type="checkbox"><span class="kompetenz-text">Ich kann mit <span class="fm" data-tex="F = m \cdot a"></span> und <span class="fm" data-tex="F = \frac{\Delta p}{\Delta t}"></span> rechnen.</span><a href="#" class="btn-ueben" data-modal="newton-2">Üben</a></div>
+                <div class="kompetenz-item" data-id="newton-3"><input type="checkbox"><span class="kompetenz-text">Ich kann das Wechselwirkungsprinzip (Newton 3) erklären.</span><a href="#" class="btn-ueben" data-modal="newton-3">Üben</a></div>
+            </div>
+        </div>
+        
+        <div class="kompetenz-section">
+            <div class="section-header kraft"><span class="icon">💥</span><h2>Kraft und Impulsänderung</h2></div>
+            <div class="kompetenz-list">
+                <div class="kompetenz-item" data-id="kraft-1"><input type="checkbox"><span class="kompetenz-text">Ich kann die Impulsänderung <span class="fm" data-tex="\Delta p = m \cdot \Delta v"></span> berechnen (mit Vorzeichen!).</span><a href="#" class="btn-ueben" data-modal="kraft-1">Üben</a></div>
+                <div class="kompetenz-item" data-id="kraft-2"><input type="checkbox"><span class="kompetenz-text">Ich kann den Kraftstoß aus einem t-F-Diagramm bestimmen (Trapezregel).</span><a href="#" class="btn-ueben" data-modal="kraft-2">Üben</a></div>
+                <div class="kompetenz-item" data-id="kraft-3"><input type="checkbox"><span class="kompetenz-text">Ich kann erklären, warum längere Stoßzeiten zu kleineren Kräften führen.</span><a href="#" class="btn-ueben" data-modal="kraft-3">Üben</a></div>
+            </div>
+        </div>
+        
+        <div class="kompetenz-section">
+            <div class="section-header rueckstoss"><span class="icon">🚀</span><h2>Rückstoß und Raketenprinzip</h2></div>
+            <div class="kompetenz-list">
+                <div class="kompetenz-item" data-id="rueck-1"><input type="checkbox"><span class="kompetenz-text">Ich kann das Rückstoßprinzip mit der Impulserhaltung erklären.</span><a href="#" class="btn-ueben" data-modal="rueck-1">Üben</a></div>
+                <div class="kompetenz-item" data-id="rueck-2"><input type="checkbox"><span class="kompetenz-text">Ich kann die Rückstoßgeschwindigkeit berechnen.</span><a href="#" class="btn-ueben" data-modal="rueck-2">Üben</a></div>
+            </div>
+        </div>
+        
+        <footer>Lore-Lorentz-Schule | Physik-LK 11NP | 2025</footer>
+    </div>
+    
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modal-title">Aufgabe</h3>
+                <button class="btn-close" onclick="closeModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('aufgabe')">📝 Beispielaufgabe</button>
+                    <button class="tab-btn" onclick="switchTab('prompt')">🤖 KI-Prompt</button>
+                </div>
+                <div class="tab-content active" id="tab-aufgabe">
+                    <div class="aufgabe-box"><h4>📝 Aufgabe</h4><div class="content" id="aufgabe-text"></div></div>
+                    <button class="loesung-toggle" onclick="toggleLoesung()">💡 Lösung anzeigen</button>
+                    <div class="loesung-box" id="loesung-box"><div class="loesung-content"><h4>✅ Lösung</h4><div class="content" id="loesung-text"></div></div></div>
+                </div>
+                <div class="tab-content" id="tab-prompt">
+                    <div class="prompt-box">
+                        <h4>🤖 Prompt für KI-Assistenten</h4>
+                        <p>Nutzen Sie diesen Prompt, um weitere Übungsaufgaben zu generieren:</p>
+                        <div class="prompt-text" id="prompt-text"></div>
+                        <div class="button-row">
+                            <button class="btn-copy" onclick="copyPrompt()"><span id="copy-icon">📋</span><span id="copy-text">Prompt kopieren</span></button>
+                            <button class="btn-google" onclick="openGoogleAI()">🚀 Google AI</button>
+                            <button class="btn-chatgpt" onclick="openChatGPT()">💬 ChatGPT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+// Formeln in Formelbox rendern
+const formeln = [
+    {id:'f1', tex:'p = m \\cdot v'},
+    {id:'f2', tex:'F = m \\cdot a = \\frac{\\Delta p}{\\Delta t}'},
+    {id:'f3', tex:'p_{\\text{vorher}} = p_{\\text{nachher}}'},
+    {id:'f4', tex:'\\Delta p = F \\cdot \\Delta t'},
+    {id:'f5', tex:'m_1 v_1 + m_2 v_2 = (m_1+m_2) v\''},
+    {id:'f6', tex:'v_{\\text{m/s}} = \\frac{v_{\\text{km/h}}}{3{,}6}'}
+];
+formeln.forEach(f => { const el=document.getElementById(f.id); if(el) katex.render(f.tex, el, {throwOnError:false}); });
+
+// Inline-Formeln
+document.querySelectorAll('.fm').forEach(el => {
+    const tex = el.dataset.tex;
+    if(tex) katex.render(tex, el, {throwOnError:false});
+});
+
+// Aufgaben-Datenbank
+const aufgaben = {
+'basis-1': {
+    title: 'Einheiten und Größenordnungen',
+    aufgabe: `Geben Sie folgende Impulse in der SI-Einheit Ns an.
+
+a) $p = 500\\,\\text{kg}\\cdot\\text{m/s}$
+b) $p = 0{,}8\\,\\text{kNs}$
+c) $p = 2000\\,\\text{g}\\cdot\\text{m/s}$
+d) $p = 0{,}003\\,\\text{MNs}$
+
+Ordnen Sie die Impulse der Größe nach (klein → groß).`,
+    loesung: `a) $500\\,\\text{kg}\\cdot\\text{m/s} = 500\\,\\text{Ns}$ ✓
+
+b) $0{,}8\\,\\text{kNs} = 0{,}8 \\cdot 1000\\,\\text{Ns} = 800\\,\\text{Ns}$
+
+c) $2000\\,\\text{g}\\cdot\\text{m/s} = 2\\,\\text{kg}\\cdot\\text{m/s} = 2\\,\\text{Ns}$
+
+d) $0{,}003\\,\\text{MNs} = 0{,}003 \\cdot 10^6\\,\\text{Ns} = 3000\\,\\text{Ns}$
+
+Reihenfolge: c) $2\\,\\text{Ns}$ < a) $500\\,\\text{Ns}$ < b) $800\\,\\text{Ns}$ < d) $3000\\,\\text{Ns}$`,
+    prompt: `Erstelle mir eine Übungsaufgabe zum Thema "Einheiten und Größenordnungen in der Physik". Niveau: Oberstufe LK. Thema: Impuls, Kraft. Nutze nur SI-Einheiten und Vorsätze. Stil: Klausuraufgabe mit Teilaufgaben. Gib mir erst nur die Aufgabe. Die Lösung erst auf Nachfrage.`
+},
+'basis-2': {
+    title: 'Einheiten umrechnen',
+    aufgabe: `Geben Sie folgende Geschwindigkeiten $v$ in $\\frac{\\text{m}}{\\text{s}}$ an.
+
+a) $v = 72\\,\\frac{\\text{km}}{\\text{h}}$
+b) $v = 15\\,\\frac{\\text{km}}{\\text{min}}$
+c) $v = 3600\\,\\frac{\\text{mm}}{\\text{s}}$
+
+Geben Sie folgende Zeiten $t$ in s an.
+
+d) $t = 50\\,\\text{ms}$
+e) $t = 0{,}25\\,\\text{min}$`,
+    loesung: `a) $v = \\frac{72}{3{,}6}\\,\\frac{\\text{m}}{\\text{s}} = 20\\,\\frac{\\text{m}}{\\text{s}}$
+
+b) $v = \\frac{15 \\cdot 1000}{60}\\,\\frac{\\text{m}}{\\text{s}} = 250\\,\\frac{\\text{m}}{\\text{s}}$
+
+c) $v = 3{,}6\\,\\frac{\\text{m}}{\\text{s}}$
+
+d) $t = 0{,}050\\,\\text{s}$
+
+e) $t = 15\\,\\text{s}$`,
+    prompt: `Erstelle mir 5 Aufgaben zum Umrechnen von Einheiten. Niveau: Oberstufe. Nutze nur SI-Einheiten. Format: "Geben Sie folgende ... in ... an." Gib mir erst nur die Aufgaben. Die Lösungen erst auf Nachfrage.`
+},
+'basis-3': {
+    title: 'Formeln umstellen',
+    aufgabe: `Stellen Sie die folgenden Formeln nach der angegebenen Größe um.
+
+a) $p = m \\cdot v$ → nach $v$
+
+b) $F = \\frac{\\Delta p}{\\Delta t}$ → nach $\\Delta t$
+
+c) Leiten Sie aus $v = a \\cdot t$ und $s = \\frac{1}{2} a t^2$ den Zusammenhang $v(s)$ her, indem Sie $t$ eliminieren.`,
+    loesung: `a) $v = \\frac{p}{m}$
+
+b) $\\Delta t = \\frac{\\Delta p}{F}$
+
+c) Aus $v = a \\cdot t$ folgt: $t = \\frac{v}{a}$
+
+Einsetzen: $s = \\frac{1}{2} a \\cdot \\frac{v^2}{a^2} = \\frac{v^2}{2a}$
+
+Umgestellt: $\\boxed{v = \\sqrt{2as}}$`,
+    prompt: `Erstelle mir Aufgaben zum Umstellen von Formeln aus der Mechanik. Niveau: Oberstufe LK. Eine Aufgabe soll eine Herleitung durch Elimination sein. Nutze nur SI-Einheiten. Gib mir erst nur die Aufgaben. Die Lösungen erst auf Nachfrage.`
+},
+'impuls-1': {
+    title: 'Impuls berechnen',
+    aufgabe: `Ein Audi Q7 ($m = 2400\\,\\text{kg}$) fährt mit $50\\,\\frac{\\text{km}}{\\text{h}}$. Ein Smart ($m = 750\\,\\text{kg}$) fährt mit $120\\,\\frac{\\text{km}}{\\text{h}}$.
+
+a) Berechnen Sie den Impuls beider Fahrzeuge.
+b) Welches Fahrzeug hat den größeren Impuls?
+c) Mit welcher Geschwindigkeit müsste der Smart fahren, um denselben Impuls zu haben?`,
+    loesung: `a) Audi: $v = \\frac{50}{3{,}6} = 13{,}89\\,\\frac{\\text{m}}{\\text{s}}$
+$p_{\\text{Audi}} = 2400 \\cdot 13{,}89 = 33333\\,\\text{Ns} \\approx 33{,}3\\,\\text{kNs}$
+
+Smart: $v = \\frac{120}{3{,}6} = 33{,}33\\,\\frac{\\text{m}}{\\text{s}}$
+$p_{\\text{Smart}} = 750 \\cdot 33{,}33 = 25000\\,\\text{Ns} = 25\\,\\text{kNs}$
+
+b) Der Audi hat den größeren Impuls, obwohl er langsamer fährt.
+
+c) $750 \\cdot v = 33333 \\Rightarrow v = 44{,}4\\,\\frac{\\text{m}}{\\text{s}} = 160\\,\\frac{\\text{km}}{\\text{h}}$`,
+    prompt: `Erstelle mir eine Aufgabe zur Berechnung des Impulses. Niveau: Oberstufe LK. Kontext: Zwei Fahrzeuge. Geschwindigkeiten in km/h. Vergleich und Interpretation. Nutze nur SI-Einheiten. Gib mir erst nur die Aufgabe. Die Lösung erst auf Nachfrage.`
+},
+'impuls-2': {
+    title: 'Bedeutung des Impulses',
+    aufgabe: `Ein Tennisball ($m = 58\\,\\text{g}$) wird mit $180\\,\\frac{\\text{km}}{\\text{h}}$ aufgeschlagen. Ein Medizinball ($m = 5\\,\\text{kg}$) wird mit $7{,}2\\,\\frac{\\text{km}}{\\text{h}}$ geworfen.
+
+a) Berechnen Sie die Impulse beider Bälle.
+b) Welcher Ball ist schwerer zu stoppen? Begründen Sie.
+c) Erklären Sie, was der Impuls über die "Wucht" aussagt.`,
+    loesung: `a) Tennis: $v = 50\\,\\frac{\\text{m}}{\\text{s}}$, $p = 0{,}058 \\cdot 50 = 2{,}9\\,\\text{Ns}$
+
+Medizin: $v = 2\\,\\frac{\\text{m}}{\\text{s}}$, $p = 5 \\cdot 2 = 10\\,\\text{Ns}$
+
+b) Der Medizinball (größerer Impuls: $10 > 2{,}9$), obwohl er langsamer ist.
+
+c) Der Impuls beschreibt die "Bewegungswirkung". Großer Impuls = mehr Kraft×Zeit zum Stoppen nötig.`,
+    prompt: `Erstelle mir eine Aufgabe zur Bedeutung des Impulses. Niveau: Oberstufe. Vergleich von Objekten mit unterschiedlichen m und v. Qualitative Erklärung. Nutze nur SI-Einheiten. Gib mir erst nur die Aufgabe. Die Lösung erst auf Nachfrage.`
+},
+'impuls-3': {
+    title: 'Impulse vergleichen',
+    aufgabe: `Ordnen Sie nach Impuls (klein → groß).
+
+A) Radfahrer: $m = 85\\,\\text{kg}$, $v = 25\\,\\frac{\\text{km}}{\\text{h}}$
+B) Fußball: $m = 430\\,\\text{g}$, $v = 90\\,\\frac{\\text{km}}{\\text{h}}$
+C) ICE-Triebkopf: $m = 80\\,\\text{t}$, $v = 1{,}8\\,\\frac{\\text{km}}{\\text{h}}$
+D) Sprinter: $m = 78\\,\\text{kg}$, $v = 36\\,\\frac{\\text{km}}{\\text{h}}$`,
+    loesung: `A) $p = 85 \\cdot 6{,}94 = 590\\,\\text{Ns}$
+B) $p = 0{,}43 \\cdot 25 = 11\\,\\text{Ns}$
+C) $p = 80000 \\cdot 0{,}5 = 40000\\,\\text{Ns}$
+D) $p = 78 \\cdot 10 = 780\\,\\text{Ns}$
+
+Reihenfolge: B < A < D ≪ C`,
+    prompt: `Erstelle mir eine Aufgabe zum Vergleichen von Impulsen. Niveau: Oberstufe. Mind. 4 Objekte. Verschiedene Größenordnungen. Geschwindigkeiten in km/h. Gib mir erst nur die Aufgabe. Die Lösung erst auf Nachfrage.`
+},
+'erhaltung-1': {
+    title: 'Impulserhaltungssatz',
+    aufgabe: `Zwei Wagen auf einer Luftkissenbahn:
+Wagen 1: $m_1 = 500\\,\\text{g}$, $v_1 = 1{,}8\\,\\frac{\\text{m}}{\\text{s}}$ (rechts)
+Wagen 2: $m_2 = 300\\,\\text{g}$, $v_2 = -1{,}2\\,\\frac{\\text{m}}{\\text{s}}$ (links)
+
+Nach dem Stoß verhaken sie sich.
+
+a) Berechnen Sie den Gesamtimpuls vor dem Stoß.
+b) Formulieren Sie den Impulserhaltungssatz.
+c) Bestimmen Sie die gemeinsame Geschwindigkeit.`,
+    loesung: `a) $p_{\\text{ges}} = 0{,}5 \\cdot 1{,}8 + 0{,}3 \\cdot (-1{,}2) = 0{,}9 - 0{,}36 = 0{,}54\\,\\text{Ns}$
+
+b) $m_1 v_1 + m_2 v_2 = (m_1 + m_2) v'$
+
+c) $0{,}54 = 0{,}8 \\cdot v' \\Rightarrow v' = 0{,}675\\,\\frac{\\text{m}}{\\text{s}}$ (nach rechts)`,
+    prompt: `Erstelle mir eine Aufgabe zur Impulserhaltung (inelastischer Stoß, Luftkissenbahn). Niveau: Oberstufe LK. Entgegengesetzte Richtungen (Vorzeichen!). Nutze nur SI-Einheiten. Gib mir erst nur die Aufgabe. Die Lösung erst auf Nachfrage.`
+},
+'erhaltung-2': {
+    title: 'Inelastischer Stoß',
+    aufgabe: `Ein VW Golf ($m_1 = 1250\\,\\text{kg}$) fährt mit $54\\,\\frac{\\text{km}}{\\text{h}}$. Ein BMW X5 ($m_2 = 2100\\,\\text{kg}$) rammt ihn von hinten mit $72\\,\\frac{\\text{km}}{\\text{h}}$. Beide verkeilen sich.
+
+a) Beschreiben Sie den Vorgang und formulieren Sie den Impulserhaltungssatz.
+b) Berechnen Sie die Impulse beider Fahrzeuge vor dem Stoß.
+c) Bestimmen Sie die gemeinsame Geschwindigkeit.`,
+    loesung: `a) Inelastischer Stoß: $m_1 v_1 + m_2 v_2 = (m_1+m_2) v'$
+
+b) $v_1 = 15\\,\\frac{\\text{m}}{\\text{s}} \\Rightarrow p_1 = 18750\\,\\text{Ns}$
+$v_2 = 20\\,\\frac{\\text{m}}{\\text{s}} \\Rightarrow p_2 = 42000\\,\\text{Ns}$
+
+c) $p_{\\text{ges}} = 60750\\,\\text{Ns}$
+$v' = \\frac{60750}{3350} = 18{,}1\\,\\frac{\\text{m}}{\\text{s}} \\approx 65\\,\\frac{\\text{km}}{\\text{h}}$`,
+    prompt: `Erstelle mir eine Aufgabe zu einem Auffahrunfall (inelastischer Stoß). Niveau: Oberstufe LK. Konkrete Automodelle. Geschwindigkeiten in km/h. Nutze nur SI-Einheiten. Gib mir erst nur die Aufgabe. Die Lösung erst auf Nachfrage.`
+},
+'erhaltung-3': {
+    title: 'Kolonnenunfall',
+    aufgabe: `Drei Fahrzeuge im Stau:
+• B: VW Lupo ($m_B = 950\\,\\text{kg}$)
+• C: Opel Astra ($m_C = 1350\\,\\text{kg}$)
+
+Ein Sprinter ($m_A = 2800\\,\\text{kg}$) fährt mit $54\\,\\frac{\\text{km}}{\\text{h}}$ auf. A+B verhaken sich, stoßen dann auf C.
+
+a) Berechnen Sie $v_{AB}$ nach Stoß 1.
+b) Berechnen Sie $v_{ABC}$ nach Stoß 2.
+c) Überprüfen Sie die Impulserhaltung.`,
+    loesung: `$v_A = 15\\,\\frac{\\text{m}}{\\text{s}}$
+
+a) $2800 \\cdot 15 = 3750 \\cdot v_{AB}$
+$v_{AB} = 11{,}2\\,\\frac{\\text{m}}{\\text{s}}$
+
+b) $3750 \\cdot 11{,}2 = 5100 \\cdot v_{ABC}$
+$v_{ABC} = 8{,}24\\,\\frac{\\text{m}}{\\text{s}} \\approx 30\\,\\frac{\\text{km}}{\\text{h}}$
+
+c) Vorher: $42000\\,\\text{Ns}$, Nachher: $5100 \\cdot 8{,}24 = 42000\\,\\text{Ns}$ ✓`,
+    prompt: `Erstelle mir eine Aufgabe zum Kolonnenunfall (3+ Fahrzeuge). Niveau: Oberstufe LK. Verkettete Stöße. Impulserhaltung überprüfen. Nutze nur SI-Einheiten. Gib mir erst nur die Aufgabe. Die Lösung erst auf Nachfrage.`
+},
+'newton-1': {
+    title: 'Newton 1 – Trägheitsgesetz',
+    aufgabe: `Ein Koffer ($m = 12\\,\\text{kg}$) liegt im ICE bei $v = 250\\,\\frac{\\text{km}}{\\text{h}}$.
+
+a) Welche resultierende Kraft wirkt? Begründen Sie.
+b) Der ICE bremst mit $a = 2{,}5\\,\\frac{\\text{m}}{\\text{s}^2}$. Was passiert mit dem Koffer? Erklären Sie mit dem Trägheitsgesetz.
+c) Berechnen Sie die Kraft zum Festhalten des Koffers.`,
+    loesung: `a) $F_{\\text{res}} = 0\\,\\text{N}$
+Begründung: $v = \\text{const.}$ → Nach Newton 1 keine resultierende Kraft.
+
+b) Der Koffer rutscht nach vorne. Wegen seiner Trägheit will er seine Geschwindigkeit beibehalten.
+
+c) $F = m \\cdot a = 12 \\cdot 2{,}5 = 30\\,\\text{N}$`,
+    prompt: `Erstelle mir eine Aufgabe zum Trägheitsgesetz (Newton 1). Niveau: Oberstufe. Alltagssituation im Fahrzeug. Erklärung + quantitative Teilaufgabe. Nutze nur SI-Einheiten. Gib mir erst nur die Aufgabe. Die Lösung erst auf Nachfrage.`
+},
+'newton-2': {
+    title: 'Newton 2 – Aktionsprinzip',
+    aufgabe: `Ein Tesla Model 3 ($m = 1850\\,\\text{kg}$) beschleunigt von 0 auf $100\\,\\frac{\\text{km}}{\\text{h}}$ in $6{,}1\\,\\text{s}$.
+
+a) Berechnen Sie die Beschleunigung $a$.
+b) Berechnen Sie die Kraft mit $F = m \\cdot a$.
+c) Berechnen Sie die Kraft mit $F = \\frac{\\Delta p}{\\Delta t}$ und vergleichen Sie.`,
+    loesung: `a) $v = 27{,}78\\,\\frac{\\text{m}}{\\text{s}}$
+$a = \\frac{27{,}78}{6{,}1} = 4{,}55\\,\\frac{\\text{m}}{\\text{s}^2}$
+
+b) $F = 1850 \\cdot 4{,}55 = 8420\\,\\text{N} \\approx 8{,}4\\,\\text{kN}$
+
+c) $\\Delta p = 1850 \\cdot 27{,}78 = 51390\\,\\text{Ns}$
+$F = \\frac{51390}{6{,}1} = 8425\\,\\text{N} \\approx 8{,}4\\,\\text{kN}$ ✓`,
+    prompt: `Erstelle mir eine Aufgabe zu Newton 2. Niveau: Oberstufe LK. Konkretes Fahrzeug. Berechnung mit F=ma und F=Δp/Δt. Vergleich. Nutze nur SI-Einheiten. Gib mir erst nur die Aufgabe. Die Lösung erst auf Nachfrage.`
+},
+'newton-3': {
+    title: 'Newton 3 – Wechselwirkung',
+    aufgabe: `Zwei Eisläufer stoßen sich ab:
+• Person A: $m_A = 55\\,\\text{kg}$
+• Person B: $m_B = 85\\,\\text{kg}$
+
+A bewegt sich mit $v_A = 1{,}8\\,\\frac{\\text{m}}{\\text{s}}$ nach links.
+
+a) Berechnen Sie die Geschwindigkeit von B.
+b) Erklären Sie mit Newton 3, warum auf beide dieselbe Kraft wirkt.
+c) Warum bewegt sich A trotzdem schneller?`,
+    loesung: `a) $55 \\cdot 1{,}8 + 85 \\cdot v_B = 0$
+$v_B = -1{,}16\\,\\frac{\\text{m}}{\\text{s}}$ (nach rechts)
+
+b) Newton 3: $\\vec{F}_{AB} = -\\vec{F}_{BA}$
+Die Kräfte sind gleich groß, aber entgegengesetzt.
+
+c) Bei gleicher Kraft: $a = \\frac{F}{m}$
+Die leichtere Person erfährt größere Beschleunigung.`,
+    prompt: `Erstelle mir eine Aufgabe zum Wechselwirkungsprinzip (Newton 3). Niveau: Oberstufe LK. Zwei Personen/Objekte stoßen sich ab. Berechnung + Erklärung. Nutze nur SI-Einheiten. Gib mir erst nur die Aufgabe. Die Lösung erst auf Nachfrage.`
+},
+'kraft-1': {
+    title: 'Impulsänderung berechnen',
+    aufgabe: `Ein Tennisball ($m = 58\\,\\text{g}$) fliegt mit $140\\,\\frac{\\text{km}}{\\text{h}}$ auf den Schläger und wird mit $160\\,\\frac{\\text{km}}{\\text{h}}$ zurückgespielt. Kontaktzeit: $\\Delta t = 4\\,\\text{ms}$.
+
+a) Berechnen Sie die Geschwindigkeiten in $\\frac{\\text{m}}{\\text{s}}$.
+b) Berechnen Sie $\\Delta p$ (Vorzeichen beachten!).
+c) Bestimmen Sie die mittlere Kraft.`,
+    loesung: `a) $v_{\\text{vor}} = 38{,}9\\,\\frac{\\text{m}}{\\text{s}}$, $v_{\\text{nach}} = 44{,}4\\,\\frac{\\text{m}}{\\text{s}}$
+
+b) Mit + = vom Schläger weg:
+$v_{\\text{vor}} = -38{,}9$, $v_{\\text{nach}} = +44{,}4$
+$\\Delta p = 0{,}058 \\cdot (44{,}4 - (-38{,}9)) = 0{,}058 \\cdot 83{,}3 = 4{,}83\\,\\text{Ns}$
+
+c) $F = \\frac{4{,}83}{0{,}004} = 1208\\,\\text{N} \\approx 1{,}2\\,\\text{kN}$`,
+    prompt: `Erstelle mir eine Aufgabe zur Impulsänderung (Ball prallt zurück). Niveau: Oberstufe LK. Richtungswechsel, Vorzeichen. Mittlere Kraft berechnen. Nutze nur SI-Einheiten. Gib mir erst nur die Aufgabe. Die Lösung erst auf Nachfrage.`
+},
+'kraft-2': {
+    title: 'Kraftstoß aus t-F-Diagramm',
+    aufgabe: `Crashtest-Daten:
+
+| t (ms) | 0 | 10 | 20 | 30 | 40 | 50 | 60 |
+|--------|---|----|----|----|----|----|----|
+| F (kN) | 0 | 2,5| 6,0| 8,0| 5,5| 2,0| 0  |
+
+Dummy-Masse: $m = 78\\,\\text{kg}$
+
+a) Zeichnen Sie das t-F-Diagramm.
+b) Bestimmen Sie den Kraftstoß (Trapezregel).
+c) Berechnen Sie die Geschwindigkeitsänderung.`,
+    loesung: `b) $\\Delta t = 0{,}01\\,\\text{s}$
+$\\Delta p = 0{,}01 \\cdot [1250 + 4250 + 7000 + 6750 + 3750 + 1000]\\,\\text{N}$
+$\\Delta p = 0{,}01 \\cdot 24000 = 240\\,\\text{Ns}$
+
+c) $\\Delta v = \\frac{240}{78} = 3{,}08\\,\\frac{\\text{m}}{\\text{s}} \\approx 11\\,\\frac{\\text{km}}{\\text{h}}$`,
+    prompt: `Erstelle mir eine Aufgabe zum Kraftstoß aus t-F-Diagramm. Niveau: Oberstufe LK. Tabelle mit Messwerten. Trapezregel. Geschwindigkeitsänderung. Nutze nur SI-Einheiten. Gib mir erst nur die Aufgabe. Die Lösung erst auf Nachfrage.`
+},
+'kraft-3': {
+    title: 'Stoßzeit und Kraft',
+    aufgabe: `Falltest: $m = 5\\,\\text{kg}$ fällt aus $h = 1{,}25\\,\\text{m}$.
+
+a) Berechnen Sie die Aufprallgeschwindigkeit mit $v^2 = 2gh$.
+b) Stoßzeit auf Beton: $\\Delta t_1 = 10\\,\\text{ms}$. Berechnen Sie die Kraft.
+c) Stoßzeit auf Matte: $\\Delta t_2 = 100\\,\\text{ms}$. Berechnen Sie die Kraft.
+d) Erklären Sie Airbag und Knautschzone.`,
+    loesung: `a) $v = \\sqrt{2 \\cdot 9{,}81 \\cdot 1{,}25} = 4{,}95\\,\\frac{\\text{m}}{\\text{s}}$
+
+b) $\\Delta p = 5 \\cdot 4{,}95 = 24{,}75\\,\\text{Ns}$
+$F_1 = \\frac{24{,}75}{0{,}01} = 2475\\,\\text{N} \\approx 2{,}5\\,\\text{kN}$
+
+c) $F_2 = \\frac{24{,}75}{0{,}1} = 248\\,\\text{N}$
+
+d) Längere Stoßzeit → kleinere Kraft bei gleichem $\\Delta p$.
+10× längere Zeit = 10× kleinere Kraft!`,
+    prompt: `Erstelle mir eine Aufgabe zum Zusammenhang Stoßzeit-Kraft. Niveau: Oberstufe LK. Fallversuch. Vergleich hart/weich. Airbag-Prinzip erklären. Nutze nur SI-Einheiten. Gib mir erst nur die Aufgabe. Die Lösung erst auf Nachfrage.`
+},
+'rueck-1': {
+    title: 'Rückstoßprinzip',
+    aufgabe: `Eine Schülerin ($m_2 = 55\\,\\text{kg}$) auf einem Skateboard wirft einen Medizinball ($m_1 = 4\\,\\text{kg}$) mit $v_1 = 6\\,\\frac{\\text{m}}{\\text{s}}$ nach vorne.
+
+a) Erklären Sie mit der Impulserhaltung, warum sich das Skateboard nach hinten bewegt.
+b) Berechnen Sie die Rückwärtsgeschwindigkeit.
+c) Zeigen Sie, dass sich die Impulse zu Null addieren.`,
+    loesung: `a) Vor dem Wurf: $p_{\\text{ges}} = 0$
+Nach dem Wurf muss $p_{\\text{ges}} = 0$ bleiben.
+Ball erhält Impuls nach vorne → Schülerin nach hinten.
+
+b) $4 \\cdot 6 + 55 \\cdot v_2 = 0$
+$v_2 = -0{,}44\\,\\frac{\\text{m}}{\\text{s}}$
+
+c) $p_{\\text{Ball}} = 24\\,\\text{Ns}$
+$p_{\\text{Schülerin}} = -24\\,\\text{Ns}$
+Summe: $0$ ✓`,
+    prompt: `Erstelle mir eine Aufgabe zum Rückstoßprinzip. Niveau: Oberstufe. Skateboard/Boot. Impulserhaltung erklären. Rückstoßgeschwindigkeit berechnen. Nachweis Summe=0. Nutze nur SI-Einheiten. Gib mir erst nur die Aufgabe. Die Lösung erst auf Nachfrage.`
+},
+'rueck-2': {
+    title: 'Rückstoßgeschwindigkeit',
+    aufgabe: `Ein Gewehr ($m_G = 3{,}5\\,\\text{kg}$) feuert eine Kugel ($m_K = 12\\,\\text{g}$) mit $v_K = 750\\,\\frac{\\text{m}}{\\text{s}}$ ab.
+
+a) Berechnen Sie die Rückstoßgeschwindigkeit.
+b) Berechnen Sie die Impulse von Kugel und Gewehr.
+c) Die Kugel verlässt den Lauf in $\\Delta t = 2\\,\\text{ms}$. Berechnen Sie die Kraft.
+d) Erklären Sie mit Newton 3 den Rückstoß.`,
+    loesung: `a) $0{,}012 \\cdot 750 + 3{,}5 \\cdot v_G = 0$
+$v_G = -2{,}57\\,\\frac{\\text{m}}{\\text{s}}$
+
+b) $p_K = 9\\,\\text{Ns}$, $p_G = -9\\,\\text{Ns}$
+
+c) $F = \\frac{9}{0{,}002} = 4500\\,\\text{N} = 4{,}5\\,\\text{kN}$
+
+d) Nach Newton 3 sind die Kräfte gleich groß. Der Schütze spürt $4{,}5\\,\\text{kN}$.`,
+    prompt: `Erstelle mir eine Aufgabe zur Rückstoßgeschwindigkeit. Niveau: Oberstufe LK. Gewehr/Kanone. Impulserhaltung. Rückstoßkraft. Newton 3. Nutze nur SI-Einheiten. Gib mir erst nur die Aufgabe. Die Lösung erst auf Nachfrage.`
+}
+};
+
+let currentAufgabe = null;
+
+// Checkbox-Funktionalität
+document.querySelectorAll('.kompetenz-item input').forEach(cb => {
+    cb.addEventListener('change', function() {
+        const item = this.closest('.kompetenz-item');
+        item.classList.toggle('checked', this.checked);
+        updateProgress();
+        saveProgress();
+    });
+});
+
+function updateProgress() {
+    const total = document.querySelectorAll('.kompetenz-item input').length;
+    const checked = document.querySelectorAll('.kompetenz-item input:checked').length;
+    document.getElementById('progress-count').textContent = checked;
+    document.getElementById('total-count').textContent = total;
+    document.getElementById('progress-fill').style.width = (checked/total*100)+'%';
+}
+
+function saveProgress() {
+    const checked = [];
+    document.querySelectorAll('.kompetenz-item').forEach(item => {
+        if(item.querySelector('input').checked) checked.push(item.dataset.id);
+    });
+    localStorage.setItem('lernliste-progress', JSON.stringify(checked));
+}
+
+function loadProgress() {
+    const saved = localStorage.getItem('lernliste-progress');
+    if(saved) {
+        JSON.parse(saved).forEach(id => {
+            const item = document.querySelector(`[data-id="${id}"]`);
+            if(item) { item.querySelector('input').checked = true; item.classList.add('checked'); }
+        });
+    }
+    updateProgress();
+}
+
+function renderLatex(text) {
+    return text.replace(/\$([^$]+)\$/g, (m, f) => {
+        try { return katex.renderToString(f, {throwOnError:false}); }
+        catch(e) { return m; }
+    });
+}
+
+function openModal(id) {
+    currentAufgabe = aufgaben[id];
+    if(!currentAufgabe) return;
+    document.getElementById('modal-title').textContent = currentAufgabe.title;
+    document.getElementById('aufgabe-text').innerHTML = renderLatex(currentAufgabe.aufgabe);
+    document.getElementById('loesung-text').innerHTML = renderLatex(currentAufgabe.loesung);
+    document.getElementById('prompt-text').textContent = currentAufgabe.prompt;
+    document.getElementById('loesung-box').classList.remove('visible');
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelector('.tab-btn').classList.add('active');
+    document.getElementById('tab-aufgabe').classList.add('active');
+    document.getElementById('modal-overlay').classList.add('active');
+}
+
+function closeModal() { document.getElementById('modal-overlay').classList.remove('active'); }
+
+function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('tab-'+name).classList.add('active');
+}
+
+function toggleLoesung() { document.getElementById('loesung-box').classList.toggle('visible'); }
+
+function copyPrompt() {
+    navigator.clipboard.writeText(document.getElementById('prompt-text').textContent).then(() => {
+        const btn = document.querySelector('.btn-copy');
+        btn.classList.add('copied');
+        document.getElementById('copy-icon').textContent = '✅';
+        document.getElementById('copy-text').textContent = 'Kopiert!';
+        setTimeout(() => {
+            btn.classList.remove('copied');
+            document.getElementById('copy-icon').textContent = '📋';
+            document.getElementById('copy-text').textContent = 'Prompt kopieren';
+        }, 2000);
+    });
+}
+
+function showToast(msg) {
+    const old = document.querySelector('.toast');
+    if(old) old.remove();
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 10);
+    setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 3000);
+}
+
+function openGoogleAI() {
+    navigator.clipboard.writeText(document.getElementById('prompt-text').textContent).then(() => {
+        showToast('✅ Prompt kopiert! Mit Strg+V einfügen.');
+        setTimeout(() => window.open('https://gemini.google.com/app', '_blank'), 500);
+    });
+}
+
+function openChatGPT() {
+    navigator.clipboard.writeText(document.getElementById('prompt-text').textContent).then(() => {
+        showToast('✅ Prompt kopiert! Mit Strg+V einfügen.');
+        setTimeout(() => window.open('https://chat.openai.com/', '_blank'), 500);
+    });
+}
+
+document.getElementById('modal-overlay').addEventListener('click', e => { if(e.target.id === 'modal-overlay') closeModal(); });
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
+
+// iOS-freundliche Touch-Handler für alle Üben-Links
+document.addEventListener('click', function(e) {
+    const btn = e.target.closest('.btn-ueben');
+    if(btn) {
+        e.preventDefault();
+        const modalId = btn.dataset.modal;
+        if(modalId) openModal(modalId);
+    }
+}, false);
+
+loadProgress();
+</script>
