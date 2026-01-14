@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formel- und Einheiten-Trainer | Physik-LK 11NP</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        
+        header h1 {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+            color: #2563eb;
+        }
+        
+        header .subtitle {
+            color: #64748b;
+            font-size: 0.9em;
+        }
+        
+        .info-box {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            color: #92400e;
+            text-align: center;
+        }
+        
+        .info-box strong {
+            color: #b45309;
+        }
+        
+        .progress-container {
+            background: white;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #475569;
+        }
+        
+        .progress-bar {
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #22c55e, #86efac);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .tab:hover {
+            border-color: #93c5fd;
+            background: #f0f9ff;
+        }
+        
+        .tab.active {
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+        
+        .tab-title {
+            font-weight: bold;
+            margin-bottom: 3px;
+            color: #1e40af;
+        }
+        
+        .tab-count {
+            font-size: 0.8em;
+            color: #64748b;
+        }
+        
+        .exercise-panel {
+            display: none;
+        }
+        
+        .exercise-panel.active {
+            display: block;
+        }
+        
+        .exercise-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .exercise-card.completed {
+            border-color: #86efac;
+            background: linear-gradient(to right, #f0fdf4, white);
+        }
+        
+        .exercise-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .exercise-number {
+            background: #2563eb;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85em;
+        }
+        
+        .difficulty {
+            display: flex;
+            gap: 3px;
+        }
+        
+        .difficulty-star {
+            color: #f59e0b;
+        }
+        
+        .difficulty-star.empty {
+            color: #e2e8f0;
+        }
+        
+        .exercise-question {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #334155;
+        }
+        
+        .gesucht {
+            color: #dc2626;
+            background: #fef2f2;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .formula-display {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 15px 0;
+            border-left: 4px solid #2563eb;
+            overflow-x: auto;
+        }
+        
+        .formula-display .katex {
+            font-size: 1.4em;
+        }
+        
+        .formula-context {
+            font-size: 0.85em;
+            color: #64748b;
+            margin-top: 12px;
+            font-style: italic;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .btn-hint {
+            background: #fef3c7;
+            color: #b45309;
+            border: 1px solid #f59e0b;
+        }
+        
+        .btn-hint:hover {
+            background: #fde68a;
+        }
+        
+        .btn-solution {
+            background: #f3e8ff;
+            color: #7c3aed;
+            border: 1px solid #a78bfa;
+        }
+        
+        .btn-solution:hover {
+            background: #ede9fe;
+        }
+        
+        .hint-box {
+            background: #fffbeb;
+            border: 1px solid #fcd34d;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+            color: #92400e;
+        }
+        
+        .hint-box.visible {
+            display: block;
+        }
+        
+        .solution-box {
+            background: #faf5ff;
+            border: 1px solid #c4b5fd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .solution-box.visible {
+            display: block;
+        }
+        
+        .solution-box h4 {
+            color: #7c3aed;
+            margin-bottom: 12px;
+        }
+        
+        .solution-steps {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e9d5ff;
+            overflow-x: auto;
+        }
+        
+        .solution-steps .step {
+            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #f3e8ff;
+        }
+        
+        .solution-steps .step:last-child {
+            border-bottom: none;
+        }
+        
+        .solution-steps .katex {
+            font-size: 1.1em;
+        }
+        
+        .solution-result {
+            background: #dcfce7;
+            border: 1px solid #86efac;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-top: 15px;
+            color: #166534;
+            text-align: center;
+        }
+        
+        .solution-result .katex {
+            font-size: 1.3em;
+        }
+        
+        .competency-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .competency-check input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            accent-color: #22c55e;
+        }
+        
+        .competency-check label {
+            cursor: pointer;
+            color: #64748b;
+        }
+        
+        .competency-check input:checked + label {
+            color: #16a34a;
+            font-weight: 500;
+        }
+        
+        .reset-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            color: #dc2626;
+            border: 2px solid #fca5a5;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .reset-btn:hover {
+            background: #fef2f2;
+            border-color: #f87171;
+        }
+        
+        .unit-converter {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .unit-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .unit-value {
+            font-size: 1.4em;
+            color: #2563eb;
+            background: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: 1px solid #bfdbfe;
+        }
+        
+        .unit-arrow {
+            color: #94a3b8;
+            font-size: 1.5em;
+        }
+        
+        .unit-target {
+            font-size: 1.4em;
+            color: #7c3aed;
+            background: white;
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: 1px solid #c4b5fd;
+        }
+        
+        .quick-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .quick-nav-btn {
+            width: 35px;
+            height: 35px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.3s;
+        }
+        
+        .quick-nav-btn:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+        }
+        
+        .quick-nav-btn.completed {
+            background: #dcfce7;
+            border-color: #86efac;
+            color: #16a34a;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+            
+            .formula-display .katex {
+                font-size: 1.1em;
+            }
+            
+            .unit-value, .unit-target {
+                font-size: 1.1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📐 Formel- und Einheiten-Trainer</h1>
+            <div class="subtitle">Lore-Lorentz-Schule | Physik-LK 11NP | Selbstlernphase</div>
+        </header>
+        
+        <div class="info-box">
+            <strong>📝 Hinweis:</strong> Lösen Sie die Aufgaben auf Papier! Nutzen Sie Tipp und Lösung zur Selbstkontrolle. Haken Sie ab, was Sie verstanden haben.
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-header">
+                <span>Fortschritt</span>
+                <span id="progress-text">0 / 20 bearbeitet</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('formeln')">
+                <div class="tab-title">📐 Formelumstellung</div>
+                <div class="tab-count" id="formeln-count">0/10 bearbeitet</div>
+            </div>
+            <div class="tab" onclick="switchTab('einheiten')">
+                <div class="tab-title">📏 Einheitenumrechnung</div>
+                <div class="tab-count" id="einheiten-count">0/10 bearbeitet</div>
+            </div>
+        </div>
+        
+        <div class="exercise-panel active" id="formeln-panel">
+            <div class="quick-nav" id="formeln-nav"></div>
+            <div id="formeln-exercises"></div>
+        </div>
+        
+        <div class="exercise-panel" id="einheiten-panel">
+            <div class="quick-nav" id="einheiten-nav"></div>
+            <div id="einheiten-exercises"></div>
+        </div>
+    </div>
+    
+    <button class="reset-btn" onclick="resetProgress()">↺ Zurücksetzen</button>
+
+    <script>
+        const formelAufgaben = [
+            {
+                id: 'f1',
+                formel: 'm_1 \\cdot v_1 + m_2 \\cdot v_2 = m_1 \\cdot v_1\' + m_2 \\cdot v_2\'',
+                kontext: 'Impulserhaltung beim elastischen Stoß',
+                gesucht: "v_2'",
+                loesung: "v_2' = \\frac{m_1 \\cdot v_1 + m_2 \\cdot v_2 - m_1 \\cdot v_1'}{m_2}",
+                hinweis: 'Bringen Sie alle Terme mit v₂\' auf eine Seite, dann teilen Sie durch m₂.',
+                schritte: [
+                    "m_1 \\cdot v_1 + m_2 \\cdot v_2 = m_1 \\cdot v_1' + m_2 \\cdot v_2'",
+                    "m_1 \\cdot v_1 + m_2 \\cdot v_2 - m_1 \\cdot v_1' = m_2 \\cdot v_2'",
+                    "v_2' = \\frac{m_1 \\cdot v_1 + m_2 \\cdot v_2 - m_1 \\cdot v_1'}{m_2}"
+                ],
+                schwierigkeit: 2
+            },
+            {
+                id: 'f2',
+                formel: 'm_1 \\cdot v_1 = (m_1 + m_2) \\cdot v\'',
+                kontext: 'Impulserhaltung beim unelastischen Stoß (v₂ = 0)',
+                gesucht: 'm_2',
+                loesung: "m_2 = m_1 \\cdot \\left( \\frac{v_1}{v'} - 1 \\right)",
+                hinweis: 'Klammer auflösen, nach m₂ umstellen. Alternativ: m₁ ausklammern.',
+                schritte: [
+                    "m_1 \\cdot v_1 = (m_1 + m_2) \\cdot v'",
+                    "m_1 \\cdot v_1 = m_1 \\cdot v' + m_2 \\cdot v'",
+                    "m_1 \\cdot v_1 - m_1 \\cdot v' = m_2 \\cdot v'",
+                    "m_1 \\cdot (v_1 - v') = m_2 \\cdot v'",
+                    "m_2 = \\frac{m_1 \\cdot (v_1 - v')}{v'} = m_1 \\cdot \\left( \\frac{v_1}{v'} - 1 \\right)"
+                ],
+                schwierigkeit: 2
+            },
+            {
+                id: 'f3',
+                formel: '\\frac{1}{2} m_1 v_1^2 + \\frac{1}{2} m_2 v_2^2 = \\frac{1}{2} m_1 v_1\'^2 + \\frac{1}{2} m_2 v_2\'^2',
+                kontext: 'Energieerhaltung beim elastischen Stoß',
+                gesucht: "v_1'",
+                loesung: "v_1' = \\sqrt{\\frac{m_1 v_1^2 + m_2 v_2^2 - m_2 v_2'^2}{m_1}}",
+                hinweis: 'Kürzen Sie ½, isolieren Sie v₁\'², dann Wurzel ziehen.',
+                schritte: [
+                    "\\frac{1}{2} m_1 v_1^2 + \\frac{1}{2} m_2 v_2^2 = \\frac{1}{2} m_1 v_1'^2 + \\frac{1}{2} m_2 v_2'^2 \\quad | \\cdot 2",
+                    "m_1 v_1^2 + m_2 v_2^2 = m_1 v_1'^2 + m_2 v_2'^2",
+                    "m_1 v_1^2 + m_2 v_2^2 - m_2 v_2'^2 = m_1 v_1'^2",
+                    "v_1'^2 = \\frac{m_1 v_1^2 + m_2 v_2^2 - m_2 v_2'^2}{m_1}",
+                    "v_1' = \\sqrt{\\frac{m_1 v_1^2 + m_2 v_2^2 - m_2 v_2'^2}{m_1}}"
+                ],
+                schwierigkeit: 3
+            },
+            {
+                id: 'f4',
+                formel: '\\frac{1}{2} m v_1^2 = \\frac{1}{2} m v_2^2 + m g h',
+                kontext: 'Energieerhaltung: Kinetisch → Kinetisch + Potentiell',
+                gesucht: 'v_2',
+                loesung: "v_2 = \\sqrt{v_1^2 - 2gh}",
+                hinweis: 'Kürzen Sie m, bringen Sie v₂² allein auf eine Seite.',
+                schritte: [
+                    "\\frac{1}{2} m v_1^2 = \\frac{1}{2} m v_2^2 + m g h \\quad | : m",
+                    "\\frac{1}{2} v_1^2 = \\frac{1}{2} v_2^2 + g h \\quad | \\cdot 2",
+                    "v_1^2 = v_2^2 + 2gh",
+                    "v_1^2 - 2gh = v_2^2",
+                    "v_2 = \\sqrt{v_1^2 - 2gh}"
+                ],
+                schwierigkeit: 3
+            },
+            {
+                id: 'f5',
+                formel: 'F = G \\cdot \\frac{m_1 \\cdot m_2}{r^2}',
+                kontext: 'Gravitationsgesetz',
+                gesucht: 'r',
+                loesung: "r = \\sqrt{\\frac{G \\cdot m_1 \\cdot m_2}{F}}",
+                hinweis: 'Multiplizieren Sie mit r², teilen Sie durch F, dann Wurzel.',
+                schritte: [
+                    "F = G \\cdot \\frac{m_1 \\cdot m_2}{r^2}",
+                    "F \\cdot r^2 = G \\cdot m_1 \\cdot m_2",
+                    "r^2 = \\frac{G \\cdot m_1 \\cdot m_2}{F}",
+                    "r = \\sqrt{\\frac{G \\cdot m_1 \\cdot m_2}{F}}"
+                ],
+                schwierigkeit: 2
+            },
+            {
+                id: 'f6',
+                formel: 's = v_0 \\cdot t + \\frac{1}{2} a t^2',
+                kontext: 'Gleichmäßig beschleunigte Bewegung mit Anfangsgeschwindigkeit',
+                gesucht: 'a',
+                loesung: "a = \\frac{2(s - v_0 t)}{t^2}",
+                hinweis: 'Subtrahieren Sie v₀·t, dann multiplizieren Sie mit 2 und teilen durch t².',
+                schritte: [
+                    "s = v_0 t + \\frac{1}{2} a t^2",
+                    "s - v_0 t = \\frac{1}{2} a t^2",
+                    "2(s - v_0 t) = a t^2",
+                    "a = \\frac{2(s - v_0 t)}{t^2}"
+                ],
+                schwierigkeit: 2
+            },
+            {
+                id: 'f7',
+                formel: 'v^2 = v_0^2 + 2 a s',
+                kontext: 'Geschwindigkeit-Weg-Beziehung',
+                gesucht: 's',
+                loesung: "s = \\frac{v^2 - v_0^2}{2a}",
+                hinweis: 'Subtrahieren Sie v₀², dann teilen Sie durch 2a.',
+                schritte: [
+                    "v^2 = v_0^2 + 2as",
+                    "v^2 - v_0^2 = 2as",
+                    "\\frac{v^2 - v_0^2}{2a} = s",
+                    "s = \\frac{v^2 - v_0^2}{2a}"
+                ],
+                schwierigkeit: 2
+            },
+            {
+                id: 'f8',
+                formel: 'T = 2\\pi \\sqrt{\\frac{l}{g}}',
+                kontext: 'Schwingungsdauer des mathematischen Pendels',
+                gesucht: 'l',
+                loesung: "l = \\frac{g \\cdot T^2}{4\\pi^2}",
+                hinweis: 'Teilen durch 2π, quadrieren, dann mit g multiplizieren.',
+                schritte: [
+                    "T = 2\\pi \\sqrt{\\frac{l}{g}}",
+                    "\\frac{T}{2\\pi} = \\sqrt{\\frac{l}{g}}",
+                    "\\left( \\frac{T}{2\\pi} \\right)^2 = \\frac{l}{g}",
+                    "\\frac{T^2}{4\\pi^2} = \\frac{l}{g}",
+                    "l = \\frac{g \\cdot T^2}{4\\pi^2}"
+                ],
+                schwierigkeit: 3
+            },
+            {
+                id: 'f9',
+                formel: "v_1' = \\frac{(m_1 - m_2) v_1 + 2 m_2 v_2}{m_1 + m_2}",
+                kontext: 'Geschwindigkeit nach elastischem Stoß (Stoßformel)',
+                gesucht: 'm_1',
+                loesung: "m_1 = m_2 \\cdot \\frac{2v_2 - v_1' - v_1}{v_1' - v_1}",
+                hinweis: 'Multiplizieren mit (m₁+m₂), alle m₁-Terme auf eine Seite, ausklammern.',
+                schritte: [
+                    "v_1' (m_1 + m_2) = (m_1 - m_2) v_1 + 2 m_2 v_2",
+                    "v_1' m_1 + v_1' m_2 = m_1 v_1 - m_2 v_1 + 2 m_2 v_2",
+                    "v_1' m_1 - m_1 v_1 = -m_2 v_1 + 2 m_2 v_2 - v_1' m_2",
+                    "m_1 (v_1' - v_1) = m_2 (2v_2 - v_1 - v_1')",
+                    "m_1 = m_2 \\cdot \\frac{2v_2 - v_1 - v_1'}{v_1' - v_1}"
+                ],
+                schwierigkeit: 3
+            },
+            {
+                id: 'f10',
+                formel: 'p \\cdot V = n \\cdot R \\cdot T',
+                kontext: 'Ideale Gasgleichung',
+                gesucht: 'T',
+                loesung: "T = \\frac{p \\cdot V}{n \\cdot R}",
+                hinweis: 'Teilen Sie beide Seiten durch n·R.',
+                schritte: [
+                    "p \\cdot V = n \\cdot R \\cdot T",
+                    "\\frac{p \\cdot V}{n \\cdot R} = T",
+                    "T = \\frac{p \\cdot V}{n \\cdot R}"
+                ],
+                schwierigkeit: 1
+            }
+        ];
+
+        const einheitenAufgaben = [
+            {
+                id: 'e1',
+                wert: '72',
+                vonEinheit: 'km/h',
+                nachEinheit: 'm/s',
+                loesung: '20',
+                hinweis: 'km/h → m/s: Teilen durch 3,6',
+                schritte: [
+                    "72\\,\\frac{\\text{km}}{\\text{h}} = \\frac{72}{3{,}6}\\,\\frac{\\text{m}}{\\text{s}} = 20\\,\\frac{\\text{m}}{\\text{s}}"
+                ],
+                schwierigkeit: 1
+            },
+            {
+                id: 'e2',
+                wert: '15',
+                vonEinheit: 'm/s',
+                nachEinheit: 'km/h',
+                loesung: '54',
+                hinweis: 'm/s → km/h: Multiplizieren mit 3,6',
+                schritte: [
+                    "15\\,\\frac{\\text{m}}{\\text{s}} = 15 \\cdot 3{,}6\\,\\frac{\\text{km}}{\\text{h}} = 54\\,\\frac{\\text{km}}{\\text{h}}"
+                ],
+                schwierigkeit: 1
+            },
+            {
+                id: 'e3',
+                wert: '2500',
+                vonEinheit: 'g',
+                nachEinheit: 'kg',
+                loesung: '2,5',
+                hinweis: 'g → kg: Teilen durch 1000',
+                schritte: [
+                    "2500\\,\\text{g} = \\frac{2500}{1000}\\,\\text{kg} = 2{,}5\\,\\text{kg}"
+                ],
+                schwierigkeit: 1
+            },
+            {
+                id: 'e4',
+                wert: '850',
+                vonEinheit: 'hPa',
+                nachEinheit: 'Pa',
+                loesung: '85000',
+                hinweis: 'hPa → Pa: Multiplizieren mit 100 (h = hekto = 100)',
+                schritte: [
+                    "850\\,\\text{hPa} = 850 \\cdot 100\\,\\text{Pa} = 85\\,000\\,\\text{Pa}"
+                ],
+                schwierigkeit: 1
+            },
+            {
+                id: 'e5',
+                wert: '3,6',
+                vonEinheit: 'MJ',
+                nachEinheit: 'kWh',
+                loesung: '1',
+                hinweis: '1 kWh = 3,6 MJ (merken!)',
+                schritte: [
+                    "1\\,\\text{kWh} = 1000\\,\\text{W} \\cdot 3600\\,\\text{s} = 3{,}6 \\cdot 10^6\\,\\text{J} = 3{,}6\\,\\text{MJ}",
+                    "\\Rightarrow 3{,}6\\,\\text{MJ} = 1\\,\\text{kWh}"
+                ],
+                schwierigkeit: 2
+            },
+            {
+                id: 'e6',
+                wert: '250',
+                vonEinheit: 'cm²',
+                nachEinheit: 'm²',
+                loesung: '0,025',
+                hinweis: 'cm² → m²: Teilen durch 10.000 (nicht 100!), da (100 cm)² = 10.000 cm²',
+                schritte: [
+                    "1\\,\\text{m} = 100\\,\\text{cm}",
+                    "1\\,\\text{m}^2 = (100\\,\\text{cm})^2 = 10\\,000\\,\\text{cm}^2",
+                    "250\\,\\text{cm}^2 = \\frac{250}{10\\,000}\\,\\text{m}^2 = 0{,}025\\,\\text{m}^2"
+                ],
+                schwierigkeit: 2
+            },
+            {
+                id: 'e7',
+                wert: '0,5',
+                vonEinheit: 'm³',
+                nachEinheit: 'Liter',
+                loesung: '500',
+                hinweis: '1 m³ = 1000 Liter (= 1000 dm³)',
+                schritte: [
+                    "1\\,\\text{m}^3 = (10\\,\\text{dm})^3 = 1000\\,\\text{dm}^3 = 1000\\,\\text{L}",
+                    "0{,}5\\,\\text{m}^3 = 0{,}5 \\cdot 1000\\,\\text{L} = 500\\,\\text{L}"
+                ],
+                schwierigkeit: 2
+            },
+            {
+                id: 'e8',
+                wert: '4,5',
+                vonEinheit: 'kg·m/s',
+                nachEinheit: 'g·cm/s',
+                loesung: '450000',
+                hinweis: 'kg → g: ×1000, m → cm: ×100, also insgesamt ×100.000',
+                schritte: [
+                    "4{,}5\\,\\frac{\\text{kg} \\cdot \\text{m}}{\\text{s}} = 4{,}5 \\cdot 1000\\,\\text{g} \\cdot 100\\,\\frac{\\text{cm}}{\\text{s}}",
+                    "= 4{,}5 \\cdot 100\\,000\\,\\frac{\\text{g} \\cdot \\text{cm}}{\\text{s}} = 450\\,000\\,\\frac{\\text{g} \\cdot \\text{cm}}{\\text{s}}"
+                ],
+                schwierigkeit: 2
+            },
+            {
+                id: 'e9',
+                wert: '9,81',
+                vonEinheit: 'N/kg',
+                nachEinheit: 'm/s²',
+                loesung: '9,81',
+                hinweis: 'N/kg und m/s² sind äquivalente Einheiten für g!',
+                schritte: [
+                    "[\\text{N}] = \\left[\\frac{\\text{kg} \\cdot \\text{m}}{\\text{s}^2}\\right]",
+                    "\\left[\\frac{\\text{N}}{\\text{kg}}\\right] = \\left[\\frac{\\text{kg} \\cdot \\text{m}}{\\text{s}^2 \\cdot \\text{kg}}\\right] = \\left[\\frac{\\text{m}}{\\text{s}^2}\\right]",
+                    "\\Rightarrow 9{,}81\\,\\frac{\\text{N}}{\\text{kg}} = 9{,}81\\,\\frac{\\text{m}}{\\text{s}^2}"
+                ],
+                schwierigkeit: 2
+            },
+            {
+                id: 'e10',
+                wert: '1',
+                vonEinheit: 'kWh',
+                nachEinheit: 'J',
+                loesung: '3600000',
+                hinweis: 'k = 1000, W = J/s, h = 3600 s',
+                schritte: [
+                    "1\\,\\text{kWh} = 1000\\,\\text{W} \\cdot 1\\,\\text{h}",
+                    "= 1000\\,\\text{W} \\cdot 3600\\,\\text{s}",
+                    "= 1000\\,\\frac{\\text{J}}{\\text{s}} \\cdot 3600\\,\\text{s}",
+                    "= 3\\,600\\,000\\,\\text{J} = 3{,}6\\,\\text{MJ}"
+                ],
+                schwierigkeit: 3
+            }
+        ];
+
+        let state = {
+            currentTab: 'formeln',
+            formeln: {},
+            einheiten: {}
+        };
+
+        function saveState() {
+            localStorage.setItem('formelTrainerState_v4', JSON.stringify(state));
+        }
+
+        function loadState() {
+            const saved = localStorage.getItem('formelTrainerState_v4');
+            if (saved) {
+                state = JSON.parse(saved);
+            }
+        }
+
+        function resetProgress() {
+            if (confirm('Möchten Sie wirklich Ihren gesamten Fortschritt zurücksetzen?')) {
+                localStorage.removeItem('formelTrainerState_v4');
+                location.reload();
+            }
+        }
+
+        function switchTab(tab) {
+            state.currentTab = tab;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.exercise-panel').forEach(p => p.classList.remove('active'));
+            
+            if (tab === 'formeln') {
+                document.querySelectorAll('.tab')[0].classList.add('active');
+                document.getElementById('formeln-panel').classList.add('active');
+            } else {
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                document.getElementById('einheiten-panel').classList.add('active');
+            }
+            saveState();
+        }
+
+        function renderFormelExercise(aufgabe, index) {
+            const completed = state.formeln[aufgabe.id]?.completed || false;
+            const stars = '★'.repeat(aufgabe.schwierigkeit) + '<span class="difficulty-star empty">' + '★'.repeat(3 - aufgabe.schwierigkeit) + '</span>';
+            const schritte = aufgabe.schritte.map((s, i) => `<div class="step">${i + 1}) $${s}$</div>`).join('');
+            
+            return `
+                <div class="exercise-card ${completed ? 'completed' : ''}" id="formel-${aufgabe.id}">
+                    <div class="exercise-header">
+                        <span class="exercise-number">Aufgabe ${index + 1}</span>
+                        <div class="difficulty">${stars}</div>
+                    </div>
+                    <div class="exercise-question">
+                        Stellen Sie die folgende Formel nach <span class="gesucht">$${aufgabe.gesucht}$</span> um:
+                    </div>
+                    <div class="formula-display">
+                        $${aufgabe.formel}$
+                        <div class="formula-context">${aufgabe.kontext}</div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-hint" onclick="toggleHint('${aufgabe.id}')">💡 Tipp</button>
+                        <button class="btn btn-solution" onclick="toggleSolution('${aufgabe.id}')">📖 Lösung</button>
+                    </div>
+                    <div class="hint-box" id="hint-${aufgabe.id}">💡 ${aufgabe.hinweis}</div>
+                    <div class="solution-box" id="solution-${aufgabe.id}">
+                        <h4>Lösungsweg:</h4>
+                        <div class="solution-steps">${schritte}</div>
+                        <div class="solution-result"><strong>Ergebnis:</strong> $${aufgabe.loesung}$</div>
+                    </div>
+                    <div class="competency-check">
+                        <input type="checkbox" id="comp-${aufgabe.id}" ${completed ? 'checked' : ''} onchange="toggleCompetency('${aufgabe.id}', 'formeln')">
+                        <label for="comp-${aufgabe.id}">✓ Auf Papier gelöst und verstanden</label>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderEinheitenExercise(aufgabe, index) {
+            const completed = state.einheiten[aufgabe.id]?.completed || false;
+            const stars = '★'.repeat(aufgabe.schwierigkeit) + '<span class="difficulty-star empty">' + '★'.repeat(3 - aufgabe.schwierigkeit) + '</span>';
+            const schritte = aufgabe.schritte.map((s, i) => `<div class="step">${aufgabe.schritte.length > 1 ? (i + 1) + ') ' : ''}$${s}$</div>`).join('');
+            
+            return `
+                <div class="exercise-card ${completed ? 'completed' : ''}" id="einheit-${aufgabe.id}">
+                    <div class="exercise-header">
+                        <span class="exercise-number">Aufgabe ${index + 1}</span>
+                        <div class="difficulty">${stars}</div>
+                    </div>
+                    <div class="exercise-question">Rechnen Sie um:</div>
+                    <div class="unit-converter">
+                        <div class="unit-row">
+                            <span class="unit-value">${aufgabe.wert} ${aufgabe.vonEinheit}</span>
+                            <span class="unit-arrow">⟶</span>
+                            <span class="unit-target">? ${aufgabe.nachEinheit}</span>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-hint" onclick="toggleHint('${aufgabe.id}')">💡 Tipp</button>
+                        <button class="btn btn-solution" onclick="toggleSolution('${aufgabe.id}')">📖 Lösung</button>
+                    </div>
+                    <div class="hint-box" id="hint-${aufgabe.id}">💡 ${aufgabe.hinweis}</div>
+                    <div class="solution-box" id="solution-${aufgabe.id}">
+                        <h4>Lösungsweg:</h4>
+                        <div class="solution-steps">${schritte}</div>
+                        <div class="solution-result"><strong>Ergebnis:</strong> ${aufgabe.loesung} ${aufgabe.nachEinheit}</div>
+                    </div>
+                    <div class="competency-check">
+                        <input type="checkbox" id="comp-${aufgabe.id}" ${completed ? 'checked' : ''} onchange="toggleCompetency('${aufgabe.id}', 'einheiten')">
+                        <label for="comp-${aufgabe.id}">✓ Auf Papier gelöst und verstanden</label>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderQuickNav(aufgaben, stateObj) {
+            return aufgaben.map((a, i) => {
+                const completed = stateObj[a.id]?.completed || false;
+                return `<button class="quick-nav-btn ${completed ? 'completed' : ''}" onclick="scrollToExercise('${a.id}')">${i + 1}</button>`;
+            }).join('');
+        }
+
+        function toggleHint(id) {
+            document.getElementById(`hint-${id}`).classList.toggle('visible');
+        }
+
+        function toggleSolution(id) {
+            document.getElementById(`solution-${id}`).classList.toggle('visible');
+            // Re-render KaTeX in case it wasn't rendered yet
+            renderMathInElement(document.getElementById(`solution-${id}`), {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ]
+            });
+        }
+
+        function toggleCompetency(id, type) {
+            const checkbox = document.getElementById(`comp-${id}`);
+            const card = checkbox.closest('.exercise-card');
+            
+            if (type === 'formeln') {
+                state.formeln[id] = { completed: checkbox.checked };
+            } else {
+                state.einheiten[id] = { completed: checkbox.checked };
+            }
+            
+            card.classList.toggle('completed', checkbox.checked);
+            updateProgress();
+            saveState();
+        }
+
+        function scrollToExercise(id) {
+            const prefix = id.startsWith('f') ? 'formel-' : 'einheit-';
+            document.getElementById(`${prefix}${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function updateProgress() {
+            const formelCompleted = Object.values(state.formeln).filter(v => v.completed).length;
+            const einheitCompleted = Object.values(state.einheiten).filter(v => v.completed).length;
+            const total = formelCompleted + einheitCompleted;
+            
+            document.getElementById('progress-fill').style.width = (total / 20) * 100 + '%';
+            document.getElementById('progress-text').textContent = `${total} / 20 bearbeitet`;
+            document.getElementById('formeln-count').textContent = `${formelCompleted}/10 bearbeitet`;
+            document.getElementById('einheiten-count').textContent = `${einheitCompleted}/10 bearbeitet`;
+            document.getElementById('formeln-nav').innerHTML = renderQuickNav(formelAufgaben, state.formeln);
+            document.getElementById('einheiten-nav').innerHTML = renderQuickNav(einheitenAufgaben, state.einheiten);
+        }
+
+        function init() {
+            loadState();
+            document.getElementById('formeln-exercises').innerHTML = formelAufgaben.map((a, i) => renderFormelExercise(a, i)).join('');
+            document.getElementById('einheiten-exercises').innerHTML = einheitenAufgaben.map((a, i) => renderEinheitenExercise(a, i)).join('');
+            switchTab(state.currentTab);
+            updateProgress();
+            
+            // Render KaTeX
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '$', right: '$', display: false}
+                ],
+                throwOnError: false
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
