@@ -137,7 +137,28 @@
         footer a:hover {
             text-decoration: underline;
         }
+        
+        .qr-code {
+            width: 80px;
+            height: 80px;
+            margin-left: auto;
+            background: white;
+            padding: 5px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .card-content {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        
+        .card-text {
+            flex: 1;
+        }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -147,51 +168,66 @@
         </header>
         
         <div class="material-grid">
-            <a href="lernliste-impuls.html" class="material-card">
+            <a href="lernliste-impuls.html" class="material-card" data-url="lernliste-impuls.html">
                 <div class="card-header">
                     <div class="card-icon purple">📋</div>
                     <div class="card-title">Lernliste: Impuls, Kraft & Newton</div>
                 </div>
-                <div class="card-description">
-                    Interaktive Checkliste zur Klausurvorbereitung mit Beispielaufgaben, Lösungen und KI-Prompts für weiteres Üben.
-                </div>
-                <div class="card-tags">
-                    <span class="tag">Impuls</span>
-                    <span class="tag">Impulserhaltung</span>
-                    <span class="tag">Newton'sche Axiome</span>
-                    <span class="tag">Kraftstoß</span>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Interaktive Checkliste zur Klausurvorbereitung mit Beispielaufgaben, Lösungen und KI-Prompts für weiteres Üben.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Impuls</span>
+                            <span class="tag">Impulserhaltung</span>
+                            <span class="tag">Newton'sche Axiome</span>
+                            <span class="tag">Kraftstoß</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-lernliste"></div>
                 </div>
             </a>
             
-            <a href="formel-einheiten-trainer.html" class="material-card">
+            <a href="formel-einheiten-trainer.html" class="material-card" data-url="formel-einheiten-trainer.html">
                 <div class="card-header">
                     <div class="card-icon blue">📐</div>
                     <div class="card-title">Formel- und Einheiten-Trainer</div>
                 </div>
-                <div class="card-description">
-                    Übungen zum Umstellen von Formeln und Umrechnen von Einheiten. Lösen Sie auf Papier und kontrollieren Sie mit Tipps und Lösungen.
-                </div>
-                <div class="card-tags">
-                    <span class="tag">Formelumstellung</span>
-                    <span class="tag">Einheitenumrechnung</span>
-                    <span class="tag">Impulserhaltung</span>
-                    <span class="tag">Energieerhaltung</span>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Übungen zum Umstellen von Formeln und Umrechnen von Einheiten. Lösen Sie auf Papier und kontrollieren Sie mit Tipps und Lösungen.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Formelumstellung</span>
+                            <span class="tag">Einheitenumrechnung</span>
+                            <span class="tag">Impulserhaltung</span>
+                            <span class="tag">Energieerhaltung</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-formel"></div>
                 </div>
             </a>
             
-            <a href="arbeit_winkel.html" class="material-card">
+            <a href="arbeit_winkel.html" class="material-card" data-url="arbeit_winkel.html">
                 <div class="card-header">
                     <div class="card-icon green">⚙️</div>
                     <div class="card-title">Mechanische Arbeit & Kinetische Energie</div>
                 </div>
-                <div class="card-description">
-                    Interaktive Visualisierung der Winkelabhängigkeit bei der mechanischen Arbeit. Mit Anwendungsaufgaben zum Schlitten ziehen und Bremsvorgang inkl. Sternaufgaben.
-                </div>
-                <div class="card-tags">
-                    <span class="tag">Arbeit</span>
-                    <span class="tag">Kinetische Energie</span>
-                    <span class="tag">Kräftezerlegung</span>
-                    <span class="tag">Bremsweg</span>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Interaktive Visualisierung der Winkelabhängigkeit bei der mechanischen Arbeit. Mit Anwendungsaufgaben zum Schlitten ziehen und Bremsvorgang inkl. Sternaufgaben.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Arbeit</span>
+                            <span class="tag">Kinetische Energie</span>
+                            <span class="tag">Kräftezerlegung</span>
+                            <span class="tag">Bremsweg</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-arbeit"></div>
                 </div>
             </a>
         </div>
@@ -203,3 +239,22 @@
     </div>
 </body>
 </html>
+    <script>
+        // Base-URL für GitHub Pages
+        const baseUrl = 'https://hbraak.github.io/2025NP_physik/';
+        
+        // QR-Code Generator Funktion
+        function generateQR(elementId, url) {
+            const qr = qrcode(0, 'M');
+            qr.addData(baseUrl + url);
+            qr.make();
+            document.getElementById(elementId).innerHTML = qr.createImgTag(2, 4);
+        }
+        
+        // QR-Codes generieren wenn Seite geladen
+        document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-lernliste', 'lernliste-impuls.html');
+            generateQR('qr-formel', 'formel-einheiten-trainer.html');
+            generateQR('qr-arbeit', 'arbeit_winkel.html');
+        });
+    </script>
