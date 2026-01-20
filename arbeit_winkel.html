@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mechanische Arbeit – Winkelabhängigkeit</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .canvas-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        canvas {
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            background: #fafbfc;
+        }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .slider-container {
+            width: 100%;
+            max-width: 500px;
+        }
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #34495e;
+        }
+        .angle-value {
+            color: #e74c3c;
+            font-size: 1.2em;
+        }
+        input[type="range"] {
+            width: 100%;
+            height: 12px;
+            -webkit-appearance: none;
+            background: linear-gradient(to right, #27ae60, #f1c40f, #e74c3c);
+            border-radius: 6px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 28px;
+            height: 28px;
+            background: white;
+            border: 3px solid #3498db;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 28px;
+            height: 28px;
+            background: white;
+            border: 3px solid #3498db;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        .results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .result-box {
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .result-box.force {
+            background: linear-gradient(135deg, #e74c3c22, #e74c3c11);
+            border: 2px solid #e74c3c;
+        }
+        .result-box.parallel {
+            background: linear-gradient(135deg, #27ae6022, #27ae6011);
+            border: 2px solid #27ae60;
+        }
+        .result-box.work {
+            background: linear-gradient(135deg, #9b59b622, #9b59b611);
+            border: 2px solid #9b59b6;
+        }
+        .result-label {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-bottom: 5px;
+        }
+        .result-value {
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+        .result-box.force .result-value { color: #e74c3c; }
+        .result-box.parallel .result-value { color: #27ae60; }
+        .result-box.work .result-value { color: #9b59b6; }
+        .formula {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            font-size: 1.2em;
+            color: #2c3e50;
+        }
+        .formula-highlight {
+            color: #9b59b6;
+            font-weight: bold;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+        }
+        .legend-color {
+            width: 20px;
+            height: 4px;
+            border-radius: 2px;
+        }
+        .legend-color.force { background: #e74c3c; }
+        .legend-color.parallel { background: #27ae60; }
+        .legend-color.perp { background: #3498db; border-style: dashed; }
+        .legend-color.weg { background: #f39c12; height: 3px; }
+        
+        /* Aufgaben-Styling */
+        .task-title {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .task-scenario {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        .scenario-image {
+            max-width: 500px;
+            margin: 0 auto 15px auto;
+        }
+        .scenario-text {
+            font-size: 1.05em;
+            line-height: 1.6;
+        }
+        .scenario-text p {
+            margin: 10px 0;
+        }
+        .subtask {
+            background: white;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .subtask.star-task {
+            border-color: #f1c40f;
+            background: linear-gradient(135deg, #fffbea 0%, #fff 100%);
+        }
+        .subtask-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .subtask-label {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #3498db;
+            min-width: 35px;
+        }
+        .star-task .subtask-label {
+            color: #f39c12;
+        }
+        .subtask-text {
+            font-size: 1.05em;
+            color: #2c3e50;
+        }
+        .hint-solution-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .btn-hint {
+            background: #f39c12;
+            color: white;
+        }
+        .btn-hint:hover {
+            background: #e67e22;
+        }
+        .btn-solution {
+            background: #27ae60;
+            color: white;
+        }
+        .btn-solution:hover {
+            background: #219a52;
+        }
+        .hint-box {
+            background: #fef9e7;
+            border-left: 4px solid #f39c12;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 0 8px 8px 0;
+            display: none;
+        }
+        .solution-box {
+            background: #e8f8f5;
+            border-left: 4px solid #27ae60;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 0 8px 8px 0;
+            display: none;
+        }
+        .formula-display {
+            background: white;
+            padding: 12px 20px;
+            margin: 10px 0;
+            border-radius: 6px;
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            font-size: 1.15em;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        .formula-display.result {
+            background: #d5f4e6;
+            border-color: #27ae60;
+            font-weight: bold;
+            font-size: 1.25em;
+        }
+        .solution-box p {
+            margin: 10px 0;
+        }
+        .solution-box em {
+            color: #7f8c8d;
+        }
+        .derivation-step {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .derivation-step h4 {
+            color: #9b59b6;
+            margin: 0 0 10px 0;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mechanische Arbeit</h1>
+    <p class="subtitle">Winkelabhängigkeit der Kraftkomponente</p>
+    
+    <div class="container">
+        <div class="canvas-container">
+            <canvas id="canvas" width="600" height="350"></canvas>
+        </div>
+        
+        <div class="controls">
+            <div class="slider-container">
+                <div class="slider-label">
+                    <span>Winkel α zwischen Kraft und Weg:</span>
+                    <span class="angle-value" id="angleDisplay">30°</span>
+                </div>
+                <input type="range" id="angleSlider" min="0" max="90" value="30">
+            </div>
+        </div>
+        
+        <div class="results">
+            <div class="result-box force">
+                <div class="result-label">Kraft F</div>
+                <div class="result-value">100 N</div>
+            </div>
+            <div class="result-box parallel">
+                <div class="result-label">F<sub>∥</sub> = F · cos(α)</div>
+                <div class="result-value" id="fParallel">86.6 N</div>
+            </div>
+            <div class="result-box work">
+                <div class="result-label">Arbeit W (bei s = 2 m)</div>
+                <div class="result-value" id="workValue">173.2 J</div>
+            </div>
+        </div>
+        
+        <div class="formula">
+            W = F · s · cos(α) = <span class="formula-highlight" id="formulaResult">100 N · 2 m · 0.866 = 173.2 J</span>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color force"></div>
+                <span>Kraft F</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color parallel"></div>
+                <span>F<sub>∥</sub> (wirksam)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color perp"></div>
+                <span>F<sub>⊥</sub> (keine Arbeit)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color weg"></div>
+                <span>Weg s</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Anwendungsaufgabe -->
+    <div class="container" style="margin-top: 25px;">
+        <h2 class="task-title">Anwendungsaufgabe: Schlitten ziehen</h2>
+        
+        <div class="task-scenario">
+            <div class="scenario-image">
+                <svg viewBox="0 0 500 240" width="100%" height="220">
+                    <defs>
+                        <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#e74c3c"/>
+                        </marker>
+                        <marker id="arrowOrange" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#f39c12"/>
+                        </marker>
+                        <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#27ae60"/>
+                        </marker>
+                    </defs>
+                    
+                    <!-- Hintergrund Schnee -->
+                    <rect x="0" y="0" width="500" height="240" fill="#f0f4f8"/>
+                    <rect x="0" y="155" width="500" height="85" fill="#ffffff"/>
+                    
+                    <!-- Schneeboden-Linie -->
+                    <line x1="0" y1="155" x2="500" y2="155" stroke="#cfd8dc" stroke-width="2"/>
+                    
+                    <!-- Schraffur für Boden -->
+                    <g stroke="#e0e0e0" stroke-width="1">
+                        <line x1="15" y1="155" x2="5" y2="170"/>
+                        <line x1="35" y1="155" x2="25" y2="170"/>
+                        <line x1="55" y1="155" x2="45" y2="170"/>
+                        <line x1="75" y1="155" x2="65" y2="170"/>
+                        <line x1="95" y1="155" x2="85" y2="170"/>
+                        <line x1="115" y1="155" x2="105" y2="170"/>
+                        <line x1="135" y1="155" x2="125" y2="170"/>
+                        <line x1="155" y1="155" x2="145" y2="170"/>
+                        <line x1="175" y1="155" x2="165" y2="170"/>
+                        <line x1="195" y1="155" x2="185" y2="170"/>
+                        <line x1="215" y1="155" x2="205" y2="170"/>
+                        <line x1="235" y1="155" x2="225" y2="170"/>
+                        <line x1="255" y1="155" x2="245" y2="170"/>
+                        <line x1="275" y1="155" x2="265" y2="170"/>
+                        <line x1="295" y1="155" x2="285" y2="170"/>
+                        <line x1="315" y1="155" x2="305" y2="170"/>
+                        <line x1="335" y1="155" x2="325" y2="170"/>
+                        <line x1="355" y1="155" x2="345" y2="170"/>
+                        <line x1="375" y1="155" x2="365" y2="170"/>
+                        <line x1="395" y1="155" x2="385" y2="170"/>
+                        <line x1="415" y1="155" x2="405" y2="170"/>
+                        <line x1="435" y1="155" x2="425" y2="170"/>
+                        <line x1="455" y1="155" x2="445" y2="170"/>
+                        <line x1="475" y1="155" x2="465" y2="170"/>
+                        <line x1="495" y1="155" x2="485" y2="170"/>
+                    </g>
+                    
+                    <!-- Schlitten - Kufen -->
+                    <path d="M60 153 L60 145 Q60 140 65 140 L155 140 Q160 140 160 145 L160 153" 
+                          fill="none" stroke="#455a64" stroke-width="4" stroke-linecap="round"/>
+                    
+                    <!-- Schlitten - Sitzfläche -->
+                    <rect x="55" y="115" width="115" height="28" rx="4" fill="#8d6e63" stroke="#5d4037" stroke-width="2"/>
+                    
+                    <!-- Schlitten - Streben -->
+                    <line x1="70" y1="140" x2="70" y2="143" stroke="#5d4037" stroke-width="3"/>
+                    <line x1="110" y1="140" x2="110" y2="143" stroke="#5d4037" stroke-width="3"/>
+                    <line x1="150" y1="140" x2="150" y2="143" stroke="#5d4037" stroke-width="3"/>
+                    
+                    <!-- Schlitten - Rückenlehne -->
+                    <rect x="55" y="95" width="8" height="25" rx="2" fill="#a1887f" stroke="#5d4037" stroke-width="1.5"/>
+                    
+                    <!-- Masse-Label am Schlitten -->
+                    <text x="112" y="133" fill="#fff" font-weight="bold" font-size="13" text-anchor="middle" font-family="Arial">m = 15 kg</text>
+                    
+                    <!-- Seil vom Schlitten -->
+                    <line x1="170" y1="125" x2="260" y2="80" stroke="#d4a574" stroke-width="5" stroke-linecap="round"/>
+                    <line x1="170" y1="125" x2="260" y2="80" stroke="#c4956a" stroke-width="3" stroke-linecap="round"/>
+                    
+                    <!-- Angriffspunkt für Kraft (kleiner Kreis) -->
+                    <circle cx="170" cy="125" r="5" fill="#5d4037"/>
+                    
+                    <!-- Horizontale Hilfslinie (gestrichelt) -->
+                    <line x1="170" y1="125" x2="320" y2="125" stroke="#90a4ae" stroke-width="1.5" stroke-dasharray="8,4"/>
+                    
+                    <!-- Kraftpfeil F (rot) -->
+                    <line x1="170" y1="125" x2="310" y2="45" stroke="#e74c3c" stroke-width="4" marker-end="url(#arrowRed)"/>
+                    
+                    <!-- Winkel-Bogen (35° entspricht ca. 0.61 rad) -->
+                    <path d="M200 125 A 30 30 0 0 0 194 107" fill="none" stroke="#e74c3c" stroke-width="2.5"/>
+                    
+                    <!-- Winkel-Label -->
+                    <text x="212" y="112" fill="#e74c3c" font-weight="bold" font-size="15" font-family="Arial">α = 35°</text>
+                    
+                    <!-- Kraft-Label -->
+                    <text x="320" y="40" fill="#e74c3c" font-weight="bold" font-size="16" font-family="Arial">F = 80 N</text>
+                    
+                    <!-- Kraftkomponenten (optional, dezent) -->
+                    <!-- F parallel (grün, horizontal) -->
+                    <line x1="170" y1="125" x2="285" y2="125" stroke="#27ae60" stroke-width="2.5" stroke-dasharray="6,3" marker-end="url(#arrowGreen)"/>
+                    <text x="295" y="130" fill="#27ae60" font-weight="bold" font-size="12" font-family="Arial">F∥</text>
+                    
+                    <!-- F senkrecht (blau, vertikal) gestrichelt -->
+                    <line x1="285" y1="125" x2="285" y2="60" stroke="#3498db" stroke-width="2" stroke-dasharray="5,3"/>
+                    <line x1="285" y1="60" x2="310" y2="45" stroke="#bdc3c7" stroke-width="1" stroke-dasharray="3,3"/>
+                    <text x="292" y="90" fill="#3498db" font-weight="bold" font-size="12" font-family="Arial">F⊥</text>
+                    
+                    <!-- Weg s (orange) -->
+                    <line x1="60" y1="195" x2="420" y2="195" stroke="#f39c12" stroke-width="3" marker-end="url(#arrowOrange)"/>
+                    <text x="240" y="218" fill="#f39c12" font-weight="bold" font-size="15" text-anchor="middle" font-family="Arial">s = 25 m</text>
+                    
+                    <!-- Bewegungsrichtung-Pfeil am Schlitten -->
+                    <path d="M175 150 L195 150 L190 145 M195 150 L190 155" stroke="#78909c" stroke-width="2" fill="none"/>
+                </svg>
+            </div>
+            
+            <div class="scenario-text">
+                <p>Ein Kind zieht einen Schlitten mit der Masse <strong>m = 15 kg</strong> an einem Seil über eine horizontale Schneefläche. Das Seil bildet mit der Horizontalen einen Winkel von <strong>α = 35°</strong>. Die Zugkraft beträgt <strong>F = 80 N</strong>.</p>
+                <p>Der Schlitten wird über eine Strecke von <strong>s = 25 m</strong> gezogen.</p>
+            </div>
+        </div>
+
+        <!-- Reminder: Sinus und Cosinus -->
+        <div class="subtask" style="background: #f8f9fa; border-color: #9b59b6;">
+            <div class="subtask-header">
+                <span class="subtask-label" style="color: #9b59b6;">📐</span>
+                <span class="subtask-text"><strong>Wiederholung:</strong> Sinus und Cosinus am rechtwinkligen Dreieck</span>
+            </div>
+            
+            <div class="hint-solution-buttons">
+                <button class="btn" style="background: #9b59b6;" onclick="toggle('reminder-trig')">Definition anzeigen</button>
+            </div>
+            
+            <div id="reminder-trig" class="solution-box" style="border-color: #9b59b6; background: #f5f0ff;">
+                <div style="display: flex; flex-wrap: wrap; gap: 25px; align-items: flex-start;">
+                    <div style="flex: 1; min-width: 200px;">
+                        <svg viewBox="0 0 220 180" width="100%" style="max-width: 220px;">
+                            <!-- Dreieck -->
+                            <polygon points="30,150 190,150 190,40" fill="#e8f4f8" stroke="#2c3e50" stroke-width="2"/>
+                            
+                            <!-- Rechter Winkel -->
+                            <rect x="175" y="135" width="15" height="15" fill="none" stroke="#2c3e50" stroke-width="1.5"/>
+                            
+                            <!-- Winkel alpha -->
+                            <path d="M60 150 A 30 30 0 0 0 52 128" fill="none" stroke="#e74c3c" stroke-width="2"/>
+                            <text x="68" y="138" fill="#e74c3c" font-weight="bold" font-size="16">α</text>
+                            
+                            <!-- Beschriftungen Seiten -->
+                            <text x="110" y="170" text-anchor="middle" fill="#27ae60" font-weight="bold" font-size="15">AK</text>
+                            <text x="200" y="100" fill="#3498db" font-weight="bold" font-size="15">GK</text>
+                            <text x="100" y="85" fill="#9b59b6" font-weight="bold" font-size="15">Hyp</text>
+                        </svg>
+                    </div>
+                    
+                    <div style="flex: 2; min-width: 280px;">
+                        <p style="margin-top: 0;"><strong>Definitionen im rechtwinkligen Dreieck:</strong></p>
+                        
+                        <div class="formula-display" style="background: #e8f8f5; border-color: #27ae60;">
+                            <strong style="color: #27ae60;">cos(α)</strong> = AK / Hyp &nbsp;(Ankathete / Hypotenuse)
+                        </div>
+                        
+                        <div class="formula-display" style="background: #e3f2fd; border-color: #3498db;">
+                            <strong style="color: #3498db;">sin(α)</strong> = GK / Hyp &nbsp;(Gegenkathete / Hypotenuse)
+                        </div>
+                        
+                        <p style="margin-top: 15px;"><strong>Anwendung bei der Kräftezerlegung:</strong></p>
+                        <p>Wenn die <strong>Hypotenuse = Kraft F</strong> ist:</p>
+                        <ul style="margin: 8px 0; padding-left: 20px;">
+                            <li><span style="color: #27ae60;"><strong>F<sub>∥</sub> = F · cos(α)</strong></span> → Komponente in Richtung der Ankathete (horizontal)</li>
+                            <li><span style="color: #3498db;"><strong>F<sub>⊥</sub> = F · sin(α)</strong></span> → Komponente in Richtung der Gegenkathete (vertikal)</li>
+                        </ul>
+                        
+                        <p style="margin-top: 12px; padding: 10px; background: #fff3e0; border-radius: 6px; font-size: 0.95em;">
+                            <strong>Merkhilfe:</strong> Der <strong>Cosinus</strong> gehört zur Seite, die am Winkel <strong>anliegt</strong> (Ankathete).<br>
+                            Der <strong>Sinus</strong> gehört zur Seite <strong>gegenüber</strong> dem Winkel (Gegenkathete).
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teilaufgabe a -->
+        <div class="subtask">
+            <div class="subtask-header">
+                <span class="subtask-label">a)</span>
+                <span class="subtask-text">Berechnen Sie die vom Kind verrichtete Arbeit.</span>
+            </div>
+            
+            <div class="hint-solution-buttons">
+                <button class="btn btn-hint" onclick="toggle('hint-a')">Tipp anzeigen</button>
+                <button class="btn btn-solution" onclick="toggle('solution-a')">Lösung anzeigen</button>
+            </div>
+            
+            <div id="hint-a" class="hint-box">
+                <strong>Tipp:</strong> Verwenden Sie die Formel für die mechanische Arbeit bei schrägem Kraftangriff. Nur die Kraftkomponente in Bewegungsrichtung verrichtet Arbeit.
+            </div>
+            
+            <div id="solution-a" class="solution-box">
+                <p><strong>Gegeben:</strong> F = 80 N, α = 35°, s = 25 m</p>
+                <p><strong>Gesucht:</strong> W</p>
+                <p><strong>Lösung:</strong></p>
+                <div class="formula-display">
+                    W = F · s · cos(α)
+                </div>
+                <div class="formula-display">
+                    W = 80 N · 25 m · cos(35°)
+                </div>
+                <div class="formula-display">
+                    W = 80 N · 25 m · 0,819
+                </div>
+                <div class="formula-display result">
+                    W ≈ 1639 J ≈ 1,64 kJ
+                </div>
+            </div>
+        </div>
+
+        <!-- Teilaufgabe b -->
+        <div class="subtask">
+            <div class="subtask-header">
+                <span class="subtask-label">b)</span>
+                <span class="subtask-text">Berechnen Sie die horizontale und vertikale Komponente der Zugkraft.</span>
+            </div>
+            
+            <div class="hint-solution-buttons">
+                <button class="btn btn-hint" onclick="toggle('hint-b')">Tipp anzeigen</button>
+                <button class="btn btn-solution" onclick="toggle('solution-b')">Lösung anzeigen</button>
+            </div>
+            
+            <div id="hint-b" class="hint-box">
+                <strong>Tipp:</strong> Zerlegen Sie die Kraft F in ihre Komponenten. Nutzen Sie: F<sub>∥</sub> = F · cos(α) für die horizontale und F<sub>⊥</sub> = F · sin(α) für die vertikale Komponente.
+            </div>
+            
+            <div id="solution-b" class="solution-box">
+                <p><strong>Horizontale Komponente (in Bewegungsrichtung):</strong></p>
+                <div class="formula-display">
+                    F<sub>∥</sub> = F · cos(α) = 80 N · cos(35°) = 80 N · 0,819 ≈ <strong>65,5 N</strong>
+                </div>
+                <p><strong>Vertikale Komponente (nach oben):</strong></p>
+                <div class="formula-display">
+                    F<sub>⊥</sub> = F · sin(α) = 80 N · sin(35°) = 80 N · 0,574 ≈ <strong>45,9 N</strong>
+                </div>
+                <p><em>Die vertikale Komponente entlastet den Schlitten teilweise – er drückt weniger stark auf den Schnee.</em></p>
+            </div>
+        </div>
+
+        <!-- Teilaufgabe c -->
+        <div class="subtask">
+            <div class="subtask-header">
+                <span class="subtask-label">c)</span>
+                <span class="subtask-text">Welche Geschwindigkeit erreicht der Schlitten nach 25 m, wenn die gesamte Arbeit in kinetische Energie umgewandelt wird? (Reibung vernachlässigt)</span>
+            </div>
+            
+            <div class="hint-solution-buttons">
+                <button class="btn btn-hint" onclick="toggle('hint-c')">Tipp anzeigen</button>
+                <button class="btn btn-solution" onclick="toggle('solution-c')">Lösung anzeigen</button>
+            </div>
+            
+            <div id="hint-c" class="hint-box">
+                <strong>Tipp:</strong> Setzen Sie die Arbeit gleich der kinetischen Energie: W = E<sub>kin</sub> = ½ · m · v². Lösen Sie nach v auf.
+            </div>
+            
+            <div id="solution-c" class="solution-box">
+                <p><strong>Energieerhaltung:</strong> Die verrichtete Arbeit wird vollständig in kinetische Energie umgewandelt.</p>
+                <div class="formula-display">
+                    W = E<sub>kin</sub> = ½ · m · v²
+                </div>
+                <p><strong>Umstellen nach v:</strong></p>
+                <div class="formula-display">
+                    v = √(2W / m) = √(2 · 1639 J / 15 kg)
+                </div>
+                <div class="formula-display">
+                    v = √(218,5 m²/s²)
+                </div>
+                <div class="formula-display result">
+                    v ≈ 14,8 m/s ≈ 53 km/h
+                </div>
+            </div>
+        </div>
+
+        <!-- Teilaufgabe d (Sternaufgabe mit Herleitung) -->
+        <div class="subtask star-task">
+            <div class="subtask-header">
+                <span class="subtask-label">d) ⭐</span>
+                <span class="subtask-text">Die Gleitreibungszahl zwischen Kufen und Schnee beträgt μ = 0,1. Berechnen Sie die Beschleunigung des Schlittens für verschiedene Zugwinkel und ermitteln Sie, bei welchem Winkel α die Beschleunigung maximal wird.</span>
+            </div>
+            
+            <div class="hint-solution-buttons">
+                <button class="btn btn-hint" onclick="toggle('hint-d1')">Tipp 1: Kräftebilanz</button>
+                <button class="btn btn-hint" onclick="toggle('hint-d2')">Tipp 2: Normalkraft</button>
+                <button class="btn btn-hint" onclick="toggle('hint-d3')">Tipp 3: Wertetabelle</button>
+                <button class="btn btn-solution" onclick="toggle('solution-d')">Vollständige Lösung</button>
+            </div>
+            
+            <div id="hint-d1" class="hint-box">
+                <strong>Tipp 1 – Kräftebilanz:</strong><br>
+                Die Beschleunigung ergibt sich aus der Bewegungsgleichung:<br>
+                m · a = F<sub>∥</sub> − F<sub>Reib</sub> = F · cos(α) − μ · F<sub>N</sub><br><br>
+                Dabei ist F<sub>N</sub> die Normalkraft, die durch die vertikale Kraftkomponente beeinflusst wird.
+            </div>
+            
+            <div id="hint-d2" class="hint-box">
+                <strong>Tipp 2 – Normalkraft:</strong><br>
+                Die vertikale Kraftkomponente F · sin(α) wirkt nach oben und entlastet den Schlitten:<br>
+                F<sub>N</sub> = m · g − F · sin(α)<br><br>
+                Die Reibungskraft wird damit: F<sub>Reib</sub> = μ · (m · g − F · sin(α))
+            </div>
+            
+            <div id="hint-d3" class="hint-box">
+                <strong>Tipp 3 – Wertetabelle anlegen:</strong><br>
+                Berechnen Sie die Beschleunigung für α = 0°, 5°, 10°, 15°, 20°, 25°, 30°.<br>
+                Tragen Sie die Werte in ein α-a-Diagramm ein und lesen Sie das Maximum ab.
+            </div>
+            
+            <div id="solution-d" class="solution-box">
+                <p><strong>Vollständige Lösung: Optimaler Zugwinkel</strong></p>
+                
+                <div class="derivation-step">
+                    <h4>Schritt 1: Kräftezerlegung</h4>
+                    <p>Horizontale Komponente (Vortrieb): F<sub>∥</sub> = F · cos(α)</p>
+                    <p>Vertikale Komponente (entlastend): F<sub>⊥</sub> = F · sin(α)</p>
+                </div>
+                
+                <div class="derivation-step">
+                    <h4>Schritt 2: Normalkraft bestimmen</h4>
+                    <p>Die vertikale Kraftbilanz ergibt:</p>
+                    <div class="formula-display">
+                        F<sub>N</sub> = m · g − F · sin(α)
+                    </div>
+                    <p><em>Die Zugkraft "hebt" den Schlitten teilweise an – er drückt weniger auf den Schnee!</em></p>
+                </div>
+                
+                <div class="derivation-step">
+                    <h4>Schritt 3: Bewegungsgleichung aufstellen</h4>
+                    <p>Newton II in horizontaler Richtung:</p>
+                    <div class="formula-display">
+                        m · a = F · cos(α) − μ · F<sub>N</sub>
+                    </div>
+                    <p>Einsetzen der Normalkraft:</p>
+                    <div class="formula-display">
+                        m · a = F · cos(α) − μ · (m · g − F · sin(α))
+                    </div>
+                    <p>Umstellen nach a:</p>
+                    <div class="formula-display">
+                        a = (F/m) · cos(α) − μ · g + (μ · F/m) · sin(α)
+                    </div>
+                    <p>Mit den gegebenen Werten (F = 80 N, m = 15 kg, μ = 0,1, g = 9,81 m/s²):</p>
+                    <div class="formula-display">
+                        a(α) = 5,33 · cos(α) + 0,533 · sin(α) − 0,981 &nbsp;&nbsp;[in m/s²]
+                    </div>
+                </div>
+                
+                <div class="derivation-step">
+                    <h4>Schritt 4: Wertetabelle berechnen</h4>
+                    <table style="width:100%; border-collapse: collapse; margin: 15px 0; font-size: 0.95em;">
+                        <tr style="background: #3498db; color: white;">
+                            <th style="padding: 10px; border: 1px solid #ddd;">α</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">cos(α)</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">sin(α)</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">F<sub>N</sub> in N</th>
+                            <th style="padding: 10px; border: 1px solid #ddd;">a in m/s²</th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">0°</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">1,000</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">0,000</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">147,2</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">4,35</td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">5°</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">0,996</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">0,087</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">140,2</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">4,40</td>
+                        </tr>
+                        <tr style="background: #d5f4e6; font-weight: bold;">
+                            <td style="padding: 8px; border: 1px solid #27ae60; text-align: center;">6°</td>
+                            <td style="padding: 8px; border: 1px solid #27ae60; text-align: center;">0,995</td>
+                            <td style="padding: 8px; border: 1px solid #27ae60; text-align: center;">0,105</td>
+                            <td style="padding: 8px; border: 1px solid #27ae60; text-align: center;">138,8</td>
+                            <td style="padding: 8px; border: 1px solid #27ae60; text-align: center;">4,41 ✓</td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">10°</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">0,985</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">0,174</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">133,3</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">4,38</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">15°</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">0,966</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">0,259</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">126,5</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">4,29</td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">20°</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">0,940</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">0,342</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">119,8</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">4,18</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">30°</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">0,866</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">0,500</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">107,2</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">3,88</td>
+                        </tr>
+                        <tr style="background: #f8f9fa;">
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">35°</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">0,819</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">0,574</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">101,3</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">3,67</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="derivation-step">
+                    <h4>Schritt 5: Grafische Darstellung</h4>
+                    <div style="text-align: center; margin: 15px 0;">
+                        <svg viewBox="0 0 400 220" width="100%" style="max-width: 400px;">
+                            <!-- Achsen -->
+                            <line x1="50" y1="180" x2="380" y2="180" stroke="#333" stroke-width="2"/>
+                            <line x1="50" y1="180" x2="50" y2="20" stroke="#333" stroke-width="2"/>
+                            
+                            <!-- Achsenbeschriftung -->
+                            <text x="215" y="210" text-anchor="middle" font-size="14" fill="#333">α in °</text>
+                            <text x="25" y="100" text-anchor="middle" font-size="14" fill="#333" transform="rotate(-90, 25, 100)">a in m/s²</text>
+                            
+                            <!-- Achsen-Ticks und Werte -->
+                            <text x="50" y="195" text-anchor="middle" font-size="11" fill="#666">0</text>
+                            <text x="110" y="195" text-anchor="middle" font-size="11" fill="#666">5</text>
+                            <text x="170" y="195" text-anchor="middle" font-size="11" fill="#666">10</text>
+                            <text x="230" y="195" text-anchor="middle" font-size="11" fill="#666">15</text>
+                            <text x="290" y="195" text-anchor="middle" font-size="11" fill="#666">20</text>
+                            <text x="350" y="195" text-anchor="middle" font-size="11" fill="#666">25</text>
+                            
+                            <text x="45" y="175" text-anchor="end" font-size="11" fill="#666">3,5</text>
+                            <text x="45" y="135" text-anchor="end" font-size="11" fill="#666">4,0</text>
+                            <text x="45" y="95" text-anchor="end" font-size="11" fill="#666">4,5</text>
+                            
+                            <!-- Gitternetz -->
+                            <line x1="50" y1="135" x2="380" y2="135" stroke="#eee" stroke-width="1"/>
+                            <line x1="50" y1="95" x2="380" y2="95" stroke="#eee" stroke-width="1"/>
+                            
+                            <!-- Kurve -->
+                            <path d="M50 112 Q80 88 122 85 Q160 84 200 92 Q260 108 320 135 Q350 152 370 165" 
+                                  fill="none" stroke="#3498db" stroke-width="3"/>
+                            
+                            <!-- Maximum markieren -->
+                            <circle cx="122" cy="85" r="8" fill="#27ae60"/>
+                            <line x1="122" y1="85" x2="122" y2="180" stroke="#27ae60" stroke-width="1.5" stroke-dasharray="5,3"/>
+                            <text x="122" y="70" text-anchor="middle" font-size="12" fill="#27ae60" font-weight="bold">Maximum</text>
+                            <text x="130" y="55" text-anchor="start" font-size="11" fill="#27ae60">≈ 6°</text>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="derivation-step">
+                    <h4>Ergebnis</h4>
+                    <div class="formula-display result">
+                        α<sub>optimal</sub> ≈ 6° &nbsp;&nbsp;&nbsp; mit &nbsp;&nbsp;&nbsp; a<sub>max</sub> ≈ 4,41 m/s²
+                    </div>
+                </div>
+                
+                <div class="derivation-step" style="background: #e8f5e9;">
+                    <h4>Physikalische Interpretation</h4>
+                    <p>Der optimale Winkel ist <strong>nicht 0°</strong>, weil zwei gegenläufige Effekte auftreten:</p>
+                    <ul style="margin: 10px 0; padding-left: 25px;">
+                        <li><strong>Bei α = 0°:</strong> Maximaler Vortrieb, aber auch maximale Reibung (volle Normalkraft)</li>
+                        <li><strong>Bei größerem α:</strong> Die vertikale Komponente entlastet den Schlitten → weniger Reibung</li>
+                        <li><strong>Bei zu großem α:</strong> Zu wenig Vortrieb in horizontaler Richtung</li>
+                    </ul>
+                    <p><em>Der optimale Winkel balanciert Vortrieb und Reibungsreduktion. Je größer μ, desto steiler sollte gezogen werden!</em></p>
+                    <p style="margin-top: 15px;"><strong>Zusatzinfo:</strong> Mit Differentialrechnung (Oberstufe) lässt sich zeigen: α<sub>optimal</sub> = arctan(μ) = arctan(0,1) ≈ 5,7° ✓</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const slider = document.getElementById('angleSlider');
+        const angleDisplay = document.getElementById('angleDisplay');
+        const fParallelDisplay = document.getElementById('fParallel');
+        const workDisplay = document.getElementById('workValue');
+        const formulaDisplay = document.getElementById('formulaResult');
+        
+        const F = 100;
+        const s = 2;
+        const scale = 1.5;
+        
+        function drawArrow(fromX, fromY, toX, toY, color, lineWidth = 3, dashed = false) {
+            const headLength = 12;
+            const angle = Math.atan2(toY - fromY, toX - fromX);
+            
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = lineWidth;
+            if (dashed) {
+                ctx.setLineDash([8, 6]);
+            } else {
+                ctx.setLineDash([]);
+            }
+            ctx.moveTo(fromX, fromY);
+            ctx.lineTo(toX, toY);
+            ctx.stroke();
+            
+            ctx.setLineDash([]);
+            ctx.beginPath();
+            ctx.fillStyle = color;
+            ctx.moveTo(toX, toY);
+            ctx.lineTo(toX - headLength * Math.cos(angle - Math.PI/6), toY - headLength * Math.sin(angle - Math.PI/6));
+            ctx.lineTo(toX - headLength * Math.cos(angle + Math.PI/6), toY - headLength * Math.sin(angle + Math.PI/6));
+            ctx.closePath();
+            ctx.fill();
+        }
+        
+        function drawArc(cx, cy, radius, startAngle, endAngle, color) {
+            ctx.beginPath();
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2;
+            ctx.setLineDash([]);
+            ctx.arc(cx, cy, radius, -startAngle, -endAngle, true);
+            ctx.stroke();
+        }
+        
+        function draw(angleDeg) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const angleRad = angleDeg * Math.PI / 180;
+            const cosA = Math.cos(angleRad);
+            const sinA = Math.sin(angleRad);
+            
+            const blockX = 120;
+            const blockY = 220;
+            const blockW = 70;
+            const blockH = 50;
+            
+            ctx.fillStyle = '#ecf0f1';
+            ctx.fillRect(0, blockY + blockH, canvas.width, 50);
+            ctx.strokeStyle = '#bdc3c7';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, blockY + blockH);
+            ctx.lineTo(canvas.width, blockY + blockH);
+            ctx.stroke();
+            
+            ctx.strokeStyle = '#bdc3c7';
+            ctx.lineWidth = 1;
+            for (let x = 10; x < canvas.width; x += 15) {
+                ctx.beginPath();
+                ctx.moveTo(x, blockY + blockH);
+                ctx.lineTo(x - 10, blockY + blockH + 15);
+                ctx.stroke();
+            }
+            
+            ctx.fillStyle = '#3498db';
+            ctx.fillRect(blockX, blockY, blockW, blockH);
+            ctx.strokeStyle = '#2980b9';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(blockX, blockY, blockW, blockH);
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 18px Segoe UI';
+            ctx.textAlign = 'center';
+            ctx.fillText('m', blockX + blockW/2, blockY + blockH/2 + 6);
+            
+            const forceStartX = blockX + blockW;
+            const forceStartY = blockY + blockH/2;
+            
+            const forceEndX = forceStartX + F * scale * cosA;
+            const forceEndY = forceStartY - F * scale * sinA;
+            drawArrow(forceStartX, forceStartY, forceEndX, forceEndY, '#e74c3c', 4);
+            
+            ctx.fillStyle = '#e74c3c';
+            ctx.font = 'bold 20px Segoe UI';
+            ctx.textAlign = 'left';
+            ctx.fillText('F', forceEndX + 8, forceEndY - 5);
+            
+            const fParaEndX = forceStartX + F * scale * cosA;
+            const fParaEndY = forceStartY;
+            if (cosA > 0.01) {
+                drawArrow(forceStartX, forceStartY, fParaEndX, fParaEndY, '#27ae60', 3);
+                ctx.fillStyle = '#27ae60';
+                ctx.font = 'bold 16px Segoe UI';
+                ctx.fillText('F∥', fParaEndX + 5, fParaEndY + 20);
+            }
+            
+            if (sinA > 0.01) {
+                const fPerpEndX = forceStartX;
+                const fPerpEndY = forceStartY - F * scale * sinA;
+                drawArrow(forceStartX, forceStartY, fPerpEndX, fPerpEndY, '#3498db', 2, true);
+                ctx.fillStyle = '#3498db';
+                ctx.font = 'bold 14px Segoe UI';
+                ctx.fillText('F⊥', fPerpEndX - 25, fPerpEndY + 10);
+                
+                ctx.beginPath();
+                ctx.strokeStyle = '#bdc3c7';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([4, 4]);
+                ctx.moveTo(fParaEndX, fParaEndY);
+                ctx.lineTo(forceEndX, forceEndY);
+                ctx.moveTo(fPerpEndX, fPerpEndY);
+                ctx.lineTo(forceEndX, forceEndY);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+            
+            if (angleDeg > 2) {
+                drawArc(forceStartX, forceStartY, 35, 0, angleRad, '#e74c3c');
+                const labelAngle = angleRad / 2;
+                const labelR = 50;
+                ctx.fillStyle = '#e74c3c';
+                ctx.font = 'bold 16px Segoe UI';
+                ctx.textAlign = 'center';
+                ctx.fillText('α', forceStartX + labelR * Math.cos(labelAngle), forceStartY - labelR * Math.sin(labelAngle) + 5);
+            }
+            
+            const wegY = blockY + blockH + 35;
+            const wegStartX = blockX;
+            const wegEndX = blockX + 200;
+            drawArrow(wegStartX, wegY, wegEndX, wegY, '#f39c12', 3);
+            ctx.fillStyle = '#f39c12';
+            ctx.font = 'bold 18px Segoe UI';
+            ctx.textAlign = 'center';
+            ctx.fillText('s = 2 m', (wegStartX + wegEndX)/2, wegY + 25);
+            
+            const fPara = F * cosA;
+            const work = F * s * cosA;
+            
+            angleDisplay.textContent = angleDeg + '°';
+            fParallelDisplay.textContent = fPara.toFixed(1) + ' N';
+            workDisplay.textContent = work.toFixed(1) + ' J';
+            formulaDisplay.textContent = `${F} N · ${s} m · ${cosA.toFixed(3)} = ${work.toFixed(1)} J`;
+            
+            drawCosinusGraph(angleDeg);
+        }
+        
+        function drawCosinusGraph(currentAngle) {
+            const graphX = 400;
+            const graphY = 50;
+            const graphW = 170;
+            const graphH = 120;
+            
+            ctx.fillStyle = '#f8f9fa';
+            ctx.fillRect(graphX, graphY, graphW, graphH);
+            ctx.strokeStyle = '#ddd';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(graphX, graphY, graphW, graphH);
+            
+            ctx.strokeStyle = '#999';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(graphX + 25, graphY + graphH - 20);
+            ctx.lineTo(graphX + graphW - 10, graphY + graphH - 20);
+            ctx.moveTo(graphX + 25, graphY + graphH - 20);
+            ctx.lineTo(graphX + 25, graphY + 10);
+            ctx.stroke();
+            
+            ctx.fillStyle = '#666';
+            ctx.font = '12px Segoe UI';
+            ctx.textAlign = 'center';
+            ctx.fillText('α', graphX + graphW - 20, graphY + graphH - 5);
+            ctx.fillText('0°', graphX + 25, graphY + graphH - 5);
+            ctx.fillText('90°', graphX + graphW - 25, graphY + graphH - 5);
+            ctx.textAlign = 'right';
+            ctx.fillText('cos α', graphX + 22, graphY + 20);
+            ctx.fillText('1', graphX + 22, graphY + 28);
+            ctx.fillText('0', graphX + 22, graphY + graphH - 18);
+            
+            ctx.beginPath();
+            ctx.strokeStyle = '#9b59b6';
+            ctx.lineWidth = 2;
+            const scaleX = (graphW - 45) / 90;
+            const scaleY = graphH - 40;
+            for (let a = 0; a <= 90; a++) {
+                const x = graphX + 25 + a * scaleX;
+                const y = graphY + graphH - 20 - Math.cos(a * Math.PI / 180) * scaleY;
+                if (a === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            ctx.stroke();
+            
+            const currentX = graphX + 25 + currentAngle * scaleX;
+            const currentY = graphY + graphH - 20 - Math.cos(currentAngle * Math.PI / 180) * scaleY;
+            
+            ctx.beginPath();
+            ctx.strokeStyle = '#e74c3c';
+            ctx.setLineDash([4, 4]);
+            ctx.moveTo(currentX, graphY + graphH - 20);
+            ctx.lineTo(currentX, currentY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            ctx.beginPath();
+            ctx.fillStyle = '#e74c3c';
+            ctx.arc(currentX, currentY, 6, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = 'bold 12px Segoe UI';
+            ctx.textAlign = 'center';
+            ctx.fillText('cos(' + currentAngle + '°) = ' + Math.cos(currentAngle * Math.PI / 180).toFixed(3), graphX + graphW/2, graphY + graphH + 15);
+        }
+        
+        slider.addEventListener('input', function() {
+            draw(parseInt(this.value));
+        });
+        
+        draw(30);
+        
+        // Toggle-Funktion für Tipps und Lösungen
+        function toggle(id) {
+            const element = document.getElementById(id);
+            if (element.style.display === 'none' || element.style.display === '') {
+                element.style.display = 'block';
+            } else {
+                element.style.display = 'none';
+            }
+        }
+    </script>
+
+    <!-- Aufgabe 2: Kinetische Energie -->
+    <div class="container" style="margin-top: 25px;">
+        <h2 class="task-title">Anwendungsaufgabe: Bremsvorgang eines PKW</h2>
+        
+        <div class="task-scenario">
+            <div class="scenario-image">
+                <svg viewBox="0 0 500 200" width="100%" height="180">
+                    <defs>
+                        <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#2980b9"/>
+                        </marker>
+                        <marker id="arrowRed2" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto">
+                            <path d="M9,0 L9,6 L0,3 z" fill="#e74c3c"/>
+                        </marker>
+                        <marker id="arrowOrange2" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#f39c12"/>
+                        </marker>
+                    </defs>
+                    
+                    <!-- Hintergrund -->
+                    <rect x="0" y="0" width="500" height="200" fill="#e8f4f8"/>
+                    
+                    <!-- Straße -->
+                    <rect x="0" y="130" width="500" height="70" fill="#555"/>
+                    <line x1="0" y1="165" x2="500" y2="165" stroke="#fff" stroke-width="3" stroke-dasharray="30,20"/>
+                    
+                    <!-- Auto -->
+                    <g transform="translate(80, 85)">
+                        <!-- Karosserie -->
+                        <path d="M0,40 L10,40 L25,15 L85,15 L105,40 L120,40 L120,50 L0,50 Z" fill="#3498db" stroke="#2980b9" stroke-width="2"/>
+                        <!-- Dach -->
+                        <path d="M25,15 L35,0 L75,0 L85,15" fill="#3498db" stroke="#2980b9" stroke-width="2"/>
+                        <!-- Fenster -->
+                        <path d="M30,15 L38,3 L55,3 L55,15 Z" fill="#a8d4f0" stroke="#2980b9" stroke-width="1"/>
+                        <path d="M58,15 L58,3 L72,3 L80,15 Z" fill="#a8d4f0" stroke="#2980b9" stroke-width="1"/>
+                        <!-- Scheinwerfer -->
+                        <rect x="115" y="42" width="5" height="6" fill="#f1c40f"/>
+                        <rect x="0" y="42" width="5" height="6" fill="#e74c3c"/>
+                        <!-- Räder -->
+                        <circle cx="30" cy="50" r="13" fill="#222"/>
+                        <circle cx="30" cy="50" r="8" fill="#444"/>
+                        <circle cx="30" cy="50" r="3" fill="#888"/>
+                        <circle cx="90" cy="50" r="13" fill="#222"/>
+                        <circle cx="90" cy="50" r="8" fill="#444"/>
+                        <circle cx="90" cy="50" r="3" fill="#888"/>
+                    </g>
+                    
+                    <!-- Geschwindigkeitsangabe -->
+                    <text x="140" y="70" fill="#2c3e50" font-weight="bold" font-size="15" font-family="Arial">v₀ = 50 km/h</text>
+                    
+                    <!-- Bewegungspfeil -->
+                    <line x1="205" y1="108" x2="270" y2="108" stroke="#2980b9" stroke-width="3" marker-end="url(#arrowBlue)"/>
+                    
+                    <!-- Bremskraft (entgegen der Bewegung) -->
+                    <line x1="80" y1="120" x2="40" y2="120" stroke="#e74c3c" stroke-width="3" marker-end="url(#arrowRed2)"/>
+                    <text x="55" y="115" fill="#e74c3c" font-weight="bold" font-size="13" text-anchor="middle" font-family="Arial">F = 8 kN</text>
+                    
+                    <!-- Bremsweg -->
+                    <line x1="95" y1="185" x2="380" y2="185" stroke="#f39c12" stroke-width="3" marker-end="url(#arrowOrange2)"/>
+                    <text x="237" y="198" fill="#f39c12" font-weight="bold" font-size="14" text-anchor="middle" font-family="Arial">Bremsweg s = ?</text>
+                    
+                    <!-- Masse -->
+                    <text x="320" y="70" fill="#2c3e50" font-weight="bold" font-size="14" font-family="Arial">m = 1200 kg</text>
+                </svg>
+            </div>
+            
+            <div class="scenario-text">
+                <p>Ein PKW mit der Masse <strong>m = 1200 kg</strong> fährt mit einer Geschwindigkeit von <strong>v₀ = 50 km/h</strong>. Der Fahrer muss eine Vollbremsung durchführen. Die Bremskraft beträgt konstant <strong>F = 8000 N</strong>.</p>
+            </div>
+        </div>
+
+        <!-- Reminder: Einheiten umrechnen -->
+        <div class="subtask" style="background: #f8f9fa; border-color: #9b59b6;">
+            <div class="subtask-header">
+                <span class="subtask-label" style="color: #9b59b6;">📐</span>
+                <span class="subtask-text"><strong>Wiederholung:</strong> Geschwindigkeit umrechnen</span>
+            </div>
+            
+            <div class="hint-solution-buttons">
+                <button class="btn" style="background: #9b59b6;" onclick="toggle('reminder-unit')">Umrechnung anzeigen</button>
+            </div>
+            
+            <div id="reminder-unit" class="solution-box" style="border-color: #9b59b6; background: #f5f0ff;">
+                <p><strong>Von km/h nach m/s:</strong></p>
+                <div class="formula-display" style="background: #fff;">
+                    v [m/s] = v [km/h] / 3,6
+                </div>
+                <p><strong>Herleitung:</strong> 1 km/h = 1000 m / 3600 s = 1/3,6 m/s</p>
+                <p style="margin-top: 10px;"><strong>Beispiele:</strong></p>
+                <ul style="margin: 5px 0; padding-left: 20px;">
+                    <li>36 km/h = 10 m/s</li>
+                    <li>50 km/h ≈ 13,9 m/s</li>
+                    <li>100 km/h ≈ 27,8 m/s</li>
+                    <li>130 km/h ≈ 36,1 m/s</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Teilaufgabe a -->
+        <div class="subtask">
+            <div class="subtask-header">
+                <span class="subtask-label">a)</span>
+                <span class="subtask-text">Berechnen Sie die kinetische Energie des PKW vor dem Bremsen.</span>
+            </div>
+            
+            <div class="hint-solution-buttons">
+                <button class="btn btn-hint" onclick="toggle('hint-2a')">Tipp anzeigen</button>
+                <button class="btn btn-solution" onclick="toggle('solution-2a')">Lösung anzeigen</button>
+            </div>
+            
+            <div id="hint-2a" class="hint-box">
+                <strong>Tipp:</strong> Wandeln Sie zuerst die Geschwindigkeit in m/s um! 
+                <br>Dann: E<sub>kin</sub> = ½ · m · v²
+            </div>
+            
+            <div id="solution-2a" class="solution-box">
+                <p><strong>Gegeben:</strong> m = 1200 kg, v₀ = 50 km/h</p>
+                <p><strong>Gesucht:</strong> E<sub>kin</sub></p>
+                <p><strong>Lösung:</strong></p>
+                <p>Umrechnung der Geschwindigkeit:</p>
+                <div class="formula-display">
+                    v₀ = 50 km/h = 50 / 3,6 m/s ≈ 13,89 m/s
+                </div>
+                <p>Kinetische Energie:</p>
+                <div class="formula-display">
+                    E<sub>kin</sub> = ½ · m · v²
+                </div>
+                <div class="formula-display">
+                    E<sub>kin</sub> = ½ · 1200 kg · (13,89 m/s)²
+                </div>
+                <div class="formula-display result">
+                    E<sub>kin</sub> ≈ 115.740 J ≈ 116 kJ
+                </div>
+            </div>
+        </div>
+
+        <!-- Teilaufgabe b -->
+        <div class="subtask">
+            <div class="subtask-header">
+                <span class="subtask-label">b)</span>
+                <span class="subtask-text">Berechnen Sie den Bremsweg des PKW.</span>
+            </div>
+            
+            <div class="hint-solution-buttons">
+                <button class="btn btn-hint" onclick="toggle('hint-2b')">Tipp anzeigen</button>
+                <button class="btn btn-solution" onclick="toggle('solution-2b')">Lösung anzeigen</button>
+            </div>
+            
+            <div id="hint-2b" class="hint-box">
+                <strong>Tipp:</strong> Die gesamte kinetische Energie muss durch Bremsarbeit abgebaut werden.
+                <br>Energieerhaltung: E<sub>kin</sub> = W<sub>Brems</sub> = F · s
+                <br>Stellen Sie nach s um!
+            </div>
+            
+            <div id="solution-2b" class="solution-box">
+                <p><strong>Ansatz:</strong> Die Bremsarbeit muss die kinetische Energie vollständig abbauen.</p>
+                <div class="formula-display">
+                    E<sub>kin</sub> = W<sub>Brems</sub>
+                </div>
+                <div class="formula-display">
+                    ½ · m · v² = F · s
+                </div>
+                <p>Umstellen nach s:</p>
+                <div class="formula-display">
+                    s = (m · v²) / (2 · F)
+                </div>
+                <div class="formula-display">
+                    s = (1200 kg · (13,89 m/s)²) / (2 · 8000 N)
+                </div>
+                <div class="formula-display result">
+                    s ≈ 14,5 m
+                </div>
+            </div>
+        </div>
+
+        <!-- Teilaufgabe c -->
+        <div class="subtask">
+            <div class="subtask-header">
+                <span class="subtask-label">c)</span>
+                <span class="subtask-text">Der Fahrer fährt nun doppelt so schnell (100 km/h). Um welchen Faktor verlängert sich der Bremsweg?</span>
+            </div>
+            
+            <div class="hint-solution-buttons">
+                <button class="btn btn-hint" onclick="toggle('hint-2c')">Tipp anzeigen</button>
+                <button class="btn btn-solution" onclick="toggle('solution-2c')">Lösung anzeigen</button>
+            </div>
+            
+            <div id="hint-2c" class="hint-box">
+                <strong>Tipp:</strong> Betrachten Sie die Formel s = (m · v²) / (2 · F).
+                <br>Wie hängt s von v ab? Was passiert, wenn v verdoppelt wird?
+            </div>
+            
+            <div id="solution-2c" class="solution-box">
+                <p><strong>Analyse der Formel:</strong></p>
+                <div class="formula-display">
+                    s = (m · v²) / (2 · F) &nbsp; → &nbsp; s ~ v²
+                </div>
+                <p>Der Bremsweg ist proportional zum <strong>Quadrat</strong> der Geschwindigkeit!</p>
+                <p>Wenn v verdoppelt wird (v → 2v):</p>
+                <div class="formula-display">
+                    s<sub>neu</sub> = (m · (2v)²) / (2 · F) = (m · 4v²) / (2 · F) = 4 · s<sub>alt</sub>
+                </div>
+                <div class="formula-display result">
+                    Der Bremsweg vervierfacht sich! → s ≈ 58 m
+                </div>
+                <p style="margin-top: 15px; padding: 12px; background: #fff3e0; border-radius: 6px;">
+                    <strong>⚠️ Wichtige Erkenntnis für die Verkehrssicherheit:</strong><br>
+                    Doppelte Geschwindigkeit bedeutet vierfachen Bremsweg!<br>
+                    Dreifache Geschwindigkeit → neunfacher Bremsweg!
+                </p>
+            </div>
+        </div>
+
+        <!-- Teilaufgabe d (Sternaufgabe) -->
+        <div class="subtask star-task">
+            <div class="subtask-header">
+                <span class="subtask-label">d) ⭐</span>
+                <span class="subtask-text">Bei einem Auffahrunfall prallt der PKW (1200 kg, 50 km/h) gegen ein stehendes Hindernis und kommt innerhalb von s = 0,5 m zum Stehen (Knautschzone). Berechnen Sie die mittlere Kraft, die auf das Fahrzeug wirkt, und vergleichen Sie diese mit der Gewichtskraft.</span>
+            </div>
+            
+            <div class="hint-solution-buttons">
+                <button class="btn btn-hint" onclick="toggle('hint-2d1')">Tipp 1: Energieansatz</button>
+                <button class="btn btn-hint" onclick="toggle('hint-2d2')">Tipp 2: Vergleich</button>
+                <button class="btn btn-solution" onclick="toggle('solution-2d')">Lösung anzeigen</button>
+            </div>
+            
+            <div id="hint-2d1" class="hint-box">
+                <strong>Tipp 1:</strong> Die kinetische Energie wird auf sehr kurzem Weg abgebaut.
+                <br>Nutzen Sie: E<sub>kin</sub> = F · s und lösen Sie nach F auf.
+            </div>
+            
+            <div id="hint-2d2" class="hint-box">
+                <strong>Tipp 2:</strong> Die Gewichtskraft berechnet sich mit F<sub>G</sub> = m · g.
+                <br>Bilden Sie das Verhältnis F / F<sub>G</sub> – dieses gibt die "g-Belastung" an.
+            </div>
+            
+            <div id="solution-2d" class="solution-box">
+                <p><strong>Gegeben:</strong> m = 1200 kg, v = 13,89 m/s, s = 0,5 m</p>
+                
+                <div class="derivation-step">
+                    <h4>Schritt 1: Aufprallkraft berechnen</h4>
+                    <div class="formula-display">
+                        E<sub>kin</sub> = F · s &nbsp; → &nbsp; F = E<sub>kin</sub> / s
+                    </div>
+                    <div class="formula-display">
+                        F = 115.740 J / 0,5 m
+                    </div>
+                    <div class="formula-display result">
+                        F ≈ 231.500 N ≈ 232 kN
+                    </div>
+                </div>
+                
+                <div class="derivation-step">
+                    <h4>Schritt 2: Vergleich mit der Gewichtskraft</h4>
+                    <div class="formula-display">
+                        F<sub>G</sub> = m · g = 1200 kg · 9,81 m/s² ≈ 11.772 N
+                    </div>
+                    <div class="formula-display">
+                        F / F<sub>G</sub> = 231.500 N / 11.772 N ≈ 19,7
+                    </div>
+                    <div class="formula-display result">
+                        Die Aufprallkraft entspricht etwa dem 20-fachen der Gewichtskraft (≈ 20 g)
+                    </div>
+                </div>
+                
+                <div class="derivation-step" style="background: #ffebee;">
+                    <h4>Physikalische Bedeutung</h4>
+                    <p>Bei einem solchen Aufprall wirkt auf die Insassen eine Verzögerung von etwa <strong>20 g</strong> (das 20-fache der Erdbeschleunigung).</p>
+                    <ul style="margin: 10px 0; padding-left: 25px;">
+                        <li>Ein 75 kg schwerer Mensch würde mit einer Kraft von ca. <strong>15.000 N</strong> (≈ 1,5 Tonnen) nach vorne geschleudert</li>
+                        <li>Ohne Sicherheitsgurt sind schwere Verletzungen unvermeidlich</li>
+                        <li>Die Knautschzone verlängert den Bremsweg und reduziert so die Aufprallkraft</li>
+                    </ul>
+                    <p style="margin-top: 10px;"><strong>Vergleich:</strong> Bei s = 0,1 m (ohne Knautschzone) wäre F ≈ 100 g – das wäre tödlich!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
