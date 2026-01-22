@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lineare Regression mit LibreOffice Calc | Physik-LK 11NP</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        
+        header h1 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            color: #2563eb;
+        }
+        
+        header .subtitle {
+            color: #64748b;
+            font-size: 1.1em;
+        }
+        
+        .info-box {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        
+        .info-box h2 {
+            color: #1e293b;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-box p {
+            color: #475569;
+            margin-bottom: 10px;
+        }
+        
+        .formula-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 15px 0;
+            font-family: 'Times New Roman', serif;
+            font-size: 1.1em;
+        }
+        
+        .hint-box {
+            background: #ecfdf5;
+            border-left: 4px solid #10b981;
+            padding: 15px 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 15px 0;
+        }
+        
+        .warning-box {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 15px 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 15px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        th, td {
+            border: 1px solid #e2e8f0;
+            padding: 10px 15px;
+            text-align: center;
+        }
+        
+        th {
+            background: #f1f5f9;
+            font-weight: 600;
+            color: #334155;
+        }
+        
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .checklist li {
+            padding: 12px 15px;
+            margin: 8px 0;
+            background: #f8fafc;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .checklist li:hover {
+            background: #f1f5f9;
+        }
+        
+        .checklist li.checked {
+            background: #ecfdf5;
+            text-decoration: line-through;
+            color: #64748b;
+        }
+        
+        .checklist input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .step-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            border-left: 5px solid #2563eb;
+        }
+        
+        .step-card h3 {
+            color: #2563eb;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .step-card ol {
+            margin-left: 20px;
+            color: #475569;
+        }
+        
+        .step-card ol li {
+            margin: 10px 0;
+        }
+        
+        code {
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.95em;
+            color: #0f172a;
+        }
+        
+        .progress-container {
+            background: #e2e8f0;
+            border-radius: 10px;
+            height: 12px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #2563eb, #3b82f6);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        .collapsible {
+            background: #f8fafc;
+            border: none;
+            padding: 15px 20px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            color: #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+            transition: background 0.2s;
+        }
+        
+        .collapsible:hover {
+            background: #f1f5f9;
+        }
+        
+        .collapsible::after {
+            content: '▼';
+            font-size: 0.8em;
+            transition: transform 0.3s;
+        }
+        
+        .collapsible.active::after {
+            transform: rotate(180deg);
+        }
+        
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: white;
+            border-radius: 0 0 10px 10px;
+        }
+        
+        .collapsible-content.show {
+            max-height: 2000px;
+        }
+        
+        .collapsible-inner {
+            padding: 20px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #94a3b8;
+            font-size: 0.9em;
+        }
+        
+        footer a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+        
+        .function-table {
+            font-size: 0.95em;
+        }
+        
+        .function-table td:first-child {
+            font-family: 'Consolas', 'Monaco', monospace;
+            background: #f8fafc;
+            text-align: left;
+        }
+        
+        .ai-prompt-box {
+            background: #f5f3ff;
+            border: 2px solid #8b5cf6;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .ai-prompt-box h4 {
+            color: #7c3aed;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+        
+        .ai-prompt-box p {
+            font-family: 'Consolas', monospace;
+            font-size: 0.9em;
+            color: #4c1d95;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 0;
+        }
+        
+        .copy-btn {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85em;
+            margin-top: 10px;
+        }
+        
+        .copy-btn:hover {
+            background: #7c3aed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Zurück zur Übersicht</a>
+        
+        <header>
+            <h1>📊 Lineare Regression mit LibreOffice Calc</h1>
+            <div class="subtitle">Temperaturabhängigkeit eines Metallwiderstands</div>
+        </header>
+        
+        <div class="info-box">
+            <h2>🎯 Lernziele</h2>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+            </div>
+            <div class="progress-text" id="progressText">0 von 8 Kompetenzen erreicht</div>
+            
+            <ul class="checklist" id="checklist">
+                <li data-id="1"><input type="checkbox"> Ich kann Messdaten in LibreOffice Calc eingeben und mit Formeln erweitern.</li>
+                <li data-id="2"><input type="checkbox"> Ich kann ein Streudiagramm (XY-Diagramm) erstellen.</li>
+                <li data-id="3"><input type="checkbox"> Ich kann Achsen korrekt beschriften (Größe und Einheit).</li>
+                <li data-id="4"><input type="checkbox"> Ich kann Pfeile an Achsenenden hinzufügen und die Skalierung anpassen.</li>
+                <li data-id="5"><input type="checkbox"> Ich kann eine Trendlinie einfügen und Gleichung + R² anzeigen lassen.</li>
+                <li data-id="6"><input type="checkbox"> Ich kann die Regressionsfunktionen STEIGUNG, ACHSENABSCHNITT und BESTIMMTHEITSMASS nutzen.</li>
+                <li data-id="7"><input type="checkbox"> Ich kann aus der Geradengleichung physikalische Größen (R₀, α) bestimmen.</li>
+                <li data-id="8"><input type="checkbox"> Ich kann ein Diagramm als Bild exportieren und in Writer einfügen.</li>
+            </ul>
+        </div>
+        
+        <div class="info-box">
+            <h2>🌡️ Schreibweise der Temperatur</h2>
+            <p>In der Physik unterscheidet man zwei Temperaturangaben:</p>
+            <table>
+                <tr>
+                    <th>Symbol</th>
+                    <th>Name</th>
+                    <th>Einheit</th>
+                    <th>Nullpunkt</th>
+                </tr>
+                <tr>
+                    <td><em>T</em></td>
+                    <td>Absolute Temperatur</td>
+                    <td>Kelvin (K)</td>
+                    <td>Absoluter Nullpunkt (−273,15 °C)</td>
+                </tr>
+                <tr>
+                    <td><em>ϑ</em> (Theta)</td>
+                    <td>Celsius-Temperatur</td>
+                    <td>Grad Celsius (°C)</td>
+                    <td>Gefrierpunkt von Wasser</td>
+                </tr>
+            </table>
+            <div class="hint-box">
+                <strong>Merke:</strong> Wenn Sie ϑ = 20 °C lesen, wissen Sie sofort, dass Celsius gemeint ist. 
+                T = 20 K wäre hingegen extrem kalt (−253 °C)!<br><br>
+                Für <strong>Temperaturdifferenzen</strong> gilt: Δϑ in °C = ΔT in K (gleiche Zahlenwerte!)
+            </div>
+        </div>
+        
+        <div class="info-box">
+            <h2>📐 Physikalischer Hintergrund</h2>
+            <p>Der elektrische Widerstand eines Metalldrahts steigt mit zunehmender Temperatur:</p>
+            <div class="formula-box">
+                <strong>R(ϑ) = R₀ · (1 + α · Δϑ) = R₀ + R₀ · α · (ϑ − ϑ₀)</strong>
+            </div>
+            <p><strong>R₀</strong> = Widerstand bei Bezugstemperatur ϑ₀ (meist 20 °C)</p>
+            <p><strong>α</strong> = Temperaturkoeffizient des Widerstands</p>
+            <p style="margin-top: 10px;">Für Kupfer: α ≈ 0,00393 K⁻¹</p>
+        </div>
+        
+        <div class="info-box">
+            <h2>📋 Messdaten</h2>
+            <p>Verwenden Sie diese Messwerte eines Kupferdrahts:</p>
+            <table>
+                <tr>
+                    <th>ϑ in °C</th>
+                    <td>20</td>
+                    <td>30</td>
+                    <td>40</td>
+                    <td>50</td>
+                    <td>60</td>
+                    <td>70</td>
+                    <td>80</td>
+                    <td>90</td>
+                </tr>
+                <tr>
+                    <th>R in Ω</th>
+                    <td>47,0</td>
+                    <td>48,8</td>
+                    <td>50,9</td>
+                    <td>52,4</td>
+                    <td>54,3</td>
+                    <td>56,1</td>
+                    <td>57,6</td>
+                    <td>59,8</td>
+                </tr>
+                <tr>
+                    <th>Δϑ in K</th>
+                    <td>0</td>
+                    <td>10</td>
+                    <td>20</td>
+                    <td>30</td>
+                    <td>40</td>
+                    <td>50</td>
+                    <td>60</td>
+                    <td>70</td>
+                </tr>
+            </table>
+            <p style="margin-top: 10px; color: #64748b; font-size: 0.9em;">
+                Die dritte Zeile berechnen Sie in Calc mit der Formel: <code>=A2-20</code> (wenn ϑ in Zelle A2 steht)
+            </p>
+        </div>
+        
+        <div class="step-card">
+            <h3>Schritt 1: Diagramm erstellen</h3>
+            <ol>
+                <li>Markieren Sie die Spalten <strong>Δϑ</strong> und <strong>R</strong> (mit Überschriften)</li>
+                <li>Menü: <strong>Einfügen → Diagramm</strong></li>
+                <li>Diagrammtyp: <strong>XY (Streuung) → Nur Punkte</strong></li>
+                <li>Datenbereich prüfen, weiter bis <strong>Fertigstellen</strong></li>
+            </ol>
+        </div>
+        
+        <div class="step-card">
+            <h3>Schritt 2: Achsen beschriften</h3>
+            <ol>
+                <li>Doppelklick ins Diagramm (Bearbeitungsmodus)</li>
+                <li>Doppelklick auf eine Achse → Reiter <strong>Beschriftung</strong></li>
+                <li>x-Achse: <code>Δϑ in K</code></li>
+                <li>y-Achse: <code>R in Ω</code></li>
+            </ol>
+            <div class="warning-box">
+                <strong>Wichtig:</strong> Achsenbeschriftungen immer mit <strong>Größe und Einheit</strong> angeben!
+            </div>
+        </div>
+        
+        <div class="step-card">
+            <h3>Schritt 3: Pfeile und Skalierung</h3>
+            <ol>
+                <li>Doppelklick auf eine Achse → Reiter <strong>Positionierung</strong></li>
+                <li>Haken bei <strong>„Pfeil anzeigen"</strong> setzen</li>
+                <li>Für beide Achsen wiederholen!</li>
+                <li>Reiter <strong>Skalierung</strong> → Minimum auf <strong>0</strong> setzen</li>
+            </ol>
+            <div class="warning-box">
+                <strong>Beide Achsen müssen bei 0 beginnen!</strong>
+            </div>
+        </div>
+        
+        <div class="step-card">
+            <h3>Schritt 4: Trendlinie einfügen</h3>
+            <ol>
+                <li>Klicken Sie im Diagramm auf einen <strong>Datenpunkt</strong></li>
+                <li>Rechtsklick → <strong>Trendlinie einfügen</strong></li>
+                <li>Typ: <strong>Linear</strong></li>
+                <li>Häkchen setzen bei:
+                    <ul>
+                        <li>☑ Gleichung anzeigen</li>
+                        <li>☑ Bestimmtheitsmaß anzeigen (R²)</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+        
+        <div class="info-box">
+            <h2>🔢 Regressionsfunktionen in Calc</h2>
+            <table class="function-table">
+                <tr>
+                    <th>Funktion</th>
+                    <th>Bedeutung</th>
+                    <th>Beispiel</th>
+                </tr>
+                <tr>
+                    <td>=STEIGUNG(Y;X)</td>
+                    <td>Steigung m der Ausgleichsgeraden</td>
+                    <td><code>=STEIGUNG(B2:B9;C2:C9)</code></td>
+                </tr>
+                <tr>
+                    <td>=ACHSENABSCHNITT(Y;X)</td>
+                    <td>y-Achsenabschnitt b</td>
+                    <td><code>=ACHSENABSCHNITT(B2:B9;C2:C9)</code></td>
+                </tr>
+                <tr>
+                    <td>=BESTIMMTHEITSMASS(Y;X)</td>
+                    <td>Bestimmtheitsmaß R²</td>
+                    <td><code>=BESTIMMTHEITSMASS(B2:B9;C2:C9)</code></td>
+                </tr>
+            </table>
+            <div class="hint-box">
+                <strong>Tipp:</strong> Die englischen Funktionsnamen <code>SLOPE</code>, <code>INTERCEPT</code> und <code>RSQ</code> funktionieren auch!
+            </div>
+        </div>
+        
+        <div class="info-box">
+            <h2>🧮 Auswertung</h2>
+            
+            <button class="collapsible">Erwartete Ergebnisse anzeigen</button>
+            <div class="collapsible-content">
+                <div class="collapsible-inner">
+                    <table>
+                        <tr>
+                            <th>Größe</th>
+                            <th>Wert</th>
+                        </tr>
+                        <tr>
+                            <td>Geradengleichung</td>
+                            <td>y = 0,1829x + 46,96</td>
+                        </tr>
+                        <tr>
+                            <td>Bestimmtheitsmaß R²</td>
+                            <td>0,9988</td>
+                        </tr>
+                        <tr>
+                            <td>R₀ (Achsenabschnitt)</td>
+                            <td>46,96 Ω ≈ 47,0 Ω</td>
+                        </tr>
+                        <tr>
+                            <td>α = Steigung / R₀</td>
+                            <td>0,1829 / 46,96 = 0,00390 K⁻¹</td>
+                        </tr>
+                        <tr>
+                            <td>Abweichung vom Literaturwert</td>
+                            <td>0,8 %</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <button class="collapsible">Interpretation von R²</button>
+            <div class="collapsible-content">
+                <div class="collapsible-inner">
+                    <p><strong>R² = 0,9988</strong> bedeutet:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>99,88 % der Varianz wird durch den linearen Zusammenhang erklärt</li>
+                        <li>Die Messpunkte liegen sehr dicht an der Ausgleichsgeraden</li>
+                        <li>Der lineare Ansatz ist für diesen Temperaturbereich sehr gut geeignet</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="step-card">
+            <h3>Schritt 5: Diagramm exportieren und einfügen</h3>
+            <ol>
+                <li>Klicken Sie auf den <strong>Rand des Diagramms</strong> (nicht in das Diagramm)</li>
+                <li>Rechtsklick → <strong>Als Bild exportieren</strong> → PNG wählen</li>
+                <li>Öffnen Sie <strong>LibreOffice Writer</strong></li>
+                <li>Menü: <strong>Einfügen → Bild</strong> → Ihre PNG-Datei auswählen</li>
+                <li>Rechtsklick auf Bild → <strong>Beschriftung einfügen</strong> für Bildunterschrift</li>
+            </ol>
+        </div>
+        
+        <div class="info-box">
+            <h2>✅ Checkliste: Professionelles Diagramm</h2>
+            <ul class="checklist" id="diagramChecklist">
+                <li><input type="checkbox"> Achsenbeschriftung mit Größe und Einheit</li>
+                <li><input type="checkbox"> Pfeile an beiden Achsenenden</li>
+                <li><input type="checkbox"> Beide Achsen beginnen bei 0</li>
+                <li><input type="checkbox"> Geradengleichung sichtbar</li>
+                <li><input type="checkbox"> Bestimmtheitsmaß R² sichtbar</li>
+                <li><input type="checkbox"> Keine überflüssige Legende</li>
+                <li><input type="checkbox"> Kein störender Standardtitel</li>
+            </ul>
+        </div>
+        
+        <div class="info-box">
+            <h2>🤖 KI-Prompt zum Weiterüben</h2>
+            <div class="ai-prompt-box">
+                <h4>Kopieren Sie diesen Prompt für weitere Übungsaufgaben:</h4>
+                <p id="aiPrompt">Ich lerne gerade lineare Regression in der Physik. Erstelle mir eine neue Messreihe (8 Werte) zu einem anderen physikalischen Zusammenhang (z.B. Hookesches Gesetz, Ohmsches Gesetz oder gleichförmige Bewegung). Die Daten sollen realistisch streuen. Gib mir nur die Messwerte, ich möchte die Regression selbst in LibreOffice Calc durchführen. Nenne auch den erwarteten Literaturwert, damit ich mein Ergebnis vergleichen kann.</p>
+                <button class="copy-btn" onclick="copyPrompt()">📋 Kopieren</button>
+                <a href="https://aistudio.google.com/" target="_blank" class="copy-btn" style="text-decoration: none; margin-left: 5px;">Google AI Studio</a>
+                <a href="https://chat.openai.com/" target="_blank" class="copy-btn" style="text-decoration: none; margin-left: 5px;">ChatGPT</a>
+            </div>
+        </div>
+        
+        <footer>
+            <a href="index.html">← Zurück zur Übersicht</a><br><br>
+            Lore-Lorentz-Schule | Physik-LK 11NP | 2025
+        </footer>
+    </div>
+    
+    <script>
+        // Fortschritt speichern und laden
+        const STORAGE_KEY = 'regression-calc-progress';
+        
+        function saveProgress() {
+            const checkboxes = document.querySelectorAll('#checklist input[type="checkbox"]');
+            const progress = Array.from(checkboxes).map(cb => cb.checked);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+        }
+        
+        function loadProgress() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                const progress = JSON.parse(saved);
+                const checkboxes = document.querySelectorAll('#checklist input[type="checkbox"]');
+                checkboxes.forEach((cb, i) => {
+                    if (progress[i]) {
+                        cb.checked = true;
+                        cb.parentElement.classList.add('checked');
+                    }
+                });
+                updateProgressBar();
+            }
+        }
+        
+        function updateProgressBar() {
+            const checkboxes = document.querySelectorAll('#checklist input[type="checkbox"]');
+            const checked = document.querySelectorAll('#checklist input[type="checkbox"]:checked').length;
+            const total = checkboxes.length;
+            const percent = (checked / total) * 100;
+            
+            document.getElementById('progressBar').style.width = percent + '%';
+            document.getElementById('progressText').textContent = checked + ' von ' + total + ' Kompetenzen erreicht';
+        }
+        
+        // Event Listener für Checkboxen
+        document.querySelectorAll('#checklist li').forEach(li => {
+            li.addEventListener('click', function(e) {
+                if (e.target.tagName !== 'INPUT') {
+                    const checkbox = this.querySelector('input[type="checkbox"]');
+                    checkbox.checked = !checkbox.checked;
+                }
+                this.classList.toggle('checked', this.querySelector('input').checked);
+                updateProgressBar();
+                saveProgress();
+            });
+        });
+        
+        // Collapsible Sections
+        document.querySelectorAll('.collapsible').forEach(button => {
+            button.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                content.classList.toggle('show');
+            });
+        });
+        
+        // Prompt kopieren
+        function copyPrompt() {
+            const prompt = document.getElementById('aiPrompt').textContent;
+            navigator.clipboard.writeText(prompt).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = '✓ Kopiert!';
+                setTimeout(() => btn.textContent = '📋 Kopieren', 2000);
+            });
+        }
+        
+        // Beim Laden
+        loadProgress();
+    </script>
+</body>
+</html>
