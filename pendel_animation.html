@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendel mit Hindernis – Animation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            color: #fff;
+        }
+        
+        h1 {
+            margin-bottom: 10px;
+            font-size: 1.8em;
+            text-align: center;
+        }
+        
+        .subtitle {
+            color: #aaa;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            max-width: 1400px;
+        }
+        
+        .canvas-container {
+            background: #0f0f1a;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        }
+        
+        canvas {
+            display: block;
+            border-radius: 10px;
+        }
+        
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .controls {
+            background: #0f0f1a;
+            border-radius: 15px;
+            padding: 25px;
+            min-width: 320px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        }
+        
+        .control-group {
+            margin-bottom: 18px;
+        }
+        
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #ddd;
+        }
+        
+        .control-group input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #2a2a4a;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .control-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #4facfe;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(79, 172, 254, 0.5);
+        }
+        
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75em;
+            color: #888;
+            margin-top: 4px;
+        }
+        
+        .value-display {
+            text-align: right;
+            color: #4facfe;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-top: 5px;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-start {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: #000;
+        }
+        
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(79, 172, 254, 0.4);
+        }
+        
+        .btn-reset {
+            background: #2a2a4a;
+            color: #fff;
+        }
+        
+        .btn-reset:hover {
+            background: #3a3a5a;
+        }
+        
+        .scope-container {
+            background: #0f0f1a;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        }
+        
+        .scope-title {
+            color: #aaa;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+            font-size: 0.85em;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 4px;
+            border-radius: 2px;
+        }
+        
+        .legend-pot { background: #667eea; }
+        .legend-kin { background: #f5576c; }
+        .legend-tot { background: #4facfe; }
+    </style>
+</head>
+<body>
+    <h1>Pendel mit Hindernis</h1>
+    <p class="subtitle">Energieerhaltung beim Fadenpendel</p>
+    
+    <div class="container">
+        <div class="canvas-container">
+            <canvas id="pendulum" width="450" height="450"></canvas>
+        </div>
+        
+        <div class="right-panel">
+            <div class="controls">
+                <div class="control-group">
+                    <label>Pendellänge l</label>
+                    <input type="range" id="length" min="1" max="3" step="0.1" value="2">
+                    <div class="value-display"><span id="lengthVal">2.0</span> m</div>
+                </div>
+                
+                <div class="control-group">
+                    <label>Stiftabstand d</label>
+                    <input type="range" id="pinDist" min="0.2" max="1.8" step="0.1" value="1.2">
+                    <div class="value-display"><span id="pinDistVal">1.2</span> m</div>
+                </div>
+                
+                <div class="control-group">
+                    <label>Startwinkel φ₀</label>
+                    <input type="range" id="angle" min="20" max="80" step="1" value="60">
+                    <div class="value-display"><span id="angleVal">60</span>°</div>
+                </div>
+                
+                <div class="control-group">
+                    <label>Dämpfung (Medium)</label>
+                    <input type="range" id="damping" min="0" max="100" step="1" value="0">
+                    <div class="slider-labels">
+                        <span>Vakuum</span>
+                        <span>Luft</span>
+                        <span>Wasser</span>
+                        <span>Honig</span>
+                    </div>
+                </div>
+                
+                <div class="buttons">
+                    <button class="btn-start" id="startBtn">▶ Start</button>
+                    <button class="btn-reset" id="resetBtn">↺ Reset</button>
+                </div>
+            </div>
+            
+            <div class="scope-container">
+                <div class="scope-title">Energie-Oszilloskop</div>
+                <canvas id="scope" width="320" height="180"></canvas>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color legend-pot"></div>
+                        <span>E<sub>pot</sub></span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color legend-kin"></div>
+                        <span>E<sub>kin</sub></span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color legend-tot"></div>
+                        <span>E<sub>ges</sub></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const canvas = document.getElementById('pendulum');
+        const ctx = canvas.getContext('2d');
+        const scopeCanvas = document.getElementById('scope');
+        const scopeCtx = scopeCanvas.getContext('2d');
+        
+        // Physikalische Konstanten
+        const g = 9.81;
+        const mass = 1.0;
+        const scale = 110;
+        
+        // Aufhängungspunkt (Pixel)
+        const pivotX = canvas.width / 2;
+        const pivotY = 70;
+        
+        // Parameter
+        let length, pinDist, startAngle, dampingCoeff;
+        
+        // Zustand: Position (x,y) und Geschwindigkeit (vx,vy) des Pendelkörpers
+        let x, y, vx, vy;
+        let isRunning = false;
+        let useShortPendulum = false; // true wenn Faden am Stift hängt
+        
+        // Oszilloskop
+        const scopeData = { pot: [], kin: [], tot: [], maxPoints: 320 };
+        let E0 = 1;
+        
+        // UI
+        const lengthSlider = document.getElementById('length');
+        const pinDistSlider = document.getElementById('pinDist');
+        const angleSlider = document.getElementById('angle');
+        const dampingSlider = document.getElementById('damping');
+        const startBtn = document.getElementById('startBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        
+        function getParams() {
+            length = parseFloat(lengthSlider.value);
+            pinDist = parseFloat(pinDistSlider.value);
+            startAngle = parseFloat(angleSlider.value) * Math.PI / 180;
+            
+            // Dämpfungskoeffizient (pro Sekunde) - sehr schwach
+            const dampVal = parseFloat(dampingSlider.value);
+            dampingCoeff = dampVal * 0.005; // 0 bis 0.5 pro Sekunde
+            
+            if (pinDist >= length - 0.1) {
+                pinDist = length - 0.1;
+                pinDistSlider.value = pinDist;
+            }
+            
+            document.getElementById('lengthVal').textContent = length.toFixed(1);
+            document.getElementById('pinDistVal').textContent = pinDist.toFixed(1);
+            document.getElementById('angleVal').textContent = angleSlider.value;
+        }
+        
+        function init() {
+            getParams();
+            
+            // Startposition: links ausgelenkt, Winkel negativ
+            x = -length * Math.sin(startAngle);
+            y = length * Math.cos(startAngle);
+            vx = 0;
+            vy = 0;
+            
+            useShortPendulum = false;
+            isRunning = false;
+            startBtn.textContent = '▶ Start';
+            
+            // Anfangsenergie
+            const h0 = length - y; // Höhe über tiefstem Punkt
+            E0 = mass * g * h0;
+            
+            scopeData.pot = [];
+            scopeData.kin = [];
+            scopeData.tot = [];
+            
+            draw();
+            drawScope();
+        }
+        
+        function getAnchor() {
+            // Gibt den aktuellen Drehpunkt zurück (Aufhängung oder Stift)
+            if (useShortPendulum) {
+                return { x: 0, y: pinDist }; // Stift in Metern
+            } else {
+                return { x: 0, y: 0 }; // Aufhängung
+            }
+        }
+        
+        function getCurrentLength() {
+            return useShortPendulum ? (length - pinDist) : length;
+        }
+        
+        function updatePhysics(dt) {
+            // Zuerst prüfen ob Übergang stattfindet
+            checkPinTransition();
+            
+            const anchor = getAnchor();
+            const L = getCurrentLength();
+            
+            // Relativer Vektor vom Anker zur Masse
+            let rx = x - anchor.x;
+            let ry = y - anchor.y;
+            let r = Math.sqrt(rx*rx + ry*ry);
+            
+            // Einheitsvektor radial (vom Anker zur Masse)
+            let nx = rx / r;
+            let ny = ry / r;
+            
+            // Tangentialvektor (senkrecht, mathematisch positiv = gegen Uhrzeigersinn)
+            let tx = -ny;
+            let ty = nx;
+            
+            // Aktuelle Geschwindigkeit in tangentialer Richtung
+            let vTan = vx * tx + vy * ty;
+            
+            // Tangentiale Beschleunigung durch Gravitation
+            // Gravitation zeigt in +y Richtung (nach unten)
+            // Tangentialkomponente: g * (Einheitsvektor_y dot Tangentialvektor) = g * ty
+            const aTan = g * ty;
+            
+            // Geschwindigkeit aktualisieren
+            vTan += aTan * dt;
+            
+            // Dämpfung
+            vTan *= (1 - dampingCoeff * dt);
+            
+            // Position aktualisieren (entlang Tangente)
+            x += vTan * tx * dt;
+            y += vTan * ty * dt;
+            
+            // Constraint: zurück auf Kreisbahn projizieren
+            rx = x - anchor.x;
+            ry = y - anchor.y;
+            r = Math.sqrt(rx*rx + ry*ry);
+            
+            // Position korrigieren
+            x = anchor.x + (rx / r) * L;
+            y = anchor.y + (ry / r) * L;
+            
+            // Geschwindigkeit tangential setzen
+            nx = (x - anchor.x) / L;
+            ny = (y - anchor.y) / L;
+            tx = -ny;
+            ty = nx;
+            vx = vTan * tx;
+            vy = vTan * ty;
+        }
+        
+        function checkPinTransition() {
+            // Stift ist bei (0, pinDist)
+            // Die Geschwindigkeit (v) bleibt beim Übergang erhalten!
+            // Nur der Drehpunkt wechselt.
+            
+            const wasShort = useShortPendulum;
+            
+            // Wechsel zum kurzen Pendel: Masse geht nach rechts (x >= 0) 
+            // und ist unterhalb des Stifts (y > pinDist)
+            if (!useShortPendulum && x >= 0 && y > pinDist) {
+                useShortPendulum = true;
+            }
+            
+            // Wechsel zurück zum langen Pendel: Masse geht nach links (x < 0)
+            if (useShortPendulum && x < 0) {
+                useShortPendulum = false;
+            }
+            
+            // Beim Wechsel: Geschwindigkeit bleibt gleich (Impulserhaltung)
+            // Keine Anpassung nötig, da wir mit (vx, vy) arbeiten
+        }
+        
+        function getEnergies() {
+            // Höhe über dem tiefsten Punkt (y = length)
+            const h = length - y;
+            
+            const v = Math.sqrt(vx*vx + vy*vy);
+            
+            const Epot = mass * g * h;
+            const Ekin = 0.5 * mass * v * v;
+            const Etot = Epot + Ekin;
+            
+            return { Epot, Ekin, Etot, v, h };
+        }
+        
+        function updateScope() {
+            const { Epot, Ekin, Etot } = getEnergies();
+            
+            scopeData.pot.push(Epot / E0);
+            scopeData.kin.push(Ekin / E0);
+            scopeData.tot.push(Etot / E0);
+            
+            if (scopeData.pot.length > scopeData.maxPoints) {
+                scopeData.pot.shift();
+                scopeData.kin.shift();
+                scopeData.tot.shift();
+            }
+        }
+        
+        function drawScope() {
+            const w = scopeCanvas.width;
+            const h = scopeCanvas.height;
+            
+            scopeCtx.fillStyle = '#0a0a15';
+            scopeCtx.fillRect(0, 0, w, h);
+            
+            // Gitter
+            scopeCtx.strokeStyle = '#1a1a3a';
+            scopeCtx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const yPos = (h / 4) * i;
+                scopeCtx.beginPath();
+                scopeCtx.moveTo(0, yPos);
+                scopeCtx.lineTo(w, yPos);
+                scopeCtx.stroke();
+            }
+            for (let i = 0; i <= 8; i++) {
+                const xPos = (w / 8) * i;
+                scopeCtx.beginPath();
+                scopeCtx.moveTo(xPos, 0);
+                scopeCtx.lineTo(xPos, h);
+                scopeCtx.stroke();
+            }
+            
+            scopeCtx.fillStyle = '#555';
+            scopeCtx.font = '10px sans-serif';
+            scopeCtx.fillText('E₀', 5, 15);
+            scopeCtx.fillText('0', 5, h - 5);
+            
+            function drawCurve(data, color) {
+                if (data.length < 2) return;
+                scopeCtx.strokeStyle = color;
+                scopeCtx.lineWidth = 2;
+                scopeCtx.beginPath();
+                for (let i = 0; i < data.length; i++) {
+                    const xPos = (i / scopeData.maxPoints) * w;
+                    const yPos = h - Math.min(1.1, data[i]) * (h - 10) - 5;
+                    if (i === 0) scopeCtx.moveTo(xPos, yPos);
+                    else scopeCtx.lineTo(xPos, yPos);
+                }
+                scopeCtx.stroke();
+            }
+            
+            drawCurve(scopeData.tot, '#4facfe');
+            drawCurve(scopeData.pot, '#667eea');
+            drawCurve(scopeData.kin, '#f5576c');
+        }
+        
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Gitter
+            ctx.strokeStyle = '#1a1a3a';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < canvas.width; i += 40) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, canvas.height);
+                ctx.stroke();
+            }
+            for (let i = 0; i < canvas.height; i += 40) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(canvas.width, i);
+                ctx.stroke();
+            }
+            
+            // Tiefster Punkt (h=0 Linie)
+            const lowestY = pivotY + length * scale;
+            ctx.strokeStyle = '#333';
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(50, lowestY);
+            ctx.lineTo(canvas.width - 50, lowestY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.fillStyle = '#555';
+            ctx.font = '12px sans-serif';
+            ctx.fillText('h = 0', canvas.width - 45, lowestY + 4);
+            
+            // Aufhängung
+            ctx.fillStyle = '#666';
+            ctx.fillRect(pivotX - 40, pivotY - 15, 80, 15);
+            ctx.beginPath();
+            ctx.arc(pivotX, pivotY, 6, 0, Math.PI * 2);
+            ctx.fillStyle = '#888';
+            ctx.fill();
+            
+            // Stift
+            const pinScreenY = pivotY + pinDist * scale;
+            ctx.beginPath();
+            ctx.arc(pivotX, pinScreenY, 8, 0, Math.PI * 2);
+            ctx.fillStyle = '#ff6b6b';
+            ctx.fill();
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.fillStyle = '#ff6b6b';
+            ctx.font = '14px sans-serif';
+            ctx.fillText('Stift', pivotX + 15, pinScreenY + 5);
+            
+            // d-Markierung
+            ctx.strokeStyle = '#888';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(pivotX - 70, pivotY);
+            ctx.lineTo(pivotX - 70, pinScreenY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(pivotX - 75, pivotY);
+            ctx.lineTo(pivotX - 65, pivotY);
+            ctx.moveTo(pivotX - 75, pinScreenY);
+            ctx.lineTo(pivotX - 65, pinScreenY);
+            ctx.stroke();
+            ctx.fillStyle = '#888';
+            ctx.font = '14px sans-serif';
+            ctx.fillText('d', pivotX - 85, (pivotY + pinScreenY) / 2 + 5);
+            
+            // Pendelkörper Position in Pixeln
+            const bobScreenX = pivotX + x * scale;
+            const bobScreenY = pivotY + y * scale;
+            
+            // Faden zeichnen
+            ctx.lineWidth = 3;
+            if (useShortPendulum) {
+                // Faden von Aufhängung zum Stift
+                ctx.strokeStyle = '#4facfe';
+                ctx.beginPath();
+                ctx.moveTo(pivotX, pivotY);
+                ctx.lineTo(pivotX, pinScreenY);
+                ctx.stroke();
+                // Faden vom Stift zur Kugel
+                ctx.strokeStyle = '#f093fb';
+                ctx.beginPath();
+                ctx.moveTo(pivotX, pinScreenY);
+                ctx.lineTo(bobScreenX, bobScreenY);
+                ctx.stroke();
+                // l' Beschriftung
+                ctx.fillStyle = '#f093fb';
+                ctx.font = 'italic 14px serif';
+                ctx.fillText("l'", (pivotX + bobScreenX) / 2 + 10, (pinScreenY + bobScreenY) / 2);
+            } else {
+                // Faden von Aufhängung zur Kugel
+                ctx.strokeStyle = '#4facfe';
+                ctx.beginPath();
+                ctx.moveTo(pivotX, pivotY);
+                ctx.lineTo(bobScreenX, bobScreenY);
+                ctx.stroke();
+                // l Beschriftung
+                ctx.fillStyle = '#4facfe';
+                ctx.font = 'italic 16px serif';
+                ctx.fillText('l', (pivotX + bobScreenX) / 2 - 20, (pivotY + bobScreenY) / 2);
+            }
+            
+            // Pendelkugel
+            const gradient = ctx.createRadialGradient(bobScreenX - 5, bobScreenY - 5, 0, bobScreenX, bobScreenY, 20);
+            gradient.addColorStop(0, '#fff');
+            gradient.addColorStop(0.3, useShortPendulum ? '#f093fb' : '#4facfe');
+            gradient.addColorStop(1, useShortPendulum ? '#764ba2' : '#0066cc');
+            ctx.beginPath();
+            ctx.arc(bobScreenX, bobScreenY, 20, 0, Math.PI * 2);
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Infoanzeigen
+            const { Epot, Ekin, Etot, v, h } = getEnergies();
+            const angle = Math.atan2(-x, y) * 180 / Math.PI;
+            
+            ctx.fillStyle = '#fff';
+            ctx.font = '14px sans-serif';
+            ctx.fillText(`φ = ${Math.abs(angle).toFixed(1)}°`, 20, 30);
+            ctx.fillText(`v = ${v.toFixed(2)} m/s`, 20, 50);
+            
+            ctx.fillStyle = '#667eea';
+            ctx.fillText(`Epot = ${Epot.toFixed(2)} J`, 20, canvas.height - 50);
+            ctx.fillStyle = '#f5576c';
+            ctx.fillText(`Ekin = ${Ekin.toFixed(2)} J`, 20, canvas.height - 30);
+            ctx.fillStyle = '#4facfe';
+            ctx.fillText(`Eges = ${Etot.toFixed(2)} J`, 20, canvas.height - 10);
+        }
+        
+        let lastTime;
+        let frameCount = 0;
+        
+        function animate(timestamp) {
+            if (!lastTime) lastTime = timestamp;
+            const dt = Math.min((timestamp - lastTime) / 1000, 0.02);
+            lastTime = timestamp;
+            
+            if (isRunning) {
+                // Mehrere kleine Schritte für Stabilität
+                const steps = 10;
+                for (let i = 0; i < steps; i++) {
+                    updatePhysics(dt / steps);
+                }
+                
+                frameCount++;
+                if (frameCount % 2 === 0) {
+                    updateScope();
+                }
+            }
+            
+            draw();
+            drawScope();
+            requestAnimationFrame(animate);
+        }
+        
+        // Event Listeners
+        lengthSlider.addEventListener('input', () => { if (!isRunning) init(); else getParams(); });
+        pinDistSlider.addEventListener('input', () => { if (!isRunning) init(); else getParams(); });
+        angleSlider.addEventListener('input', () => { if (!isRunning) init(); else getParams(); });
+        dampingSlider.addEventListener('input', getParams);
+        
+        startBtn.addEventListener('click', () => {
+            if (isRunning) {
+                isRunning = false;
+                startBtn.textContent = '▶ Start';
+            } else {
+                isRunning = true;
+                startBtn.textContent = '⏸ Pause';
+                lastTime = null;
+            }
+        });
+        
+        resetBtn.addEventListener('click', init);
+        
+        // Start
+        init();
+        animate();
+    </script>
+</body>
+</html>
