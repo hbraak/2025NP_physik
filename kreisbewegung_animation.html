@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kreisbewegung — Interaktive Animation</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding: 15px;
+            color: #1e293b;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header {
+            text-align: center; margin-bottom: 20px; padding: 20px;
+            background: white; border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        header h1 { font-size: 1.8em; color: #2563eb; margin-bottom: 5px; }
+        header .subtitle { color: #64748b; font-size: 1em; }
+        .back-link {
+            display: inline-block; margin-bottom: 15px; color: #2563eb;
+            text-decoration: none; font-weight: 600; font-size: 0.95em;
+        }
+        .back-link:hover { text-decoration: underline; }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 15px;
+        }
+        @media (max-width: 900px) {
+            .main-layout { grid-template-columns: 1fr; }
+        }
+
+        .panel {
+            background: white; border-radius: 15px; padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .panel h2 {
+            font-size: 1.1em; color: #2563eb; margin-bottom: 12px;
+            border-bottom: 2px solid #eff6ff; padding-bottom: 8px;
+        }
+
+        canvas { display: block; border-radius: 10px; background: #f8fafc; border: 1px solid #e2e8f0; }
+        #mainCanvas { width: 100%; }
+
+        .controls { display: flex; flex-direction: column; gap: 14px; }
+        .slider-group label {
+            display: flex; justify-content: space-between; align-items: center;
+            font-weight: 600; font-size: 0.9em; margin-bottom: 4px; color: #334155;
+        }
+        .slider-group label span { color: #2563eb; font-family: 'Consolas', monospace; }
+        input[type="range"] {
+            width: 100%; height: 6px; border-radius: 3px;
+            -webkit-appearance: none; appearance: none;
+            background: #e2e8f0; outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 18px; height: 18px; border-radius: 50%;
+            background: #2563eb; cursor: pointer; border: 2px solid white;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 18px; height: 18px; border-radius: 50%;
+            background: #2563eb; cursor: pointer; border: 2px solid white;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        }
+
+        .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+        .btn {
+            flex: 1; min-width: 80px; padding: 10px 14px; border: none;
+            border-radius: 10px; font-size: 0.95em; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; font-family: inherit;
+        }
+        .btn-play { background: #2563eb; color: white; }
+        .btn-play:hover { background: #1d4ed8; }
+        .btn-pause { background: #f59e0b; color: white; }
+        .btn-pause:hover { background: #d97706; }
+        .btn-reset { background: #64748b; color: white; }
+        .btn-reset:hover { background: #475569; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        select {
+            width: 100%; padding: 10px 12px; border-radius: 10px;
+            border: 2px solid #e2e8f0; font-size: 0.9em; font-family: inherit;
+            background: white; color: #1e293b; cursor: pointer;
+        }
+        select:focus { outline: none; border-color: #2563eb; }
+
+        .results {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+        }
+        .result-item {
+            background: #f8fafc; border-radius: 10px; padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .result-item .label { font-size: 0.78em; color: #64748b; margin-bottom: 2px; }
+        .result-item .value {
+            font-size: 1.05em; font-weight: 700; color: #1e293b;
+            font-family: 'Consolas', monospace;
+        }
+
+        .proj-canvases {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+            margin-top: 10px;
+        }
+        .proj-canvases canvas { width: 100%; }
+
+        .legend {
+            display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px;
+            font-size: 0.82em; color: #64748b;
+        }
+        .legend-item { display: flex; align-items: center; gap: 4px; }
+        .legend-dot {
+            width: 10px; height: 10px; border-radius: 50%; display: inline-block;
+        }
+
+        .formula-box {
+            background: #eff6ff; border-radius: 10px; padding: 12px;
+            font-size: 0.85em; line-height: 1.7; margin-top: 10px;
+            border: 1px solid #bfdbfe;
+        }
+        .formula-box code {
+            background: white; padding: 1px 5px; border-radius: 4px;
+            font-family: 'Consolas', monospace; font-size: 0.95em;
+        }
+        footer {
+            text-align: center; margin-top: 20px; padding: 15px;
+            color: #94a3b8; font-size: 0.85em;
+        }
+        footer a { color: #2563eb; text-decoration: none; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="index.html" class="back-link">← Zurück zur Übersicht</a>
+    <header>
+        <h1>🔄 Gleichförmige Kreisbewegung</h1>
+        <div class="subtitle">Zentripetalkraft, Bahngeschwindigkeit & Projektion auf Sinus/Kosinus</div>
+    </header>
+
+    <div class="main-layout">
+        <div>
+            <div class="panel" style="margin-bottom:15px;">
+                <h2>Kreisbahn</h2>
+                <canvas id="mainCanvas" width="800" height="550"></canvas>
+                <div class="legend">
+                    <div class="legend-item"><span class="legend-dot" style="background:#2563eb"></span> v (tangential)</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span> F<sub>z</sub> (Zentripetal)</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#a855f7"></span> Spur</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#10b981"></span> Radius</div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>Projektionen x(t) und y(t)</h2>
+                <div class="proj-canvases">
+                    <div>
+                        <canvas id="xProjCanvas" width="350" height="220"></canvas>
+                        <div style="text-align:center;font-size:0.82em;color:#64748b;margin-top:4px;">x(t) = r · cos(ωt)</div>
+                    </div>
+                    <div>
+                        <canvas id="yProjCanvas" width="350" height="220"></canvas>
+                        <div style="text-align:center;font-size:0.82em;color:#64748b;margin-top:4px;">y(t) = r · sin(ωt)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="panel">
+                <h2>⚙️ Parameter</h2>
+                <div class="slider-group">
+                    <label>Radius r: <span id="rVal">2.0 m</span></label>
+                    <input type="range" id="rSlider" min="0.5" max="5" step="0.1" value="2">
+                </div>
+                <div class="slider-group" style="margin-top:12px;">
+                    <label>Periode T: <span id="tVal">3.0 s</span></label>
+                    <input type="range" id="tSlider" min="0.5" max="10" step="0.1" value="3">
+                </div>
+                <div class="slider-group" style="margin-top:12px;">
+                    <label>Masse m: <span id="mVal">1.0 kg</span></label>
+                    <input type="range" id="mSlider" min="0.1" max="10" step="0.1" value="1">
+                </div>
+                <div style="margin-top:12px;">
+                    <label style="font-weight:600;font-size:0.9em;color:#334155;display:block;margin-bottom:4px;">🔧 Anwendungsbeispiel</label>
+                    <select id="scenarioSelect">
+                        <option value="">— Eigene Werte —</option>
+                        <option value="karussell">🎠 Karussell (r=3, T=6, m=60)</option>
+                        <option value="kurve">🚗 Kurvenfahrt (r=50, T=9, m=1500)</option>
+                        <option value="zentrifuge">🧪 Zentrifuge (r=0.15, T=0.02, m=0.01)</option>
+                        <option value="satellit">🛰️ Satellit (r=6771, T=5400, m=420)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>▶️ Steuerung</h2>
+                <div class="btn-row">
+                    <button class="btn btn-play" id="btnPlay" onclick="startAnimation()">▶ Play</button>
+                    <button class="btn btn-pause" id="btnPause" onclick="pauseAnimation()" disabled>⏸ Pause</button>
+                    <button class="btn btn-reset" id="btnReset" onclick="resetAnimation()">↺ Reset</button>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>📊 Berechnete Größen</h2>
+                <div class="results">
+                    <div class="result-item">
+                        <div class="label">Bahngeschwindigkeit v</div>
+                        <div class="value" id="resV">—</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="label">Winkelgeschw. ω</div>
+                        <div class="value" id="resOmega">—</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="label">Zentripetalbeschl. a<sub>z</sub></div>
+                        <div class="value" id="resA">—</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="label">Zentripetalkraft F<sub>z</sub></div>
+                        <div class="value" id="resF">—</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="label">Frequenz f</div>
+                        <div class="value" id="resFreq">—</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="label">Winkel φ (aktuell)</div>
+                        <div class="value" id="resPhi">—</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>📖 Formeln</h2>
+                <div class="formula-box">
+                    <strong>Bahngeschw.:</strong> <code>v = 2πr / T</code><br>
+                    <strong>Winkelgeschw.:</strong> <code>ω = 2π / T</code><br>
+                    <strong>Beschleunigung:</strong> <code>a<sub>z</sub> = v² / r</code><br>
+                    <strong>Kraft:</strong> <code>F<sub>z</sub> = m · v² / r</code><br>
+                    <strong>Position:</strong> <code>x = r·cos(ωt)</code>, <code>y = r·sin(ωt)</code>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        Physik-LK 11NP | Lore-Lorentz-Schule | <a href="index.html">Zurück zur Übersicht</a>
+    </footer>
+</div>
+
+<script>
+// ============ PHYSICS ============
+let r = 2, T = 3, m = 1;
+let v, omega, az, Fz, freq;
+
+function calcPhysics() {
+    omega = 2 * Math.PI / T;
+    v = omega * r;
+    az = v * v / r;
+    Fz = m * az;
+    freq = 1 / T;
+}
+
+// ============ STATE ============
+let animTime = 0, playing = false, paused = false, animId = null;
+let lastFrameTime = null;
+let trailAngles = [];
+
+// ============ CANVAS ============
+const mainCanvas = document.getElementById('mainCanvas');
+const mainCtx = mainCanvas.getContext('2d');
+const xProjCanvas = document.getElementById('xProjCanvas');
+const xCtx = xProjCanvas.getContext('2d');
+const yProjCanvas = document.getElementById('yProjCanvas');
+const yCtx = yProjCanvas.getContext('2d');
+
+function resizeCanvases() {
+    const dpr = window.devicePixelRatio || 1;
+    const rect = mainCanvas.getBoundingClientRect();
+    mainCanvas.width = rect.width * dpr;
+    mainCanvas.height = rect.width * 0.69 * dpr;
+    mainCanvas.style.height = (rect.width * 0.69) + 'px';
+    mainCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    [xProjCanvas, yProjCanvas].forEach(c => {
+        const cr = c.getBoundingClientRect();
+        c.width = cr.width * dpr;
+        c.height = 220 * dpr;
+        c.style.height = '220px';
+        c.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0);
+    });
+}
+window.addEventListener('resize', () => { resizeCanvases(); drawAll(); });
+
+// ============ DRAWING HELPERS ============
+function drawArrow(ctx, x0, y0, x1, y1, color, lineWidth) {
+    const dx = x1 - x0, dy = y1 - y0;
+    const len = Math.sqrt(dx*dx + dy*dy);
+    if (len < 2) return;
+    const headLen = Math.min(12, len * 0.3);
+    const angle = Math.atan2(dy, dx);
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.lineWidth = lineWidth || 2;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(x0, y0);
+    ctx.lineTo(x1, y1);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x1 - headLen * Math.cos(angle - 0.4), y1 - headLen * Math.sin(angle - 0.4));
+    ctx.lineTo(x1 - headLen * Math.cos(angle + 0.4), y1 - headLen * Math.sin(angle + 0.4));
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+}
+
+// ============ MAIN CANVAS ============
+function drawMain() {
+    const W = mainCanvas.getBoundingClientRect().width;
+    const H = parseFloat(mainCanvas.style.height);
+    mainCtx.clearRect(0, 0, W, H);
+
+    calcPhysics();
+
+    const cx = W * 0.5;
+    const cy = H * 0.5;
+    const maxR = Math.min(W, H) * 0.35;
+    const scale = maxR; // 1 unit = maxR pixels, but we normalize to r
+
+    // Draw subtle grid
+    mainCtx.save();
+    mainCtx.strokeStyle = '#e2e8f0';
+    mainCtx.lineWidth = 1;
+    // Cross hairs
+    mainCtx.beginPath(); mainCtx.moveTo(cx - maxR - 30, cy); mainCtx.lineTo(cx + maxR + 30, cy); mainCtx.stroke();
+    mainCtx.beginPath(); mainCtx.moveTo(cx, cy - maxR - 30); mainCtx.lineTo(cx, cy + maxR + 30); mainCtx.stroke();
+    mainCtx.restore();
+
+    // Axis labels
+    mainCtx.save();
+    mainCtx.fillStyle = '#94a3b8';
+    mainCtx.font = '11px Segoe UI';
+    mainCtx.textAlign = 'center';
+    mainCtx.fillText('x', cx + maxR + 18, cy + 4);
+    mainCtx.fillText('y', cx + 4, cy - maxR - 12);
+    mainCtx.restore();
+
+    // Circle (orbit)
+    mainCtx.save();
+    mainCtx.strokeStyle = '#cbd5e1';
+    mainCtx.lineWidth = 2;
+    mainCtx.setLineDash([6, 4]);
+    mainCtx.beginPath();
+    mainCtx.arc(cx, cy, maxR, 0, 2 * Math.PI);
+    mainCtx.stroke();
+    mainCtx.setLineDash([]);
+    mainCtx.restore();
+
+    // Center dot
+    mainCtx.save();
+    mainCtx.beginPath();
+    mainCtx.arc(cx, cy, 4, 0, 2 * Math.PI);
+    mainCtx.fillStyle = '#475569';
+    mainCtx.fill();
+    mainCtx.restore();
+
+    // Trail (last 2 periods worth)
+    if (trailAngles.length > 1) {
+        mainCtx.save();
+        const maxTrailLen = 200;
+        const startIdx = Math.max(0, trailAngles.length - maxTrailLen);
+        for (let i = startIdx; i < trailAngles.length - 1; i++) {
+            const alpha = (i - startIdx) / (trailAngles.length - startIdx);
+            mainCtx.strokeStyle = `rgba(168,85,247,${alpha * 0.5})`;
+            mainCtx.lineWidth = 2;
+            const a1 = trailAngles[i], a2 = trailAngles[i + 1];
+            mainCtx.beginPath();
+            mainCtx.moveTo(cx + maxR * Math.cos(a1), cy - maxR * Math.sin(a1));
+            mainCtx.lineTo(cx + maxR * Math.cos(a2), cy - maxR * Math.sin(a2));
+            mainCtx.stroke();
+        }
+        mainCtx.restore();
+    }
+
+    // Current angle
+    const phi = omega * animTime;
+    const bx = cx + maxR * Math.cos(phi);
+    const by = cy - maxR * Math.sin(phi);
+
+    // Radius line (green)
+    mainCtx.save();
+    mainCtx.strokeStyle = '#10b981';
+    mainCtx.lineWidth = 2;
+    mainCtx.beginPath();
+    mainCtx.moveTo(cx, cy);
+    mainCtx.lineTo(bx, by);
+    mainCtx.stroke();
+    // Label r
+    const midRx = (cx + bx) / 2, midRy = (cy + by) / 2;
+    mainCtx.fillStyle = '#10b981';
+    mainCtx.font = 'bold 12px Consolas, monospace';
+    mainCtx.textAlign = 'center';
+    mainCtx.fillText('r', midRx + 12 * Math.sin(phi), midRy + 12 * Math.cos(phi));
+    mainCtx.restore();
+
+    // Velocity vector (tangential, blue)
+    // Tangent direction: perpendicular to radius, in direction of motion
+    const vDir_x = -Math.sin(phi);
+    const vDir_y = Math.cos(phi); // screen y is flipped
+    const velArrowLen = Math.min(v / (2 * Math.PI * 5 / 0.5) * maxR * 0.8, maxR * 0.7); // scale nicely
+    const vScale = maxR * 0.5 / Math.max(v, 0.01);
+    const vLen = Math.min(v * vScale, maxR * 0.7);
+    drawArrow(mainCtx, bx, by, bx + vDir_x * vLen, by + vDir_y * vLen, '#2563eb', 3);
+    // Label v
+    mainCtx.save();
+    mainCtx.fillStyle = '#2563eb';
+    mainCtx.font = 'bold 11px Consolas, monospace';
+    mainCtx.textAlign = 'center';
+    mainCtx.fillText('v', bx + vDir_x * (vLen + 14), by + vDir_y * (vLen + 14));
+    mainCtx.restore();
+
+    // Centripetal force vector (toward center, red)
+    const fDir_x = cx - bx, fDir_y = cy - by;
+    const fDirLen = Math.sqrt(fDir_x * fDir_x + fDir_y * fDir_y);
+    const fNorm_x = fDir_x / fDirLen, fNorm_y = fDir_y / fDirLen;
+    const fScale = maxR * 0.4 / Math.max(az, 0.01);
+    const fLen = Math.min(az * fScale, maxR * 0.6);
+    drawArrow(mainCtx, bx, by, bx + fNorm_x * fLen, by + fNorm_y * fLen, '#ef4444', 3);
+    // Label Fz
+    mainCtx.save();
+    mainCtx.fillStyle = '#ef4444';
+    mainCtx.font = 'bold 11px Consolas, monospace';
+    mainCtx.textAlign = 'center';
+    mainCtx.fillText('F_z', bx + fNorm_x * (fLen * 0.5) + 14 * fNorm_y, by + fNorm_y * (fLen * 0.5) - 14 * fNorm_x);
+    mainCtx.restore();
+
+    // Projection lines (dashed)
+    mainCtx.save();
+    mainCtx.strokeStyle = 'rgba(100,116,139,0.35)';
+    mainCtx.lineWidth = 1;
+    mainCtx.setLineDash([4, 3]);
+    // x projection
+    mainCtx.beginPath(); mainCtx.moveTo(bx, by); mainCtx.lineTo(bx, cy); mainCtx.stroke();
+    // y projection
+    mainCtx.beginPath(); mainCtx.moveTo(bx, by); mainCtx.lineTo(cx, by); mainCtx.stroke();
+    mainCtx.setLineDash([]);
+    // Projection dots
+    mainCtx.beginPath(); mainCtx.arc(bx, cy, 4, 0, 2 * Math.PI); mainCtx.fillStyle = '#2563eb'; mainCtx.fill();
+    mainCtx.beginPath(); mainCtx.arc(cx, by, 4, 0, 2 * Math.PI); mainCtx.fillStyle = '#ef4444'; mainCtx.fill();
+    mainCtx.restore();
+
+    // Angle arc
+    if (phi > 0.05) {
+        mainCtx.save();
+        mainCtx.strokeStyle = '#f59e0b';
+        mainCtx.lineWidth = 2;
+        mainCtx.beginPath();
+        const arcR = 30;
+        // phi is measured from +x axis, counter-clockwise, but screen y is inverted
+        mainCtx.arc(cx, cy, arcR, -phi, 0);
+        mainCtx.stroke();
+        // Label phi
+        const labelAngle = -phi / 2;
+        mainCtx.fillStyle = '#f59e0b';
+        mainCtx.font = 'bold 11px Segoe UI';
+        mainCtx.textAlign = 'center';
+        mainCtx.fillText('φ', cx + (arcR + 14) * Math.cos(labelAngle), cy + (arcR + 14) * Math.sin(labelAngle));
+        mainCtx.restore();
+    }
+
+    // Ball
+    mainCtx.save();
+    mainCtx.beginPath();
+    mainCtx.arc(bx, by, 10, 0, 2 * Math.PI);
+    const grad = mainCtx.createRadialGradient(bx - 2, by - 2, 2, bx, by, 10);
+    grad.addColorStop(0, '#60a5fa');
+    grad.addColorStop(1, '#2563eb');
+    mainCtx.fillStyle = grad;
+    mainCtx.fill();
+    mainCtx.strokeStyle = '#1e40af';
+    mainCtx.lineWidth = 2;
+    mainCtx.stroke();
+    mainCtx.restore();
+
+    // Info text
+    mainCtx.save();
+    mainCtx.font = '12px Consolas, monospace';
+    mainCtx.fillStyle = '#64748b';
+    mainCtx.textAlign = 'left';
+    mainCtx.fillText(`φ = ${((phi % (2*Math.PI)) * 180 / Math.PI).toFixed(1)}°  |  t = ${animTime.toFixed(2)} s`, 15, H - 10);
+    mainCtx.restore();
+
+    // Update results
+    document.getElementById('resV').textContent = formatSI(v, 'm/s');
+    document.getElementById('resOmega').textContent = omega.toFixed(3) + ' rad/s';
+    document.getElementById('resA').textContent = formatSI(az, 'm/s²');
+    document.getElementById('resF').textContent = formatSI(Fz, 'N');
+    document.getElementById('resFreq').textContent = freq.toFixed(3) + ' Hz';
+    document.getElementById('resPhi').textContent = ((phi % (2*Math.PI)) * 180 / Math.PI).toFixed(1) + '°';
+}
+
+// ============ X PROJECTION ============
+function drawXProj() {
+    const W = xProjCanvas.getBoundingClientRect().width;
+    const H = 220;
+    xCtx.clearRect(0, 0, W, H);
+
+    calcPhysics();
+    const margin = { top: 25, right: 15, bottom: 30, left: 40 };
+    const pw = W - margin.left - margin.right;
+    const ph = H - margin.top - margin.bottom;
+    const midY = margin.top + ph / 2;
+
+    // Show 2 full periods
+    const tTotal = T * 2;
+    const scaleT = pw / tTotal;
+    const scaleA = (ph / 2) * 0.85;
+
+    // Grid
+    xCtx.save();
+    xCtx.strokeStyle = '#f1f5f9'; xCtx.lineWidth = 1;
+    // Zero line
+    xCtx.strokeStyle = '#cbd5e1';
+    xCtx.beginPath(); xCtx.moveTo(margin.left, midY); xCtx.lineTo(margin.left + pw, midY); xCtx.stroke();
+    xCtx.restore();
+
+    // Axes
+    xCtx.save();
+    xCtx.strokeStyle = '#475569'; xCtx.lineWidth = 1.5;
+    xCtx.beginPath(); xCtx.moveTo(margin.left, margin.top); xCtx.lineTo(margin.left, margin.top + ph); xCtx.stroke();
+    xCtx.beginPath(); xCtx.moveTo(margin.left, margin.top + ph); xCtx.lineTo(margin.left + pw, margin.top + ph); xCtx.stroke();
+    // Labels
+    xCtx.fillStyle = '#475569'; xCtx.font = '10px Segoe UI'; xCtx.textAlign = 'center';
+    const stepT = T;
+    for (let gt = stepT; gt <= tTotal; gt += stepT) {
+        const sx = margin.left + gt * scaleT;
+        xCtx.fillText(gt.toFixed(1) + 's', sx, margin.top + ph + 14);
+    }
+    xCtx.textAlign = 'right';
+    xCtx.fillText('+r', margin.left - 5, midY - scaleA + 4);
+    xCtx.fillText('-r', margin.left - 5, midY + scaleA + 4);
+    xCtx.fillText('0', margin.left - 5, midY + 4);
+    xCtx.restore();
+
+    // Full cosine (ghost)
+    xCtx.save();
+    xCtx.strokeStyle = 'rgba(37,99,235,0.2)'; xCtx.lineWidth = 2;
+    xCtx.setLineDash([4, 4]);
+    xCtx.beginPath();
+    for (let i = 0; i <= 200; i++) {
+        const t = (i / 200) * tTotal;
+        const val = Math.cos(omega * t);
+        const sx = margin.left + t * scaleT;
+        const sy = midY - val * scaleA;
+        if (i === 0) xCtx.moveTo(sx, sy); else xCtx.lineTo(sx, sy);
+    }
+    xCtx.stroke();
+    xCtx.setLineDash([]);
+    xCtx.restore();
+
+    // Animated portion
+    const currentT = animTime % tTotal;
+    xCtx.save();
+    xCtx.strokeStyle = '#2563eb'; xCtx.lineWidth = 3;
+    xCtx.beginPath();
+    const steps = Math.max(Math.floor(currentT / tTotal * 200), 1);
+    for (let i = 0; i <= steps; i++) {
+        const t = (i / 200) * tTotal;
+        if (t > currentT) break;
+        const val = Math.cos(omega * t);
+        const sx = margin.left + t * scaleT;
+        const sy = midY - val * scaleA;
+        if (i === 0) xCtx.moveTo(sx, sy); else xCtx.lineTo(sx, sy);
+    }
+    xCtx.stroke();
+    // Dot
+    const xNow = Math.cos(omega * currentT);
+    xCtx.beginPath();
+    xCtx.arc(margin.left + currentT * scaleT, midY - xNow * scaleA, 5, 0, 2 * Math.PI);
+    xCtx.fillStyle = '#2563eb';
+    xCtx.fill();
+    xCtx.restore();
+
+    // Title
+    xCtx.save();
+    xCtx.font = 'bold 12px Segoe UI'; xCtx.fillStyle = '#2563eb';
+    xCtx.textAlign = 'left';
+    xCtx.fillText('x(t) = r · cos(ωt)', margin.left + 5, margin.top - 6);
+    xCtx.restore();
+}
+
+// ============ Y PROJECTION ============
+function drawYProj() {
+    const W = yProjCanvas.getBoundingClientRect().width;
+    const H = 220;
+    yCtx.clearRect(0, 0, W, H);
+
+    calcPhysics();
+    const margin = { top: 25, right: 15, bottom: 30, left: 40 };
+    const pw = W - margin.left - margin.right;
+    const ph = H - margin.top - margin.bottom;
+    const midY = margin.top + ph / 2;
+
+    const tTotal = T * 2;
+    const scaleT = pw / tTotal;
+    const scaleA = (ph / 2) * 0.85;
+
+    // Grid
+    yCtx.save();
+    yCtx.strokeStyle = '#cbd5e1'; yCtx.lineWidth = 1;
+    yCtx.beginPath(); yCtx.moveTo(margin.left, midY); yCtx.lineTo(margin.left + pw, midY); yCtx.stroke();
+    yCtx.restore();
+
+    // Axes
+    yCtx.save();
+    yCtx.strokeStyle = '#475569'; yCtx.lineWidth = 1.5;
+    yCtx.beginPath(); yCtx.moveTo(margin.left, margin.top); yCtx.lineTo(margin.left, margin.top + ph); yCtx.stroke();
+    yCtx.beginPath(); yCtx.moveTo(margin.left, margin.top + ph); yCtx.lineTo(margin.left + pw, margin.top + ph); yCtx.stroke();
+    yCtx.fillStyle = '#475569'; yCtx.font = '10px Segoe UI'; yCtx.textAlign = 'center';
+    const stepT = T;
+    for (let gt = stepT; gt <= tTotal; gt += stepT) {
+        const sx = margin.left + gt * scaleT;
+        yCtx.fillText(gt.toFixed(1) + 's', sx, margin.top + ph + 14);
+    }
+    yCtx.textAlign = 'right';
+    yCtx.fillText('+r', margin.left - 5, midY - scaleA + 4);
+    yCtx.fillText('-r', margin.left - 5, midY + scaleA + 4);
+    yCtx.fillText('0', margin.left - 5, midY + 4);
+    yCtx.restore();
+
+    // Full sine (ghost)
+    yCtx.save();
+    yCtx.strokeStyle = 'rgba(239,68,68,0.2)'; yCtx.lineWidth = 2;
+    yCtx.setLineDash([4, 4]);
+    yCtx.beginPath();
+    for (let i = 0; i <= 200; i++) {
+        const t = (i / 200) * tTotal;
+        const val = Math.sin(omega * t);
+        const sx = margin.left + t * scaleT;
+        const sy = midY - val * scaleA;
+        if (i === 0) yCtx.moveTo(sx, sy); else yCtx.lineTo(sx, sy);
+    }
+    yCtx.stroke();
+    yCtx.setLineDash([]);
+    yCtx.restore();
+
+    // Animated portion
+    const currentT = animTime % tTotal;
+    yCtx.save();
+    yCtx.strokeStyle = '#ef4444'; yCtx.lineWidth = 3;
+    yCtx.beginPath();
+    const steps = Math.max(Math.floor(currentT / tTotal * 200), 1);
+    for (let i = 0; i <= steps; i++) {
+        const t = (i / 200) * tTotal;
+        if (t > currentT) break;
+        const val = Math.sin(omega * t);
+        const sx = margin.left + t * scaleT;
+        const sy = midY - val * scaleA;
+        if (i === 0) yCtx.moveTo(sx, sy); else yCtx.lineTo(sx, sy);
+    }
+    yCtx.stroke();
+    // Dot
+    const yNow = Math.sin(omega * currentT);
+    yCtx.beginPath();
+    yCtx.arc(margin.left + currentT * scaleT, midY - yNow * scaleA, 5, 0, 2 * Math.PI);
+    yCtx.fillStyle = '#ef4444';
+    yCtx.fill();
+    yCtx.restore();
+
+    // Title
+    yCtx.save();
+    yCtx.font = 'bold 12px Segoe UI'; yCtx.fillStyle = '#ef4444';
+    yCtx.textAlign = 'left';
+    yCtx.fillText('y(t) = r · sin(ωt)', margin.left + 5, margin.top - 6);
+    yCtx.restore();
+}
+
+// ============ UTILITIES ============
+function formatSI(val, unit) {
+    if (Math.abs(val) >= 1e6) return (val / 1e6).toFixed(2) + ' M' + unit;
+    if (Math.abs(val) >= 1e3) return (val / 1e3).toFixed(2) + ' k' + unit;
+    if (Math.abs(val) < 0.01 && val !== 0) return (val * 1000).toFixed(2) + ' m' + unit;
+    return val.toFixed(3) + ' ' + unit;
+}
+
+// ============ ANIMATION ============
+function drawAll() {
+    drawMain();
+    drawXProj();
+    drawYProj();
+}
+
+function animationLoop(timestamp) {
+    if (!playing) return;
+    if (lastFrameTime === null) lastFrameTime = timestamp;
+    const dt = (timestamp - lastFrameTime) / 1000;
+    lastFrameTime = timestamp;
+
+    // Speed factor: real-time for T >= 1s, slow down for very fast periods
+    const speedFactor = T < 1 ? T : 1;
+    animTime += dt * speedFactor;
+
+    // Trail
+    const phi = omega * animTime;
+    trailAngles.push(phi);
+    if (trailAngles.length > 600) trailAngles = trailAngles.slice(-400);
+
+    drawAll();
+
+    if (playing) {
+        animId = requestAnimationFrame(animationLoop);
+    }
+}
+
+function startAnimation() {
+    playing = true;
+    paused = false;
+    lastFrameTime = null;
+    updateButtons();
+    animId = requestAnimationFrame(animationLoop);
+}
+
+function pauseAnimation() {
+    playing = false;
+    paused = true;
+    updateButtons();
+}
+
+function resetAnimation() {
+    playing = false;
+    paused = false;
+    animTime = 0;
+    trailAngles = [];
+    lastFrameTime = null;
+    if (animId) cancelAnimationFrame(animId);
+    updateButtons();
+    drawAll();
+}
+
+function updateButtons() {
+    document.getElementById('btnPlay').disabled = playing;
+    document.getElementById('btnPause').disabled = !playing;
+}
+
+// ============ CONTROLS ============
+const rSlider = document.getElementById('rSlider');
+const tSlider = document.getElementById('tSlider');
+const mSlider = document.getElementById('mSlider');
+const scenarioSelect = document.getElementById('scenarioSelect');
+
+rSlider.addEventListener('input', () => {
+    r = parseFloat(rSlider.value);
+    document.getElementById('rVal').textContent = r.toFixed(1) + ' m';
+    scenarioSelect.value = '';
+    calcPhysics();
+    drawAll();
+});
+
+tSlider.addEventListener('input', () => {
+    T = parseFloat(tSlider.value);
+    document.getElementById('tVal').textContent = T.toFixed(1) + ' s';
+    scenarioSelect.value = '';
+    calcPhysics();
+    drawAll();
+});
+
+mSlider.addEventListener('input', () => {
+    m = parseFloat(mSlider.value);
+    document.getElementById('mVal').textContent = m.toFixed(1) + ' kg';
+    scenarioSelect.value = '';
+    calcPhysics();
+    drawAll();
+});
+
+const scenarios = {
+    karussell: { r: 3, T: 6, m: 60, rMax: 5, TMax: 10, mMax: 100 },
+    kurve: { r: 50, T: 9, m: 1500, rMax: 100, TMax: 15, mMax: 2000 },
+    zentrifuge: { r: 0.15, T: 0.5, m: 0.01, rMax: 1, TMax: 1, mMax: 0.1 },
+    satellit: { r: 5, T: 5, m: 420, rMax: 5, TMax: 10, mMax: 500 }
+};
+
+scenarioSelect.addEventListener('change', () => {
+    const key = scenarioSelect.value;
+    if (!scenarios[key]) return;
+    const s = scenarios[key];
+
+    // Adjust slider ranges for this scenario
+    rSlider.min = 0.1; rSlider.max = s.rMax; rSlider.step = s.rMax > 10 ? 1 : 0.1;
+    tSlider.min = 0.1; tSlider.max = s.TMax; tSlider.step = s.TMax > 5 ? 0.5 : 0.1;
+    mSlider.min = 0.001; mSlider.max = s.mMax; mSlider.step = s.mMax > 10 ? 1 : 0.1;
+
+    r = s.r; T = s.T; m = s.m;
+    rSlider.value = r;
+    tSlider.value = T;
+    mSlider.value = m;
+    document.getElementById('rVal').textContent = r.toFixed(1) + ' m';
+    document.getElementById('tVal').textContent = T.toFixed(1) + ' s';
+    document.getElementById('mVal').textContent = m.toFixed(1) + ' kg';
+    resetAnimation();
+});
+
+// ============ INIT ============
+resizeCanvases();
+calcPhysics();
+drawAll();
+</script>
+</body>
+</html>

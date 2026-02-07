@@ -168,6 +168,48 @@
         </header>
         
         <div class="material-grid">
+            <a href="wurf_animation.html" class="material-card" data-url="wurf_animation.html">
+                <div class="card-header">
+                    <div class="card-icon blue">🎯</div>
+                    <div class="card-title">Waagerechter Wurf — Interaktive Animation</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Simulieren Sie den waagerechten Wurf mit einstellbarer Höhe und Geschwindigkeit. Mit Vektorzerlegung und Berufsbezug-Beispielen (Kran, Förderband, Stuntman).
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Superposition</span>
+                            <span class="tag">Parabelflugbahn</span>
+                            <span class="tag">Vektorzerlegung</span>
+                            <span class="tag">Berufsbezug</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-wurf"></div>
+                </div>
+            </a>
+
+            <a href="kreisbewegung_animation.html" class="material-card" data-url="kreisbewegung_animation.html">
+                <div class="card-header">
+                    <div class="card-icon purple">🔄</div>
+                    <div class="card-title">Kreisbewegung — Interaktive Animation</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Visualisierung der gleichförmigen Kreisbewegung mit Zentripetalkraft, Geschwindigkeitsvektor und Sinusprojektionen. Mit realen Anwendungsbeispielen.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Kreisbewegung</span>
+                            <span class="tag">Zentripetalkraft</span>
+                            <span class="tag">Sinus/Kosinus</span>
+                            <span class="tag">Bahngeschwindigkeit</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-kreisbewegung"></div>
+                </div>
+            </a>
+
             <a href="regression-calc.html" class="material-card" data-url="regression-calc.html">
                 <div class="card-header">
                     <div class="card-icon blue">📊</div>
@@ -274,6 +316,8 @@
         
         // QR-Codes generieren wenn Seite geladen
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-wurf', 'wurf_animation.html');
+            generateQR('qr-kreisbewegung', 'kreisbewegung_animation.html');
             generateQR('qr-regression', 'regression-calc.html');
             generateQR('qr-lernliste', 'lernliste-impuls.html');
             generateQR('qr-formel', 'formel-einheiten-trainer.html');

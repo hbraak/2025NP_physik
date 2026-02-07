@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waagerechter Wurf — Interaktive Animation</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding: 15px;
+            color: #1e293b;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header {
+            text-align: center; margin-bottom: 20px; padding: 20px;
+            background: white; border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        header h1 { font-size: 1.8em; color: #2563eb; margin-bottom: 5px; }
+        header .subtitle { color: #64748b; font-size: 1em; }
+        .back-link {
+            display: inline-block; margin-bottom: 15px; color: #2563eb;
+            text-decoration: none; font-weight: 600; font-size: 0.95em;
+        }
+        .back-link:hover { text-decoration: underline; }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 15px;
+        }
+        @media (max-width: 900px) {
+            .main-layout { grid-template-columns: 1fr; }
+        }
+
+        .panel {
+            background: white; border-radius: 15px; padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .panel h2 {
+            font-size: 1.1em; color: #2563eb; margin-bottom: 12px;
+            border-bottom: 2px solid #eff6ff; padding-bottom: 8px;
+        }
+
+        canvas { display: block; border-radius: 10px; background: #f8fafc; border: 1px solid #e2e8f0; }
+        #mainCanvas { width: 100%; cursor: crosshair; }
+
+        .controls { display: flex; flex-direction: column; gap: 14px; }
+        .slider-group label {
+            display: flex; justify-content: space-between; align-items: center;
+            font-weight: 600; font-size: 0.9em; margin-bottom: 4px; color: #334155;
+        }
+        .slider-group label span { color: #2563eb; font-family: 'Consolas', monospace; }
+        input[type="range"] {
+            width: 100%; height: 6px; border-radius: 3px;
+            -webkit-appearance: none; appearance: none;
+            background: #e2e8f0; outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 18px; height: 18px; border-radius: 50%;
+            background: #2563eb; cursor: pointer; border: 2px solid white;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 18px; height: 18px; border-radius: 50%;
+            background: #2563eb; cursor: pointer; border: 2px solid white;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        }
+
+        .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+        .btn {
+            flex: 1; min-width: 80px; padding: 10px 14px; border: none;
+            border-radius: 10px; font-size: 0.95em; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; font-family: inherit;
+        }
+        .btn-play { background: #2563eb; color: white; }
+        .btn-play:hover { background: #1d4ed8; }
+        .btn-pause { background: #f59e0b; color: white; }
+        .btn-pause:hover { background: #d97706; }
+        .btn-reset { background: #64748b; color: white; }
+        .btn-reset:hover { background: #475569; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        select {
+            width: 100%; padding: 10px 12px; border-radius: 10px;
+            border: 2px solid #e2e8f0; font-size: 0.9em; font-family: inherit;
+            background: white; color: #1e293b; cursor: pointer;
+        }
+        select:focus { outline: none; border-color: #2563eb; }
+
+        .results {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+        }
+        .result-item {
+            background: #f8fafc; border-radius: 10px; padding: 10px 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .result-item .label { font-size: 0.78em; color: #64748b; margin-bottom: 2px; }
+        .result-item .value {
+            font-size: 1.05em; font-weight: 700; color: #1e293b;
+            font-family: 'Consolas', monospace;
+        }
+
+        .decomp-canvases {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+            margin-top: 10px;
+        }
+        .decomp-canvases canvas { width: 100%; }
+
+        .legend {
+            display: flex; gap: 12px; flex-wrap: wrap; margin-top: 10px;
+            font-size: 0.82em; color: #64748b;
+        }
+        .legend-item { display: flex; align-items: center; gap: 4px; }
+        .legend-dot {
+            width: 10px; height: 10px; border-radius: 50%; display: inline-block;
+        }
+
+        .formula-box {
+            background: #eff6ff; border-radius: 10px; padding: 12px;
+            font-size: 0.85em; line-height: 1.7; margin-top: 10px;
+            border: 1px solid #bfdbfe;
+        }
+        .formula-box code {
+            background: white; padding: 1px 5px; border-radius: 4px;
+            font-family: 'Consolas', monospace; font-size: 0.95em;
+        }
+        footer {
+            text-align: center; margin-top: 20px; padding: 15px;
+            color: #94a3b8; font-size: 0.85em;
+        }
+        footer a { color: #2563eb; text-decoration: none; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="index.html" class="back-link">← Zurück zur Übersicht</a>
+    <header>
+        <h1>🎯 Waagerechter Wurf</h1>
+        <div class="subtitle">Superposition: gleichförmige Bewegung + freier Fall</div>
+    </header>
+
+    <div class="main-layout">
+        <div>
+            <div class="panel" style="margin-bottom:15px;">
+                <h2>Flugbahn</h2>
+                <canvas id="mainCanvas" width="800" height="500"></canvas>
+                <div class="legend">
+                    <div class="legend-item"><span class="legend-dot" style="background:#2563eb"></span> v (gesamt)</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#10b981"></span> v<sub>x</sub> (horizontal)</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span> v<sub>y</sub> (vertikal)</div>
+                    <div class="legend-item"><span class="legend-dot" style="background:#a855f7"></span> Flugbahn</div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>Bewegungszerlegung</h2>
+                <div class="decomp-canvases">
+                    <div>
+                        <canvas id="xCanvas" width="350" height="220"></canvas>
+                        <div style="text-align:center;font-size:0.82em;color:#64748b;margin-top:4px;">x-Bewegung (gleichförmig)</div>
+                    </div>
+                    <div>
+                        <canvas id="yCanvas" width="350" height="220"></canvas>
+                        <div style="text-align:center;font-size:0.82em;color:#64748b;margin-top:4px;">y-Bewegung (freier Fall)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="panel">
+                <h2>⚙️ Parameter</h2>
+                <div class="slider-group">
+                    <label>Anfangsgeschwindigkeit v₀: <span id="v0Val">10 m/s</span></label>
+                    <input type="range" id="v0Slider" min="0" max="30" step="0.5" value="10">
+                </div>
+                <div class="slider-group" style="margin-top:12px;">
+                    <label>Abwurfhöhe h: <span id="hVal">20 m</span></label>
+                    <input type="range" id="hSlider" min="1" max="50" step="0.5" value="20">
+                </div>
+                <div style="margin-top:12px;">
+                    <label style="font-weight:600;font-size:0.9em;color:#334155;display:block;margin-bottom:4px;">🔧 Berufsbezug-Szenario</label>
+                    <select id="scenarioSelect">
+                        <option value="">— Eigene Werte —</option>
+                        <option value="kran">🏗️ Kran-Laufkatze (v₀=2, h=25)</option>
+                        <option value="foerderband">📦 Förderband (v₀=5, h=3)</option>
+                        <option value="stuntman">🎬 Stuntman (v₀=15, h=10)</option>
+                        <option value="flugzeug">✈️ Flugzeug-Abwurf (v₀=25, h=45)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>▶️ Steuerung</h2>
+                <div class="btn-row">
+                    <button class="btn btn-play" id="btnPlay" onclick="startAnimation()">▶ Play</button>
+                    <button class="btn btn-pause" id="btnPause" onclick="pauseAnimation()" disabled>⏸ Pause</button>
+                    <button class="btn btn-reset" id="btnReset" onclick="resetAnimation()">↺ Reset</button>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>📊 Ergebnisse</h2>
+                <div class="results">
+                    <div class="result-item">
+                        <div class="label">Flugzeit t</div>
+                        <div class="value" id="resT">—</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="label">Reichweite x<sub>w</sub></div>
+                        <div class="value" id="resX">—</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="label">v<sub>Auftreff</sub></div>
+                        <div class="value" id="resV">—</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="label">Winkel α</div>
+                        <div class="value" id="resA">—</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="label">v<sub>x</sub> (aktuell)</div>
+                        <div class="value" id="resVx">—</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="label">v<sub>y</sub> (aktuell)</div>
+                        <div class="value" id="resVy">—</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2>📖 Formeln</h2>
+                <div class="formula-box">
+                    <strong>x-Richtung:</strong> <code>x = v₀ · t</code><br>
+                    <strong>y-Richtung:</strong> <code>y = ½ · g · t²</code><br>
+                    <strong>Flugzeit:</strong> <code>t = √(2h / g)</code><br>
+                    <strong>Reichweite:</strong> <code>x<sub>w</sub> = v₀ · t</code><br>
+                    <strong>v<sub>y</sub>:</strong> <code>v<sub>y</sub> = g · t</code><br>
+                    <strong>v<sub>ges</sub>:</strong> <code>√(v₀² + v<sub>y</sub>²)</code><br>
+                    <strong>Winkel:</strong> <code>α = arctan(v<sub>y</sub> / v₀)</code>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        Physik-LK 11NP | Lore-Lorentz-Schule | <a href="index.html">Zurück zur Übersicht</a>
+    </footer>
+</div>
+
+<script>
+// ============ PHYSICS ============
+const g = 9.81;
+let v0 = 10, h = 20;
+let tFlight, xRange, vImpact, alphaImpact;
+
+function calcPhysics() {
+    tFlight = Math.sqrt(2 * h / g);
+    xRange = v0 * tFlight;
+    const vyEnd = g * tFlight;
+    vImpact = Math.sqrt(v0 * v0 + vyEnd * vyEnd);
+    alphaImpact = Math.atan2(vyEnd, v0) * 180 / Math.PI;
+}
+
+function posAt(t) {
+    return { x: v0 * t, y: 0.5 * g * t * t };
+}
+function velAt(t) {
+    return { vx: v0, vy: g * t };
+}
+
+// ============ STATE ============
+let animTime = 0, playing = false, paused = false, animId = null;
+let lastFrameTime = null;
+let trailPoints = [];
+
+// ============ CANVAS SETUP ============
+const mainCanvas = document.getElementById('mainCanvas');
+const mainCtx = mainCanvas.getContext('2d');
+const xCanvas = document.getElementById('xCanvas');
+const xCtx = xCanvas.getContext('2d');
+const yCanvas = document.getElementById('yCanvas');
+const yCtx = yCanvas.getContext('2d');
+
+function resizeCanvases() {
+    const dpr = window.devicePixelRatio || 1;
+    const rect = mainCanvas.getBoundingClientRect();
+    mainCanvas.width = rect.width * dpr;
+    mainCanvas.height = rect.width * 0.625 * dpr;
+    mainCanvas.style.height = (rect.width * 0.625) + 'px';
+    mainCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    [xCanvas, yCanvas].forEach(c => {
+        const r = c.getBoundingClientRect();
+        c.width = r.width * dpr;
+        c.height = 220 * dpr;
+        c.style.height = '220px';
+        c.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0);
+    });
+}
+window.addEventListener('resize', () => { resizeCanvases(); drawAll(); });
+
+// ============ DRAWING HELPERS ============
+function drawArrow(ctx, x0, y0, x1, y1, color, lineWidth) {
+    const dx = x1 - x0, dy = y1 - y0;
+    const len = Math.sqrt(dx*dx + dy*dy);
+    if (len < 2) return;
+    const headLen = Math.min(10, len * 0.3);
+    const angle = Math.atan2(dy, dx);
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.lineWidth = lineWidth || 2;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(x0, y0);
+    ctx.lineTo(x1, y1);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x1 - headLen * Math.cos(angle - 0.4), y1 - headLen * Math.sin(angle - 0.4));
+    ctx.lineTo(x1 - headLen * Math.cos(angle + 0.4), y1 - headLen * Math.sin(angle + 0.4));
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+}
+
+// ============ MAIN CANVAS ============
+function drawMain() {
+    const W = mainCanvas.getBoundingClientRect().width;
+    const H = parseFloat(mainCanvas.style.height);
+    mainCtx.clearRect(0, 0, W, H);
+
+    const margin = { top: 40, right: 30, bottom: 40, left: 55 };
+    const pw = W - margin.left - margin.right;
+    const ph = H - margin.top - margin.bottom;
+
+    calcPhysics();
+    const maxX = Math.max(xRange * 1.15, 1);
+    const maxY = Math.max(h * 1.15, 1);
+    const scaleX = pw / maxX;
+    const scaleY = ph / maxY;
+
+    function toScreen(px, py) {
+        return {
+            sx: margin.left + px * scaleX,
+            sy: margin.top + py * scaleY
+        };
+    }
+
+    // Grid
+    mainCtx.save();
+    mainCtx.strokeStyle = '#e2e8f0';
+    mainCtx.lineWidth = 1;
+    const gridStepX = niceStep(maxX, 8);
+    const gridStepY = niceStep(maxY, 6);
+    for (let gx = 0; gx <= maxX; gx += gridStepX) {
+        const s = toScreen(gx, 0);
+        mainCtx.beginPath(); mainCtx.moveTo(s.sx, margin.top); mainCtx.lineTo(s.sx, margin.top + ph); mainCtx.stroke();
+    }
+    for (let gy = 0; gy <= maxY; gy += gridStepY) {
+        const s = toScreen(0, gy);
+        mainCtx.beginPath(); mainCtx.moveTo(margin.left, s.sy); mainCtx.lineTo(margin.left + pw, s.sy); mainCtx.stroke();
+    }
+    mainCtx.restore();
+
+    // Axes
+    mainCtx.save();
+    mainCtx.strokeStyle = '#475569';
+    mainCtx.lineWidth = 2;
+    mainCtx.beginPath();
+    mainCtx.moveTo(margin.left, margin.top);
+    mainCtx.lineTo(margin.left, margin.top + ph);
+    mainCtx.stroke();
+    mainCtx.beginPath();
+    mainCtx.moveTo(margin.left, margin.top);
+    mainCtx.lineTo(margin.left + pw, margin.top);
+    mainCtx.stroke();
+
+    // Axis labels
+    mainCtx.fillStyle = '#475569';
+    mainCtx.font = '12px Segoe UI';
+    mainCtx.textAlign = 'center';
+    for (let gx = gridStepX; gx <= maxX; gx += gridStepX) {
+        const s = toScreen(gx, 0);
+        mainCtx.fillText(fmtNum(gx), s.sx, margin.top - 8);
+    }
+    mainCtx.textAlign = 'right';
+    for (let gy = gridStepY; gy <= maxY; gy += gridStepY) {
+        const s = toScreen(0, gy);
+        mainCtx.fillText(fmtNum(gy), margin.left - 8, s.sy + 4);
+    }
+
+    // Axis titles
+    mainCtx.font = 'bold 13px Segoe UI';
+    mainCtx.textAlign = 'center';
+    mainCtx.fillText('x (m) →', margin.left + pw / 2, margin.top - 22);
+    mainCtx.save();
+    mainCtx.translate(16, margin.top + ph / 2);
+    mainCtx.rotate(-Math.PI / 2);
+    mainCtx.fillText('↑ y (m) — nach unten positiv', 0, 0);
+    mainCtx.restore();
+    mainCtx.restore();
+
+    // Ground line
+    const groundS = toScreen(0, h);
+    mainCtx.save();
+    mainCtx.strokeStyle = '#92400e';
+    mainCtx.lineWidth = 3;
+    mainCtx.setLineDash([8, 4]);
+    mainCtx.beginPath();
+    mainCtx.moveTo(margin.left, groundS.sy);
+    mainCtx.lineTo(margin.left + pw, groundS.sy);
+    mainCtx.stroke();
+    mainCtx.setLineDash([]);
+    mainCtx.fillStyle = '#92400e';
+    mainCtx.font = 'bold 12px Segoe UI';
+    mainCtx.textAlign = 'right';
+    mainCtx.fillText('Boden (y = h)', margin.left + pw - 5, groundS.sy - 6);
+    mainCtx.restore();
+
+    // Starting platform
+    const startS = toScreen(0, 0);
+    mainCtx.save();
+    mainCtx.fillStyle = '#64748b';
+    mainCtx.fillRect(margin.left - 12, startS.sy - 3, 14, 6);
+    mainCtx.restore();
+
+    // Full parabola (ghost)
+    mainCtx.save();
+    mainCtx.strokeStyle = 'rgba(168,85,247,0.25)';
+    mainCtx.lineWidth = 2;
+    mainCtx.setLineDash([5, 5]);
+    mainCtx.beginPath();
+    const steps = 100;
+    for (let i = 0; i <= steps; i++) {
+        const t = (i / steps) * tFlight;
+        const p = posAt(t);
+        const s = toScreen(p.x, p.y);
+        if (i === 0) mainCtx.moveTo(s.sx, s.sy);
+        else mainCtx.lineTo(s.sx, s.sy);
+    }
+    mainCtx.stroke();
+    mainCtx.setLineDash([]);
+    mainCtx.restore();
+
+    // Trail
+    if (trailPoints.length > 1) {
+        mainCtx.save();
+        mainCtx.strokeStyle = '#a855f7';
+        mainCtx.lineWidth = 3;
+        mainCtx.lineJoin = 'round';
+        mainCtx.beginPath();
+        for (let i = 0; i < trailPoints.length; i++) {
+            const s = toScreen(trailPoints[i].x, trailPoints[i].y);
+            if (i === 0) mainCtx.moveTo(s.sx, s.sy);
+            else mainCtx.lineTo(s.sx, s.sy);
+        }
+        mainCtx.stroke();
+        mainCtx.restore();
+    }
+
+    // Ball and vectors
+    const currentT = Math.min(animTime, tFlight);
+    const pos = posAt(currentT);
+    const vel = velAt(currentT);
+    const ballS = toScreen(pos.x, pos.y);
+
+    // Velocity vectors (scaled for visibility)
+    const velScale = Math.min(pw, ph) / (Math.max(vImpact, 1) * 3.5);
+
+    // vx arrow (green)
+    drawArrow(mainCtx, ballS.sx, ballS.sy, ballS.sx + vel.vx * velScale, ballS.sy, '#10b981', 2.5);
+    // vy arrow (red) — downward
+    drawArrow(mainCtx, ballS.sx, ballS.sy, ballS.sx, ballS.sy + vel.vy * velScale, '#ef4444', 2.5);
+    // v total arrow (blue)
+    drawArrow(mainCtx, ballS.sx, ballS.sy, ballS.sx + vel.vx * velScale, ballS.sy + vel.vy * velScale, '#2563eb', 3);
+
+    // Dashed rectangle for vector decomposition
+    if (vel.vy > 0.1) {
+        mainCtx.save();
+        mainCtx.strokeStyle = 'rgba(100,116,139,0.3)';
+        mainCtx.lineWidth = 1;
+        mainCtx.setLineDash([4, 3]);
+        mainCtx.beginPath();
+        mainCtx.moveTo(ballS.sx + vel.vx * velScale, ballS.sy);
+        mainCtx.lineTo(ballS.sx + vel.vx * velScale, ballS.sy + vel.vy * velScale);
+        mainCtx.stroke();
+        mainCtx.beginPath();
+        mainCtx.moveTo(ballS.sx, ballS.sy + vel.vy * velScale);
+        mainCtx.lineTo(ballS.sx + vel.vx * velScale, ballS.sy + vel.vy * velScale);
+        mainCtx.stroke();
+        mainCtx.setLineDash([]);
+        mainCtx.restore();
+    }
+
+    // Ball
+    mainCtx.save();
+    mainCtx.beginPath();
+    mainCtx.arc(ballS.sx, ballS.sy, 8, 0, 2 * Math.PI);
+    mainCtx.fillStyle = '#2563eb';
+    mainCtx.fill();
+    mainCtx.strokeStyle = '#1e40af';
+    mainCtx.lineWidth = 2;
+    mainCtx.stroke();
+    // Highlight
+    mainCtx.beginPath();
+    mainCtx.arc(ballS.sx - 2, ballS.sy - 2, 3, 0, 2 * Math.PI);
+    mainCtx.fillStyle = 'rgba(255,255,255,0.5)';
+    mainCtx.fill();
+    mainCtx.restore();
+
+    // Vector labels
+    mainCtx.save();
+    mainCtx.font = 'bold 11px Consolas, monospace';
+    if (vel.vx > 0.5) {
+        mainCtx.fillStyle = '#10b981';
+        mainCtx.textAlign = 'center';
+        mainCtx.fillText('v_x=' + vel.vx.toFixed(1), ballS.sx + vel.vx * velScale * 0.5, ballS.sy - 10);
+    }
+    if (vel.vy > 0.5) {
+        mainCtx.fillStyle = '#ef4444';
+        mainCtx.textAlign = 'left';
+        mainCtx.fillText('v_y=' + vel.vy.toFixed(1), ballS.sx + 12, ballS.sy + vel.vy * velScale * 0.5 + 4);
+    }
+    mainCtx.restore();
+
+    // Update results
+    const vNow = Math.sqrt(vel.vx * vel.vx + vel.vy * vel.vy);
+    const alphaNow = vel.vx > 0 ? Math.atan2(vel.vy, vel.vx) * 180 / Math.PI : 0;
+    document.getElementById('resT').textContent = tFlight.toFixed(2) + ' s';
+    document.getElementById('resX').textContent = xRange.toFixed(2) + ' m';
+    document.getElementById('resV').textContent = vImpact.toFixed(2) + ' m/s';
+    document.getElementById('resA').textContent = alphaImpact.toFixed(1) + '°';
+    document.getElementById('resVx').textContent = vel.vx.toFixed(2) + ' m/s';
+    document.getElementById('resVy').textContent = vel.vy.toFixed(2) + ' m/s';
+}
+
+// ============ X-CANVAS (position-time) ============
+function drawXGraph() {
+    const W = xCanvas.getBoundingClientRect().width;
+    const H = 220;
+    xCtx.clearRect(0, 0, W, H);
+
+    calcPhysics();
+    const margin = { top: 25, right: 15, bottom: 30, left: 45 };
+    const pw = W - margin.left - margin.right;
+    const ph = H - margin.top - margin.bottom;
+
+    const maxT = Math.max(tFlight * 1.15, 0.5);
+    const maxXv = Math.max(xRange * 1.15, 1);
+    const scaleT = pw / maxT;
+    const scaleXv = ph / maxXv;
+
+    // Grid
+    xCtx.save();
+    xCtx.strokeStyle = '#f1f5f9';
+    xCtx.lineWidth = 1;
+    const stepT = niceStep(maxT, 5);
+    const stepXv = niceStep(maxXv, 4);
+    for (let gt = 0; gt <= maxT; gt += stepT) {
+        const sx = margin.left + gt * scaleT;
+        xCtx.beginPath(); xCtx.moveTo(sx, margin.top); xCtx.lineTo(sx, margin.top + ph); xCtx.stroke();
+    }
+    for (let gx = 0; gx <= maxXv; gx += stepXv) {
+        const sy = margin.top + ph - gx * scaleXv;
+        xCtx.beginPath(); xCtx.moveTo(margin.left, sy); xCtx.lineTo(margin.left + pw, sy); xCtx.stroke();
+    }
+    xCtx.restore();
+
+    // Axes
+    xCtx.save();
+    xCtx.strokeStyle = '#475569'; xCtx.lineWidth = 1.5;
+    xCtx.beginPath(); xCtx.moveTo(margin.left, margin.top); xCtx.lineTo(margin.left, margin.top + ph); xCtx.lineTo(margin.left + pw, margin.top + ph); xCtx.stroke();
+    xCtx.fillStyle = '#475569'; xCtx.font = '10px Segoe UI'; xCtx.textAlign = 'center';
+    for (let gt = stepT; gt <= maxT; gt += stepT) {
+        xCtx.fillText(fmtNum(gt), margin.left + gt * scaleT, margin.top + ph + 14);
+    }
+    xCtx.textAlign = 'right';
+    for (let gx = stepXv; gx <= maxXv; gx += stepXv) {
+        xCtx.fillText(fmtNum(gx), margin.left - 5, margin.top + ph - gx * scaleXv + 4);
+    }
+    xCtx.font = 'bold 11px Segoe UI';
+    xCtx.textAlign = 'center';
+    xCtx.fillText('t (s)', margin.left + pw / 2, margin.top + ph + 26);
+    xCtx.save(); xCtx.translate(12, margin.top + ph / 2); xCtx.rotate(-Math.PI / 2);
+    xCtx.fillText('x (m)', 0, 0); xCtx.restore();
+    xCtx.restore();
+
+    // Full line (ghost)
+    xCtx.save();
+    xCtx.strokeStyle = 'rgba(16,185,129,0.3)';
+    xCtx.lineWidth = 2;
+    xCtx.setLineDash([4, 4]);
+    xCtx.beginPath();
+    xCtx.moveTo(margin.left, margin.top + ph);
+    xCtx.lineTo(margin.left + tFlight * scaleT, margin.top + ph - xRange * scaleXv);
+    xCtx.stroke();
+    xCtx.setLineDash([]);
+    xCtx.restore();
+
+    // Animated line
+    const currentT = Math.min(animTime, tFlight);
+    const currentX = v0 * currentT;
+    xCtx.save();
+    xCtx.strokeStyle = '#10b981';
+    xCtx.lineWidth = 3;
+    xCtx.beginPath();
+    xCtx.moveTo(margin.left, margin.top + ph);
+    xCtx.lineTo(margin.left + currentT * scaleT, margin.top + ph - currentX * scaleXv);
+    xCtx.stroke();
+    // Dot
+    xCtx.beginPath();
+    xCtx.arc(margin.left + currentT * scaleT, margin.top + ph - currentX * scaleXv, 5, 0, 2 * Math.PI);
+    xCtx.fillStyle = '#10b981';
+    xCtx.fill();
+    xCtx.restore();
+
+    // Title
+    xCtx.save();
+    xCtx.font = 'bold 12px Segoe UI';
+    xCtx.fillStyle = '#10b981';
+    xCtx.textAlign = 'left';
+    xCtx.fillText('x(t) = v₀ · t', margin.left + 5, margin.top - 6);
+    xCtx.restore();
+}
+
+// ============ Y-CANVAS (position-time) ============
+function drawYGraph() {
+    const W = yCanvas.getBoundingClientRect().width;
+    const H = 220;
+    yCtx.clearRect(0, 0, W, H);
+
+    calcPhysics();
+    const margin = { top: 25, right: 15, bottom: 30, left: 45 };
+    const pw = W - margin.left - margin.right;
+    const ph = H - margin.top - margin.bottom;
+
+    const maxT = Math.max(tFlight * 1.15, 0.5);
+    const maxYv = Math.max(h * 1.15, 1);
+    const scaleT = pw / maxT;
+    const scaleYv = ph / maxYv;
+
+    // Grid
+    yCtx.save();
+    yCtx.strokeStyle = '#f1f5f9';
+    yCtx.lineWidth = 1;
+    const stepT = niceStep(maxT, 5);
+    const stepYv = niceStep(maxYv, 4);
+    for (let gt = 0; gt <= maxT; gt += stepT) {
+        const sx = margin.left + gt * scaleT;
+        yCtx.beginPath(); yCtx.moveTo(sx, margin.top); yCtx.lineTo(sx, margin.top + ph); yCtx.stroke();
+    }
+    for (let gy = 0; gy <= maxYv; gy += stepYv) {
+        const sy = margin.top + gy * scaleYv;
+        yCtx.beginPath(); yCtx.moveTo(margin.left, sy); yCtx.lineTo(margin.left + pw, sy); yCtx.stroke();
+    }
+    yCtx.restore();
+
+    // Axes
+    yCtx.save();
+    yCtx.strokeStyle = '#475569'; yCtx.lineWidth = 1.5;
+    yCtx.beginPath(); yCtx.moveTo(margin.left, margin.top); yCtx.lineTo(margin.left, margin.top + ph); yCtx.stroke();
+    yCtx.beginPath(); yCtx.moveTo(margin.left, margin.top); yCtx.lineTo(margin.left + pw, margin.top); yCtx.stroke();
+    yCtx.fillStyle = '#475569'; yCtx.font = '10px Segoe UI'; yCtx.textAlign = 'center';
+    for (let gt = stepT; gt <= maxT; gt += stepT) {
+        yCtx.fillText(fmtNum(gt), margin.left + gt * scaleT, margin.top + ph + 14);
+    }
+    yCtx.textAlign = 'right';
+    for (let gy = stepYv; gy <= maxYv; gy += stepYv) {
+        yCtx.fillText(fmtNum(gy), margin.left - 5, margin.top + gy * scaleYv + 4);
+    }
+    yCtx.font = 'bold 11px Segoe UI';
+    yCtx.textAlign = 'center';
+    yCtx.fillText('t (s)', margin.left + pw / 2, margin.top + ph + 26);
+    yCtx.save(); yCtx.translate(12, margin.top + ph / 2); yCtx.rotate(-Math.PI / 2);
+    yCtx.fillText('y (m) ↓', 0, 0); yCtx.restore();
+    yCtx.restore();
+
+    // Full parabola (ghost)
+    yCtx.save();
+    yCtx.strokeStyle = 'rgba(239,68,68,0.25)';
+    yCtx.lineWidth = 2;
+    yCtx.setLineDash([4, 4]);
+    yCtx.beginPath();
+    const steps = 60;
+    for (let i = 0; i <= steps; i++) {
+        const t = (i / steps) * tFlight;
+        const y = 0.5 * g * t * t;
+        const sx = margin.left + t * scaleT;
+        const sy = margin.top + y * scaleYv;
+        if (i === 0) yCtx.moveTo(sx, sy);
+        else yCtx.lineTo(sx, sy);
+    }
+    yCtx.stroke();
+    yCtx.setLineDash([]);
+    yCtx.restore();
+
+    // Animated curve
+    const currentT = Math.min(animTime, tFlight);
+    yCtx.save();
+    yCtx.strokeStyle = '#ef4444';
+    yCtx.lineWidth = 3;
+    yCtx.beginPath();
+    for (let i = 0; i <= 60; i++) {
+        const t = (i / 60) * currentT;
+        const y = 0.5 * g * t * t;
+        const sx = margin.left + t * scaleT;
+        const sy = margin.top + y * scaleYv;
+        if (i === 0) yCtx.moveTo(sx, sy);
+        else yCtx.lineTo(sx, sy);
+    }
+    yCtx.stroke();
+    // Dot
+    const yNow = 0.5 * g * currentT * currentT;
+    yCtx.beginPath();
+    yCtx.arc(margin.left + currentT * scaleT, margin.top + yNow * scaleYv, 5, 0, 2 * Math.PI);
+    yCtx.fillStyle = '#ef4444';
+    yCtx.fill();
+    yCtx.restore();
+
+    // Title
+    yCtx.save();
+    yCtx.font = 'bold 12px Segoe UI';
+    yCtx.fillStyle = '#ef4444';
+    yCtx.textAlign = 'left';
+    yCtx.fillText('y(t) = ½·g·t²', margin.left + 5, margin.top - 6);
+    yCtx.restore();
+}
+
+// ============ UTILITIES ============
+function niceStep(range, targetTicks) {
+    const rough = range / targetTicks;
+    const pow = Math.pow(10, Math.floor(Math.log10(rough)));
+    const norm = rough / pow;
+    let step;
+    if (norm < 1.5) step = 1;
+    else if (norm < 3.5) step = 2;
+    else if (norm < 7.5) step = 5;
+    else step = 10;
+    return step * pow;
+}
+
+function fmtNum(n) {
+    if (n === Math.floor(n)) return n.toString();
+    return n.toFixed(1);
+}
+
+// ============ ANIMATION ============
+function drawAll() {
+    drawMain();
+    drawXGraph();
+    drawYGraph();
+}
+
+function animationLoop(timestamp) {
+    if (!playing) return;
+    if (lastFrameTime === null) lastFrameTime = timestamp;
+    const dt = (timestamp - lastFrameTime) / 1000;
+    lastFrameTime = timestamp;
+
+    animTime += dt;
+
+    // Add trail point
+    const pos = posAt(Math.min(animTime, tFlight));
+    trailPoints.push({ x: pos.x, y: pos.y });
+
+    if (animTime >= tFlight) {
+        animTime = tFlight;
+        playing = false;
+        updateButtons();
+    }
+
+    drawAll();
+
+    if (playing) {
+        animId = requestAnimationFrame(animationLoop);
+    }
+}
+
+function startAnimation() {
+    if (animTime >= tFlight) {
+        resetAnimation();
+    }
+    playing = true;
+    paused = false;
+    lastFrameTime = null;
+    updateButtons();
+    animId = requestAnimationFrame(animationLoop);
+}
+
+function pauseAnimation() {
+    playing = false;
+    paused = true;
+    updateButtons();
+}
+
+function resetAnimation() {
+    playing = false;
+    paused = false;
+    animTime = 0;
+    trailPoints = [];
+    lastFrameTime = null;
+    if (animId) cancelAnimationFrame(animId);
+    updateButtons();
+    drawAll();
+}
+
+function updateButtons() {
+    document.getElementById('btnPlay').disabled = playing;
+    document.getElementById('btnPause').disabled = !playing;
+}
+
+// ============ CONTROLS ============
+const v0Slider = document.getElementById('v0Slider');
+const hSlider = document.getElementById('hSlider');
+const scenarioSelect = document.getElementById('scenarioSelect');
+
+v0Slider.addEventListener('input', () => {
+    v0 = parseFloat(v0Slider.value);
+    document.getElementById('v0Val').textContent = v0.toFixed(1) + ' m/s';
+    scenarioSelect.value = '';
+    resetAnimation();
+});
+
+hSlider.addEventListener('input', () => {
+    h = parseFloat(hSlider.value);
+    document.getElementById('hVal').textContent = h.toFixed(1) + ' m';
+    scenarioSelect.value = '';
+    resetAnimation();
+});
+
+const scenarios = {
+    kran: { v0: 2, h: 25 },
+    foerderband: { v0: 5, h: 3 },
+    stuntman: { v0: 15, h: 10 },
+    flugzeug: { v0: 25, h: 45 }
+};
+
+scenarioSelect.addEventListener('change', () => {
+    const key = scenarioSelect.value;
+    if (scenarios[key]) {
+        v0 = scenarios[key].v0;
+        h = scenarios[key].h;
+        v0Slider.value = v0;
+        hSlider.value = h;
+        document.getElementById('v0Val').textContent = v0.toFixed(1) + ' m/s';
+        document.getElementById('hVal').textContent = h.toFixed(1) + ' m';
+        resetAnimation();
+    }
+});
+
+// ============ INIT ============
+resizeCanvases();
+calcPhysics();
+drawAll();
+</script>
+</body>
+</html>
