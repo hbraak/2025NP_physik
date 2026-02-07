@@ -415,9 +415,9 @@ function drawMain() {
     mainCtx.restore();
 
     // Velocity vector (tangential, blue)
-    // Tangent direction: perpendicular to radius, in direction of motion
+    // Position is (cos φ, -sin φ) in screen coords, so tangent (d/dφ) is (-sin φ, -cos φ)
     const vDir_x = -Math.sin(phi);
-    const vDir_y = Math.cos(phi); // screen y is flipped
+    const vDir_y = -Math.cos(phi); // screen y is inverted
     const velArrowLen = Math.min(v / (2 * Math.PI * 5 / 0.5) * maxR * 0.8, maxR * 0.7); // scale nicely
     const vScale = maxR * 0.5 / Math.max(v, 0.01);
     const vLen = Math.min(v * vScale, maxR * 0.7);
