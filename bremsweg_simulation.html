@@ -127,10 +127,7 @@
             <h3>🎯 Challenge: Schaffst du es rechtzeitig zu bremsen?</h3>
             <p>Ein Hindernis taucht plötzlich auf — reagiere so schnell du kannst! Deine echte Reaktionszeit wird gemessen.</p>
             <div class="obstacle-distance" id="obstacleInfo">Starte die Challenge und bremse wenn das 🚧 erscheint!</div>
-            <div class="challenge-btns">
-                <button class="btn btn-challenge" onclick="startChallenge()" id="btnChallenge">🎮 Challenge starten</button>
-                <button class="btn btn-go" id="btnBrakeChallenge" onclick="challengeBrake()" disabled>⚠️ BREMSEN!</button>
-            </div>
+            <button class="btn btn-challenge" onclick="startChallenge()" id="btnChallenge" style="margin-top:10px; width:100%">🎮 Challenge starten</button>
             <div class="challenge-result" id="challengeResult"></div>
         </div>
 
@@ -161,6 +158,9 @@
             <canvas id="simCanvas" width="900" height="280"></canvas>
             <div class="speed-display">🏎️ <span class="kmh" id="liveSpeed">0</span> km/h</div>
         </div>
+        
+        <!-- BREMSEN direkt unter der Fahrbahn -->
+        <button class="btn btn-go" id="btnBrakeMain" onclick="brakeNow()" style="width:100%; margin-bottom:15px; padding:18px; font-size:1.3em;" disabled>⚠️ BREMSEN!</button>
 
         <div class="results">
             <div class="result-card reaction">
@@ -332,6 +332,7 @@ let sReaction = 0, sBrake = 0, animId = null;
 let obstacleX = -1, challengeMode = false, challengeObstacleTime = 0, playerReactionTime = 0;
 let obstacleVisible = false;
 let brakeSoundPlayed = false;
+let carXAtBrake = 80;
 
 // Sliders
 document.getElementById('speed').addEventListener('input', e => {
@@ -742,22 +743,26 @@ function animate(timestamp) {
             document.getElementById('btnBrake').classList.remove('braking');
             
             if (challengeMode && obstacleX > 0) {
+                // Calculate distance from brake-start to obstacle
+                const brakeStartM = (carXAtBrake - 80) / 8;
+                const distToObstacle = obstacleX - brakeStartM;
                 const totalDist = sReaction + sBrake;
                 const result = document.getElementById('challengeResult');
-                if (totalDist <= obstacleX) {
+                if (totalDist <= distToObstacle) {
                     result.className = 'challenge-result success';
-                    result.textContent = `✅ Geschafft! Anhalteweg: ${totalDist.toFixed(1).replace('.',',')} m — Hindernis bei ${obstacleX.toFixed(0)} m (${(obstacleX - totalDist).toFixed(1).replace('.',',')} m Luft). Reaktionszeit: ${playerReactionTime.toFixed(2).replace('.',',')} s`;
+                    result.textContent = `✅ Geschafft! Anhalteweg: ${totalDist.toFixed(1).replace('.',',')} m — Hindernis war ${distToObstacle.toFixed(0)} m entfernt (${(distToObstacle - totalDist).toFixed(1).replace('.',',')} m Luft). Reaktionszeit: ${playerReactionTime.toFixed(2).replace('.',',')} s`;
                     playSuccess();
                 } else {
                     result.className = 'challenge-result fail';
-                    result.textContent = `💥 Aufprall! Anhalteweg: ${totalDist.toFixed(1).replace('.',',')} m — Hindernis bei ${obstacleX.toFixed(0)} m. ${(totalDist - obstacleX).toFixed(1).replace('.',',')} m zu spät! Reaktionszeit: ${playerReactionTime.toFixed(2).replace('.',',')} s`;
+                    result.textContent = `💥 Aufprall! Anhalteweg: ${totalDist.toFixed(1).replace('.',',')} m — Hindernis war nur ${distToObstacle.toFixed(0)} m entfernt. ${(totalDist - distToObstacle).toFixed(1).replace('.',',')} m zu spät! Reaktionszeit: ${playerReactionTime.toFixed(2).replace('.',',')} s`;
                     playCrash();
                 }
                 challengeMode = false;
-                document.getElementById('btnBrakeChallenge').disabled = true;
-                document.getElementById('btnBrakeChallenge').textContent = '⚠️ BREMSEN!';
-                document.getElementById('btnBrakeChallenge').classList.remove('btn-pulse');
             }
+            const mainBtn = document.getElementById('btnBrakeMain');
+            mainBtn.disabled = true;
+            mainBtn.textContent = '⚠️ BREMSEN!';
+            mainBtn.classList.remove('btn-pulse');
         }
     }
     
@@ -780,20 +785,16 @@ function startBrake() {
         lastTime = 0;
         obstacleX = -1; obstacleVisible = false;
         challengeMode = false;
-        document.getElementById('btnBrake').textContent = '🛑 JETZT BREMSEN!';
-        document.getElementById('btnBrake').classList.add('braking');
+        document.getElementById('btnBrake').textContent = '🚗 Fährt...';
         document.getElementById('resReaction').textContent = '—';
         document.getElementById('resBrake').textContent = '—';
         document.getElementById('resTotal').textContent = '—';
+        // Enable main brake button
+        const mainBtn = document.getElementById('btnBrakeMain');
+        mainBtn.disabled = false;
+        mainBtn.textContent = '🛑 BREMSEN!';
         startEngineSound();
         animId = requestAnimationFrame(animate);
-    } else if (simState === 'driving') {
-        playHorn();
-        simState = 'reacting';
-        simTime = 0;
-        document.getElementById('btnBrake').textContent = '⏳ Reagiere...';
-        document.getElementById('btnBrake').disabled = true;
-        setTimeout(() => { document.getElementById('btnBrake').disabled = false; }, 500);
     }
 }
 
@@ -805,12 +806,12 @@ function resetSim() {
     sReaction = 0; sBrake = 0;
     obstacleX = -1; obstacleVisible = false;
     challengeMode = false; lastTime = 0;
-    document.getElementById('btnBrake').textContent = '⚠️ Simulation starten';
-    document.getElementById('btnBrake').classList.remove('braking');
+    document.getElementById('btnBrake').textContent = '🚗 Freie Simulation';
     document.getElementById('btnBrake').disabled = false;
-    document.getElementById('btnBrakeChallenge').disabled = true;
-    document.getElementById('btnBrakeChallenge').textContent = '⚠️ BREMSEN!';
-    document.getElementById('btnBrakeChallenge').classList.remove('btn-pulse');
+    const mainBtn = document.getElementById('btnBrakeMain');
+    mainBtn.disabled = true;
+    mainBtn.textContent = '⚠️ BREMSEN!';
+    mainBtn.classList.remove('btn-pulse');
     document.getElementById('resReaction').textContent = '—';
     document.getElementById('resBrake').textContent = '—';
     document.getElementById('resTotal').textContent = '—';
@@ -819,22 +820,53 @@ function resetSim() {
     drawScene();
 }
 
+// ===== Unified Brake Button =====
+function brakeNow() {
+    if (challengeMode && simState === 'driving') {
+        // Challenge brake
+        playerReactionTime = (performance.now() - challengeObstacleTime) / 1000;
+        reactionTime = playerReactionTime;
+        document.getElementById('reaction').value = Math.min(2.5, reactionTime);
+        document.getElementById('reactionVal').textContent = reactionTime.toFixed(2).replace('.', ',') + ' s';
+        document.getElementById('obstacleInfo').textContent = `Deine Reaktionszeit: ${playerReactionTime.toFixed(2).replace('.',',')} s`;
+    }
+    
+    if (simState === 'driving') {
+        carXAtBrake = carX;
+        playHorn();
+        simState = 'reacting';
+        simTime = 0;
+        const btn = document.getElementById('btnBrakeMain');
+        btn.disabled = true;
+        btn.textContent = '⏳ Reagiere...';
+        btn.classList.remove('btn-pulse');
+    }
+}
+
 // ===== Challenge Mode =====
 function startChallenge() {
     resetSim();
     ensureAudio();
     challengeMode = true;
     
+    // Place obstacle much further ahead so it's visible on screen
+    // We need it to appear at a distance that's reachable but gives the player a chance
     const sr = calcReactionDist(v0ms(), 1.0);
     const sb = calcBrakeDist(v0ms(), brakeAccel);
     const theoretical = sr + sb;
+    // Place obstacle at 1.1-1.5x theoretical distance
+    // But also ensure it's far enough ahead in pixels to be visible
     obstacleX = theoretical * (1.1 + Math.random() * 0.4);
+    // Minimum distance so it appears on screen
+    if (obstacleX < 60) obstacleX = 60 + Math.random() * 30;
     obstacleVisible = false;
     
     document.getElementById('obstacleInfo').textContent = `⏳ Fahrt bei ${speed} km/h — warte auf das Hindernis...`;
-    document.getElementById('btnBrakeChallenge').disabled = true;
-    document.getElementById('btnBrakeChallenge').textContent = '👀 Warten...';
     document.getElementById('challengeResult').textContent = '';
+    
+    const btn = document.getElementById('btnBrakeMain');
+    btn.disabled = true;
+    btn.textContent = '👀 Warte auf Hindernis...';
     
     simState = 'driving';
     carSpeed = v0ms();
@@ -846,32 +878,20 @@ function startChallenge() {
     const delay = 1500 + Math.random() * 3000;
     setTimeout(() => {
         if (simState === 'driving' && challengeMode) {
+            // Place obstacle AHEAD of current car position
+            const currentDistM = (carX - 80) / 8; // convert px back to meters
+            obstacleX = currentDistM + theoretical * (1.0 + Math.random() * 0.3);
             obstacleVisible = true;
             challengeObstacleTime = performance.now();
             playAlert();
-            document.getElementById('obstacleInfo').textContent = `🚨 HINDERNIS in ${obstacleX.toFixed(0)} m! BREMSEN!!!`;
-            document.getElementById('btnBrakeChallenge').disabled = false;
-            document.getElementById('btnBrakeChallenge').textContent = '🚨 BREMSEN!!!';
-            document.getElementById('btnBrakeChallenge').classList.add('btn-pulse');
+            document.getElementById('obstacleInfo').textContent = `🚨 HINDERNIS! BREMSEN!!!`;
+            
+            const btn = document.getElementById('btnBrakeMain');
+            btn.disabled = false;
+            btn.textContent = '🚨 BREMSEN!!!';
+            btn.classList.add('btn-pulse');
         }
     }, delay);
-}
-
-function challengeBrake() {
-    if (simState !== 'driving' || !challengeMode) return;
-    
-    playerReactionTime = (performance.now() - challengeObstacleTime) / 1000;
-    reactionTime = playerReactionTime;
-    document.getElementById('reaction').value = Math.min(2.5, reactionTime);
-    document.getElementById('reactionVal').textContent = reactionTime.toFixed(2).replace('.', ',') + ' s';
-    
-    playHorn();
-    simState = 'reacting';
-    simTime = 0;
-    document.getElementById('btnBrakeChallenge').disabled = true;
-    document.getElementById('btnBrakeChallenge').textContent = '⏳ Reagiere...';
-    document.getElementById('btnBrakeChallenge').classList.remove('btn-pulse');
-    document.getElementById('obstacleInfo').textContent = `Deine Reaktionszeit: ${playerReactionTime.toFixed(2).replace('.',',')} s`;
 }
 
 // Init
