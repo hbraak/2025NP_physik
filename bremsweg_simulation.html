@@ -880,7 +880,7 @@ function startChallenge() {
         if (simState === 'driving' && challengeMode) {
             // Place obstacle AHEAD of current car position
             const currentDistM = (carX - 80) / 8; // convert px back to meters
-            obstacleX = currentDistM + theoretical * (1.0 + Math.random() * 0.3);
+            obstacleX = currentDistM + theoretical * (1.5 + Math.random() * 0.8);
             obstacleVisible = true;
             challengeObstacleTime = performance.now();
             playAlert();
