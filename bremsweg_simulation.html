@@ -151,16 +151,15 @@
                 <div class="road-btn" data-a="2.0" data-label="Eis">❄️ Eis/Glätte<br><small>a = 2,0 m/s²</small></div>
                 <div class="road-btn" data-a="1.5" data-label="Förderband">🏭 Förderband<br><small>a = 1,5 m/s²</small></div>
             </div>
+            <div style="grid-column:1/-1; display:flex; gap:10px;">
+                <button class="btn btn-go" id="btnBrake" onclick="startBrake()" style="flex:1">🚗 Freie Simulation</button>
+                <button class="btn btn-reset" onclick="resetSim()" style="flex:0.4">↺ Reset</button>
+            </div>
         </div>
 
         <div class="sim-area">
-            <canvas id="simCanvas" width="900" height="200"></canvas>
+            <canvas id="simCanvas" width="900" height="280"></canvas>
             <div class="speed-display">🏎️ <span class="kmh" id="liveSpeed">0</span> km/h</div>
-        </div>
-        
-        <div class="btn-row">
-            <button class="btn btn-go" id="btnBrake" onclick="startBrake()">⚠️ Simulation starten</button>
-            <button class="btn btn-reset" onclick="resetSim()">↺ Zurücksetzen</button>
         </div>
 
         <div class="results">
@@ -385,63 +384,175 @@ function updateComparison() {
     }).join('');
 }
 
+// Generate random trees (seeded positions)
+const trees = [];
+for (let i = 0; i < 80; i++) {
+    trees.push({
+        x: i * 120 + Math.random() * 60,
+        size: 0.6 + Math.random() * 0.6,
+        type: Math.random() > 0.3 ? 'pine' : 'bare', // mostly pines
+        snow: true
+    });
+}
+
+function drawTree(x, y, size, type, snow) {
+    const s = size * 30;
+    // Trunk
+    ctx.fillStyle = '#5a3a1a';
+    ctx.fillRect(x - 3 * size, y - s * 0.3, 6 * size, s * 0.5);
+    
+    if (type === 'pine') {
+        // Pine tree layers with snow
+        for (let i = 0; i < 3; i++) {
+            const layerY = y - s * 0.3 - i * s * 0.35;
+            const layerW = (s * 0.7 - i * s * 0.15);
+            ctx.fillStyle = '#1a5a2a';
+            ctx.beginPath();
+            ctx.moveTo(x, layerY - s * 0.4);
+            ctx.lineTo(x - layerW, layerY);
+            ctx.lineTo(x + layerW, layerY);
+            ctx.closePath();
+            ctx.fill();
+            if (snow) {
+                ctx.fillStyle = 'rgba(220,235,255,0.7)';
+                ctx.beginPath();
+                ctx.moveTo(x, layerY - s * 0.4);
+                ctx.lineTo(x - layerW * 0.7, layerY - s * 0.12);
+                ctx.lineTo(x + layerW * 0.7, layerY - s * 0.12);
+                ctx.closePath();
+                ctx.fill();
+            }
+        }
+    } else {
+        // Bare tree branches
+        ctx.strokeStyle = '#5a3a1a';
+        ctx.lineWidth = 2 * size;
+        const branchY = y - s * 0.3;
+        for (let b = 0; b < 4; b++) {
+            const angle = -0.3 - b * 0.4 + (b % 2) * 0.8;
+            const len = s * (0.3 + b * 0.1);
+            ctx.beginPath();
+            ctx.moveTo(x, branchY - b * s * 0.2);
+            ctx.lineTo(x + Math.cos(angle) * len, branchY - b * s * 0.2 - Math.sin(Math.abs(angle)) * len * 0.7);
+            ctx.stroke();
+        }
+        if (snow) {
+            ctx.fillStyle = 'rgba(220,235,255,0.5)';
+            ctx.beginPath();
+            ctx.arc(x, y - s * 0.8, s * 0.15, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+}
+
 function drawScene() {
     const W = canvas.width, H = canvas.height;
     ctx.clearRect(0, 0, W, H);
     
-    // Sky gradient
-    const sky = ctx.createLinearGradient(0, 0, 0, H * 0.6);
-    sky.addColorStop(0, '#1a1a2e');
-    sky.addColorStop(1, '#16213e');
+    const roadY = H * 0.65;
+    const roadH = H * 0.2;
+    
+    // Sky gradient (winter sky)
+    const sky = ctx.createLinearGradient(0, 0, 0, roadY);
+    sky.addColorStop(0, '#0d1b2a');
+    sky.addColorStop(0.5, '#1b2838');
+    sky.addColorStop(1, '#2a3a4a');
     ctx.fillStyle = sky;
-    ctx.fillRect(0, 0, W, H * 0.6);
+    ctx.fillRect(0, 0, W, roadY);
+    
+    // Snow-covered ground behind road
+    ctx.fillStyle = '#d4dfe8';
+    ctx.fillRect(0, roadY - 8, W, 8);
+    ctx.fillStyle = '#c8d8e4';
+    ctx.fillRect(0, roadY + roadH, W, H - roadY - roadH);
+    
+    // Scrolling trees in background
+    const scrollPx = (carX - 80) * 0.5; // parallax
+    for (const tree of trees) {
+        const tx = tree.x - scrollPx;
+        const wrapped = ((tx % (80 * 120)) + 80 * 120) % (80 * 120) - 200;
+        if (wrapped > -50 && wrapped < W + 50) {
+            drawTree(wrapped, roadY - 5, tree.size, tree.type, tree.snow);
+        }
+    }
+    
+    // Distant hills
+    ctx.fillStyle = '#2a3a4a';
+    ctx.beginPath();
+    ctx.moveTo(0, roadY - 5);
+    for (let x = 0; x <= W; x += 3) {
+        const hillScroll = (x + scrollPx * 0.2) * 0.01;
+        ctx.lineTo(x, roadY - 20 - Math.sin(hillScroll) * 15 - Math.cos(hillScroll * 2.3) * 8);
+    }
+    ctx.lineTo(W, roadY);
+    ctx.closePath();
+    ctx.fill();
+    
+    // Re-draw near-ground snow over hills
+    ctx.fillStyle = 'rgba(212,223,232,0.6)';
+    ctx.beginPath();
+    ctx.moveTo(0, roadY - 3);
+    for (let x = 0; x <= W; x += 5) {
+        const snowScroll = (x + scrollPx * 0.3) * 0.02;
+        ctx.lineTo(x, roadY - 5 - Math.sin(snowScroll) * 3);
+    }
+    ctx.lineTo(W, roadY);
+    ctx.closePath();
+    ctx.fill();
     
     // Road
-    const roadY = H * 0.6;
-    ctx.fillStyle = '#333';
-    ctx.fillRect(0, roadY, W, H * 0.4);
+    ctx.fillStyle = '#3a3a3a';
+    ctx.fillRect(0, roadY, W, roadH);
     
-    // Road markings (scroll with car)
+    // Road edge lines
+    ctx.strokeStyle = '#888';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, roadY + 2); ctx.lineTo(W, roadY + 2);
+    ctx.moveTo(0, roadY + roadH - 2); ctx.lineTo(W, roadY + roadH - 2);
+    ctx.stroke();
+    
+    // Road markings (dashed center line)
     ctx.setLineDash([30, 20]);
-    ctx.strokeStyle = '#666';
+    ctx.strokeStyle = '#777';
     ctx.lineWidth = 2;
     ctx.beginPath();
     const scrollOffset = (carX - 80) * 2;
     for (let x = -scrollOffset % 50; x < W; x += 50) {
-        ctx.moveTo(x, roadY + H * 0.2);
-        ctx.lineTo(x + 30, roadY + H * 0.2);
+        ctx.moveTo(x, roadY + roadH / 2);
+        ctx.lineTo(x + 30, roadY + roadH / 2);
     }
     ctx.stroke();
     ctx.setLineDash([]);
     
-    // Distance markers
+    // Distance markers on road
     if (simState !== 'idle') {
         const pixPerMeter = 8;
-        ctx.fillStyle = '#555';
+        ctx.fillStyle = 'rgba(255,255,255,0.4)';
         ctx.font = '10px sans-serif';
         for (let m = 0; m <= 500; m += 10) {
             const mx = 80 + m * pixPerMeter - (carX - 80);
             if (mx > 0 && mx < W) {
-                ctx.fillRect(mx, roadY, 1, 5);
+                ctx.fillRect(mx, roadY + roadH - 8, 1, 5);
                 if (m % 50 === 0) {
-                    ctx.fillText(m + 'm', mx - 8, roadY + 15);
+                    ctx.fillText(m + 'm', mx - 8, roadY + roadH + 12);
                 }
             }
         }
     }
     
-    // Reaction zone (orange)
+    // Reaction zone (orange) on road
     if (sReaction > 0 && simState !== 'idle') {
         const pixPerMeter = 8;
         const zs = Math.max(0, 80 - (carX - 80));
         const ze = Math.max(0, 80 + sReaction * pixPerMeter - (carX - 80));
         if (ze > 0 && zs < W) {
             ctx.fillStyle = 'rgba(243, 156, 18, 0.3)';
-            ctx.fillRect(zs, roadY, ze - zs, H * 0.4);
+            ctx.fillRect(zs, roadY, ze - zs, roadH);
         }
     }
     
-    // Brake zone (red)
+    // Brake zone (red) on road
     if (sBrake > 0 && (simState === 'braking' || simState === 'stopped')) {
         const pixPerMeter = 8;
         const brakeStartPx = 80 + sReaction * pixPerMeter;
@@ -449,7 +560,7 @@ function drawScene() {
         const ze = Math.max(0, brakeStartPx + sBrake * pixPerMeter - (carX - 80));
         if (ze > 0 && zs < W) {
             ctx.fillStyle = 'rgba(231, 76, 60, 0.3)';
-            ctx.fillRect(zs, roadY, ze - zs, H * 0.4);
+            ctx.fillRect(zs, roadY, ze - zs, roadH);
         }
     }
     
@@ -458,47 +569,82 @@ function drawScene() {
         const pixPerMeter = 8;
         const ox = 80 + obstacleX * pixPerMeter - (carX - 80);
         if (ox > -30 && ox < W + 30) {
-            // Draw barrier
-            ctx.fillStyle = '#ff4444';
-            ctx.fillRect(ox - 15, roadY - 20, 30, 5);
-            ctx.fillStyle = '#ffaa00';
-            ctx.fillRect(ox - 15, roadY - 15, 30, 5);
-            ctx.fillStyle = '#ff4444';
-            ctx.fillRect(ox - 15, roadY - 10, 30, 5);
+            const barrierY = roadY + 2;
             // Posts
-            ctx.fillStyle = '#888';
-            ctx.fillRect(ox - 12, roadY - 20, 3, roadY * 0.4 + 20);
-            ctx.fillRect(ox + 10, roadY - 20, 3, roadY * 0.4 + 20);
-            // Warning sign
-            ctx.font = '24px sans-serif';
-            ctx.fillText('⚠️', ox - 12, roadY - 25);
+            ctx.fillStyle = '#666';
+            ctx.fillRect(ox - 14, barrierY, 3, roadH - 4);
+            ctx.fillRect(ox + 11, barrierY, 3, roadH - 4);
+            // Red-yellow stripes
+            for (let s = 0; s < 5; s++) {
+                ctx.fillStyle = s % 2 === 0 ? '#ff3333' : '#ffaa00';
+                ctx.fillRect(ox - 14, barrierY + s * (roadH - 4) / 5, 28, (roadH - 4) / 5);
+            }
+            // Warning sign above
+            ctx.font = '22px sans-serif';
+            ctx.fillText('⚠️', ox - 11, roadY - 5);
         }
     }
     
-    // Car
-    const carDrawX = 80;
-    const carY = roadY + 5;
+    // Tire marks on road
+    if (simState === 'braking' || simState === 'stopped') {
+        const pixPerMeter = 8;
+        const carDrawX = 80;
+        const markStart = 80 + sReaction * pixPerMeter - (carX - 80);
+        const tireY1 = roadY + roadH * 0.35;
+        const tireY2 = roadY + roadH * 0.65;
+        if (markStart < carDrawX) {
+            ctx.strokeStyle = 'rgba(30,30,30,0.6)';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(Math.max(0, markStart), tireY1);
+            ctx.lineTo(carDrawX - 15, tireY1);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(Math.max(0, markStart + 30), tireY2);
+            ctx.lineTo(carDrawX + 15, tireY2);
+            ctx.stroke();
+        }
+    }
     
-    ctx.fillStyle = simState === 'reacting' ? '#f39c12' : simState === 'braking' ? '#e74c3c' : '#3498db';
+    // Car (centered on road)
+    const carDrawX = 80;
+    const carCenterY = roadY + roadH / 2;
+    const carY = carCenterY - 14;
+    
+    // Shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.2)';
     ctx.beginPath();
-    ctx.roundRect(carDrawX - 25, carY, 50, 22, 4);
+    ctx.ellipse(carDrawX, carCenterY + 16, 28, 5, 0, 0, Math.PI * 2);
     ctx.fill();
     
+    // Car body
+    ctx.fillStyle = simState === 'reacting' ? '#f39c12' : simState === 'braking' ? '#e74c3c' : '#3498db';
+    ctx.beginPath();
+    ctx.roundRect(carDrawX - 28, carY, 56, 24, 4);
+    ctx.fill();
+    
+    // Car roof
     ctx.fillStyle = simState === 'reacting' ? '#e67e22' : simState === 'braking' ? '#c0392b' : '#2980b9';
     ctx.beginPath();
-    ctx.roundRect(carDrawX - 12, carY - 12, 30, 14, 3);
+    ctx.roundRect(carDrawX - 14, carY - 14, 34, 16, 3);
     ctx.fill();
     
     // Windows
-    ctx.fillStyle = 'rgba(150,200,255,0.3)';
-    ctx.fillRect(carDrawX - 8, carY - 10, 12, 10);
-    ctx.fillRect(carDrawX + 6, carY - 10, 12, 10);
+    ctx.fillStyle = 'rgba(150,210,255,0.4)';
+    ctx.fillRect(carDrawX - 10, carY - 12, 14, 12);
+    ctx.fillRect(carDrawX + 6, carY - 12, 14, 12);
     
     // Wheels
     ctx.fillStyle = '#111';
     ctx.beginPath();
-    ctx.arc(carDrawX - 15, carY + 24, 6, 0, Math.PI * 2);
-    ctx.arc(carDrawX + 15, carY + 24, 6, 0, Math.PI * 2);
+    ctx.arc(carDrawX - 17, carCenterY + 12, 7, 0, Math.PI * 2);
+    ctx.arc(carDrawX + 17, carCenterY + 12, 7, 0, Math.PI * 2);
+    ctx.fill();
+    // Hubcaps
+    ctx.fillStyle = '#444';
+    ctx.beginPath();
+    ctx.arc(carDrawX - 17, carCenterY + 12, 3, 0, Math.PI * 2);
+    ctx.arc(carDrawX + 17, carCenterY + 12, 3, 0, Math.PI * 2);
     ctx.fill();
     
     // Brake lights
@@ -506,7 +652,7 @@ function drawScene() {
         ctx.fillStyle = '#ff0000';
         ctx.shadowColor = '#ff0000';
         ctx.shadowBlur = 15;
-        ctx.fillRect(carDrawX - 27, carY + 3, 4, 10);
+        ctx.fillRect(carDrawX - 30, carY + 4, 4, 12);
         ctx.shadowBlur = 0;
     }
     
@@ -515,43 +661,41 @@ function drawScene() {
         ctx.fillStyle = '#ffff99';
         ctx.shadowColor = '#ffff99';
         ctx.shadowBlur = 12;
-        ctx.fillRect(carDrawX + 25, carY + 3, 4, 8);
+        ctx.fillRect(carDrawX + 28, carY + 4, 4, 10);
         ctx.shadowBlur = 0;
-    }
-    
-    // Tire marks
-    if (simState === 'braking' || simState === 'stopped') {
-        ctx.strokeStyle = 'rgba(40,40,40,0.7)';
-        ctx.lineWidth = 4;
-        const pixPerMeter = 8;
-        const markStart = 80 + sReaction * pixPerMeter - (carX - 80);
-        if (markStart < carDrawX) {
-            ctx.beginPath();
-            ctx.moveTo(Math.max(0, markStart), carY + 24);
-            ctx.lineTo(carDrawX - 15, carY + 24);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(Math.max(0, markStart + 30), carY + 24);
-            ctx.lineTo(carDrawX + 15, carY + 24);
-            ctx.stroke();
-        }
     }
     
     // Status text
     ctx.font = 'bold 14px sans-serif';
     if (simState === 'driving') {
-        ctx.fillStyle = '#3498db';
-        ctx.fillText('🚗 Fahrt...', 10, 25);
+        ctx.fillStyle = '#88bbff';
+        ctx.fillText('🚗 Fahrt...', 10, 22);
     } else if (simState === 'reacting') {
         ctx.fillStyle = '#f39c12';
-        ctx.fillText('⚠️ REAKTIONSZEIT — Auto fährt ungebremst weiter!', 10, 25);
+        ctx.fillText('⚠️ REAKTIONSZEIT — Auto fährt ungebremst weiter!', 10, 22);
     } else if (simState === 'braking') {
         ctx.fillStyle = '#e74c3c';
-        ctx.fillText('🛑 BREMSUNG — Geschwindigkeit nimmt ab', 10, 25);
+        ctx.fillText('🛑 BREMSUNG — Geschwindigkeit nimmt ab', 10, 22);
     } else if (simState === 'stopped') {
         ctx.fillStyle = '#2ecc71';
         const total = sReaction + sBrake;
-        ctx.fillText(`✅ Gestoppt nach ${total.toFixed(1).replace('.',',')} m (${roadLabel})`, 10, 25);
+        ctx.fillText(`✅ Gestoppt nach ${total.toFixed(1).replace('.',',')} m (${roadLabel})`, 10, 22);
+    } else {
+        ctx.fillStyle = '#667';
+        ctx.fillText('Starte die Challenge oben oder klicke auf die Fahrbahn-Optionen', 10, 22);
+    }
+    
+    // Snowflakes (subtle)
+    if (simState !== 'idle') {
+        ctx.fillStyle = 'rgba(220,235,255,0.5)';
+        const t = performance.now() * 0.001;
+        for (let i = 0; i < 15; i++) {
+            const sx = ((i * 137 + t * 30 * (0.5 + i * 0.1)) % W);
+            const sy = ((i * 89 + t * 20 * (0.3 + i * 0.05)) % (roadY - 10));
+            ctx.beginPath();
+            ctx.arc(sx, sy, 1.5, 0, Math.PI * 2);
+            ctx.fill();
+        }
     }
     
     document.getElementById('liveSpeed').textContent = Math.round(simState === 'idle' ? 0 : carSpeed * 3.6);
