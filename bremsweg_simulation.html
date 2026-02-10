@@ -75,6 +75,12 @@
         }
         .btn-pulse { animation: pulse-btn 0.3s infinite alternate; }
         
+        @keyframes blink-reaction {
+            0%, 100% { color: #f39c12; transform: scale(1); }
+            50% { color: #ff4444; transform: scale(1.15); }
+        }
+        .blink-reaction { animation: blink-reaction 0.6s ease-in-out 5; display: inline-block; }
+        
         /* Results */
         .results {
             display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;
@@ -127,7 +133,7 @@
             <h3>🎯 Challenge: Schaffst du es rechtzeitig zu bremsen?</h3>
             <p>Ein Hindernis taucht plötzlich auf — reagiere so schnell du kannst! Deine echte Reaktionszeit wird gemessen.</p>
             <div class="obstacle-distance" id="obstacleInfo">Starte die Challenge und bremse wenn das 🚧 erscheint!</div>
-            <button class="btn btn-challenge" onclick="startChallenge()" id="btnChallenge" style="margin-top:10px; width:100%">🎮 Challenge starten</button>
+            <!-- Challenge-Button ist jetzt unter der Fahrbahn -->
             <div class="challenge-result" id="challengeResult"></div>
         </div>
 
@@ -159,8 +165,11 @@
             <div class="speed-display">🏎️ <span class="kmh" id="liveSpeed">0</span> km/h</div>
         </div>
         
-        <!-- BREMSEN direkt unter der Fahrbahn -->
-        <button class="btn btn-go" id="btnBrakeMain" onclick="brakeNow()" style="width:100%; margin-bottom:15px; padding:18px; font-size:1.3em;" disabled>⚠️ BREMSEN!</button>
+        <!-- Buttons direkt unter der Fahrbahn -->
+        <div style="display:flex; gap:10px; margin-bottom:15px;">
+            <button class="btn btn-challenge" id="btnChallenge" onclick="startChallenge()" style="flex:1; padding:18px; font-size:1.2em;">🎮 Challenge</button>
+            <button class="btn btn-go" id="btnBrakeMain" onclick="brakeNow()" style="flex:1; padding:18px; font-size:1.3em;" disabled>⚠️ BREMSEN!</button>
+        </div>
 
         <div class="results">
             <div class="result-card reaction">
@@ -724,7 +733,10 @@ function animate(timestamp) {
             simState = 'braking';
             simTime = 0;
             brakeSoundPlayed = false;
-            document.getElementById('resReaction').textContent = sReaction.toFixed(1).replace('.', ',') + ' m';
+            const reactionEl = document.getElementById('resReaction');
+            reactionEl.textContent = sReaction.toFixed(1).replace('.', ',') + ' m';
+            reactionEl.classList.add('blink-reaction');
+            setTimeout(() => reactionEl.classList.remove('blink-reaction'), 3500);
             playBrakeSound();
             stopEngineSound();
         }
@@ -828,7 +840,7 @@ function brakeNow() {
         reactionTime = playerReactionTime;
         document.getElementById('reaction').value = Math.min(2.5, reactionTime);
         document.getElementById('reactionVal').textContent = reactionTime.toFixed(2).replace('.', ',') + ' s';
-        document.getElementById('obstacleInfo').textContent = `Deine Reaktionszeit: ${playerReactionTime.toFixed(2).replace('.',',')} s`;
+        document.getElementById('obstacleInfo').innerHTML = `Deine Reaktionszeit: <span class="blink-reaction">${playerReactionTime.toFixed(2).replace('.',',')} s</span>`;
     }
     
     if (simState === 'driving') {
