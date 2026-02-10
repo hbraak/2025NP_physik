@@ -675,7 +675,7 @@ function drawScene() {
         ctx.shadowBlur = 0;
     }
     
-    // Status text
+    // Status text on road
     ctx.font = 'bold 14px sans-serif';
     if (simState === 'driving') {
         ctx.fillStyle = '#88bbff';
@@ -692,7 +692,42 @@ function drawScene() {
         ctx.fillText(`✅ Gestoppt nach ${total.toFixed(1).replace('.',',')} m (${roadLabel})`, 10, 22);
     } else {
         ctx.fillStyle = '#667';
-        ctx.fillText('Starte die Challenge oben oder klicke auf die Fahrbahn-Optionen', 10, 22);
+        ctx.fillText('Starte die Challenge oder Freie Simulation', 10, 22);
+    }
+    
+    // Blinking reaction time ON the road
+    if (challengeMode && playerReactionTime > 0 && (simState === 'reacting' || simState === 'braking' || simState === 'stopped')) {
+        const blink = Math.sin(performance.now() * 0.008) > 0;
+        const scale = 1 + Math.abs(Math.sin(performance.now() * 0.005)) * 0.15;
+        ctx.save();
+        ctx.translate(W / 2, roadY + roadH / 2);
+        ctx.scale(scale, scale);
+        ctx.font = 'bold 28px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = blink ? '#ff4444' : '#f39c12';
+        ctx.shadowColor = 'rgba(0,0,0,0.8)';
+        ctx.shadowBlur = 8;
+        ctx.fillText(`Reaktionszeit: ${playerReactionTime.toFixed(2).replace('.',',')} s`, 0, 0);
+        ctx.shadowBlur = 0;
+        ctx.restore();
+        ctx.textAlign = 'start';
+    }
+    
+    // Also show stopping result on road
+    if (simState === 'stopped' && sReaction > 0) {
+        ctx.save();
+        ctx.font = 'bold 20px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.shadowColor = 'rgba(0,0,0,0.8)';
+        ctx.shadowBlur = 6;
+        const total = sReaction + sBrake;
+        ctx.fillStyle = '#f39c12';
+        ctx.fillText(`Reaktionsweg: ${sReaction.toFixed(1).replace('.',',')} m`, W / 2, roadY + roadH - 8);
+        ctx.fillStyle = '#e74c3c';
+        ctx.fillText(`Bremsweg: ${sBrake.toFixed(1).replace('.',',')} m`, W / 2, roadY + roadH + 15);
+        ctx.shadowBlur = 0;
+        ctx.restore();
+        ctx.textAlign = 'start';
     }
     
     // Snowflakes (subtle)
