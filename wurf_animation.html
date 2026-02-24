@@ -139,7 +139,8 @@
 <body>
 <div class="container">
     <a href="index.html" class="back-link">← Zurück zur Übersicht</a>
-    <header>
+    <header style="position:relative;">
+        <img src="https://lore-lorentz-schule.de/wp-content/uploads/2022/11/Logo-Lore-Lorentz-Schule-farbe-Homepage-1.png" alt="Lore-Lorentz-Schule" style="position:absolute;top:12px;right:15px;height:50px;opacity:0.85;">
         <h1>🎯 Waagerechter Wurf</h1>
         <div class="subtitle">Superposition: gleichförmige Bewegung + freier Fall</div>
     </header>
@@ -518,16 +519,16 @@ function drawMain() {
 
     // Vector labels
     mainCtx.save();
-    mainCtx.font = 'bold 11px Consolas, monospace';
+    mainCtx.font = 'bold 15px Consolas, monospace';
     if (vel.vx > 0.5) {
         mainCtx.fillStyle = '#10b981';
-        mainCtx.textAlign = 'center';
-        mainCtx.fillText('v_x=' + vel.vx.toFixed(1), ballS.sx + vel.vx * velScale * 0.5, ballS.sy - 10);
+        mainCtx.textAlign = 'left';
+        mainCtx.fillText('vₓ = ' + vel.vx.toFixed(1) + ' m/s', ballS.sx + vel.vx * velScale + 8, ballS.sy - 2);
     }
     if (vel.vy > 0.5) {
         mainCtx.fillStyle = '#ef4444';
         mainCtx.textAlign = 'left';
-        mainCtx.fillText('v_y=' + vel.vy.toFixed(1), ballS.sx + 12, ballS.sy + vel.vy * velScale * 0.5 + 4);
+        mainCtx.fillText('vᵧ = ' + vel.vy.toFixed(1) + ' m/s', ballS.sx + 18, ballS.sy + vel.vy * velScale + 18);
     }
     mainCtx.restore();
 
