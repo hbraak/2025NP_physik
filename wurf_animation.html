@@ -473,15 +473,23 @@ function drawMain() {
     const vel = velAt(currentT);
     const ballS = toScreen(pos.x, pos.y);
 
-    // Velocity vectors (scaled for visibility)
-    const velScale = Math.min(pw, ph) / (Math.max(vImpact, 1) * 3.5);
+    // Velocity vectors — use trajectory scales so arrows look tangential
+    // Screen displacement per velocity unit:
+    const vxScreen = vel.vx * scaleX;   // px per (m/s) in x
+    const vyScreen = vel.vy * scaleY;   // px per (m/s) in y
+    // Normalize to a nice arrow length
+    const vScreenLen = Math.sqrt(vxScreen * vxScreen + vyScreen * vyScreen) || 1;
+    const arrowLen = Math.min(pw, ph) * 0.22;  // max arrow length in px
+    const velScale = arrowLen / vScreenLen;
+    const dxArrow = vxScreen * velScale;
+    const dyArrow = vyScreen * velScale;
 
-    // vx arrow (green)
-    drawArrow(mainCtx, ballS.sx, ballS.sy, ballS.sx + vel.vx * velScale, ballS.sy, '#10b981', 2.5);
-    // vy arrow (red) — downward
-    drawArrow(mainCtx, ballS.sx, ballS.sy, ballS.sx, ballS.sy + vel.vy * velScale, '#ef4444', 2.5);
-    // v total arrow (blue)
-    drawArrow(mainCtx, ballS.sx, ballS.sy, ballS.sx + vel.vx * velScale, ballS.sy + vel.vy * velScale, '#2563eb', 3);
+    // vx arrow (green) — same horizontal length as blue arrow's x-component
+    drawArrow(mainCtx, ballS.sx, ballS.sy, ballS.sx + dxArrow, ballS.sy, '#10b981', 2.5);
+    // vy arrow (red) — same vertical length as blue arrow's y-component
+    drawArrow(mainCtx, ballS.sx, ballS.sy, ballS.sx, ballS.sy + dyArrow, '#ef4444', 2.5);
+    // v total arrow (blue) — visually tangential to trajectory
+    drawArrow(mainCtx, ballS.sx, ballS.sy, ballS.sx + dxArrow, ballS.sy + dyArrow, '#2563eb', 3);
 
     // Dashed rectangle for vector decomposition
     if (vel.vy > 0.1) {
@@ -490,12 +498,12 @@ function drawMain() {
         mainCtx.lineWidth = 1;
         mainCtx.setLineDash([4, 3]);
         mainCtx.beginPath();
-        mainCtx.moveTo(ballS.sx + vel.vx * velScale, ballS.sy);
-        mainCtx.lineTo(ballS.sx + vel.vx * velScale, ballS.sy + vel.vy * velScale);
+        mainCtx.moveTo(ballS.sx + dxArrow, ballS.sy);
+        mainCtx.lineTo(ballS.sx + dxArrow, ballS.sy + dyArrow);
         mainCtx.stroke();
         mainCtx.beginPath();
-        mainCtx.moveTo(ballS.sx, ballS.sy + vel.vy * velScale);
-        mainCtx.lineTo(ballS.sx + vel.vx * velScale, ballS.sy + vel.vy * velScale);
+        mainCtx.moveTo(ballS.sx, ballS.sy + dyArrow);
+        mainCtx.lineTo(ballS.sx + dxArrow, ballS.sy + dyArrow);
         mainCtx.stroke();
         mainCtx.setLineDash([]);
         mainCtx.restore();
@@ -523,12 +531,12 @@ function drawMain() {
     if (vel.vx > 0.5) {
         mainCtx.fillStyle = '#10b981';
         mainCtx.textAlign = 'left';
-        mainCtx.fillText('vₓ = ' + vel.vx.toFixed(1) + ' m/s', ballS.sx + vel.vx * velScale + 8, ballS.sy - 2);
+        mainCtx.fillText('vₓ = ' + vel.vx.toFixed(1) + ' m/s', ballS.sx + dxArrow + 8, ballS.sy - 2);
     }
     if (vel.vy > 0.5) {
         mainCtx.fillStyle = '#ef4444';
         mainCtx.textAlign = 'left';
-        mainCtx.fillText('vᵧ = ' + vel.vy.toFixed(1) + ' m/s', ballS.sx + 18, ballS.sy + vel.vy * velScale + 18);
+        mainCtx.fillText('vᵧ = ' + vel.vy.toFixed(1) + ' m/s', ballS.sx + 18, ballS.sy + dyArrow + 18);
     }
     mainCtx.restore();
 
