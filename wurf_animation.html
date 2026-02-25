@@ -473,12 +473,14 @@ function drawMain() {
     const vel = velAt(currentT);
     const ballS = toScreen(pos.x, pos.y);
 
-    // Velocity vectors — fixed scale (px per m/s) so vx arrow stays constant
-    const vImpactNow = Math.sqrt(v0 * v0 + (g * tFlight) * (g * tFlight));
-    const maxArrowPx = Math.min(pw, ph) * 0.22;
-    const pxPerMs = maxArrowPx / (vImpactNow || 1);  // fixed scale based on max velocity
-    const dxArrow = vel.vx * pxPerMs;
-    const dyArrow = vel.vy * pxPerMs;
+    // Velocity vectors — screen-space tangential + constant vx arrow length
+    // vx arrow: fixed length (vx is constant), based on screen scale
+    const vxArrowPx = vel.vx * scaleX * 0.15;  // fixed since vx=v0=const
+    // vy arrow: grows proportionally in screen space
+    const vyArrowPx = vel.vy * scaleY * 0.15;
+    // Blue total arrow uses same screen-space components → tangential to curve
+    const dxArrow = vxArrowPx;
+    const dyArrow = vyArrowPx;
 
     // vx arrow (green) — same horizontal length as blue arrow's x-component
     drawArrow(mainCtx, ballS.sx, ballS.sy, ballS.sx + dxArrow, ballS.sy, '#10b981', 2.5);
