@@ -454,101 +454,142 @@ function startTimer(minutes) {
 }
 function stopTimer() { if (timerInterval) clearInterval(timerInterval); }
 
-// Setup diagram (Phase 2)
+// Setup diagram (Phase 2) — clean schematic, no trajectories
 function drawSetup() {
   const c = document.getElementById('setupCanvas');
   if (!c) return;
   const ctx = c.getContext('2d');
   const W = c.width, H = c.height;
-  const scale = 55; // px per meter
-  const ox = 80, oy = H - 40; // origin
+  const scale = 60; // px per meter
+  const ox = 100, oy = H - 50; // origin (more room for labels)
 
   ctx.clearRect(0, 0, W, H);
 
+  const h1 = 4, h2 = 2, d = 2.5;
+
   // Grid
-  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+  ctx.strokeStyle = 'rgba(255,255,255,0.06)';
   ctx.lineWidth = 1;
-  for (let x = 0; x <= 5; x++) {
-    ctx.beginPath(); ctx.moveTo(ox + x*scale, oy); ctx.lineTo(ox + x*scale, 20); ctx.stroke();
+  for (let x = 0; x <= 4; x++) {
+    ctx.beginPath(); ctx.moveTo(ox + x*scale, oy); ctx.lineTo(ox + x*scale, oy - 5*scale); ctx.stroke();
   }
   for (let y = 0; y <= 5; y++) {
-    ctx.beginPath(); ctx.moveTo(ox, oy - y*scale); ctx.lineTo(ox + 5*scale, oy - y*scale); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(ox, oy - y*scale); ctx.lineTo(ox + 4*scale, oy - y*scale); ctx.stroke();
   }
 
   // Axes
   ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ox + 5*scale, oy); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ox, 20); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ox + 4*scale, oy); ctx.stroke(); // x
+  ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ox, oy - 5*scale); ctx.stroke(); // y
+  // Arrowheads
+  ctx.fillStyle = '#fff';
+  ctx.beginPath(); ctx.moveTo(ox + 4*scale, oy); ctx.lineTo(ox + 4*scale - 8, oy - 5); ctx.lineTo(ox + 4*scale - 8, oy + 5); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(ox, oy - 5*scale); ctx.lineTo(ox - 5, oy - 5*scale + 8); ctx.lineTo(ox + 5, oy - 5*scale + 8); ctx.fill();
 
-  // Labels
-  ctx.fillStyle = '#aaa'; ctx.font = '13px Segoe UI';
-  ctx.fillText('x (m)', ox + 5*scale + 5, oy + 5);
-  ctx.fillText('y (m)', ox - 5, 15);
-  for (let i = 0; i <= 5; i++) { ctx.fillText(i, ox + i*scale - 3, oy + 18); }
-  for (let i = 1; i <= 5; i++) { ctx.fillText(i, ox - 20, oy - i*scale + 5); }
+  // Axis labels
+  ctx.fillStyle = '#ccc'; ctx.font = '14px Segoe UI';
+  ctx.fillText('x (m)', ox + 4*scale + 8, oy + 5);
+  ctx.fillText('y (m)', ox + 8, oy - 5*scale + 5);
+  ctx.fillStyle = '#888'; ctx.font = '12px Segoe UI';
+  for (let i = 0; i <= 3; i++) ctx.fillText(i, ox + i*scale - 3, oy + 20);
+  for (let i = 1; i <= 5; i++) ctx.fillText(i, ox - 18, oy - i*scale + 5);
 
   // Ground
-  ctx.fillStyle = '#4e342e'; ctx.fillRect(ox, oy, 5*scale, 8);
+  ctx.fillStyle = '#5d4037';
+  ctx.fillRect(ox - 10, oy + 1, 4*scale + 20, 6);
+  // Ground hatching
+  ctx.strokeStyle = '#795548'; ctx.lineWidth = 1;
+  for (let gx = ox - 10; gx < ox + 4*scale + 10; gx += 12) {
+    ctx.beginPath(); ctx.moveTo(gx, oy + 7); ctx.lineTo(gx - 6, oy + 14); ctx.stroke();
+  }
 
-  // Band A (blue)
-  const h1 = 4, v1 = 3, h2 = 2, v2 = 2, d = 2.5;
-  ctx.fillStyle = '#2196f3'; ctx.fillRect(ox - 40, oy - h1*scale - 8, 50, 16);
-  ctx.fillStyle = '#fff'; ctx.font = 'bold 12px Segoe UI';
-  ctx.fillText('Band A', ox - 38, oy - h1*scale - 14);
-  ctx.fillText('v₁ →', ox + 12, oy - h1*scale + 4);
+  // Band A (blue, left side, extending left of axis)
+  const bandW = 60, bandH = 14;
+  const bandAx = ox - bandW + 5, bandAy = oy - h1*scale - bandH/2;
+  ctx.fillStyle = '#1565c0'; ctx.fillRect(bandAx, bandAy, bandW, bandH);
+  ctx.strokeStyle = '#42a5f5'; ctx.lineWidth = 1.5; ctx.strokeRect(bandAx, bandAy, bandW, bandH);
+  // Rollers
+  ctx.fillStyle = '#90caf9';
+  ctx.beginPath(); ctx.arc(bandAx + 8, bandAy + bandH/2, 4, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(bandAx + bandW - 3, bandAy + bandH/2, 4, 0, Math.PI*2); ctx.fill();
 
-  // Band B (red)
-  ctx.fillStyle = '#f44336'; ctx.fillRect(ox + d*scale - 10, oy - h2*scale - 8, 50, 16);
-  ctx.fillStyle = '#fff';
-  ctx.fillText('Band B', ox + d*scale - 8, oy - h2*scale - 14);
-  ctx.fillText('← v₂', ox + d*scale - 45, oy - h2*scale + 4);
+  // Band A labels
+  ctx.fillStyle = '#64b5f6'; ctx.font = 'bold 14px Segoe UI';
+  ctx.fillText('Band A', bandAx, bandAy - 8);
+  // v₁ arrow
+  ctx.strokeStyle = '#64b5f6'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(ox + 10, bandAy + bandH/2); ctx.lineTo(ox + 50, bandAy + bandH/2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(ox + 50, bandAy + bandH/2); ctx.lineTo(ox + 42, bandAy + bandH/2 - 5); ctx.lineTo(ox + 42, bandAy + bandH/2 + 5); ctx.fill();
+  ctx.fillStyle = '#64b5f6'; ctx.font = 'italic 13px Segoe UI';
+  ctx.fillText('v₁', ox + 55, bandAy + bandH/2 + 5);
 
-  // Height labels
-  ctx.strokeStyle = '#64b5f6'; ctx.setLineDash([4,4]); ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(ox + 10, oy - h1*scale); ctx.lineTo(ox + 10, oy); ctx.stroke();
-  ctx.fillStyle = '#64b5f6'; ctx.fillText('h₁ = 4,0 m', ox + 15, oy - h1*scale/2);
+  // Paket A
+  ctx.fillStyle = '#42a5f5';
+  ctx.fillRect(ox - 2, bandAy - 12, 16, 12);
+  ctx.strokeStyle = '#90caf9'; ctx.lineWidth = 1; ctx.strokeRect(ox - 2, bandAy - 12, 16, 12);
+  ctx.fillStyle = '#fff'; ctx.font = '9px Segoe UI'; ctx.fillText('📦', ox, bandAy - 3);
 
-  ctx.strokeStyle = '#ef9a9a';
-  ctx.beginPath(); ctx.moveTo(ox + d*scale, oy - h2*scale); ctx.lineTo(ox + d*scale, oy); ctx.stroke();
-  ctx.fillStyle = '#ef9a9a'; ctx.fillText('h₂ = 2,0 m', ox + d*scale + 5, oy - h2*scale/2);
+  // Band B (red, right side)
+  const bandBx = ox + d*scale - 5, bandBy = oy - h2*scale - bandH/2;
+  ctx.fillStyle = '#c62828'; ctx.fillRect(bandBx, bandBy, bandW, bandH);
+  ctx.strokeStyle = '#ef5350'; ctx.lineWidth = 1.5; ctx.strokeRect(bandBx, bandBy, bandW, bandH);
+  ctx.fillStyle = '#ef9a9a';
+  ctx.beginPath(); ctx.arc(bandBx + 3, bandBy + bandH/2, 4, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(bandBx + bandW - 8, bandBy + bandH/2, 4, 0, Math.PI*2); ctx.fill();
+
+  // Band B labels
+  ctx.fillStyle = '#ef9a9a'; ctx.font = 'bold 14px Segoe UI';
+  ctx.fillText('Band B', bandBx + bandW + 8, bandBy + 5);
+  // v₂ arrow (pointing left)
+  ctx.strokeStyle = '#ef9a9a'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(bandBx - 5, bandBy + bandH/2); ctx.lineTo(bandBx - 50, bandBy + bandH/2); ctx.stroke();
+  ctx.fillStyle = '#ef9a9a';
+  ctx.beginPath(); ctx.moveTo(bandBx - 50, bandBy + bandH/2); ctx.lineTo(bandBx - 42, bandBy + bandH/2 - 5); ctx.lineTo(bandBx - 42, bandBy + bandH/2 + 5); ctx.fill();
+  ctx.font = 'italic 13px Segoe UI';
+  ctx.fillText('v₂', bandBx - 68, bandBy + bandH/2 + 5);
+
+  // Paket B
+  ctx.fillStyle = '#e53935';
+  ctx.fillRect(bandBx - 14, bandBy - 12, 16, 12);
+  ctx.strokeStyle = '#ef9a9a'; ctx.lineWidth = 1; ctx.strokeRect(bandBx - 14, bandBy - 12, 16, 12);
+  ctx.fillStyle = '#fff'; ctx.font = '9px Segoe UI'; ctx.fillText('📦', bandBx - 12, bandBy - 3);
+
+  // Height markers (dashed, on the LEFT side of diagram)
+  ctx.setLineDash([5,5]); ctx.lineWidth = 1;
+  // h₁
+  ctx.strokeStyle = 'rgba(100,181,246,0.5)';
+  ctx.beginPath(); ctx.moveTo(ox - 50, oy); ctx.lineTo(ox - 50, oy - h1*scale); ctx.stroke();
+  ctx.fillStyle = '#64b5f6'; ctx.font = '13px Segoe UI';
+  ctx.fillText('h₁ = 4,0 m', ox - 95, oy - h1*scale/2 + 4);
+  // arrows
   ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(ox - 50, oy - 2); ctx.lineTo(ox - 54, oy - 10); ctx.lineTo(ox - 46, oy - 10); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(ox - 50, oy - h1*scale + 2); ctx.lineTo(ox - 54, oy - h1*scale + 10); ctx.lineTo(ox - 46, oy - h1*scale + 10); ctx.fill();
 
-  // Distance
+  // h₂ (right side)
+  ctx.setLineDash([5,5]);
+  ctx.strokeStyle = 'rgba(239,154,154,0.5)';
+  ctx.beginPath(); ctx.moveTo(ox + d*scale + bandW + 20, oy); ctx.lineTo(ox + d*scale + bandW + 20, oy - h2*scale); ctx.stroke();
+  ctx.fillStyle = '#ef9a9a';
+  ctx.fillText('h₂ = 2,0 m', ox + d*scale + bandW + 28, oy - h2*scale/2 + 4);
+  ctx.setLineDash([]);
+  const rx = ox + d*scale + bandW + 20;
+  ctx.beginPath(); ctx.moveTo(rx, oy - 2); ctx.lineTo(rx - 4, oy - 10); ctx.lineTo(rx + 4, oy - 10); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(rx, oy - h2*scale + 2); ctx.lineTo(rx - 4, oy - h2*scale + 10); ctx.lineTo(rx + 4, oy - h2*scale + 10); ctx.fill();
+
+  // Distance d (below ground)
   ctx.strokeStyle = '#ffcc80'; ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.moveTo(ox + 10, oy + 30); ctx.lineTo(ox + d*scale, oy + 30); ctx.stroke();
-  ctx.fillStyle = '#ffcc80'; ctx.fillText('d = 2,5 m', ox + d*scale/2 - 20, oy + 45);
+  ctx.beginPath(); ctx.moveTo(ox, oy + 25); ctx.lineTo(ox + d*scale, oy + 25); ctx.stroke();
+  // arrows
+  ctx.fillStyle = '#ffcc80';
+  ctx.beginPath(); ctx.moveTo(ox, oy + 25); ctx.lineTo(ox + 8, oy + 21); ctx.lineTo(ox + 8, oy + 29); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(ox + d*scale, oy + 25); ctx.lineTo(ox + d*scale - 8, oy + 21); ctx.lineTo(ox + d*scale - 8, oy + 29); ctx.fill();
+  ctx.font = 'bold 13px Segoe UI';
+  ctx.fillText('d = 2,5 m', ox + d*scale/2 - 25, oy + 42);
 
-  // Parabolas (Gruppe 1)
-  const g_val = 9.81;
-  // Path A: y = h1 - g/(2*v1^2) * x^2
-  ctx.strokeStyle = '#64b5f6'; ctx.lineWidth = 2.5; ctx.setLineDash([6,4]);
-  ctx.beginPath();
-  for (let px = 0; px <= 3; px += 0.02) {
-    const yy = h1 - (g_val / (2*v1*v1)) * px*px;
-    if (yy < 0) break;
-    const cx = ox + px*scale, cy = oy - yy*scale;
-    if (px === 0) ctx.moveTo(cx, cy); else ctx.lineTo(cx, cy);
-  }
-  ctx.stroke();
-
-  // Path B: y = h2 - g/(2*v2^2) * (d-x)^2
-  ctx.strokeStyle = '#ef9a9a';
-  ctx.beginPath();
-  for (let px = d; px >= 0; px -= 0.02) {
-    const yy = h2 - (g_val / (2*v2*v2)) * (d-px)*(d-px);
-    if (yy < 0) break;
-    const cx = ox + px*scale, cy = oy - yy*scale;
-    if (px === d) ctx.moveTo(cx, cy); else ctx.lineTo(cx, cy);
-  }
-  ctx.stroke();
-  ctx.setLineDash([]);
-
-  // Intersection point
-  const xs = 2.037, ys_val = 1.738;
-  ctx.fillStyle = '#ff9800';
-  ctx.beginPath(); ctx.arc(ox + xs*scale, oy - ys_val*scale, 6, 0, Math.PI*2); ctx.fill();
-  ctx.fillStyle = '#ffcc80'; ctx.font = '11px Segoe UI';
-  ctx.fillText('Schnittpunkt?', ox + xs*scale + 10, oy - ys_val*scale - 8);
+  // Question mark in the middle
+  ctx.fillStyle = 'rgba(255,152,0,0.3)'; ctx.font = 'bold 50px Segoe UI';
+  ctx.fillText('?', ox + d*scale/2 - 8, oy - 1.5*scale);
 }
 
 // Simulation (Phase 3)
