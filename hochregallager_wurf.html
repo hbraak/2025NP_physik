@@ -117,6 +117,21 @@
   /* Canvas for diagram */
   canvas { background: rgba(255,255,255,0.03); border-radius: 10px; display: block; margin: 15px auto; }
 
+  /* Floating QR code */
+  .qr-float {
+    position: fixed; bottom: 20px; right: 20px; z-index: 100;
+    background: rgba(26,35,126,0.92); border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 12px; padding: 10px; text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    transition: all 0.3s; cursor: pointer;
+  }
+  .qr-float:hover { transform: scale(1.05); border-color: #ff9800; }
+  .qr-float img { width: 110px; height: 110px; border-radius: 4px; display: block; }
+  .qr-float .qr-label {
+    color: #90caf9; font-size: 0.7em; margin-top: 5px;
+    font-weight: bold; letter-spacing: 0.5px;
+  }
+
   /* Navigation */
   .nav-btns { display: flex; justify-content: center; gap: 15px; margin-top: 30px; }
   .nav-btn {
@@ -172,6 +187,12 @@ MathJax = {
     <div class="subtitle">Waagerechter Wurf — Vertiefung &amp; Klausurvorbereitung | 11NP Physik</div>
   </div>
   <div class="phase-indicator" id="phaseLabel" onclick="nextPhase()">Phase 1 / 4</div>
+</div>
+
+<!-- Floating QR Code -->
+<div class="qr-float" title="Seite auf dem Handy öffnen">
+  <img src="qr_hochregallager.png" alt="QR-Code">
+  <div class="qr-label">📱 MITMACHEN</div>
 </div>
 
 <div class="container">
