@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernliste Q3: Energie, Leistung &amp; Superposition</title>
+
+<!-- MathJax -->
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(','\\)'], ['$','$']], displayMath: [['\\[','\\]'], ['$$','$$']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] },
+    startup: { typeset: false }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js" crossorigin="anonymous"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Serif:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #f5f2eb;
+  --surface: #ffffff;
+  --surface2: #f0ece2;
+  --border: #d4cfc4;
+  --text: #1a1915;
+  --text-muted: #6b6760;
+  --accent: #2b4c8c;
+  --accent-light: #dce6f5;
+  --green: #1a6b3a;
+  --green-light: #d4edde;
+  --yellow-light: #fdf5d0;
+  --formula-bg: #0f1923;
+  --afb1: #1a5c8c;  --afb1-bg: #dceef8;
+  --afb2: #7a5200;  --afb2-bg: #fef0cc;
+  --afb3: #7a1a1a;  --afb3-bg: #fde8e8;
+  --star: #b06000;  --star-bg: #fff0d0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* ── Header ── */
+header {
+  background: var(--accent);
+  color: white;
+  position: sticky; top: 0; z-index: 200;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.22);
+}
+.header-inner {
+  max-width: 920px; margin: 0 auto;
+  padding: 16px 24px 8px;
+}
+.header-school { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.7; }
+.header-title  { font-size: 1.3rem; font-weight: 700; margin: 3px 0 4px; }
+.header-sub    { font-size: 0.8rem; opacity: 0.78; font-family: 'IBM Plex Serif', serif; font-style: italic; }
+.progress-wrap { max-width: 920px; margin: 0 auto; padding: 6px 24px 14px; }
+.progress-label { font-size: 0.73rem; color: rgba(255,255,255,0.7); display: flex; justify-content: space-between; margin-bottom: 4px; }
+.progress-track { height: 7px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden; }
+.progress-fill  { height: 100%; background: #7ecba0; border-radius: 4px; transition: width .5s; width: 0; }
+
+/* ── AFB legend ── */
+.afb-legend {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 0;
+}
+.afb-legend-inner {
+  max-width: 920px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+}
+.afb-legend-label { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+.afb-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  border-radius: 4px; padding: 3px 9px; font-size: 0.73rem; font-weight: 700; letter-spacing: 0.04em;
+  border: 1.5px solid transparent;
+}
+.afb1 { background: var(--afb1-bg); color: var(--afb1); border-color: #9ac4de; }
+.afb2 { background: var(--afb2-bg); color: var(--afb2); border-color: #e8c96a; }
+.afb3 { background: var(--afb3-bg); color: var(--afb3); border-color: #e8a0a0; }
+.star-pill { background: var(--star-bg); color: var(--star); border-color: #e8c070; }
+
+/* ── Formula strip ── */
+.formula-strip {
+  background: var(--formula-bg);
+  color: #c8e8ff;
+  padding: 10px 0;
+  overflow-x: auto;
+}
+.formula-strip-inner {
+  max-width: 920px; margin: 0 auto; padding: 0 24px;
+  display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+}
+.formula-strip-label { font-size: 0.68rem; color: rgba(255,255,255,0.4); letter-spacing: 0.1em; text-transform: uppercase; flex-shrink: 0; }
+.fchip {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 4px; padding: 3px 10px;
+  font-size: 0.82rem; white-space: nowrap;
+  color: #ddf0ff;
+}
+.fchip .mjx-container { display: inline !important; }
+
+/* ── Main ── */
+main { max-width: 920px; margin: 0 auto; padding: 26px 24px 60px; }
+
+/* ── Section ── */
+.section { margin-bottom: 26px; }
+.section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.section-icon {
+  width: 32px; height: 32px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.05rem; flex-shrink: 0;
+}
+.s-basis   .section-icon { background: #dce6f5; }
+.s-epot    .section-icon { background: #dff0e8; }
+.s-ekin    .section-icon { background: #fdecd8; }
+.s-eges    .section-icon { background: #ece0f5; }
+.s-leistung .section-icon { background: #fde8e8; }
+.s-wurf    .section-icon { background: #e0f0ff; }
+.s-diagramm .section-icon { background: #f5f0d8; }
+.section-title { font-size: 0.98rem; font-weight: 700; }
+.section-count { font-size: 0.72rem; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; margin-left: auto; }
+
+/* ── Cards ── */
+.card-list { display: flex; flex-direction: column; gap: 5px; }
+
+.comp-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  display: flex; align-items: stretch;
+  transition: border-color .18s, box-shadow .18s;
+  overflow: hidden;
+}
+.comp-card:hover { border-color: #a8bed8; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+.comp-card.done { background: var(--green-light); border-color: #a0d4b8; }
+.comp-card.done .comp-text { text-decoration: line-through; color: #3a7a54; opacity: 0.72; }
+.comp-card.star-card { border-color: #e0c060; background: var(--yellow-light); }
+.comp-card.star-card.done { background: var(--green-light); border-color: #a0d4b8; }
+
+/* Checkbox */
+.comp-check {
+  width: 46px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.comp-check:hover { background: rgba(0,0,0,0.03); }
+.checkbox {
+  width: 19px; height: 19px;
+  border: 2px solid var(--border); border-radius: 4px;
+  background: white; display: flex; align-items: center; justify-content: center;
+  pointer-events: none; transition: all .15s;
+}
+.comp-card.done .checkbox { background: var(--green); border-color: var(--green); }
+.checkbox::after {
+  content: ''; display: none;
+  width: 4px; height: 8px;
+  border: 2px solid white; border-top: none; border-left: none;
+  transform: rotate(45deg) translateY(-1px);
+}
+.comp-card.done .checkbox::after { display: block; }
+
+/* Body */
+.comp-body { flex: 1; padding: 9px 10px; min-width: 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.comp-text { font-size: 0.875rem; line-height: 1.45; flex: 1; min-width: 160px; }
+.comp-text .mjx-container { display: inline !important; }
+
+/* AFB badge on card */
+.card-afb { flex-shrink: 0; }
+
+/* Üben button */
+.comp-btn {
+  padding: 0 14px; background: none; border: none;
+  border-left: 1.5px solid var(--border);
+  color: var(--accent); font-size: 0.76rem; font-weight: 700;
+  font-family: 'IBM Plex Sans', sans-serif;
+  cursor: pointer; white-space: nowrap; letter-spacing: 0.03em;
+  transition: background .14s;
+}
+.comp-btn:hover { background: var(--accent-light); }
+
+/* ── Modal ── */
+.overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(10,10,14,0.54); z-index: 500;
+  justify-content: center; align-items: flex-start;
+  padding: 36px 14px 20px; overflow-y: auto;
+}
+.overlay.open { display: flex; }
+.modal {
+  background: var(--surface); border-radius: 12px;
+  width: 100%; max-width: 640px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.25);
+  animation: slideUp .2s ease; overflow: hidden;
+}
+@keyframes slideUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+
+.modal-head {
+  background: var(--accent); color: white;
+  padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;
+}
+.modal-head h3 { font-size: 0.93rem; font-weight: 600; }
+.modal-close {
+  background: rgba(255,255,255,0.15); border: none; color: white;
+  width: 26px; height: 26px; border-radius: 5px; cursor: pointer; font-size: 0.9rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.modal-close:hover { background: rgba(255,255,255,0.28); }
+
+.modal-tabs { display: flex; border-bottom: 2px solid var(--border); background: var(--surface2); }
+.mtab {
+  flex: 1; padding: 9px 8px; border: none; background: none;
+  font-family: 'IBM Plex Sans', sans-serif; font-size: 0.8rem; font-weight: 600;
+  color: var(--text-muted); cursor: pointer;
+  border-bottom: 2.5px solid transparent; margin-bottom: -2px;
+  transition: color .14s;
+}
+.mtab.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--surface); }
+
+.modal-body { padding: 18px 20px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Task / solution content */
+.task-box {
+  background: var(--surface2); border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 13px 15px; font-size: 0.875rem; line-height: 1.65;
+  margin-bottom: 12px;
+}
+.task-box p { margin-bottom: 5px; }
+.task-box p:last-child { margin-bottom: 0; }
+.given {
+  display: block; font-family: 'IBM Plex Mono', monospace; font-size: 0.8em;
+  background: rgba(0,0,0,0.06); padding: 7px 10px; border-radius: 5px; margin: 7px 0;
+  line-height: 1.7;
+}
+/* Structured subtasks replacing .given */
+.subtasks {
+  margin: 8px 0 4px; display: flex; flex-direction: column; gap: 5px;
+}
+.subtask {
+  display: flex; align-items: baseline; gap: 8px;
+  font-size: 0.875rem; line-height: 1.55;
+}
+.subtask-label {
+  flex-shrink: 0; width: 20px;
+  font-weight: 700; color: var(--accent);
+}
+.subtask-body { flex: 1; }
+.hint-box {
+  background: rgba(43,76,140,0.07); border-left: 3px solid var(--accent);
+  border-radius: 0 5px 5px 0; padding: 5px 10px;
+  font-size: 0.82rem; color: var(--text-muted); margin-top: 6px;
+  font-style: italic;
+}
+.sol-toggle {
+  width: 100%; background: none; border: 1.5px solid var(--border); border-radius: 6px;
+  padding: 8px 14px; font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.8rem; font-weight: 600; color: var(--text-muted); cursor: pointer;
+  margin-bottom: 10px; transition: all .14s; text-align: left;
+}
+.sol-toggle:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.sol-box {
+  display: none; background: var(--green-light); border: 1.5px solid #a0d4b8;
+  border-radius: 8px; padding: 13px 15px; font-size: 0.855rem; line-height: 1.65;
+}
+.sol-box.open { display: block; animation: fadeIn .18s ease; }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+.sol-step { display: flex; gap: 8px; margin-bottom: 9px; }
+.sol-step:last-child { margin-bottom: 0; }
+.snum {
+  width: 19px; height: 19px; flex-shrink: 0; margin-top: 2px;
+  background: var(--green); color: white; border-radius: 50%;
+  font-size: 0.67rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.sol-step .mjx-container { display: inline !important; }
+.fbox {
+  display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 0.82em;
+  background: rgba(255,255,255,0.72); padding: 3px 8px; border-radius: 4px; margin: 2px 0;
+}
+.result {
+  display: inline-block; background: var(--green); color: white;
+  border-radius: 5px; padding: 5px 12px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.83em; font-weight: 600; margin-top: 8px;
+}
+/* for display math in modal */
+.dmath { text-align: center; margin: 8px 0; overflow-x: auto; }
+
+/* Prompt tab */
+.prompt-box {
+  background: var(--formula-bg); color: #c8e8ff;
+  border-radius: 8px; padding: 13px 15px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.77rem; line-height: 1.65;
+  white-space: pre-wrap; max-height: 230px; overflow-y: auto; margin-bottom: 12px;
+}
+.ai-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.ai-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 13px; border: 1.5px solid var(--border); border-radius: 6px;
+  font-family: 'IBM Plex Sans', sans-serif; font-size: 0.78rem; font-weight: 600;
+  cursor: pointer; text-decoration: none; background: white; color: var(--text);
+  transition: all .14s;
+}
+.ai-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.ai-btn.copy { background: var(--accent); color: white; border-color: var(--accent); }
+.ai-btn.copy:hover { background: #1e3d74; }
+
+/* Footer */
+footer {
+  text-align: center; color: var(--text-muted); font-size: 0.73rem;
+  padding: 18px; border-top: 1px solid var(--border);
+  font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.05em;
+}
+
+@media(max-width:500px) {
+  main { padding: 18px 14px 40px; }
+  .comp-btn { padding: 0 9px; font-size: 0.7rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header>
+  <div class="header-inner">
+    <div class="header-school">Lore-Lorentz-Schule &nbsp;·&nbsp; Physik-LK 11NP</div>
+    <div class="header-title">Lernliste: Energie, Leistung &amp; Superposition</div>
+    <div class="header-sub">Klausurvorbereitung Q3 &nbsp;·&nbsp; Alle drei Anforderungsbereiche (AFB I–III)</div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>Ihr Fortschritt</span>
+      <span id="prog-text">0 von 0 Kompetenzen</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+  </div>
+</header>
+
+<!-- ══ AFB LEGENDE ══ -->
+<div class="afb-legend">
+  <div class="afb-legend-inner">
+    <span class="afb-legend-label">Anforderungsbereiche:</span>
+    <span class="afb-pill afb1">AFB I &nbsp;Reproduktion</span>
+    <span class="afb-pill afb2">AFB II &nbsp;Transfer</span>
+    <span class="afb-pill afb3">AFB III &nbsp;Reflexion</span>
+    <span class="afb-pill star-pill">★ Knobelaufgabe</span>
+  </div>
+</div>
+
+<!-- ══ FORMELLEISTE ══ -->
+<div class="formula-strip">
+  <div class="formula-strip-inner">
+    <span class="formula-strip-label">Formeln</span>
+    <span class="fchip">\(E_\text{pot} = mgh\)</span>
+    <span class="fchip">\(E_\text{kin} = \tfrac{1}{2}mv^2\)</span>
+    <span class="fchip">\(E_\text{ges} = E_\text{pot} + E_\text{kin} = \text{const.}\)</span>
+    <span class="fchip">\(P = \dfrac{W}{t} = F \cdot v\)</span>
+    <span class="fchip">\(\eta = \dfrac{P_\text{nutz}}{P_\text{el}}\)</span>
+    <span class="fchip">\(x(t)= v_0 t\)</span>
+    <span class="fchip">\(y(t)= \tfrac{1}{2}gt^2\)</span>
+    <span class="fchip">\(t_\text{Auf}= \sqrt{\dfrac{2h}{g}}\)</span>
+    <span class="fchip">\(v_\text{Auf}= \sqrt{v_0^2+2gh}\)</span>
+  </div>
+</div>
+
+<main>
+
+<!-- ══════════════════════════════════════════════
+     0. BASISKOMPETENZEN
+══════════════════════════════════════════════ -->
+<div class="section s-basis">
+  <div class="section-header">
+    <div class="section-icon">🔧</div>
+    <div class="section-title">Basiskompetenzen &amp; Arbeitstechniken</div>
+    <div class="section-count" id="cnt-basis"></div>
+  </div>
+  <div class="card-list" id="sec-basis">
+
+    <div class="comp-card" data-id="b1" data-sec="basis">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann physikalische Größen in SI-Einheiten umrechnen: km/h&nbsp;→&nbsp;m/s, kW&nbsp;→&nbsp;W, t&nbsp;→&nbsp;kg, MJ&nbsp;→&nbsp;J.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('b1')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="b2" data-sec="basis">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann mit Zehnerpotenzen rechnen (Präfixe k, M, G) und Ergebnisse korrekt in Standardform \(a \times 10^n\) angeben.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('b2')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="b3" data-sec="basis">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann Formeln nach einer gesuchten Größe umstellen, z.&thinsp;B. \(E_\text{kin} = \tfrac{1}{2}mv^2\) nach \(v\).</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('b3')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="b4" data-sec="basis">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann ein \(h\)-\(E\)-Diagramm maßstäblich zeichnen: Achsenbeschriftung, Skala, \(E_\text{pot}\)-, \(E_\text{kin}\)- und \(E_\text{ges}\)-Kurve benennen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('b4')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="b5" data-sec="basis">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann aus einem \(h\)-\(E\)-Diagramm Energiewerte ablesen und physikalisch interpretieren (z.&thinsp;B. Schnittpunkt von \(E_\text{pot}\) und \(E_\text{kin}\)).</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('b5')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="b6" data-sec="basis">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann Satz des Pythagoras auf Geschwindigkeitsvektoren anwenden: \(|\vec{v}| = \sqrt{v_x^2 + v_y^2}\) und den Winkel mit \(\arctan\) bestimmen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('b6')">Üben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     1. POTENTIELLE ENERGIE
+══════════════════════════════════════════════ -->
+<div class="section s-epot">
+  <div class="section-header">
+    <div class="section-icon">⬆️</div>
+    <div class="section-title">Potentielle Energie (Lageenergie)</div>
+    <div class="section-count" id="cnt-epot"></div>
+  </div>
+  <div class="card-list" id="sec-epot">
+
+    <div class="comp-card" data-id="p1" data-sec="epot">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann \(E_\text{pot} = mgh\) aus der Hubarbeit herleiten und auf technische Situationen anwenden (Kran, Aufzug).</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('p1')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="p2" data-sec="epot">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann das Bezugsniveau frei wählen und begründen, dass \(\Delta E_\text{pot}\) bei einem Vorgang bezugsniveauunabhängig ist.</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('p2')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="p3" data-sec="epot">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann \(E_\text{pot}\) eines Pumpspeicherkraftwerks berechnen (\(m = \rho V\)) und daraus die Betriebsdauer ermitteln.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('p3')">Üben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     2. KINETISCHE ENERGIE
+══════════════════════════════════════════════ -->
+<div class="section s-ekin">
+  <div class="section-header">
+    <div class="section-icon">🏃</div>
+    <div class="section-title">Kinetische Energie (Bewegungsenergie)</div>
+    <div class="section-count" id="cnt-ekin"></div>
+  </div>
+  <div class="card-list" id="sec-ekin">
+
+    <div class="comp-card" data-id="k1" data-sec="ekin">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann \(E_\text{kin} = \tfrac{1}{2}mv^2\) anwenden und nach \(v\) umstellen: \(v = \sqrt{\dfrac{2E_\text{kin}}{m}}\).</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('k1')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="k2" data-sec="ekin">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann erklären und begründen, warum die Bremsstrecke bei doppelter Geschwindigkeit viermal so lang ist (\(E_\text{kin} \propto v^2\)).</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('k2')">Üben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     3. GESAMTENERGIE & ENERGIEERHALTUNG
+══════════════════════════════════════════════ -->
+<div class="section s-eges">
+  <div class="section-header">
+    <div class="section-icon">⚖️</div>
+    <div class="section-title">Mechanische Gesamtenergie &amp; Energieerhaltung</div>
+    <div class="section-count" id="cnt-eges"></div>
+  </div>
+  <div class="card-list" id="sec-eges">
+
+    <div class="comp-card" data-id="e1" data-sec="eges">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann \(E_\text{ges} = E_\text{pot} + E_\text{kin} = \text{const.}\) formulieren und die Gesamtenergie beim freien Fall berechnen.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e1')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="e2" data-sec="eges">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Aufprallgeschwindigkeit aus der Energieerhaltung berechnen: \(v = \sqrt{2gh}\) bzw. \(v = \sqrt{v_0^2 + 2gh}\).</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e2')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="e3" data-sec="eges">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann ein \(h\)-\(E\)-Diagramm interpretieren: Schnittpunkt bei \(h = h_0/2\), Auswirkung von Änderungen der Masse oder Anfangshöhe beschreiben.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e3')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="e4" data-sec="eges">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann Achterbahn-Aufgaben lösen: Geschwindigkeiten im Tal und auf Zwischenhügeln über \(mgh_1 + \tfrac{1}{2}mv_1^2 = mgh_2 + \tfrac{1}{2}mv_2^2\) berechnen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e4')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="e5" data-sec="eges">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann begründen, warum der Abwurfwinkel beim schrägen Wurf keinen Einfluss auf \(v_\text{Auf}\) hat (Energieargument: nur Betrag von \(v_0\) zählt).</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e5')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="e6" data-sec="eges">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann beurteilen, ob ein Energieträger (z.&thinsp;B. Pumpspeicher) für einen bestimmten Bedarf ausreicht, und Näherungen wie Reibungsfreiheit kritisch bewerten.</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e6b')">Üben</button>
+    </div>
+
+    <div class="comp-card star-card" data-id="e7" data-sec="eges">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">★ Ich kann die Mindesthöhe für einen Looping herleiten: Bedingung \(\dfrac{mv^2}{r} \geq mg\) im höchsten Punkt liefert \(h_\text{min} = \dfrac{5r}{2}\).</span>
+        <span class="afb-pill star-pill card-afb">★ AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e7')">Üben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     4. LEISTUNG
+══════════════════════════════════════════════ -->
+<div class="section s-leistung">
+  <div class="section-header">
+    <div class="section-icon">⚡</div>
+    <div class="section-title">Mechanische Leistung &amp; Wirkungsgrad</div>
+    <div class="section-count" id="cnt-leistung"></div>
+  </div>
+  <div class="card-list" id="sec-leistung">
+
+    <div class="comp-card" data-id="l1" data-sec="leistung">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann \(P = \dfrac{W}{t}\) erläutern und anwenden sowie Leistung in W, kW und PS angeben (1 PS \(\approx\) 735,5 W).</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('l1')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="l2" data-sec="leistung">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Formel \(P = F \cdot v\) herleiten und anwenden (z.&thinsp;B. Motor überwindet Luftwiderstand bei konstanter Geschwindigkeit).</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('l2')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="l3" data-sec="leistung">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann den Wirkungsgrad \(\eta = \dfrac{P_\text{nutz}}{P_\text{el}}\) anwenden und die aufgenommene Leistung bei gegebenem \(\eta\) berechnen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('l3')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="l4" data-sec="leistung">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann begründen, warum die tatsächliche Motorleistung immer größer als die berechnete Nutzleistung ist (Reibung, Wärme, Lüfter …).</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('l4')">Üben</button>
+    </div>
+
+    <div class="comp-card star-card" data-id="l5" data-sec="leistung">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">★ Ich kann die Hangabtriebskraft \(F_H = mg\sin\alpha \approx mg \cdot \tfrac{p}{100}\) bei \(p\,\%\) Steigung berechnen und daraus die Antriebsleistung bestimmen.</span>
+        <span class="afb-pill star-pill card-afb">★ AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('l5')">Üben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     5. WAAGERECHTER WURF & SUPERPOSITION
+══════════════════════════════════════════════ -->
+<div class="section s-wurf">
+  <div class="section-header">
+    <div class="section-icon">🎯</div>
+    <div class="section-title">Waagerechter Wurf &amp; Superpositionsprinzip</div>
+    <div class="section-count" id="cnt-wurf"></div>
+  </div>
+  <div class="card-list" id="sec-wurf">
+
+    <div class="comp-card" data-id="w1" data-sec="wurf">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann das Superpositionsprinzip erläutern: horizontale Bewegung \(x(t) = v_0 t\) und vertikale Bewegung \(y(t) = \tfrac{1}{2}gt^2\) laufen unabhängig ab.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('w1')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="w2" data-sec="wurf">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann Flugzeit \(t_\text{Auf}\) \(t_\text{Auf} = \sqrt{2h/g}\), Reichweite \(x = v_0 t_\text{Auf}\) und Auftreffwinkel \(\tan\alpha = v_y/v_x\) berechnen.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('w2')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="w3" data-sec="wurf">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Auftreffgeschwindigkeit \(v_\text{Auf} = \sqrt{v_0^2 + 2gh}\) berechnen und den Zusammenhang zur Energieerhaltung erläutern.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('w3')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="w4" data-sec="wurf">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Flugbahn des waagerechten Wurfs maßstäblich skizzieren (Wertetabelle, \(x\)-\(y\)-Koordinatensystem, mind. 4 Punkte, Parabelform).</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('w4')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="w5" data-sec="wurf">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann eine Wurfaufgabe mit praktischer Anforderung lösen (z.&thinsp;B. Auffangbehälter positionieren: Reichweite \(\pm\) Streubreite &le; halbe Behälterbreite).</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('w5')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="w6" data-sec="wurf">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann begründen, warum \(t_\text{Auf}\) unabhängig von \(v_0\) ist und warum ein horizontal abgeworfenes Objekt gleichzeitig mit einem senkrecht fallenden aufprallt.</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('w6')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="w7" data-sec="wurf">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Wurfparabel qualitativ analysieren: Einfluss von \(v_0\) und \(h\) auf Reichweite, Flugzeit \(t_\text{Auf}\) und Auftreffwinkel beschreiben und vergleichen.</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('w7')">Üben</button>
+    </div>
+
+    <div class="comp-card star-card" data-id="w8" data-sec="wurf">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">★ Ich kann die Überlagerung zweier gleichförmiger Bewegungen (CNC-Fräse) von der Wurfbewegung abgrenzen und resultierenden Weg, Geschwindigkeit und Winkel berechnen.</span>
+        <span class="afb-pill star-pill card-afb">★ AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('w8')">Üben</button>
+    </div>
+
+  </div>
+</div>
+
+</main>
+<footer>Lore-Lorentz-Schule &nbsp;·&nbsp; Physik-LK 11NP &nbsp;·&nbsp; Q3 Klausurvorbereitung</footer>
+
+<!-- ══ MODAL ══ -->
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="m-title">Übungsaufgabe</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-tabs">
+      <button class="mtab active" onclick="switchTab(0)">📝 Aufgabe</button>
+      <button class="mtab" onclick="switchTab(1)">✅ Lösung</button>
+      <button class="mtab" onclick="switchTab(2)">🤖 KI-Prompt</button>
+    </div>
+    <div class="modal-body">
+      <div class="tab-panel active" id="tp0"></div>
+      <div class="tab-panel" id="tp1"></div>
+      <div class="tab-panel" id="tp2"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DATA & LOGIC ══ -->
+<script>
+// ─────────────────────────────────────────────
+// TASK DATA
+// ─────────────────────────────────────────────
+const T = {
+
+b1:{title:"Einheiten umrechnen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Rechnen Sie in SI-Einheiten um:</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">\\(v = 72\\,\\text{km/h}\\) → m/s</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">\\(P = 15\\,\\text{kW}\\) → W</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">\\(m = 2\\,\\text{t}\\) → kg</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">\\(E = 3{,}5\\,\\text{MJ}\\) → J</span></div>
+    <div class="subtask"><span class="subtask-label">e)</span><span class="subtask-body">\\(\\varrho = 1000\\,\\text{kg/m}^3\\), \\(V = 8{,}0\\cdot10^6\\,\\text{m}^3\\) → Masse \\(m\\) in kg</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>\\( v = \\dfrac{72}{3{,}6} = 20\\,\\text{m/s} \\) &nbsp;(Merke: ÷ 3,6)</div></div>
+<div class="sol-step"><div class="snum">b</div><div>\\( P = 15 \\cdot 10^3\\,\\text{W} = 15\\,000\\,\\text{W} \\)</div></div>
+<div class="sol-step"><div class="snum">c</div><div>\\( m = 2 \\cdot 1000\\,\\text{kg} = 2000\\,\\text{kg} \\)</div></div>
+<div class="sol-step"><div class="snum">d</div><div>\\( E = 3{,}5 \\cdot 10^6\\,\\text{J} \\)</div></div>
+<div class="sol-step"><div class="snum">e</div><div>\\( m = \\varrho \\cdot V = 1000\\,\\frac{\\text{kg}}{\\text{m}^3} \\cdot 8{,}0 \\cdot 10^6\\,\\text{m}^3 = 8{,}0 \\cdot 10^9\\,\\text{kg} \\)</div></div>`,
+prompt:`Ich übe das Umrechnen physikalischer Einheiten (Klasse 11, Berufsgymnasium Physik).
+
+Erstelle 5 Umrechnungsaufgaben mit folgenden Einheiten:
+- km/h ↔ m/s
+- kW, MW, PS ↔ W
+- t, g ↔ kg
+- kJ, MJ ↔ J
+- Dichte × Volumen → Masse
+
+Vollständige Lösung mit Rechenweg nach jeder Aufgabe.`},
+
+b2:{title:"Zehnerpotenzen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Berechnen Sie und geben Sie das Ergebnis in Standardform \\(a \\times 10^n\\) an:</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">\\(m = 8{,}0\\cdot10^9\\,\\text{kg}\\), \\(g = 9{,}81\\,\\text{m/s}^2\\), \\(h = 400\\,\\text{m}\\) &nbsp;→&nbsp; \\(E_\\text{pot} = mgh = \\,?\\)</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">\\(E = 3{,}14\\cdot10^{13}\\,\\text{J}\\), \\(P = 10^9\\,\\text{W}\\) &nbsp;→&nbsp; \\(t = E/P = \\,?\\) &nbsp;(auch in Stunden angeben)</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">\\(1\\,\\text{kWh} = 1000\\,\\text{W} \\cdot 3600\\,\\text{s} = \\,?\\,\\text{J}\\)</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( E_\\text{pot} = 8{,}0\\cdot10^9 \\cdot 9{,}81 \\cdot 400 = 8{,}0 \\cdot 9{,}81 \\cdot 400 \\cdot 10^9 \\)
+  <div class="dmath">\\( = 31\\,392 \\cdot 10^9\\,\\text{J} \\approx 3{,}14 \\cdot 10^{13}\\,\\text{J} \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( t = \\dfrac{E}{P} = \\dfrac{3{,}14 \\cdot 10^{13}\\,\\text{J}}{10^9\\,\\text{W}} = 3{,}14 \\cdot 10^4\\,\\text{s} \\approx 8{,}7\\,\\text{h} \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( 1\\,\\text{kWh} = 1000\\,\\text{W} \\cdot 3600\\,\\text{s} = 3{,}6 \\cdot 10^6\\,\\text{J} \\)
+</div></div>`,
+prompt:`Ich übe das Rechnen mit Zehnerpotenzen in der Physik (Energie und Leistung, Klasse 11).
+
+Erstelle 4 Aufgaben mit Präfixen k (10³), M (10⁶), G (10⁹), bei denen Ergebnisse in Standardform angegeben werden müssen. Thema: Energie, Leistung, Zeit. Vollständige Lösungen.`},
+
+b3:{title:"Formeln umstellen (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Stellen Sie die Formel nach der gesuchten Größe um und berechnen Sie:</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">\\(E_\\text{kin} = \\tfrac{1}{2}mv^2\\) &nbsp;→ nach \\(v\\); &nbsp; \\(E_\\text{kin} = 882{,}9\\,\\text{J}\\), \\(m = 2{,}0\\,\\text{kg}\\)</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">\\(E_\\text{pot} = mgh\\) &nbsp;→ nach \\(h\\); &nbsp; \\(E_\\text{pot} = 3{,}14\\cdot10^{13}\\,\\text{J}\\), \\(m = 8\\cdot10^9\\,\\text{kg}\\)</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">\\(P = W/t\\) &nbsp;→ nach \\(t\\); &nbsp; \\(P = 10^9\\,\\text{W}\\), \\(W = 3{,}14\\cdot10^{13}\\,\\text{J}\\)</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">\\(P = F\\cdot v\\) &nbsp;→ nach \\(F\\); &nbsp; \\(P = 74\\,400\\,\\text{W}\\), \\(v = 120\\,\\text{km/h}\\)</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( v = \\sqrt{\\dfrac{2E_\\text{kin}}{m}} = \\sqrt{\\dfrac{2 \\cdot 882{,}9}{2{,}0}} = \\sqrt{882{,}9} \\approx 29{,}7\\,\\text{m/s} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( h = \\dfrac{E_\\text{pot}}{mg} = \\dfrac{3{,}14\\cdot10^{13}}{8\\cdot10^9 \\cdot 9{,}81} \\approx 400\\,\\text{m} \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( t = \\dfrac{W}{P} = \\dfrac{3{,}14\\cdot10^{13}}{10^9} = 3{,}14\\cdot10^4\\,\\text{s} \\approx 8{,}7\\,\\text{h} \\)
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  \\( v = \\tfrac{120}{3{,}6} = 33{,}33\\,\\text{m/s} \\);&nbsp;
+  \\( F = \\dfrac{P}{v} = \\dfrac{74\\,400}{33{,}33} \\approx 2232\\,\\text{N} \\)
+</div></div>`,
+prompt:`Ich übe das Umstellen physikalischer Formeln (Energie & Leistung, Klasse 11).
+Relevante Formeln: E_pot=mgh, E_kin=½mv², P=W/t, P=F·v.
+Erstelle 5 Umstellungsaufgaben mit Zahlenwerten. Zeige erst die algebraische Umformung, dann das Einsetzen.`},
+
+b4:{title:"h-E-Diagramm zeichnen (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Ein Stein (\\(m = 2{,}0\\,\\text{kg}\\)) fällt aus \\(h_0 = 45\\,\\text{m}\\). Es gilt \\(E_\\text{ges} = 882{,}9\\,\\text{J}\\).</p>
+  <p><strong>Zeichnen</strong> Sie ein \\(h\\)-\\(E\\)-Diagramm mit folgenden Anforderungen:</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Achsen: \\(h/\\text{m}\\) von 0 bis 45 m; \\(E/\\text{J}\\) von 0 bis 900 J</span></div>
+    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">\\(E_\\text{ges}\\): waagerechte Linie bei \\(882{,}9\\,\\text{J}\\)</span></div>
+    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">\\(E_\\text{pot}\\): Gerade von \\((h=0;\\,E=0)\\) bis \\((h=45\\,\\text{m};\\,E=883\\,\\text{J})\\)</span></div>
+    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">\\(E_\\text{kin}\\): Gerade von \\((h=0;\\,E=883\\,\\text{J})\\) bis \\((h=45\\,\\text{m};\\,E=0)\\)</span></div>
+    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Mindestens 5 Stützpunkte berechnen; alle Linien beschriften</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">1</div><div><strong>Stützpunktberechnung:</strong></div></div>
+<div class="sol-step"><div class="snum"> </div><div>
+  <span class="fbox">h=45 m: E_pot=883 J, E_kin=0 J</span><br>
+  <span class="fbox">h=36 m: E_pot=706 J, E_kin=177 J</span><br>
+  <span class="fbox">h=22,5 m: E_pot=441 J, E_kin=441 J ← Schnittpunkt</span><br>
+  <span class="fbox">h=9 m:  E_pot=177 J, E_kin=706 J</span><br>
+  <span class="fbox">h=0 m:  E_pot=0 J,  E_kin=883 J</span>
+</div></div>
+<div class="sol-step"><div class="snum">2</div><div>
+  Schnittpunkt bei \\(h = h_0/2 = 22{,}5\\,\\text{m}\\): hier \\(E_\\text{pot} = E_\\text{kin} = 441\\,\\text{J}\\).
+  <div class="dmath">\\( E_\\text{pot}(h) = mgh = \\frac{E_\\text{ges}}{h_0}\\cdot h \\quad \\text{(lineare Funktion!)} \\)</div>
+</div></div>
+<div class="result">Schnittpunkt immer bei h₀/2</div>`,
+prompt:`Ich übe das Zeichnen von h-E-Diagrammen (Physik Klasse 11, freier Fall).
+Gib mir eine neue Aufgabe mit anderen Zahlenwerten. Erkläre:
+1. Warum sind E_pot und E_kin im h-E-Diagramm Geraden?
+2. Was bedeutet der Schnittpunkt?
+3. Was ändert sich am Diagramm, wenn \(m\) verdoppelt wird?`},
+
+b5:{title:"Diagramm ablesen (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Ein \\(h\\)-\\(E\\)-Diagramm zeigt: \\(E_\\text{ges} = 500\\,\\text{J}\\), \\(h_0 = 50\\,\\text{m}\\), \\(m = 1{,}0\\,\\text{kg}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">\\(E_\\text{pot}\\) bei \\(h = 20\\,\\text{m}\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">\\(E_\\text{kin}\\) bei \\(h = 20\\,\\text{m}\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Bei welcher Höhe gilt \\(E_\\text{pot} = E_\\text{kin}\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Geschwindigkeit bei h = 20 m?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( E_\\text{pot}(h{=}20) = \\frac{E_\\text{ges}}{h_0}\\cdot h = \\frac{500}{50}\\cdot 20 = 200\\,\\text{J} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( E_\\text{kin} = E_\\text{ges} - E_\\text{pot} = 500 - 200 = 300\\,\\text{J} \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( E_\\text{pot} = E_\\text{kin} = \\tfrac{E_\\text{ges}}{2} = 250\\,\\text{J} \\Rightarrow h = \\tfrac{h_0}{2} = 25\\,\\text{m} \\)
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  \\( E_\\text{kin} = \\tfrac{1}{2}mv^2 \\Rightarrow v = \\sqrt{\\dfrac{2\\cdot300}{1{,}0}} = \\sqrt{600} \\approx 24{,}5\\,\\text{m/s} \\)
+</div></div>`,
+prompt:`Ich übe das Ablesen und Interpretieren von h-E-Diagrammen (Physik Klasse 11).
+Erstelle eine Aufgabe, bei der ich aus einem Diagramm E_pot, E_kin ablese und daraus die Geschwindigkeit berechne. Schnittpunkt soll explizit begründet werden.`},
+
+b6:{title:"Pythagoras auf Vektoren (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Beim waagerechten Wurf hat ein Körper beim Aufprall: \\(v_x = 20\\,\\text{m/s}\\), \\(v_y = 9{,}91\\,\\text{m/s}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Betrag der Gesamtgeschwindigkeit \\(|\\vec{v}|\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Winkel \\(\\alpha\\) zur Horizontalen?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">CNC-Fräse: \\(v_x = 0{,}5\\,\\text{m/s}\\), \\(v_y = 0{,}3\\,\\text{m/s}\\) &nbsp;→&nbsp; \\(|v_\\text{res}|\\) und Winkel \\(\\beta\\)?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( |v| = \\sqrt{v_x^2+v_y^2} = \\sqrt{20^2+9{,}91^2} = \\sqrt{400+98{,}2} \\approx 22{,}3\\,\\text{m/s} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( \\tan\\alpha = \\dfrac{v_y}{v_x} = \\dfrac{9{,}91}{20} = 0{,}496 \\Rightarrow \\alpha = \\arctan(0{,}496) \\approx 26{,}4° \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( |v_\\text{res}| = \\sqrt{0{,}5^2+0{,}3^2} = \\sqrt{0{,}34} \\approx 0{,}583\\,\\text{m/s} \\);&nbsp;
+  \\( \\beta = \\arctan\\!\\left(\\tfrac{0{,}3}{0{,}5}\\right) \\approx 31{,}0° \\)
+</div></div>`,
+prompt:`Ich übe Vektorbeträge und Winkel (Pythagoras, arctan) in der Physik (Klasse 11, waagerechter Wurf).
+Erstelle 3 Aufgaben mit verschiedenen Kontexten. Vollständige Lösungen.`},
+
+// ── EPOT ────────────────────────────────────────────────────────────
+p1:{title:"E_pot = mgh (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Ein Baukran hebt eine Stahlplatte (\\(m = 2500\\,\\text{kg}\\)) auf \\(h = 35\\,\\text{m}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Hubarbeit \\(W_\\text{Hub}\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Leiten Sie \\(E_\\text{pot} = mgh\\) aus der Hubarbeit her.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Welche Mindestkraft muss der Kran aufbringen? Begründen Sie.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( W_\\text{Hub} = F_G \\cdot h = mgh = 2500\\cdot9{,}81\\cdot35 = 857\\,375\\,\\text{J} \\approx 857\\,\\text{kJ} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Herleitung: \\( W = F \\cdot s \\), mit \\( F = mg \\) und \\( s = h \\):
+  <div class="dmath">\\( W_\\text{Hub} = mgh \\;\\rightarrow\\; E_\\text{pot} = mgh \\)</div>
+  Die gesamte Hubarbeit wird als Lageenergie gespeichert.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Bei konstantem Heben: \\( F_\\text{min} = F_G = mg = 2500\\cdot9{,}81 \\approx 24\\,500\\,\\text{N} \\)
+</div></div>
+<div class="result">E_pot = 857 kJ</div>`,
+prompt:`Ich übe potentielle Energie und Hubarbeit (Physik Klasse 11, Berufsgymnasium Technik).
+Erstelle 2 Aufgaben mit Berufsbezug (Kran, Förderanlage), bei denen E_pot=mgh angewandt und auch nach Kraft oder Höhe umgestellt wird. Vollständige Lösungen.`},
+
+p2:{title:"Bezugsniveau (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Ein Ball (\\(m = 0{,}4\\,\\text{kg}\\)) liegt auf einem Tisch (\\(h_\\text{Tisch} = 0{,}8\\,\\text{m}\\)). Der Fußboden befindet sich \\(3{,}0\\,\\text{m}\\) über dem Erdboden (1. OG).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Berechnen Sie \\(E_\\text{pot}\\) für drei Bezugsniveaus:</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Bezugsniveau = Tischplatte &nbsp;→&nbsp; \\(E_\\text{pot} = ?\\)</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Bezugsniveau = Fußboden &nbsp;→&nbsp; \\(E_\\text{pot} = ?\\)</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Bezugsniveau = Erdboden &nbsp;→&nbsp; \\(E_\\text{pot} = ?\\)</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Begründen Sie: Welche Größe ist bezugsniveauunabhängig?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( h = 0 \\Rightarrow E_\\text{pot} = 0\\,\\text{J} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( E_\\text{pot} = 0{,}4\\cdot9{,}81\\cdot0{,}8 = 3{,}14\\,\\text{J} \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( h = 3{,}0 + 0{,}8 = 3{,}8\\,\\text{m} \\Rightarrow E_\\text{pot} = 0{,}4\\cdot9{,}81\\cdot3{,}8 = 14{,}9\\,\\text{J} \\)
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Die absoluten Werte sind verschieden – aber die <strong>Änderung</strong>:
+  <div class="dmath">\\( \\Delta E_\\text{pot} = mgh_\\text{Tisch} = 3{,}14\\,\\text{J} \\)</div>
+  ist für alle Bezugsniveaus gleich. \\(\\Delta E_\\text{pot}\\) ist bezugsniveauunabhängig.
+</div></div>`,
+prompt:`Ich übe das Konzept Bezugsniveau bei der potentiellen Energie (Physik Klasse 11).
+Erkläre: Warum ist E_pot relativ? Was ist trotzdem eindeutig? Gib eine Aufgabe mit 3 Bezugsniveaus und vollständigem Lösungsweg.`},
+
+p3:{title:"Pumpspeicherkraftwerk (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Pumpspeicherkraftwerk: \\(V = 8{,}0\\cdot10^6\\,\\text{m}^3\\), \\(\\Delta h = 400\\,\\text{m}\\), \\(\\varrho = 1000\\,\\text{kg/m}^3\\), \\(P = 1000\\,\\text{MW}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Masse des Wassers \\(m = \\varrho \\cdot V = ?\\)</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Potentielle Energie \\(E_\\text{pot} = ?\\)</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Maximale Betriebsdauer \\(t = E/P = ?\\) (ohne Verluste)</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( m = \\varrho V = 1000 \\cdot 8{,}0\\cdot10^6 = 8{,}0\\cdot10^9\\,\\text{kg} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( E_\\text{pot} = mgh = 8{,}0\\cdot10^9\\cdot9{,}81\\cdot400 \\approx 3{,}14\\cdot10^{13}\\,\\text{J} \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( t = \\dfrac{E_\\text{pot}}{P} = \\dfrac{3{,}14\\cdot10^{13}}{10^9} = 3{,}14\\cdot10^4\\,\\text{s} \\approx 8{,}7\\,\\text{h} \\)
+</div></div>
+<div class="result">E_pot ≈ 3,14 × 10¹³ J | Betriebsdauer ≈ 8,7 h</div>`,
+prompt:`Ich übe Pumpspeicherkraftwerk-Aufgaben (Physik Klasse 11, UTEC-Bezug).
+Erstelle eine ähnliche Aufgabe mit anderen Werten (anderes Volumen, andere Höhe, andere Leistung). Schritte: Masse → E_pot → Betriebsdauer. Mit Zehnerpotenzen.`},
+
+// ── EKIN ────────────────────────────────────────────────────────────
+k1:{title:"E_kin berechnen (AFB I)",
+aufgabe:`<div class="task-box">
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Auto: \\(m = 1200\\,\\text{kg}\\), \\(v = 120\\,\\text{km/h}\\) &nbsp;→&nbsp; \\(E_\\text{kin} = ?\\)</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Stein: \\(m = 2{,}0\\,\\text{kg}\\), \\(v = 29{,}7\\,\\text{m/s}\\) &nbsp;→&nbsp; \\(E_\\text{kin} = ?\\)</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">\\(E_\\text{kin} = 392{,}4\\,\\text{J}\\), \\(m = 2{,}0\\,\\text{kg}\\) &nbsp;→&nbsp; \\(v = ?\\)</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( v = \\tfrac{120}{3{,}6} = 33{,}33\\,\\text{m/s}; \\quad E_\\text{kin} = \\tfrac{1}{2}\\cdot1200\\cdot33{,}33^2 \\approx 667\\,\\text{kJ} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( E_\\text{kin} = \\tfrac{1}{2}\\cdot2{,}0\\cdot29{,}7^2 = 1{,}0\\cdot882{,}1 \\approx 882\\,\\text{J} \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( v = \\sqrt{\\dfrac{2E_\\text{kin}}{m}} = \\sqrt{\\dfrac{2\\cdot392{,}4}{2{,}0}} = \\sqrt{392{,}4} \\approx 19{,}8\\,\\text{m/s} \\)
+</div></div>`,
+prompt:`Ich übe E_kin = ½mv² (Physik Klasse 11). Erstelle 4 Aufgaben: E_kin berechnen, nach v umstellen, Vergleiche (doppelte v → 4-fache E). Vollständige Lösungen.`},
+
+k2:{title:"E_kin ∝ v² – Begründung (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Auto (\\(m = 1200\\,\\text{kg}\\)) bei \\(v_1 = 50\\,\\text{km/h}\\) und \\(v_2 = 100\\,\\text{km/h}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">\\(E_\\text{kin}\\) für beide Geschwindigkeiten berechnen?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Verhältnis \\(E_\\text{kin}(v_2) / E_\\text{kin}(v_1) = ?\\)</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Begründen Sie: Warum ist die Bremsstrecke bei \\(v_2\\) viermal so lang?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( v_1 = \\tfrac{50}{3{,}6} \\approx 13{,}89\\,\\text{m/s}; \\quad E_1 = \\tfrac{1}{2}\\cdot1200\\cdot13{,}89^2 \\approx 116\\,\\text{kJ} \\)<br>
+  \\( v_2 = \\tfrac{100}{3{,}6} \\approx 27{,}78\\,\\text{m/s}; \\quad E_2 = \\tfrac{1}{2}\\cdot1200\\cdot27{,}78^2 \\approx 463\\,\\text{kJ} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( \\dfrac{E_2}{E_1} = \\dfrac{463}{116} \\approx 4 \\) &nbsp;(da \\(v_2 = 2v_1\\) und \\(E \\propto v^2\\))
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Bremsarbeit = \\(E_\\text{kin}\\). Da die Bremskraft konstant ist, gilt \\(W = F\\cdot s\\), also \\(s = E_\\text{kin}/F \\propto v^2\\). Doppelte Geschwindigkeit → <strong>vierfache Bremsstrecke</strong>.
+</div></div>`,
+prompt:`Ich übe die quadratische Abhängigkeit der kinetischen Energie (Physik Klasse 11, Sicherheitsbezug).
+Erstelle 2 Aufgaben zum Vergleich von E_kin bei verschiedenen Geschwindigkeiten (Fahrzeuge, Bremswege). Mit physikalischer Begründung.`},
+
+// ── EGES ────────────────────────────────────────────────────────────
+e1:{title:"E_ges – Fallender Stein (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Stein: \\(m = 2{,}0\\,\\text{kg}\\), fällt aus \\(h_0 = 45\\,\\text{m}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">\\(E_\\text{ges}\\) zu Beginn?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">\\(E_\\text{pot}\\) und \\(E_\\text{kin}\\) nach \\(20\\,\\text{m}\\) Fallstrecke (\\(h = 25\\,\\text{m}\\))?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Aufprallgeschwindigkeit \\(v_\\text{Auf} = ?\\)</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( E_\\text{ges} = mgh_0 + 0 = 2{,}0\\cdot9{,}81\\cdot45 = 882{,}9\\,\\text{J} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( E_\\text{pot} = mgh = 2{,}0\\cdot9{,}81\\cdot25 = 490{,}5\\,\\text{J} \\)<br>
+  \\( E_\\text{kin} = E_\\text{ges} - E_\\text{pot} = 882{,}9 - 490{,}5 = 392{,}4\\,\\text{J} \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( v = \\sqrt{\\dfrac{2E_\\text{ges}}{m}} = \\sqrt{\\dfrac{2\\cdot882{,}9}{2{,}0}} = \\sqrt{882{,}9} \\approx 29{,}7\\,\\text{m/s} \\)
+</div></div>
+<div class="result">v_Auf ≈ 29,7 m/s ≈ 107 km/h</div>`,
+prompt:`Ich übe mechanische Gesamtenergie und Energieerhaltung (freier Fall, Klasse 11).
+Erstelle eine neue Aufgabe (andere Masse, andere Höhe), bei der ich E_ges, E_pot und E_kin an einem Zwischenpunkt sowie v_Auf berechne.`},
+
+e2:{title:"Aufprallgeschwindigkeit (AFB I)",
+aufgabe:`<div class="task-box">
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Stein: \\(h = 45\\,\\text{m}\\), \\(v_0 = 0\\) &nbsp;→&nbsp; \\(v_\\text{Auf} = ?\\)</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Achterbahnwagen (\\(m = 500\\,\\text{kg}\\)): Start aus \\(h_1 = 40\\,\\text{m}\\) &nbsp;→&nbsp; \\(v\\) im Tal?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Ball (\\(m = 0{,}5\\,\\text{kg}\\)): \\(h = 80\\,\\text{m}\\), \\(v_0 = 15\\,\\text{m/s}\\) (schräg geworfen) &nbsp;→&nbsp; \\(v_\\text{Auf} = ?\\)</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( v = \\sqrt{2gh} = \\sqrt{2\\cdot9{,}81\\cdot45} = \\sqrt{882{,}9} \\approx 29{,}7\\,\\text{m/s} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( v = \\sqrt{2gh_1} = \\sqrt{2\\cdot9{,}81\\cdot40} \\approx 28{,}0\\,\\text{m/s} \\approx 100\\,\\text{km/h} \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( E_\\text{ges} = mgh_0 + \\tfrac{1}{2}mv_0^2 = 0{,}5\\cdot9{,}81\\cdot80 + \\tfrac{1}{2}\\cdot0{,}5\\cdot225 = 448{,}65\\,\\text{J} \\)<br>
+  \\( v_\\text{Auf} = \\sqrt{\\dfrac{2E_\\text{ges}}{m}} = \\sqrt{\\dfrac{2\\cdot448{,}65}{0{,}5}} \\approx 42{,}4\\,\\text{m/s} \\)
+</div></div>`,
+prompt:`Ich übe Aufprallgeschwindigkeit via Energieerhaltung (Klasse 11). Einmal ohne, einmal mit Anfangsgeschwindigkeit. Mit Begründung, warum v=√(v₀²+2gh) gilt.`},
+
+e3:{title:"h-E-Diagramm interpretieren (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Körper fällt aus \\(h_0 = 40\\,\\text{m}\\); \\(E_\\text{ges} = 392{,}4\\,\\text{J}\\) (\\(m=1{,}0\\,\\text{kg}\\)).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Bei welcher Höhe gilt \\(E_\\text{pot} = E_\\text{kin}\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">\\(E_\\text{kin}\\) bei \\(h = 10\\,\\text{m}\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Was ändert sich am Diagramm, wenn \\(m\\) verdoppelt wird?</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Was ändert sich am Diagramm, wenn \\(h_0\\) halbiert wird?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( E_\\text{pot} = E_\\text{kin} \\Rightarrow h = h_0/2 = 20\\,\\text{m} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( E_\\text{pot}(10) = 1{,}0\\cdot9{,}81\\cdot10 = 98{,}1\\,\\text{J} \\Rightarrow E_\\text{kin} = 392{,}4 - 98{,}1 = 294{,}3\\,\\text{J} \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Alle Energiewerte × 2 → Diagramm in \\(E\\)-Richtung gestreckt (Faktor 2); \\(h_0\\) unverändert.
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  \\(h_0\\) und \\(E_\\text{ges}\\) halbieren sich → Diagramm in beide Richtungen gestaucht.
+</div></div>`,
+prompt:`Ich übe h-E-Diagramme interpretieren (Physik Klasse 11). Erkläre: Schnittpunkt immer bei h₀/2, Einfluss von m und h₀. Neue Aufgabe mit Diagrammauswertung.`},
+
+e4:{title:"Achterbahn (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Achterbahnwagen (\\(m = 500\\,\\text{kg}\\)), Start aus Ruhe bei \\(h_1 = 40\\,\\text{m}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Geschwindigkeit im Tal (\\(h = 0\\))?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Maximale Höhe \\(h_{2,\\max}\\) des zweiten Hügels?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Geschwindigkeit bei \\(h_2 = 25\\,\\text{m}\\)?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( v_\\text{Tal} = \\sqrt{2gh_1} = \\sqrt{2\\cdot9{,}81\\cdot40} \\approx 28{,}0\\,\\text{m/s} \\approx 100\\,\\text{km/h} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( mgh_1 = mgh_{2,\\max} \\Rightarrow h_{2,\\max} = h_1 = 40\\,\\text{m} \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( v_2 = \\sqrt{2g(h_1-h_2)} = \\sqrt{2\\cdot9{,}81\\cdot15} = \\sqrt{294{,}3} \\approx 17{,}2\\,\\text{m/s} \\)
+</div></div>
+<div class="result">v_Tal ≈ 28,0 m/s | h₂,max = 40 m | v bei 25 m ≈ 17,2 m/s</div>`,
+prompt:`Ich übe Achterbahn-Aufgaben mit Energieerhaltung (Klasse 11). Erstelle eine Variante mit 3 Hügeln, vollständigem Lösungsweg und physikalischen Erläuterungen.`},
+
+e5:{title:"Wurfwinkelunabhängigkeit – Begründung (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Ball (\\(m = 0{,}5\\,\\text{kg}\\)) wird von \\(h = 80\\,\\text{m}\\) mit \\(|v_0| = 15\\,\\text{m/s}\\) geworfen.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(v_\\text{Auf}\\) für senkrechten Wurf nach unten.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie \\(v_\\text{Auf}\\) für waagerechten Wurf.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Begründen Sie physikalisch, warum beide Werte gleich sind.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a+b</div><div>
+  In beiden Fällen: \\( E_\\text{ges} = mgh_0 + \\tfrac{1}{2}mv_0^2 = 0{,}5\\cdot9{,}81\\cdot80 + \\tfrac{1}{2}\\cdot0{,}5\\cdot225 = 448{,}65\\,\\text{J} \\)
+  <div class="dmath">\\( v_\\text{Auf} = \\sqrt{\\dfrac{2E_\\text{ges}}{m}} = \\sqrt{\\dfrac{2\\cdot448{,}65}{0{,}5}} \\approx 42{,}4\\,\\text{m/s} \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\(E_\\text{kin} = \\tfrac{1}{2}mv^2\\) hängt nur vom <strong>Betrag</strong> von \\(v\\) ab, nicht von der Richtung. Da \\(E_\\text{ges}\\) bei gleichem \\(|v_0|\\) und gleichem \\(h\\) identisch ist, ist \\(v_\\text{Auf}\\) unabhängig vom Wurfwinkel.
+</div></div>`,
+prompt:`Ich übe die Winkelunabhängigkeit der Aufprallgeschwindigkeit (Physik Klasse 11).
+Erkläre mathematisch (E_kin = ½mv² enthält keine Richtung) und physikalisch. Gib eine Aufgabe, die zwei Wurfwinkel vergleicht.`},
+
+e6b:{title:"Bewertungsaufgabe Pumpspeicher (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Ein Pumpspeicherkraftwerk speichert \\(E_\\text{pot} \\approx 3{,}14\\cdot10^{13}\\,\\text{J}\\) und hat \\(P = 1000\\,\\text{MW}\\). Wirkungsgrad \\(\\eta = 80\\,\\%\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Tatsächliche Betriebsdauer mit \\(\\eta = 80\\,\\%\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Das Werk soll eine Stadt (Bedarf: \\(500\\,\\text{MW}\\)) versorgen. Reicht der Speicher für \\(24\\,\\text{h}\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Bewerten Sie: Warum ist der reale Wirkungsgrad relevant – und was vernachlässigt unsere Modellrechnung?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( E_\\text{nutz} = \\eta\\cdot E_\\text{pot} = 0{,}80\\cdot3{,}14\\cdot10^{13} = 2{,}51\\cdot10^{13}\\,\\text{J} \\)<br>
+  \\( t = \\dfrac{E_\\text{nutz}}{P} = \\dfrac{2{,}51\\cdot10^{13}}{10^9} = 2{,}51\\cdot10^4\\,\\text{s} \\approx 7{,}0\\,\\text{h} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Bedarf 24 h: \\( E_\\text{bed} = 500\\cdot10^6\\cdot86400 = 4{,}32\\cdot10^{13}\\,\\text{J} \\)<br>
+  \\( E_\\text{nutz} = 2{,}51\\cdot10^{13}\\,\\text{J} < 4{,}32\\cdot10^{13}\\,\\text{J} \\) → <strong>Nein</strong>, der Speicher reicht nicht für 24 h.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Vernachlässigt: Reibungsverluste beim Pumpen, Leitungsverluste, variabler Wirkungsgrad. Im Modell: keine Reibung, konstantes \\(g\\), ideale Turbine. → Reale Kapazität ist geringer.
+</div></div>`,
+prompt:`Ich übe Bewertungsaufgaben zur Energiespeicherung (Physik Klasse 11, AFB III).
+Erstelle eine Aufgabe, bei der ich berechne ob ein Energiespeicher für einen bestimmten Bedarf reicht, und die Näherungen im Modell kritisch bewerte.`},
+
+e7:{title:"★ Looping-Mindesthöhe (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Spielzeugauto (\\(m = 50\\,\\text{g}\\)), Looping-Radius \\(r = 0{,}12\\,\\text{m}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Mindestgeschwindigkeit \\(v_\\min\\) im höchsten Loopingpunkt? &nbsp;<span style="color:var(--text-muted);font-size:.85em">Bedingung: \\(mv^2/r \\geq mg\\)</span></span></div>
+    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Bedingung: F_Z ≥ F_G  →  mv²/r ≥ mg</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Mindesthöhe \\(h_\\min\\) des Startpunkts? (Energieerhaltung: Start&nbsp;→&nbsp;höchster Punkt bei \\(h = 2r\\))</span></div>
+    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">(Energieerhaltung: Start → höchster Punkt bei h = 2r)</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( \\dfrac{mv^2}{r} \\geq mg \\Rightarrow v_\\min = \\sqrt{gr} = \\sqrt{9{,}81\\cdot0{,}12} \\approx 1{,}08\\,\\text{m/s} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Energieerhaltung (Start bei \\(h_\\min\\), \\(v=0\\)) → (oben bei \\(h=2r\\), \\(v=v_\\min\\)):
+  <div class="dmath">\\( mgh_\\min = mg(2r) + \\tfrac{1}{2}mv_\\min^2 = mg(2r) + \\tfrac{1}{2}m(gr) = mg\\tfrac{5r}{2} \\)</div>
+  \\[ \\boxed{h_\\min = \\dfrac{5r}{2} = \\dfrac{5\\cdot0{,}12}{2} = 0{,}30\\,\\text{m}} \\]
+</div></div>`,
+prompt:`Ich übe die Looping-Mindesthöhe (Physik Klasse 11, Knobelaufgabe).
+Erkläre: Warum F_Z ≥ F_G oben? Leite h_min = 5r/2 allgemein her. Dann eine Variante mit anderem r.`},
+
+// ── LEISTUNG ────────────────────────────────────────────────────────
+l1:{title:"P = W/t (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Schüler (\\(m = 70\\,\\text{kg}\\)) läuft Treppe (\\(h = 12\\,\\text{m}\\)) in \\(t = 25\\,\\text{s}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Hubarbeit \\(W\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Leistung \\(P\\) in W?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Leistung in PS?</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Person B braucht \\(50\\,\\text{s}\\) – vergleichen Sie die Leistungen.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( W = mgh = 70\\cdot9{,}81\\cdot12 \\approx 8240\\,\\text{J} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( P = \\dfrac{W}{t} = \\dfrac{8240}{25} \\approx 330\\,\\text{W} \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( P = \\dfrac{330}{735{,}5} \\approx 0{,}45\\,\\text{PS} \\)
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  \\( P_B = \\tfrac{8240}{50} = 164{,}8\\,\\text{W} \\) &nbsp;→ Person A hat die <strong>doppelte</strong> Leistung (gleiche Arbeit, halbe Zeit).
+</div></div>
+<div class="result">P ≈ 330 W ≈ 0,45 PS</div>`,
+prompt:`Ich übe P = W/t (Physik Klasse 11). Erstelle 3 Aufgaben (Treppensteigen, Sport, Maschinen): Arbeit → Leistung in W, kW, PS. Vollständige Lösungen.`},
+
+l2:{title:"P = F·v herleiten (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Auto bei \\(v = 120\\,\\text{km/h}\\), Luftwiderstand \\(F_L = 800\\,\\text{N}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">\\(v\\) in m/s?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Motorleistung gegen Luftwiderstand in W?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Leistung in kW und PS?</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Leiten Sie \\(P = F\\cdot v\\) aus \\(P = W/t\\) her.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( v = \\tfrac{120}{3{,}6} = 33{,}33\\,\\text{m/s} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( P = F\\cdot v = 800\\cdot33{,}33 \\approx 26\\,667\\,\\text{W} \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( P \\approx 26{,}7\\,\\text{kW} \\approx 36{,}3\\,\\text{PS} \\)
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  \\( P = \\dfrac{W}{t} = \\dfrac{F\\cdot s}{t} = F\\cdot\\dfrac{s}{t} = F\\cdot v \\quad \\checkmark \\)
+</div></div>`,
+prompt:`Ich übe P = F·v (Physik Klasse 11). Erkläre Herleitung aus P=W/t. Erstelle 2 Aufgaben (Fahrzeugantrieb, Widerstandskraft). Vollständige Lösungen.`},
+
+l3:{title:"Wirkungsgrad η (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Kran: \\(m = 2000\\,\\text{kg}\\), \\(h = 15\\,\\text{m}\\), \\(t = 30\\,\\text{s}\\), \\(\\eta = 60\\,\\%\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Nutzleistung \\(P_\\text{nutz}\\) (mechanisch)?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Elektrische Leistungsaufnahme \\(P_\\text{el}\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Verlustleistung \\(P_\\text{Verlust}\\)?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( W = mgh = 2000\\cdot9{,}81\\cdot15 = 294\\,300\\,\\text{J} \\)<br>
+  \\( P_\\text{nutz} = \\dfrac{W}{t} = \\dfrac{294\\,300}{30} \\approx 9810\\,\\text{W} \\approx 9{,}81\\,\\text{kW} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( \\eta = \\dfrac{P_\\text{nutz}}{P_\\text{el}} \\Rightarrow P_\\text{el} = \\dfrac{P_\\text{nutz}}{\\eta} = \\dfrac{9810}{0{,}60} \\approx 16\\,350\\,\\text{W} \\approx 16{,}4\\,\\text{kW} \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( P_\\text{Verlust} = P_\\text{el} - P_\\text{nutz} = 16\\,350 - 9810 \\approx 6540\\,\\text{W} \\approx 6{,}5\\,\\text{kW} \\)
+</div></div>
+<div class="result">P_el ≈ 16,4 kW | 40 % Verluste</div>`,
+prompt:`Ich übe Wirkungsgrad η = P_nutz/P_el (Klasse 11). Erstelle 2 Aufgaben (Kran, Pumpe): Nutzleistung → P_el via η → Verlustleistung. Vollständige Lösungen.`},
+
+l4:{title:"Begründung: P_real > P_nutz (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Ein Aufzug (\\(6\\times75\\,\\text{kg}\\), \\(h=20\\,\\text{m}\\), \\(t=8\\,\\text{s}\\)) hat eine Nennleistung von \\(15\\,\\text{kW}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die theoretische Mindestleistung \\(P_\\text{nutz}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Der Motor hat \\(15\\,\\text{kW}\\) – berechnen Sie den Wirkungsgrad \\(\\eta\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Begründen Sie ausführlich, warum \\(P_\\text{real} > P_\\text{nutz}\\) gilt und welche Energieformen dabei auftreten.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( W = 6\\cdot75\\cdot9{,}81\\cdot20 = 88\\,290\\,\\text{J} \\)<br>
+  \\( P_\\text{nutz} = \\dfrac{88\\,290}{8} \\approx 11\\,036\\,\\text{W} \\approx 11{,}0\\,\\text{kW} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( \\eta = \\dfrac{P_\\text{nutz}}{P_\\text{el}} = \\dfrac{11{,}0}{15{,}0} \\approx 73\\,\\% \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Verluste entstehen durch: <strong>Seilreibung</strong> (→ Wärme), <strong>Motorverluste</strong> (Ohmsche Wärme in Wicklungen), <strong>Getriebereibung</strong>, <strong>Lüfterarbeit</strong> (Kühlung). Der Energieerhaltungssatz gilt global: \\(E_\\text{el} = E_\\text{pot} + E_\\text{Wärme}\\).
+</div></div>`,
+prompt:`Ich übe Begründungsaufgaben zu Wirkungsgrad und Energieverlusten (Physik Klasse 11, AFB III).
+Erstelle eine Aufgabe, bei der ich berechne und dann erkläre, wo Energie verloren geht. Welche Energieformen treten auf?`},
+
+l5:{title:"★ Radfahrer am Berg (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Radfahrer: \\(m = 80\\,\\text{kg}\\), \\(v = 15\\,\\text{km/h}\\), Steigung \\(6\\,\\%\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Hangabtriebskraft \\(F_H\\)? &nbsp;<span style="color:var(--text-muted);font-size:.85em">Tipp: Steigung \\(6\\,\\% \\Rightarrow \\sin\\alpha \\approx \\tan\\alpha = \\tfrac{6}{100} = 0{,}06\\)</span></span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Leistung gegen Hangabtriebskraft \\(P = F_H \\cdot v = ?\\)</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Warum ist die tatsächliche Leistung deutlich höher? Nennen Sie Ursachen.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( F_H = mg\\sin\\alpha \\approx mg\\cdot\\dfrac{p}{100} = 80\\cdot9{,}81\\cdot\\dfrac{6}{100} \\approx 47{,}1\\,\\text{N} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( v = \\tfrac{15}{3{,}6} = 4{,}17\\,\\text{m/s}; \\quad P = F_H\\cdot v = 47{,}1\\cdot4{,}17 \\approx 196\\,\\text{W} \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Zusätzliche Widerstände: Rollreibung (Reifen auf Asphalt), Luftwiderstand (bei 15 km/h relevant), Lagerreibung, Wirkungsgrad der Muskel-Getriebe-Kette. → \\(P_\\text{real} > P_\\text{Hang}\\).
+</div></div>
+<div class="result">F_H ≈ 47,1 N | P_Hang ≈ 196 W</div>`,
+prompt:`Ich übe Hangabtriebskraft und Leistung am Berg (Physik Klasse 11, Knobelaufgabe).
+Erkläre: F_H = mg·sinα und warum sinα ≈ tanα bei kleinen Winkeln. Neue Aufgabe mit LKW oder E-Bike auf Steigung.`},
+
+// ── WURF ────────────────────────────────────────────────────────────
+w1:{title:"Superpositionsprinzip (AFB I)",
+aufgabe:`<div class="task-box">
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Beschreiben Sie \\(x\\)- und \\(y\\)-Bewegung des waagerechten Wurfs getrennt. Welche Kraft wirkt horizontal, welche vertikal?</span></div>
+    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Welche Kraft wirkt horizontal? Welche vertikal?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Eine Laufkatze (\\(v_0 = 1{,}5\\,\\text{m/s}\\)) lässt eine Last los.</span></div>
+    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Warum bleibt die Last horizontal zunächst "neben" der Katze?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  <strong>Horizontal:</strong> \\( x(t) = v_0\\cdot t \\) (gleichförmig, keine Kraft in \\(x\\))<br>
+  <strong>Vertikal:</strong> \\( y(t) = \\tfrac{1}{2}gt^2 \\) (gleichmäßig beschleunigt, \\(F_G = mg\\))
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Die Last behält \\(v_x = v_0 = 1{,}5\\,\\text{m/s}\\) (Trägheit, Newton 1). Erst die Schwerkraft zieht sie nach unten. Der horizontale Abstand zur Katze ist anfangs null – er wächst erst, wenn die Katze weiterfährt.
+</div></div>`,
+prompt:`Ich übe das Superpositionsprinzip beim waagerechten Wurf (Physik Klasse 11).
+Erkläre mit Alltagsbeispiel (z.B. Abwurf aus Flugzeug, Förderband). Rolle von Newton 1. Aufgabe mit Erklärungsteil.`},
+
+w2:{title:"Flugzeit t_Auf, Reichweite, Winkel (AFB I)",
+aufgabe:`<div class="task-box">
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Laufkatze: \\(v_0 = 1{,}5\\,\\text{m/s}\\), \\(h = 20\\,\\text{m}\\) &nbsp;→&nbsp; \\(t_\\text{Auf}\\), \\(x_\\max\\), Auftreffwinkel \\(\\alpha\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Förderband: \\(v_0 = 2{,}0\\,\\text{m/s}\\), \\(h = 1{,}2\\,\\text{m}\\) &nbsp;→&nbsp; \\(t_\\text{Auf}\\), \\(x_\\max\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Stuntman: \\(v_0 = 72\\,\\text{km/h}\\), \\(h = 5{,}0\\,\\text{m}\\) &nbsp;→&nbsp; \\(t_\\text{Auf}\\), \\(x_\\max\\)?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( t = \\sqrt{\\tfrac{2\\cdot20}{9{,}81}} \\approx 2{,}02\\,\\text{s}; \\quad x = 1{,}5\\cdot2{,}02 \\approx 3{,}03\\,\\text{m} \\)<br>
+  \\( v_y = g\\cdot t = 9{,}81\\cdot2{,}02 \\approx 19{,}8\\,\\text{m/s}; \\quad \\tan\\alpha = \\tfrac{19{,}8}{1{,}5} \\approx 13{,}2 \\Rightarrow \\alpha \\approx 85{,}7° \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( t = \\sqrt{\\tfrac{2\\cdot1{,}2}{9{,}81}} \\approx 0{,}495\\,\\text{s}; \\quad x = 2{,}0\\cdot0{,}495 \\approx 0{,}99\\,\\text{m} \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( v_0 = \\tfrac{72}{3{,}6} = 20\\,\\text{m/s}; \\quad t = \\sqrt{\\tfrac{2\\cdot5{,}0}{9{,}81}} \\approx 1{,}01\\,\\text{s}; \\quad x = 20\\cdot1{,}01 \\approx 20{,}2\\,\\text{m} \\)
+</div></div>`,
+prompt:`Ich übe Flugzeit \(t_\text{Auf}\), Reichweite und Auftreffwinkel beim waagerechten Wurf (Klasse 11).
+Erstelle 3 neue Aufgaben mit Berufsbezug. Vollständige Lösungen.`},
+
+w3:{title:"v_Auf und Energieerhaltung (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Stuntman: \\(v_0 = 20\\,\\text{m/s}\\), \\(h = 5{,}0\\,\\text{m}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(v_\\text{Auf} = \\sqrt{v_0^2+2gh}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Zeigen Sie: Dasselbe Ergebnis folgt aus der Energieerhaltung.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Warum gilt \\(v_\\text{Auf} > v_0\\)?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( v_\\text{Auf} = \\sqrt{v_0^2+2gh} = \\sqrt{400+2\\cdot9{,}81\\cdot5} = \\sqrt{498{,}1} \\approx 22{,}3\\,\\text{m/s} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( E_\\text{ges} = \\tfrac{1}{2}mv_0^2 + mgh \\);&nbsp; am Boden: \\( E_\\text{ges} = \\tfrac{1}{2}mv^2 \\)<br>
+  \\( v = \\sqrt{v_0^2+2gh} \\) &nbsp;✓ (identisch)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Beim Fall wird \\(E_\\text{pot}\\) in \\(E_\\text{kin}\\) umgewandelt → \\(v_y\\) kommt hinzu → \\(|v_\\text{Auf}| > v_0\\).
+</div></div>`,
+prompt:`Ich übe v_Auf = √(v₀²+2gh) und den Zusammenhang zur Energieerhaltung (Klasse 11).
+Erkläre die Herleitung. Erstelle 2 Aufgaben: einmal v₀=0, einmal v₀≠0.`},
+
+w4:{title:"Flugbahn skizzieren (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Stuntman: \\(v_0 = 20\\,\\text{m/s}\\), \\(h = 5{,}0\\,\\text{m}\\).</p>
+  <p>Erstellen Sie eine Wertetabelle und zeichnen Sie die Flugbahn maßstäblich in ein \\(x\\)-\\(y\\)-Koordinatensystem (y-Achse nach unten).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Zeitpunkte: \\(t = 0;\\; 0{,}25;\\; 0{,}50;\\; 0{,}75;\\; 1{,}01\\,\\text{s}\\)</span></div>
+    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Formeln: \\(x(t) = v_0\\cdot t\\) &nbsp;und&nbsp; \\(y(t) = \\tfrac{1}{2}g\\,t^2\\)</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">1</div><div><strong>Wertetabelle:</strong><br>
+  <span class="fbox">t=0,00 s: x=0,0 m, y=0,00 m</span><br>
+  <span class="fbox">t=0,25 s: x=5,0 m, y=0,31 m</span><br>
+  <span class="fbox">t=0,50 s: x=10,0 m, y=1,23 m</span><br>
+  <span class="fbox">t=0,75 s: x=15,0 m, y=2,76 m</span><br>
+  <span class="fbox">t=1,01 s: x=20,2 m, y=5,00 m ← Aufprall</span>
+</div></div>
+<div class="sol-step"><div class="snum">2</div><div>
+  <strong>Zeichenregeln:</strong> x-Achse nach rechts (0–22 m), y-Achse nach unten (0–5 m). Maßstab angeben (z.B. 1 cm = 2 m). Alle 5 Punkte eintragen, mit Parabel verbinden. Start und Aufprall markieren. Achsen und Kurve beschriften.
+</div></div>`,
+prompt:`Ich übe das Zeichnen von Wurfparabeln (Klasse 11). Erstelle eine Aufgabe zum waagerechten Wurf mit 5 Zeitpunkten und Hinweisen zur korrekten Achswahl und Skalierung.`},
+
+w5:{title:"Auffangbehälter positionieren (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Förderband: \\(v_0 = 2{,}0\\,\\text{m/s}\\), \\(h = 1{,}2\\,\\text{m}\\). Behälterbreite: \\(40\\,\\text{cm}\\), Streubreite \\(\\pm 5\\,\\text{cm}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die Reichweite \\(x_\\max\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Das Werkstück muss im Behälter landen. In welchem Abstand vom Bandende muss die Behältermitte stehen?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Zeigen Sie: Die Behälterbreite von \\(40\\,\\text{cm}\\) ist bei \\(\\pm 5\\,\\text{cm}\\) Streuung ausreichend.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( t = \\sqrt{\\tfrac{2\\cdot1{,}2}{9{,}81}} \\approx 0{,}495\\,\\text{s}; \\quad x_\\max = 2{,}0\\cdot0{,}495 \\approx 0{,}99\\,\\text{m} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Behältermitte bei \\( x_M = 0{,}99\\,\\text{m} \\) vom Bandende.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Streubreich: \\([0{,}94\\,\\text{m},\\,1{,}04\\,\\text{m}]\\). Behälter deckt \\([0{,}79\\,\\text{m},\\,1{,}19\\,\\text{m}]\\) ab. \\( 0{,}94 > 0{,}79 \\) ✓ und \\( 1{,}04 < 1{,}19 \\) ✓ → Behälter reicht aus.
+</div></div>`,
+prompt:`Ich übe Wurfaufgaben mit praktischer Anforderung (Klasse 11, Berufsbezug Produktion).
+Erstelle eine ähnliche Aufgabe: Werkstück landet in einem Behälter, ich muss Position und Größe des Behälters bestimmen oder prüfen.`},
+
+w6:{title:"Begründung: t unabhängig von v₀ (AFB III)",
+aufgabe:`<div class="task-box">
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Begründen Sie: Warum hängt \\(t_\\text{Auf} = \\sqrt{2h/g}\\) nicht von \\(v_0\\) ab?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Zwei Kugeln werden gleichzeitig losgelassen: eine horizontal abgeworfen (\\(v_0 = 10\\,\\text{m/s}\\)),</span></div>
+    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">die andere senkrecht fallen gelassen (\\(v_0 = 0\\)), aus gleicher Höhe \\(h = 2\\,\\text{m}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Welche landet zuerst? Begründen Sie ohne Rechnung.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(t_\\text{Auf}\\) folgt ausschließlich aus der <em>vertikalen</em> Bewegung: \\(h = \\tfrac{1}{2}gt^2\\). Die Horizontalgeschwindigkeit \\(v_0\\) taucht darin nicht auf – beide Bewegungsrichtungen sind unabhängig (Superpositionsprinzip).
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Beide landen <strong>gleichzeitig</strong>. Die vertikale Fallbewegung \\(y(t) = \\tfrac{1}{2}gt^2\\) ist bei beiden identisch; \\(v_0\\) beeinflusst nur \\(x(t)\\), nicht \\(y(t)\\).
+  <div class="dmath">\\( t = \\sqrt{\\dfrac{2\\cdot2{,}0}{9{,}81}} \\approx 0{,}64\\,\\text{s} \\quad\\text{(für beide)} \\)</div>
+</div></div>`,
+prompt:`Ich übe die konzeptionelle Begründung des Superpositionsprinzips (Physik Klasse 11, AFB III).
+Erstelle eine Frage, bei der ich den gleichzeitigen Aufprall zweier Körper begründe und erkläre, was "Unabhängigkeit der Bewegungen" bedeutet.`},
+
+w7:{title:"Qualitative Analyse der Wurfparabel (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Drei Körper werden aus gleicher Höhe \\(h = 5{,}0\\,\\text{m}\\) waagerecht abgeworfen:</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Körper A: \\(v_0 = 5\\,\\text{m/s}\\)</span></div>
+    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Körper B: \\(v_0 = 20\\,\\text{m/s}\\)</span></div>
+    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Körper C: \\(v_0 = 0\\) (senkrechter Fall)</span></div>
+    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Vergleichen Sie ohne vollständige Rechnung:</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Flugzeit \\(t_\\text{Auf}\\)</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">horizontale Reichweite \\(x_\\max\\)</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Auftreffwinkel \\(\\alpha\\)</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Auftreffgeschwindigkeit \\(|v_\\text{Auf}|\\)</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  Flugzeit \\(t_\\text{Auf}\\): <strong>A = B = C</strong>, alle \\(t = \\sqrt{2h/g} \\approx 1{,}01\\,\\text{s}\\). \\(t\\) hängt nicht von \\(v_0\\) ab.
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Reichweite: \\(x \\propto v_0\\) → C: 0 m, A: 5,05 m, B: 20,2 m.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( \\tan\\alpha = v_y/v_0 = (g\\cdot t)/v_0 \\). Kleines \\(v_0\\) → großes \\(\\alpha\\) (steiler Aufprall). C: 90° (senkrecht), A: ca. 64°, B: ca. 26°.
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  \\( v_\\text{Auf} = \\sqrt{v_0^2+2gh} \\). Für alle gilt \\(v_y = g\\cdot t \\approx 9{,}91\\,\\text{m/s}\\), aber \\(v_x\\) verschieden:<br>
+  C: ≈ 9,91 m/s; A: ≈ 11,1 m/s; B: ≈ 22,3 m/s.
+</div></div>`,
+prompt:`Ich übe qualitative Analyse der Wurfparabel (Physik Klasse 11, AFB III).
+Erkläre: Wie ändern sich Reichweite, Winkel und v_Auf, wenn v₀ vergrößert wird? Erstelle eine Vergleichsaufgabe mit 3 Objekten.`},
+
+w8:{title:"★ CNC-Fräse vs. Wurfbewegung (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>CNC-Fräskopf: \\(v_x = 0{,}5\\,\\text{m/s}\\), \\(v_y = 0{,}3\\,\\text{m/s}\\) (beide gleichförmig), \\(t = 4{,}0\\,\\text{s}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Wege \\(x\\) und \\(y\\) nach \\(t = 4{,}0\\,\\text{s}\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Gesamtstrecke \\(s_\\text{res}\\) vom Startpunkt?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Winkel \\(\\beta\\) zur \\(x\\)-Achse? Resultierende Geschwindigkeit \\(v_\\text{res}\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Welche Bahnform entsteht – und warum ist das beim waagerechten Wurf anders?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( x = v_x\\cdot t = 0{,}5\\cdot4{,}0 = 2{,}0\\,\\text{m}; \\quad y = v_y\\cdot t = 0{,}3\\cdot4{,}0 = 1{,}2\\,\\text{m} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( s = \\sqrt{x^2+y^2} = \\sqrt{4{,}00+1{,}44} = \\sqrt{5{,}44} \\approx 2{,}33\\,\\text{m} \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( \\beta = \\arctan\\!\\left(\\tfrac{v_y}{v_x}\\right) = \\arctan(0{,}6) \\approx 31°; \\quad v_\\text{res} = \\sqrt{0{,}5^2+0{,}3^2} = \\sqrt{0{,}34} \\approx 0{,}583\\,\\text{m/s} \\)
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Fräse: beide \\(v\\) konstant → <strong>Gerade</strong> (gleichförmig). Beim Wurf: \\(v_y = g\\cdot t\\) wächst mit der Zeit → <strong>Parabel</strong> (\\(y \\propto t^2\\)).
+</div></div>
+<div class="result">s ≈ 2,33 m | β ≈ 31° | v_res ≈ 0,58 m/s</div>`,
+prompt:`Ich übe den Vergleich gleichförmige Überlagerung vs. Wurfbewegung (Physik Klasse 11, Knobelaufgabe).
+Erkläre: Wann Gerade, wann Parabel? Neue Aufgabe mit anderen Geschwindigkeiten und dem expliziten Vergleich beider Situationen.`}
+};
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+const state = {};
+let curId = null;
+
+function loadState(){
+  try{ Object.assign(state, JSON.parse(sessionStorage.getItem('q3-lernliste')||'{}')); }catch(e){}
+}
+function saveState(){
+  try{ sessionStorage.setItem('q3-lernliste', JSON.stringify(state)); }catch(e){}
+}
+
+// ─────────────────────────────────────────────
+// TOGGLE
+// ─────────────────────────────────────────────
+function toggle(checkArea){
+  const card = checkArea.closest('.comp-card');
+  card.classList.toggle('done');
+  state[card.dataset.id] = card.classList.contains('done');
+  saveState();
+  updateProgress();
+  updateCnt(card.dataset.sec);
+}
+
+// ─────────────────────────────────────────────
+// PROGRESS
+// ─────────────────────────────────────────────
+function updateProgress(){
+  const all = document.querySelectorAll('.comp-card').length;
+  const done = document.querySelectorAll('.comp-card.done').length;
+  const pct = all ? done/all*100 : 0;
+  document.getElementById('prog-fill').style.width = pct+'%';
+  document.getElementById('prog-text').textContent = done+' von '+all+' Kompetenzen';
+}
+function updateCnt(sec){
+  const all  = document.querySelectorAll(`[data-sec="${sec}"]`).length;
+  const done = document.querySelectorAll(`[data-sec="${sec}"].done`).length;
+  const el   = document.getElementById('cnt-'+sec);
+  if(el) el.textContent = done+'/'+all;
+}
+function initState(){
+  loadState();
+  document.querySelectorAll('.comp-card').forEach(c=>{
+    if(state[c.dataset.id]) c.classList.add('done');
+  });
+  updateProgress();
+  ['basis','epot','ekin','eges','leistung','wurf'].forEach(s=>updateCnt(s));
+}
+
+// ─────────────────────────────────────────────
+// MODAL
+// ─────────────────────────────────────────────
+function openModal(id){
+  curId = id;
+  const d = T[id];
+  if(!d) return;
+
+  document.getElementById('m-title').textContent = d.title;
+
+  // Tab 0: Aufgabe + ausklappbare Lösung
+  document.getElementById('tp0').innerHTML =
+    d.aufgabe +
+    `<button class="sol-toggle" onclick="toggleSol()">💡 Lösung anzeigen</button>
+     <div class="sol-box" id="sol-box">${d.loesung}</div>`;
+
+  // Tab 1: Lösung direkt
+  document.getElementById('tp1').innerHTML =
+    `<div class="sol-box open">${d.loesung}</div>`;
+
+  // Tab 2: KI-Prompt
+  document.getElementById('tp2').innerHTML =
+    `<p style="font-size:.8rem;color:var(--text-muted);margin-bottom:10px">Prompt für weitere Übungsaufgaben:</p>
+     <div class="prompt-box">${d.prompt}</div>
+     <div class="ai-btns">
+       <button class="ai-btn copy" onclick="copyPrompt()">📋 Kopieren</button>
+       <a class="ai-btn" href="https://gemini.google.com" target="_blank">🚀 Google AI</a>
+       <a class="ai-btn" href="https://chatgpt.com" target="_blank">💬 ChatGPT</a>
+     </div>`;
+
+  // Reset tabs
+  document.querySelectorAll('.mtab').forEach((t,i)=>t.classList.toggle('active',i===0));
+  document.querySelectorAll('.tab-panel').forEach((p,i)=>p.classList.toggle('active',i===0));
+
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Re-render MathJax
+  if(window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise([document.getElementById('overlay')]).catch(e=>console.log(e));
+  }
+}
+
+function closeModal(){
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function overlayClick(e){ if(e.target===document.getElementById('overlay')) closeModal(); }
+
+function switchTab(i){
+  document.querySelectorAll('.mtab').forEach((t,j)=>t.classList.toggle('active',i===j));
+  document.querySelectorAll('.tab-panel').forEach((p,j)=>p.classList.toggle('active',i===j));
+  if(window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise([document.getElementById('tp'+i)]).catch(e=>console.log(e));
+  }
+}
+
+function toggleSol(){
+  const b = document.getElementById('sol-box');
+  const btn = b.previousElementSibling;
+  b.classList.toggle('open');
+  btn.textContent = b.classList.contains('open') ? '🙈 Lösung ausblenden' : '💡 Lösung anzeigen';
+  if(b.classList.contains('open') && window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise([b]).catch(e=>console.log(e));
+  }
+}
+
+function copyPrompt(){
+  if(!T[curId]) return;
+  navigator.clipboard.writeText(T[curId].prompt).then(()=>{
+    const btn = document.querySelector('.copy');
+    btn.textContent = '✅ Kopiert!';
+    setTimeout(()=>btn.textContent='📋 Kopieren', 2000);
+  });
+}
+
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', ()=>{
+  initState();
+  // Render MathJax in main page (formula strip + cards)
+  if(window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise().catch(e=>console.log(e));
+  }
+});
+</script>
+</body>
+</html>
