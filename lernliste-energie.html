@@ -575,7 +575,7 @@ footer {
         <span class="comp-text">Ich kann beurteilen, ob ein Energieträger (z.&thinsp;B. Pumpspeicher) für einen bestimmten Bedarf ausreicht, und Näherungen wie Reibungsfreiheit kritisch bewerten.</span>
         <span class="afb-pill afb3 card-afb">AFB III</span>
       </div>
-      <button class="comp-btn" onclick="openModal('e6b')">Üben</button>
+      <button class="comp-btn" onclick="openModal('e6')">Üben</button>
     </div>
 
     <div class="comp-card star-card" data-id="e7" data-sec="eges">
@@ -672,7 +672,7 @@ footer {
     <div class="comp-card" data-id="w2" data-sec="wurf">
       <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
       <div class="comp-body">
-        <span class="comp-text">Ich kann Flugzeit \(t_\text{Auf}\) \(t_\text{Auf} = \sqrt{2h/g}\), Reichweite \(x = v_0 t_\text{Auf}\) und Auftreffwinkel \(\tan\alpha = v_y/v_x\) berechnen.</span>
+        <span class="comp-text">Ich kann die Flugzeit \(t_\text{Auf} = \sqrt{\dfrac{2h}{g}}\), die Reichweite \(x = v_0\,t_\text{Auf}\) und den Auftreffwinkel \(\tan\alpha = \dfrac{v_y}{v_x}\) berechnen.</span>
         <span class="afb-pill afb1 card-afb">AFB I</span>
       </div>
       <button class="comp-btn" onclick="openModal('w2')">Üben</button>
@@ -767,13 +767,14 @@ const T = {
 
 b1:{title:"Einheiten umrechnen (AFB I)",
 aufgabe:`<div class="task-box">
-  <p>Rechnen Sie in SI-Einheiten um:</p>
+  <p>Im Planungsbüro eines Windparks werden Messwerte aus verschiedenen Quellen zusammengeführt. Damit alle Berechnungen einheitlich durchgeführt werden können, müssen die Angaben zunächst in <strong>SI-Einheiten</strong> umgerechnet werden.</p>
+  <p>Rechnen Sie die folgenden Größen um und geben Sie jeweils den vollständigen Rechenweg an:</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">\\(v = 72\\,\\text{km/h}\\) → m/s</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">\\(P = 15\\,\\text{kW}\\) → W</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">\\(m = 2\\,\\text{t}\\) → kg</span></div>
-    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">\\(E = 3{,}5\\,\\text{MJ}\\) → J</span></div>
-    <div class="subtask"><span class="subtask-label">e)</span><span class="subtask-body">\\(\\varrho = 1000\\,\\text{kg/m}^3\\), \\(V = 8{,}0\\cdot10^6\\,\\text{m}^3\\) → Masse \\(m\\) in kg</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Die Windgeschwindigkeit beträgt \\(v = 72\\,\\text{km/h}\\). Geben Sie \\(v\\) in m/s an.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Eine kleine Windkraftanlage hat eine Nennleistung von \\(P = 15\\,\\text{kW}\\). Geben Sie \\(P\\) in Watt an.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Die Rotornabe wiegt \\(m = 2\\,\\text{t}\\). Geben Sie die Masse in kg an.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Die jährliche Energieproduktion beträgt \\(E = 3{,}5\\,\\text{MJ}\\). Geben Sie \\(E\\) in Joule an.</span></div>
+    <div class="subtask"><span class="subtask-label">e)</span><span class="subtask-body">Das Ausgleichsbecken hat das Volumen \\(V = 8{,}0 \\cdot 10^6\\,\\text{m}^3\\) bei einer Dichte \\(\\varrho = 1000\\,\\text{kg/m}^3\\). Berechnen Sie die Wassermasse \\(m\\) in kg.</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>\\( v = \\dfrac{72}{3{,}6} = 20\\,\\text{m/s} \\) &nbsp;(Merke: ÷ 3,6)</div></div>
@@ -794,11 +795,13 @@ Vollständige Lösung mit Rechenweg nach jeder Aufgabe.`},
 
 b2:{title:"Zehnerpotenzen (AFB I)",
 aufgabe:`<div class="task-box">
-  <p>Berechnen Sie und geben Sie das Ergebnis in Standardform \\(a \\times 10^n\\) an:</p>
+  <p>Das Pumpspeicherkraftwerk Goldisthal in Thüringen ist eines der größten in Deutschland. Es kann überschüssigen Strom aus dem Netz nutzen, um Wasser in ein Hochbecken zu pumpen, und dieses Wasser später zur Stromerzeugung ablassen.</p>
+  <p><strong>Gegeben:</strong> Wassermasse \\(m = 8{,}0 \\cdot 10^9\\,\\text{kg}\\), Höhenunterschied \\(\\Delta h = 400\\,\\text{m}\\), Nennleistung \\(P = 1{,}0 \\cdot 10^9\\,\\text{W}\\).</p>
+  <p>Berechnen Sie und geben Sie alle Ergebnisse in <strong>Standardform</strong> \\(a \\times 10^n\\) an:</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">\\(m = 8{,}0\\cdot10^9\\,\\text{kg}\\), \\(g = 9{,}81\\,\\text{m/s}^2\\), \\(h = 400\\,\\text{m}\\) &nbsp;→&nbsp; \\(E_\\text{pot} = mgh = \\,?\\)</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">\\(E = 3{,}14\\cdot10^{13}\\,\\text{J}\\), \\(P = 10^9\\,\\text{W}\\) &nbsp;→&nbsp; \\(t = E/P = \\,?\\) &nbsp;(auch in Stunden angeben)</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">\\(1\\,\\text{kWh} = 1000\\,\\text{W} \\cdot 3600\\,\\text{s} = \\,?\\,\\text{J}\\)</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die gespeicherte potentielle Energie: \\(E_\\text{pot} = mgh = \boxed{\;\;}\\)</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Wie lange kann das Kraftwerk bei Nennleistung betrieben werden? Berechnen Sie \\(t = E/P\\) und geben Sie das Ergebnis auch in Stunden an.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Wie viel Energie entspricht \\(1\\,\\text{kWh}\\)? Zeigen Sie: \\(1\\,\\text{kWh} = 1000\\,\\text{W} \\cdot 3600\\,\\text{s} = \boxed{\;\;}\\,\\text{J}\\).</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
@@ -817,12 +820,12 @@ Erstelle 4 Aufgaben mit Präfixen k (10³), M (10⁶), G (10⁹), bei denen Erge
 
 b3:{title:"Formeln umstellen (AFB II)",
 aufgabe:`<div class="task-box">
-  <p>Stellen Sie die Formel nach der gesuchten Größe um und berechnen Sie:</p>
+  <p>Bei der Entwicklung eines neuen Elektrofahrzeugs werden verschiedene physikalische Größen berechnet. Stellen Sie jeweils zunächst die Formel <strong>algebraisch</strong> nach der gesuchten Größe um, dann setzen Sie die Zahlen ein.</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">\\(E_\\text{kin} = \\tfrac{1}{2}mv^2\\) &nbsp;→ nach \\(v\\); &nbsp; \\(E_\\text{kin} = 882{,}9\\,\\text{J}\\), \\(m = 2{,}0\\,\\text{kg}\\)</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">\\(E_\\text{pot} = mgh\\) &nbsp;→ nach \\(h\\); &nbsp; \\(E_\\text{pot} = 3{,}14\\cdot10^{13}\\,\\text{J}\\), \\(m = 8\\cdot10^9\\,\\text{kg}\\)</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">\\(P = W/t\\) &nbsp;→ nach \\(t\\); &nbsp; \\(P = 10^9\\,\\text{W}\\), \\(W = 3{,}14\\cdot10^{13}\\,\\text{J}\\)</span></div>
-    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">\\(P = F\\cdot v\\) &nbsp;→ nach \\(F\\); &nbsp; \\(P = 74\\,400\\,\\text{W}\\), \\(v = 120\\,\\text{km/h}\\)</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Ein Testfahrzeug trifft beim Crash-Test mit \\(E_\\text{kin} = 882{,}9\\,\\text{J}\\) und \\(m = 2{,}0\\,\\text{kg}\\) auf. Stellen Sie \\(E_\\text{kin} = \\tfrac{1}{2}mv^2\\) nach \\(v\\) um und berechnen Sie die Aufprallgeschwindigkeit.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Im Pumpspeicher ist \\(E_\\text{pot} = 3{,}14 \\cdot 10^{13}\\,\\text{J}\\) gespeichert, die Wassermasse beträgt \\(m = 8 \\cdot 10^9\\,\\text{kg}\\). Stellen Sie \\(E_\\text{pot} = mgh\\) nach \\(h\\) um und bestimmen Sie die Stauhöhe.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Das Kraftwerk liefert \\(P = 10^9\\,\\text{W}\\) bei einer Energiereserve von \\(W = 3{,}14 \\cdot 10^{13}\\,\\text{J}\\). Stellen Sie \\(P = W/t\\) nach \\(t\\) um und berechnen Sie die Betriebsdauer in Stunden.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Ein Fahrzeug bewegt sich mit \\(v = 120\\,\\text{km/h}\\), der Motor leistet \\(P = 74\\,400\\,\\text{W}\\) gegen den Luftwiderstand. Stellen Sie \\(P = F \\cdot v\\) nach \\(F\\) um und berechnen Sie die Widerstandskraft.</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
@@ -835,8 +838,8 @@ loesung:`<div class="sol-step"><div class="snum">a</div><div>
   \\( t = \\dfrac{W}{P} = \\dfrac{3{,}14\\cdot10^{13}}{10^9} = 3{,}14\\cdot10^4\\,\\text{s} \\approx 8{,}7\\,\\text{h} \\)
 </div></div>
 <div class="sol-step"><div class="snum">d</div><div>
-  \\( v = \\tfrac{120}{3{,}6} = 33{,}33\\,\\text{m/s} \\);&nbsp;
-  \\( F = \\dfrac{P}{v} = \\dfrac{74\\,400}{33{,}33} \\approx 2232\\,\\text{N} \\)
+  \\( v = \\tfrac{120}{3{,}6} = 33{,}3\\,\\text{m/s} \\);&nbsp;
+  \\( F = \\dfrac{P}{v} = \\dfrac{74\\,400}{33{,}3} \\approx 2232\\,\\text{N} \\)
 </div></div>`,
 prompt:`Ich übe das Umstellen physikalischer Formeln (Energie & Leistung, Klasse 11).
 Relevante Formeln: E_pot=mgh, E_kin=½mv², P=W/t, P=F·v.
@@ -844,15 +847,16 @@ Erstelle 5 Umstellungsaufgaben mit Zahlenwerten. Zeige erst die algebraische Umf
 
 b4:{title:"h-E-Diagramm zeichnen (AFB II)",
 aufgabe:`<div class="task-box">
-  <p>Ein Stein (\\(m = 2{,}0\\,\\text{kg}\\)) fällt aus \\(h_0 = 45\\,\\text{m}\\). Es gilt \\(E_\\text{ges} = 882{,}9\\,\\text{J}\\).</p>
-  <p><strong>Zeichnen</strong> Sie ein \\(h\\)-\\(E\\)-Diagramm mit folgenden Anforderungen:</p>
+  <p>Auf einer Baustelle fällt ein Stein (\\(m = 2{,}0\\,\\text{kg}\\)) versehentlich aus \\(h_0 = 45\\,\\text{m}\\) Höhe. Die mechanische Gesamtenergie (Bezugsniveau: Boden) beträgt \\(E_\\text{ges} = 882{,}9\\,\\text{J}\\).</p>
+  <p><strong>Erstellen Sie ein \\(h\\)-\\(E\\)-Diagramm</strong> nach folgenden Vorgaben:</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Achsen: \\(h/\\text{m}\\) von 0 bis 45 m; \\(E/\\text{J}\\) von 0 bis 900 J</span></div>
+    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Achsen: \\(h\\,/\\,\\text{m}\\) von 0 bis 45 m (\\(x\\)-Achse); \\(E\\,/\\,\\text{J}\\) von 0 bis 900 J (\\(y\\)-Achse)</span></div>
     <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">\\(E_\\text{ges}\\): waagerechte Linie bei \\(882{,}9\\,\\text{J}\\)</span></div>
-    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">\\(E_\\text{pot}\\): Gerade von \\((h=0;\\,E=0)\\) bis \\((h=45\\,\\text{m};\\,E=883\\,\\text{J})\\)</span></div>
-    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">\\(E_\\text{kin}\\): Gerade von \\((h=0;\\,E=883\\,\\text{J})\\) bis \\((h=45\\,\\text{m};\\,E=0)\\)</span></div>
-    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Mindestens 5 Stützpunkte berechnen; alle Linien beschriften</span></div>
+    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">\\(E_\\text{pot}\\): Gerade von \\((h=0\\,\\text{m};\\; E=0\\,\\text{J})\\) bis \\((h=45\\,\\text{m};\\; E=883\\,\\text{J})\\)</span></div>
+    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">\\(E_\\text{kin}\\): Gerade von \\((h=0\\,\\text{m};\\; E=883\\,\\text{J})\\) bis \\((h=45\\,\\text{m};\\; E=0\\,\\text{J})\\)</span></div>
+    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Berechnen Sie mindestens <strong>5 Stützpunkte</strong>, tragen Sie sie in eine Tabelle ein und beschriften Sie alle drei Geraden im Diagramm.</span></div>
   </div>
+  <div class="hint-box">Tipp: Da \\(E_\\text{pot} = mgh\\) linear in \\(h\\) ist, sind beide Kurven tatsächlich Geraden. Der Schnittpunkt von \\(E_\\text{pot}\\) und \\(E_\\text{kin}\\) liegt immer bei \\(h^* = h_0/2\\).</div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">1</div><div><strong>Stützpunktberechnung:</strong></div></div>
 <div class="sol-step"><div class="snum"> </div><div>
@@ -900,22 +904,23 @@ Erstelle eine Aufgabe, bei der ich aus einem Diagramm E_pot, E_kin ablese und da
 
 b6:{title:"Pythagoras auf Vektoren (AFB II)",
 aufgabe:`<div class="task-box">
-  <p>Beim waagerechten Wurf hat ein Körper beim Aufprall: \\(v_x = 20\\,\\text{m/s}\\), \\(v_y = 9{,}91\\,\\text{m/s}\\).</p>
+  <p>Bei einem Filmstunt verlässt ein Motorrad waagerecht eine Rampe. Im Moment des Aufpralls auf dem Boden beträgt die horizontale Geschwindigkeit \\(v_x = 20\\,\\text{m/s}\\) und die vertikale (nach unten) Geschwindigkeit \\(v_y = 9{,}91\\,\\text{m/s}\\).</p>
+  <p>In einer Produktionshalle fährt ein CNC-Fräskopf gleichzeitig mit \\(v_x = 0{,}5\\,\\text{m/s}\\) und \\(v_y = 0{,}3\\,\\text{m/s}\\) in zwei Richtungen.</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Betrag der Gesamtgeschwindigkeit \\(|\\vec{v}|\\)?</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Winkel \\(\\alpha\\) zur Horizontalen?</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">CNC-Fräse: \\(v_x = 0{,}5\\,\\text{m/s}\\), \\(v_y = 0{,}3\\,\\text{m/s}\\) &nbsp;→&nbsp; \\(|v_\\text{res}|\\) und Winkel \\(\\beta\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie den Betrag der Aufprallgeschwindigkeit des Motorrads: \\(|\\vec{v}| = \\sqrt{v_x^2 + v_y^2}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Unter welchem Winkel \\(\\alpha\\) zur Horizontalen trifft das Motorrad auf? Bestimmen Sie \\(\\alpha\\) über \\(\\tan\\alpha = v_y/v_x\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie für den CNC-Fräskopf die resultierende Geschwindigkeit \\(|v_\\text{res}|\\) und den Winkel \\(\\beta\\) zur \\(x\\)-Achse.</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
   \\( |v| = \\sqrt{v_x^2+v_y^2} = \\sqrt{20^2+9{,}91^2} = \\sqrt{400+98{,}2} \\approx 22{,}3\\,\\text{m/s} \\)
 </div></div>
 <div class="sol-step"><div class="snum">b</div><div>
-  \\( \\tan\\alpha = \\dfrac{v_y}{v_x} = \\dfrac{9{,}91}{20} = 0{,}496 \\Rightarrow \\alpha = \\arctan(0{,}496) \\approx 26{,}4° \\)
+  \\( \\tan\\alpha = \\dfrac{v_y}{v_x} = \\dfrac{9{,}91}{20} = 0{,}496 \\Rightarrow \\alpha = \\arctan(0{,}496) \\approx 26{,}4^\circ \\)
 </div></div>
 <div class="sol-step"><div class="snum">c</div><div>
   \\( |v_\\text{res}| = \\sqrt{0{,}5^2+0{,}3^2} = \\sqrt{0{,}34} \\approx 0{,}583\\,\\text{m/s} \\);&nbsp;
-  \\( \\beta = \\arctan\\!\\left(\\tfrac{0{,}3}{0{,}5}\\right) \\approx 31{,}0° \\)
+  \\( \\beta = \\arctan\\!\\left(\\tfrac{0{,}3}{0{,}5}\\right) \\approx 31{,}0^\circ \\)
 </div></div>`,
 prompt:`Ich übe Vektorbeträge und Winkel (Pythagoras, arctan) in der Physik (Klasse 11, waagerechter Wurf).
 Erstelle 3 Aufgaben mit verschiedenen Kontexten. Vollständige Lösungen.`},
@@ -923,11 +928,11 @@ Erstelle 3 Aufgaben mit verschiedenen Kontexten. Vollständige Lösungen.`},
 // ── EPOT ────────────────────────────────────────────────────────────
 p1:{title:"E_pot = mgh (AFB I)",
 aufgabe:`<div class="task-box">
-  <p>Ein Baukran hebt eine Stahlplatte (\\(m = 2500\\,\\text{kg}\\)) auf \\(h = 35\\,\\text{m}\\).</p>
+  <p>Auf einer Großbaustelle in Düsseldorf hebt ein Turmdrehkran eine Stahlplatte (\\(m = 2500\\,\\text{kg}\\)) vom Boden auf eine Höhe von \\(h = 35\\,\\text{m}\\), um sie auf einer Betondecke zu platzieren. Der Hubvorgang dauert \\(t = 45\\,\\text{s}\\).</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Hubarbeit \\(W_\\text{Hub}\\)?</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Leiten Sie \\(E_\\text{pot} = mgh\\) aus der Hubarbeit her.</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Welche Mindestkraft muss der Kran aufbringen? Begründen Sie.</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die verrichtete Hubarbeit \\(W_\\text{Hub}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Leiten Sie die Formel \\(E_\\text{pot} = mgh\\) aus der Arbeitsdefinition \\(W = F \\cdot s\\) her. Warum gilt \\(E_\\text{pot} = W_\\text{Hub}\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Welche Mindestkraft \\(F_\\text{min}\\) muss der Kran aufbringen, um die Platte mit konstanter Geschwindigkeit zu heben? Begründen Sie mithilfe des ersten Newtonschen Gesetzes.</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
@@ -947,13 +952,13 @@ Erstelle 2 Aufgaben mit Berufsbezug (Kran, Förderanlage), bei denen E_pot=mgh a
 
 p2:{title:"Bezugsniveau (AFB III)",
 aufgabe:`<div class="task-box">
-  <p>Ein Ball (\\(m = 0{,}4\\,\\text{kg}\\)) liegt auf einem Tisch (\\(h_\\text{Tisch} = 0{,}8\\,\\text{m}\\)). Der Fußboden befindet sich \\(3{,}0\\,\\text{m}\\) über dem Erdboden (1. OG).</p>
+  <p>In einem Schulgebäude liegt ein Ball (\\(m = 0{,}4\\,\\text{kg}\\)) auf einem Tisch. Die Tischplatte befindet sich \\(h_\\text{T} = 0{,}8\\,\\text{m}\\) über dem Fußboden des ersten Obergeschosses. Das erste Obergeschoss liegt \\(h_\\text{OG} = 3{,}0\\,\\text{m}\\) über dem Erdboden.</p>
+  <p>Je nach gewähltem Bezugsniveau ergibt sich ein anderer Wert für \\(E_\\text{pot}\\). Berechnen Sie:</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Berechnen Sie \\(E_\\text{pot}\\) für drei Bezugsniveaus:</span></div>
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Bezugsniveau = Tischplatte &nbsp;→&nbsp; \\(E_\\text{pot} = ?\\)</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Bezugsniveau = Fußboden &nbsp;→&nbsp; \\(E_\\text{pot} = ?\\)</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Bezugsniveau = Erdboden &nbsp;→&nbsp; \\(E_\\text{pot} = ?\\)</span></div>
-    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Begründen Sie: Welche Größe ist bezugsniveauunabhängig?</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">\\(E_\\text{pot}\\) mit Bezugsniveau <em>Tischplatte</em> (\\(h = 0\\))</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">\\(E_\\text{pot}\\) mit Bezugsniveau <em>Fußboden des 1. OG</em></span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">\\(E_\\text{pot}\\) mit Bezugsniveau <em>Erdboden</em></span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Die drei Werte sind verschieden. Erklären Sie: Welche Größe ist <strong>unabhängig</strong> vom gewählten Bezugsniveau – und warum ist diese Größe die physikalisch relevante?</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
@@ -975,11 +980,12 @@ Erkläre: Warum ist E_pot relativ? Was ist trotzdem eindeutig? Gib eine Aufgabe 
 
 p3:{title:"Pumpspeicherkraftwerk (AFB II)",
 aufgabe:`<div class="task-box">
-  <p>Pumpspeicherkraftwerk: \\(V = 8{,}0\\cdot10^6\\,\\text{m}^3\\), \\(\\Delta h = 400\\,\\text{m}\\), \\(\\varrho = 1000\\,\\text{kg/m}^3\\), \\(P = 1000\\,\\text{MW}\\).</p>
+  <p>Das Pumpspeicherkraftwerk Goldisthal (Thüringen) speichert Energie, indem Wasser bei Stromüberschuss in ein Hochbecken gepumpt und bei Bedarf wieder durch Turbinen abgelassen wird.</p>
+  <p><strong>Gegeben:</strong> Volumen \\(V = 8{,}0 \\cdot 10^6\\,\\text{m}^3\\), Dichte \\(\\varrho = 1000\\,\\text{kg/m}^3\\), Höhenunterschied \\(\\Delta h = 400\\,\\text{m}\\), Nennleistung \\(P = 1000\\,\\text{MW}\\).</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Masse des Wassers \\(m = \\varrho \\cdot V = ?\\)</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Potentielle Energie \\(E_\\text{pot} = ?\\)</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Maximale Betriebsdauer \\(t = E/P = ?\\) (ohne Verluste)</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die Masse \\(m\\) des gespeicherten Wassers über \\(m = \\varrho \\cdot V\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie die im Hochbecken gespeicherte potentielle Energie \\(E_\\text{pot}\\). Geben Sie das Ergebnis in Standardform an.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Wie lange kann das Kraftwerk bei Nennleistung betrieben werden (ohne Verluste)? Berechnen Sie \\(t = E/P\\) in Sekunden und Stunden.</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
@@ -998,14 +1004,16 @@ Erstelle eine ähnliche Aufgabe mit anderen Werten (anderes Volumen, andere Höh
 // ── EKIN ────────────────────────────────────────────────────────────
 k1:{title:"E_kin berechnen (AFB I)",
 aufgabe:`<div class="task-box">
+  <p>Auf einem Testgelände werden verschiedene Objekte hinsichtlich ihrer kinetischen Energie untersucht. Diese bestimmt bei einem Aufprall die maximal freiwerdende Verformungsenergie und die Bremsstrecke.</p>
+  <p>Berechnen Sie jeweils \\(E_\\text{kin}\\) oder stellen Sie nach der gesuchten Größe um:</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Auto: \\(m = 1200\\,\\text{kg}\\), \\(v = 120\\,\\text{km/h}\\) &nbsp;→&nbsp; \\(E_\\text{kin} = ?\\)</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Stein: \\(m = 2{,}0\\,\\text{kg}\\), \\(v = 29{,}7\\,\\text{m/s}\\) &nbsp;→&nbsp; \\(E_\\text{kin} = ?\\)</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">\\(E_\\text{kin} = 392{,}4\\,\\text{J}\\), \\(m = 2{,}0\\,\\text{kg}\\) &nbsp;→&nbsp; \\(v = ?\\)</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Ein SUV (\\(m = 1200\\,\\text{kg}\\)) fährt auf der Autobahn mit \\(v = 120\\,\\text{km/h}\\). Berechnen Sie seine kinetische Energie. <em>(Hinweis: zuerst in m/s umrechnen)</em></span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Auf einer Baustelle fällt ein Stein (\\(m = 2{,}0\\,\\text{kg}\\)) aus \\(h = 45\\,\\text{m}\\) und erreicht beim Aufprall \\(v = 29{,}7\\,\\text{m/s}\\). Berechnen Sie \\(E_\\text{kin}\\) und vergleichen Sie mit der ursprünglichen \\(E_\\text{pot}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Ein Crashtest-Objekt (\\(m = 2{,}0\\,\\text{kg}\\)) hat beim Aufprall \\(E_\\text{kin} = 392{,}4\\,\\text{J}\\). Stellen Sie \\(E_\\text{kin} = \\tfrac{1}{2}mv^2\\) nach \\(v\\) um und berechnen Sie die Aufprallgeschwindigkeit.</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
-  \\( v = \\tfrac{120}{3{,}6} = 33{,}33\\,\\text{m/s}; \\quad E_\\text{kin} = \\tfrac{1}{2}\\cdot1200\\cdot33{,}33^2 \\approx 667\\,\\text{kJ} \\)
+  \\( v = \\tfrac{120}{3{,}6} = 33{,}3\\,\\text{m/s}; \\quad E_\\text{kin} = \\tfrac{1}{2}\\cdot1200\\cdot33{,}3^2 \\approx 667\\,\\text{kJ} \\)
 </div></div>
 <div class="sol-step"><div class="snum">b</div><div>
   \\( E_\\text{kin} = \\tfrac{1}{2}\\cdot2{,}0\\cdot29{,}7^2 = 1{,}0\\cdot882{,}1 \\approx 882\\,\\text{J} \\)
@@ -1017,11 +1025,11 @@ prompt:`Ich übe E_kin = ½mv² (Physik Klasse 11). Erstelle 4 Aufgaben: E_kin b
 
 k2:{title:"E_kin ∝ v² – Begründung (AFB III)",
 aufgabe:`<div class="task-box">
-  <p>Auto (\\(m = 1200\\,\\text{kg}\\)) bei \\(v_1 = 50\\,\\text{km/h}\\) und \\(v_2 = 100\\,\\text{km/h}\\).</p>
+  <p>Bei einem Fahrsicherheitstraining wird gezeigt, wie stark sich die Bremsstrecke mit der Geschwindigkeit ändert. Ein PKW (\\(m = 1200\\,\\text{kg}\\)) wird bei \\(v_1 = 50\\,\\text{km/h}\\) (Innerorts) und \\(v_2 = 100\\,\\text{km/h}\\) (Außerorts) untersucht. Die Bremskraft sei in beiden Fällen konstant.</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">\\(E_\\text{kin}\\) für beide Geschwindigkeiten berechnen?</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Verhältnis \\(E_\\text{kin}(v_2) / E_\\text{kin}(v_1) = ?\\)</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Begründen Sie: Warum ist die Bremsstrecke bei \\(v_2\\) viermal so lang?</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(E_\\text{kin}\\) für beide Geschwindigkeiten.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie das Verhältnis \\(E_\\text{kin}(v_2) / E_\\text{kin}(v_1)\\). Was stellen Sie fest?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Die Bremsstrecke bei \\(v_1\\) beträgt \\(s_1 = 14\\,\\text{m}\\). Bestimmen Sie \\(s_2\\) mithilfe von \\(W_\\text{Brems} = F \\cdot s = E_\\text{kin}\\). Begründen Sie das Ergebnis anhand der Formel \\(E_\\text{kin} \\propto v^2\\).</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
@@ -1040,11 +1048,12 @@ Erstelle 2 Aufgaben zum Vergleich von E_kin bei verschiedenen Geschwindigkeiten 
 // ── EGES ────────────────────────────────────────────────────────────
 e1:{title:"E_ges – Fallender Stein (AFB I)",
 aufgabe:`<div class="task-box">
-  <p>Stein: \\(m = 2{,}0\\,\\text{kg}\\), fällt aus \\(h_0 = 45\\,\\text{m}\\).</p>
+  <p>Auf einer Baustelle fällt ein Stein (\\(m = 2{,}0\\,\\text{kg}\\)) von einem Gerüst in \\(h_0 = 45\\,\\text{m}\\) Höhe herunter. Das System ist reibungsfrei – die mechanische Gesamtenergie bleibt erhalten.</p>
+  <p><strong>Bezugsniveau:</strong> Boden (\\(h = 0\\)).</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">\\(E_\\text{ges}\\) zu Beginn?</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">\\(E_\\text{pot}\\) und \\(E_\\text{kin}\\) nach \\(20\\,\\text{m}\\) Fallstrecke (\\(h = 25\\,\\text{m}\\))?</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Aufprallgeschwindigkeit \\(v_\\text{Auf} = ?\\)</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die mechanische Gesamtenergie \\(E_\\text{ges}\\) zu Beginn des Falls (\\(v_0 = 0\\)).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Nach einer Fallstrecke von \\(20\\,\\text{m}\\) hat der Stein die Höhe \\(h = 25\\,\\text{m}\\) erreicht. Berechnen Sie \\(E_\\text{pot}\\) und \\(E_\\text{kin}\\) an dieser Stelle. Was fällt auf?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie die Aufprallgeschwindigkeit \\(v_\\text{Auf}\\) direkt vor dem Aufprall am Boden. Geben Sie das Ergebnis auch in km/h an.</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
@@ -1063,10 +1072,12 @@ Erstelle eine neue Aufgabe (andere Masse, andere Höhe), bei der ich E_ges, E_po
 
 e2:{title:"Aufprallgeschwindigkeit (AFB I)",
 aufgabe:`<div class="task-box">
+  <p>Die Aufprallgeschwindigkeit lässt sich eleganter über die <strong>Energieerhaltung</strong> berechnen als über Kinematik – unabhängig davon, ob ein Körper fällt, geworfen oder auf einer Bahn geführt wird.</p>
+  <p>Berechnen Sie in jedem Fall \\(v_\\text{Auf}\\) über die Energieerhaltung und geben Sie den Ansatz an:</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Stein: \\(h = 45\\,\\text{m}\\), \\(v_0 = 0\\) &nbsp;→&nbsp; \\(v_\\text{Auf} = ?\\)</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Achterbahnwagen (\\(m = 500\\,\\text{kg}\\)): Start aus \\(h_1 = 40\\,\\text{m}\\) &nbsp;→&nbsp; \\(v\\) im Tal?</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Ball (\\(m = 0{,}5\\,\\text{kg}\\)): \\(h = 80\\,\\text{m}\\), \\(v_0 = 15\\,\\text{m/s}\\) (schräg geworfen) &nbsp;→&nbsp; \\(v_\\text{Auf} = ?\\)</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Ein Stein (\\(m = 2{,}0\\,\\text{kg}\\)) fällt aus \\(h = 45\\,\\text{m}\\) aus der Ruhe (\\(v_0 = 0\\)). Berechnen Sie die Aufprallgeschwindigkeit.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Ein Achterbahnwagen (\\(m = 500\\,\\text{kg}\\)) startet aus der Ruhe auf einem \\(h_1 = 40\\,\\text{m}\\) hohen Hügel und rollt reibungsfrei ins Tal. Wie groß ist \\(v\\) im Tal? Geben Sie das Ergebnis auch in km/h an.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Ein Ball (\\(m = 0{,}5\\,\\text{kg}\\)) wird von einer Klippe (\\(h = 80\\,\\text{m}\\)) schräg mit \\(|v_0| = 15\\,\\text{m/s}\\) abgeworfen. Berechnen Sie \\(v_\\text{Auf}\\). Erklären Sie, warum der Abwurfwinkel dabei keine Rolle spielt.</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
@@ -1083,12 +1094,13 @@ prompt:`Ich übe Aufprallgeschwindigkeit via Energieerhaltung (Klasse 11). Einma
 
 e3:{title:"h-E-Diagramm interpretieren (AFB II)",
 aufgabe:`<div class="task-box">
-  <p>Körper fällt aus \\(h_0 = 40\\,\\text{m}\\); \\(E_\\text{ges} = 392{,}4\\,\\text{J}\\) (\\(m=1{,}0\\,\\text{kg}\\)).</p>
+  <p>Ein Körper (\\(m = 1{,}0\\,\\text{kg}\\)) fällt aus \\(h_0 = 40\\,\\text{m}\\) Höhe. Die Gesamtenergie beträgt \\(E_\\text{ges} = 392{,}4\\,\\text{J}\\). Im \\(h\\)-\\(E\\)-Diagramm ist der Verlauf von \\(E_\\text{pot}\\) und \\(E_\\text{kin}\\) als Funktion der Höhe \\(h\\) dargestellt.</p>
+  <p><strong>Lesen Sie ab und berechnen Sie:</strong></p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Bei welcher Höhe gilt \\(E_\\text{pot} = E_\\text{kin}\\)?</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">\\(E_\\text{kin}\\) bei \\(h = 10\\,\\text{m}\\)?</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Was ändert sich am Diagramm, wenn \\(m\\) verdoppelt wird?</span></div>
-    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Was ändert sich am Diagramm, wenn \\(h_0\\) halbiert wird?</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Bei welcher Höhe \\(h^*\\) gilt \\(E_\\text{pot} = E_\\text{kin}\\)? Berechnen Sie \\(h^*\\) und begründen Sie, warum dieser Schnittpunkt immer bei \\(h^* = h_0/2\\) liegt.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Bestimmen Sie \\(E_\\text{kin}\\) bei \\(h = 10\\,\\text{m}\\) und berechnen Sie daraus die Geschwindigkeit des Körpers an dieser Stelle.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Die Masse wird auf \\(m' = 2{,}0\\,\\text{kg}\\) verdoppelt (gleiche Höhe \\(h_0\\)). Beschreiben Sie, wie sich das Diagramm verändert: Welche Größen ändern sich, welche bleiben gleich?</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Die Starthöhe wird auf \\(h_0' = 20\\,\\text{m}\\) halbiert (gleiche Masse). Beschreiben Sie, wie sich das Diagramm verändert.</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
@@ -1107,11 +1119,12 @@ prompt:`Ich übe h-E-Diagramme interpretieren (Physik Klasse 11). Erkläre: Schn
 
 e4:{title:"Achterbahn (AFB II)",
 aufgabe:`<div class="task-box">
-  <p>Achterbahnwagen (\\(m = 500\\,\\text{kg}\\)), Start aus Ruhe bei \\(h_1 = 40\\,\\text{m}\\).</p>
+  <p>Eine Achterbahn startet aus der Ruhe auf dem ersten Hügel bei \\(h_1 = 40\\,\\text{m}\\). Die Gesamtmasse des Wagens mit Fahrgästen beträgt \\(m = 500\\,\\text{kg}\\). Reibungsverluste werden vernachlässigt.</p>
+  <p><strong>Bezugsniveau:</strong> Taltiefpunkt (\\(h = 0\\)).</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Geschwindigkeit im Tal (\\(h = 0\\))?</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Maximale Höhe \\(h_{2,\\max}\\) des zweiten Hügels?</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Geschwindigkeit bei \\(h_2 = 25\\,\\text{m}\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die Geschwindigkeit des Wagens im tiefsten Punkt des Tals.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Der zweite Hügel soll so hoch wie möglich sein. Welche maximale Höhe \\(h_{2,\\text{max}}\\) kann er haben, damit der Wagen ihn noch überquert? Begründen Sie mit dem Energieerhaltungssatz.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Tatsächlich ist der zweite Hügel nur \\(h_2 = 25\\,\\text{m}\\) hoch. Berechnen Sie die Geschwindigkeit des Wagens auf der Kuppe dieses Hügels.</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
@@ -1128,11 +1141,11 @@ prompt:`Ich übe Achterbahn-Aufgaben mit Energieerhaltung (Klasse 11). Erstelle 
 
 e5:{title:"Wurfwinkelunabhängigkeit – Begründung (AFB III)",
 aufgabe:`<div class="task-box">
-  <p>Ball (\\(m = 0{,}5\\,\\text{kg}\\)) wird von \\(h = 80\\,\\text{m}\\) mit \\(|v_0| = 15\\,\\text{m/s}\\) geworfen.</p>
+  <p>Von einer Klippe (\\(h = 80\\,\\text{m}\\)) wird ein Ball (\\(m = 0{,}5\\,\\text{kg}\\)) mit demselben Betrag der Anfangsgeschwindigkeit \\(|v_0| = 15\\,\\text{m/s}\\) in verschiedene Richtungen geworfen. Ein Physiker behauptet: <em>„Die Aufprallgeschwindigkeit ist stets gleich, egal in welche Richtung man wirft."</em></p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(v_\\text{Auf}\\) für senkrechten Wurf nach unten.</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie \\(v_\\text{Auf}\\) für waagerechten Wurf.</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Begründen Sie physikalisch, warum beide Werte gleich sind.</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(v_\\text{Auf}\\) für den <strong>senkrechten Wurf nach unten</strong>.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie \\(v_\\text{Auf}\\) für den <strong>waagerechten Abwurf</strong>.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Vergleichen Sie Ihre Ergebnisse und <strong>begründen Sie</strong> physikalisch, warum die Aufprallgeschwindigkeit unabhängig vom Abwurfwinkel ist. Nutzen Sie dabei die Formel \\(E_\\text{kin} = \\tfrac{1}{2}mv^2\\).</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a+b</div><div>
@@ -1147,11 +1160,11 @@ Erkläre mathematisch (E_kin = ½mv² enthält keine Richtung) und physikalisch.
 
 e6b:{title:"Bewertungsaufgabe Pumpspeicher (AFB III)",
 aufgabe:`<div class="task-box">
-  <p>Ein Pumpspeicherkraftwerk speichert \\(E_\\text{pot} \\approx 3{,}14\\cdot10^{13}\\,\\text{J}\\) und hat \\(P = 1000\\,\\text{MW}\\). Wirkungsgrad \\(\\eta = 80\\,\\%\\).</p>
+  <p>Das Pumpspeicherkraftwerk Goldisthal hat eine gespeicherte Energie von \\(E_\\text{pot} \\approx 3{,}14 \\cdot 10^{13}\\,\\text{J}\\) bei einer Nennleistung von \\(P = 1000\\,\\text{MW}\\). Der reale Gesamtwirkungsgrad (Pumpen und Turbinieren zusammen) beträgt \\(\\eta = 80\\,\\%\\).</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Tatsächliche Betriebsdauer mit \\(\\eta = 80\\,\\%\\)?</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Das Werk soll eine Stadt (Bedarf: \\(500\\,\\text{MW}\\)) versorgen. Reicht der Speicher für \\(24\\,\\text{h}\\)?</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Bewerten Sie: Warum ist der reale Wirkungsgrad relevant – und was vernachlässigt unsere Modellrechnung?</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die tatsächlich nutzbare Energie \\(E_\\text{nutz} = \\eta \\cdot E_\\text{pot}\\) und daraus die reale Betriebsdauer \\(t\\) bei Nennleistung in Stunden.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Das Kraftwerk soll eine Stadt (Strombedarf \\(P_\\text{Stadt} = 500\\,\\text{MW}\\)) für \\(24\\,\\text{h}\\) versorgen. Berechnen Sie den Energiebedarf und prüfen Sie, ob \\(E_\\text{nutz}\\) ausreicht.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body"><strong>Bewerten Sie das Modell:</strong> Welche Größen haben wir bei der Berechnung von \\(E_\\text{pot}\\) als konstant angenommen? Welche realen Effekte werden vernachlässigt, und wie wirken sie sich auf die tatsächliche Speicherkapazität aus?</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
@@ -1170,13 +1183,12 @@ Erstelle eine Aufgabe, bei der ich berechne ob ein Energiespeicher für einen be
 
 e7:{title:"★ Looping-Mindesthöhe (AFB III)",
 aufgabe:`<div class="task-box">
-  <p>Spielzeugauto (\\(m = 50\\,\\text{g}\\)), Looping-Radius \\(r = 0{,}12\\,\\text{m}\\).</p>
+  <p>Ein Spielzeugauto (\\(m = 50\\,\\text{g} = 0{,}050\\,\\text{kg}\\)) soll einen kreisförmigen Looping (Radius \\(r = 0{,}12\\,\\text{m}\\)) vollständig durchfahren. Das Auto startet aus der Ruhe auf einer schiefen Startrampe.</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Mindestgeschwindigkeit \\(v_\\min\\) im höchsten Loopingpunkt? &nbsp;<span style="color:var(--text-muted);font-size:.85em">Bedingung: \\(mv^2/r \\geq mg\\)</span></span></div>
-    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Bedingung: F_Z ≥ F_G  →  mv²/r ≥ mg</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Mindesthöhe \\(h_\\min\\) des Startpunkts? (Energieerhaltung: Start&nbsp;→&nbsp;höchster Punkt bei \\(h = 2r\\))</span></div>
-    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">(Energieerhaltung: Start → höchster Punkt bei h = 2r)</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Im höchsten Punkt des Loopings (\\(h = 2r\\)) muss die Zentripetalkraft mindestens so groß wie die Gewichtskraft sein: \\(F_Z \\geq F_G\\), also \\(\\dfrac{mv^2}{r} \\geq mg\\). Leiten Sie daraus die Mindestgeschwindigkeit \\(v_\\text{min}\\) im höchsten Punkt her und berechnen Sie \\(v_\\text{min}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Wenden Sie den Energieerhaltungssatz vom Startpunkt (Höhe \\(h_\\text{min}\\), \\(v = 0\\)) bis zum höchsten Loopingpunkt (\\(h = 2r\\), \\(v = v_\\text{min}\\)) an. Leiten Sie daraus \\(h_\\text{min} = \\tfrac{5r}{2}\\) her und berechnen Sie \\(h_\\text{min}\\).</span></div>
   </div>
+  <div class="hint-box">Tipp für b): Setzen Sie \\(v_\\text{min}^2 = gr\\) aus Teilaufgabe a) in den Energieerhaltungsansatz ein.</div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
   \\( \\dfrac{mv^2}{r} \\geq mg \\Rightarrow v_\\min = \\sqrt{gr} = \\sqrt{9{,}81\\cdot0{,}12} \\approx 1{,}08\\,\\text{m/s} \\)
@@ -1192,12 +1204,12 @@ Erkläre: Warum F_Z ≥ F_G oben? Leite h_min = 5r/2 allgemein her. Dann eine Va
 // ── LEISTUNG ────────────────────────────────────────────────────────
 l1:{title:"P = W/t (AFB I)",
 aufgabe:`<div class="task-box">
-  <p>Schüler (\\(m = 70\\,\\text{kg}\\)) läuft Treppe (\\(h = 12\\,\\text{m}\\)) in \\(t = 25\\,\\text{s}\\).</p>
+  <p>Beim Sporttag der Lore-Lorentz-Schule messen zwei Schüler ihre Zeit beim Treppenlaufen. Eine Treppe mit der Höhe \\(h = 12\\,\\text{m}\\) wird erklommen. Schüler A (\\(m = 70\\,\\text{kg}\\)) benötigt \\(t_A = 25\\,\\text{s}\\), Schüler B (gleiche Masse) braucht \\(t_B = 50\\,\\text{s}\\).</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Hubarbeit \\(W\\)?</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Leistung \\(P\\) in W?</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Leistung in PS?</span></div>
-    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Person B braucht \\(50\\,\\text{s}\\) – vergleichen Sie die Leistungen.</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die verrichtete Hubarbeit \\(W\\) (für beide identisch).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie die mechanische Leistung von Schüler A in Watt.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Geben Sie die Leistung von Schüler A auch in PS an. (\\(1\\,\\text{PS} \\approx 735{,}5\\,\\text{W}\\))</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Vergleichen Sie die Leistungen beider Schüler. Schüler B hat nicht weniger Energie aufgewendet – was unterscheidet die beiden dann physikalisch?</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
@@ -1217,19 +1229,19 @@ prompt:`Ich übe P = W/t (Physik Klasse 11). Erstelle 3 Aufgaben (Treppensteigen
 
 l2:{title:"P = F·v herleiten (AFB II)",
 aufgabe:`<div class="task-box">
-  <p>Auto bei \\(v = 120\\,\\text{km/h}\\), Luftwiderstand \\(F_L = 800\\,\\text{N}\\).</p>
+  <p>Ein PKW fährt auf der Autobahn mit konstanter Geschwindigkeit \\(v = 120\\,\\text{km/h}\\). Bei dieser Geschwindigkeit beträgt der Luftwiderstand \\(F_L = 800\\,\\text{N}\\). Da die Geschwindigkeit konstant ist, muss der Motor exakt diesen Widerstand überwinden (keine Beschleunigung, kein Anstieg).</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">\\(v\\) in m/s?</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Motorleistung gegen Luftwiderstand in W?</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Leistung in kW und PS?</span></div>
-    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Leiten Sie \\(P = F\\cdot v\\) aus \\(P = W/t\\) her.</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Rechnen Sie \\(v = 120\\,\\text{km/h}\\) in m/s um.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie die Motorleistung \\(P\\) gegen den Luftwiderstand in Watt.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Geben Sie die Leistung in kW und PS an.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Leiten Sie die Formel \\(P = F \\cdot v\\) algebraisch aus \\(P = W/t\\) her. Welche Definition der Arbeit \\(W\\) verwenden Sie dabei?</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
-  \\( v = \\tfrac{120}{3{,}6} = 33{,}33\\,\\text{m/s} \\)
+  \\( v = \\tfrac{120}{3{,}6} = 33{,}3\\,\\text{m/s} \\)
 </div></div>
 <div class="sol-step"><div class="snum">b</div><div>
-  \\( P = F\\cdot v = 800\\cdot33{,}33 \\approx 26\\,667\\,\\text{W} \\)
+  \\( P = F\\cdot v = 800\\cdot33{,}3 \\approx 26\\,667\\,\\text{W} \\)
 </div></div>
 <div class="sol-step"><div class="snum">c</div><div>
   \\( P \\approx 26{,}7\\,\\text{kW} \\approx 36{,}3\\,\\text{PS} \\)
@@ -1241,11 +1253,11 @@ prompt:`Ich übe P = F·v (Physik Klasse 11). Erkläre Herleitung aus P=W/t. Ers
 
 l3:{title:"Wirkungsgrad η (AFB II)",
 aufgabe:`<div class="task-box">
-  <p>Kran: \\(m = 2000\\,\\text{kg}\\), \\(h = 15\\,\\text{m}\\), \\(t = 30\\,\\text{s}\\), \\(\\eta = 60\\,\\%\\).</p>
+  <p>Auf einer Baustelle hebt ein elektrisch betriebener Kran eine Betonplatte (\\(m = 2000\\,\\text{kg}\\)) in \\(t = 30\\,\\text{s}\\) auf eine Höhe von \\(h = 15\\,\\text{m}\\). Der Wirkungsgrad des Krans beträgt \\(\\eta = 60\\,\\%\\): Nur 60 % der aufgenommenen elektrischen Energie wird in Hubarbeit umgewandelt.</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Nutzleistung \\(P_\\text{nutz}\\) (mechanisch)?</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Elektrische Leistungsaufnahme \\(P_\\text{el}\\)?</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Verlustleistung \\(P_\\text{Verlust}\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die mechanische Nutzleistung \\(P_\\text{nutz} = W_\\text{Hub}/t\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie die elektrische Leistungsaufnahme \\(P_\\text{el}\\) aus \\(\\eta = P_\\text{nutz}/P_\\text{el}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie die Verlustleistung \\(P_\\text{Verlust} = P_\\text{el} - P_\\text{nutz}\\). Welcher prozentuale Anteil der zugeführten Energie geht verloren?</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
@@ -1263,11 +1275,11 @@ prompt:`Ich übe Wirkungsgrad η = P_nutz/P_el (Klasse 11). Erstelle 2 Aufgaben 
 
 l4:{title:"Begründung: P_real > P_nutz (AFB III)",
 aufgabe:`<div class="task-box">
-  <p>Ein Aufzug (\\(6\\times75\\,\\text{kg}\\), \\(h=20\\,\\text{m}\\), \\(t=8\\,\\text{s}\\)) hat eine Nennleistung von \\(15\\,\\text{kW}\\).</p>
+  <p>In einem Bürogebäude befördert ein Personenaufzug 6 Personen (je \\(m = 75\\,\\text{kg}\\)) in \\(t = 8\\,\\text{s}\\) auf eine Höhe von \\(h = 20\\,\\text{m}\\). Die Nennleistung des Motors beträgt laut Typenschild \\(P_\\text{Motor} = 15\\,\\text{kW}\\).</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die theoretische Mindestleistung \\(P_\\text{nutz}\\).</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Der Motor hat \\(15\\,\\text{kW}\\) – berechnen Sie den Wirkungsgrad \\(\\eta\\).</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Begründen Sie ausführlich, warum \\(P_\\text{real} > P_\\text{nutz}\\) gilt und welche Energieformen dabei auftreten.</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die theoretische Mindestleistung \\(P_\\text{nutz}\\) für einen reibungsfreien Aufzug.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie den Wirkungsgrad \\(\\eta = P_\\text{nutz}/P_\\text{Motor}\\) des realen Aufzugs.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body"><strong>Begründen Sie ausführlich:</strong> Warum gilt \\(P_\\text{Motor} > P_\\text{nutz}\\)? Nennen Sie mindestens drei konkrete Verlustmechanismen und die dabei entstehenden Energieformen. Gilt der Energieerhaltungssatz trotzdem – und wenn ja, wie?</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
@@ -1285,11 +1297,12 @@ Erstelle eine Aufgabe, bei der ich berechne und dann erkläre, wo Energie verlor
 
 l5:{title:"★ Radfahrer am Berg (AFB III)",
 aufgabe:`<div class="task-box">
-  <p>Radfahrer: \\(m = 80\\,\\text{kg}\\), \\(v = 15\\,\\text{km/h}\\), Steigung \\(6\\,\\%\\).</p>
+  <p>Ein Radfahrer (Gesamtmasse Mensch + Fahrrad: \\(m = 80\\,\\text{kg}\\)) fährt mit konstanter Geschwindigkeit \\(v = 15\\,\\text{km/h}\\) eine Straße mit einer Steigung von \\(p = 6\\,\\%\\) hinauf.</p>
+  <div class="hint-box">Hinweis: Bei einer Steigung \\(p\\,\\%\\) gilt \\(\\sin\\alpha \\approx \\tan\\alpha = p/100\\). Für \\(p = 6\\,\\%\\): \\(\\sin\\alpha \\approx 6/100 = 0{,}06\\).</div>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Hangabtriebskraft \\(F_H\\)? &nbsp;<span style="color:var(--text-muted);font-size:.85em">Tipp: Steigung \\(6\\,\\% \\Rightarrow \\sin\\alpha \\approx \\tan\\alpha = \\tfrac{6}{100} = 0{,}06\\)</span></span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Leistung gegen Hangabtriebskraft \\(P = F_H \\cdot v = ?\\)</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Warum ist die tatsächliche Leistung deutlich höher? Nennen Sie Ursachen.</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die Hangabtriebskraft \\(F_H = mg \\cdot \\dfrac{p}{100}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie die mechanische Mindestleistung \\(P = F_H \\cdot v\\), die der Radfahrer gegen die Hangabtriebskraft aufwenden muss.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Die tatsächlich benötigte Körperleistung beim Bergfahren ist stets deutlich höher als \\(P_\\text{Hang}\\). Begründen Sie: Welche weiteren Kräfte wirken, und welche Verluste entstehen im Antriebsstrang?</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
@@ -1308,11 +1321,11 @@ Erkläre: F_H = mg·sinα und warum sinα ≈ tanα bei kleinen Winkeln. Neue Au
 // ── WURF ────────────────────────────────────────────────────────────
 w1:{title:"Superpositionsprinzip (AFB I)",
 aufgabe:`<div class="task-box">
+  <p>In einer Produktionshalle bewegt sich eine Laufkatze mit konstanter Geschwindigkeit \\(v_0 = 1{,}5\\,\\text{m/s}\\) horizontal auf einer Schiene. In dem Moment, in dem ein Elektromagnet ausgeschaltet wird, fällt ein Werkstück von der Laufkatze ab und bewegt sich als waagerechter Wurf weiter. Das <strong>Superpositionsprinzip</strong> besagt: Horizontale und vertikale Bewegung überlagern sich unabhängig.</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Beschreiben Sie \\(x\\)- und \\(y\\)-Bewegung des waagerechten Wurfs getrennt. Welche Kraft wirkt horizontal, welche vertikal?</span></div>
-    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Welche Kraft wirkt horizontal? Welche vertikal?</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Eine Laufkatze (\\(v_0 = 1{,}5\\,\\text{m/s}\\)) lässt eine Last los.</span></div>
-    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Warum bleibt die Last horizontal zunächst "neben" der Katze?</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Beschreiben Sie die <strong>horizontale</strong> Bewegung des Werkstücks nach dem Loslassen: Welche Kraft wirkt horizontal? Wie lautet \\(x(t)\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Beschreiben Sie die <strong>vertikale</strong> Bewegung: Welche Kraft wirkt vertikal? Wie lautet \\(y(t)\\) (mit \\(y = 0\\) am Startpunkt, \\(y\\) nach unten positiv)?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Unmittelbar nach dem Loslassen hat das Werkstück dieselbe horizontale Geschwindigkeit wie die Laufkatze. Erklären Sie mithilfe des ersten Newtonschen Gesetzes, warum das Werkstück anfangs „neben" der Laufkatze bleibt – und was danach passiert.</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
@@ -1327,15 +1340,17 @@ Erkläre mit Alltagsbeispiel (z.B. Abwurf aus Flugzeug, Förderband). Rolle von 
 
 w2:{title:"Flugzeit t_Auf, Reichweite, Winkel (AFB I)",
 aufgabe:`<div class="task-box">
+  <p>Der waagerechte Wurf tritt in Technik und Alltag häufig auf. Berechnen Sie für die folgenden drei Szenarien jeweils Flugzeit \\(t_\\text{Auf}\\), Reichweite \\(x_\\text{max}\\) und (wo verlangt) Auftreffwinkel \\(\\alpha\\).</p>
+  <p><strong>Formeln:</strong> \\(t_\\text{Auf} = \\sqrt{2h/g}\\), &nbsp; \\(x_\\text{max} = v_0 \\cdot t_\\text{Auf}\\), &nbsp; \\(v_y = g \\cdot t_\\text{Auf}\\), &nbsp; \\(\\tan\\alpha = v_y/v_x\\).</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Laufkatze: \\(v_0 = 1{,}5\\,\\text{m/s}\\), \\(h = 20\\,\\text{m}\\) &nbsp;→&nbsp; \\(t_\\text{Auf}\\), \\(x_\\max\\), Auftreffwinkel \\(\\alpha\\)?</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Förderband: \\(v_0 = 2{,}0\\,\\text{m/s}\\), \\(h = 1{,}2\\,\\text{m}\\) &nbsp;→&nbsp; \\(t_\\text{Auf}\\), \\(x_\\max\\)?</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Stuntman: \\(v_0 = 72\\,\\text{km/h}\\), \\(h = 5{,}0\\,\\text{m}\\) &nbsp;→&nbsp; \\(t_\\text{Auf}\\), \\(x_\\max\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body"><strong>Laufkatze:</strong> Ein Werkstück fällt bei \\(v_0 = 1{,}5\\,\\text{m/s}\\) aus \\(h = 20\\,\\text{m}\\). Berechnen Sie \\(t_\\text{Auf}\\), \\(x_\\text{max}\\) und den Auftreffwinkel \\(\\alpha\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body"><strong>Förderband:</strong> Schüttgut verlässt ein Förderband mit \\(v_0 = 2{,}0\\,\\text{m/s}\\) waagerecht in \\(h = 1{,}2\\,\\text{m}\\) Höhe. Wo landet es?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body"><strong>Filmstunt:</strong> Ein Motorrad verlässt eine Rampe waagerecht mit \\(v_0 = 72\\,\\text{km/h}\\) in \\(h = 5{,}0\\,\\text{m}\\) Höhe. Berechnen Sie Flugzeit und Reichweite.</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
   \\( t = \\sqrt{\\tfrac{2\\cdot20}{9{,}81}} \\approx 2{,}02\\,\\text{s}; \\quad x = 1{,}5\\cdot2{,}02 \\approx 3{,}03\\,\\text{m} \\)<br>
-  \\( v_y = g\\cdot t = 9{,}81\\cdot2{,}02 \\approx 19{,}8\\,\\text{m/s}; \\quad \\tan\\alpha = \\tfrac{19{,}8}{1{,}5} \\approx 13{,}2 \\Rightarrow \\alpha \\approx 85{,}7° \\)
+  \\( v_y = g\\cdot t = 9{,}81\\cdot2{,}02 \\approx 19{,}8\\,\\text{m/s}; \\quad \\tan\\alpha = \\tfrac{19{,}8}{1{,}5} \\approx 13{,}2 \\Rightarrow \\alpha \\approx 85{,}7^\circ \\)
 </div></div>
 <div class="sol-step"><div class="snum">b</div><div>
   \\( t = \\sqrt{\\tfrac{2\\cdot1{,}2}{9{,}81}} \\approx 0{,}495\\,\\text{s}; \\quad x = 2{,}0\\cdot0{,}495 \\approx 0{,}99\\,\\text{m} \\)
@@ -1348,11 +1363,11 @@ Erstelle 3 neue Aufgaben mit Berufsbezug. Vollständige Lösungen.`},
 
 w3:{title:"v_Auf und Energieerhaltung (AFB II)",
 aufgabe:`<div class="task-box">
-  <p>Stuntman: \\(v_0 = 20\\,\\text{m/s}\\), \\(h = 5{,}0\\,\\text{m}\\).</p>
+  <p>Bei einem Filmstunt verlässt ein Motorrad eine Rampe waagerecht mit \\(v_0 = 20\\,\\text{m/s}\\) in einer Höhe von \\(h = 5{,}0\\,\\text{m}\\). Die Aufprallgeschwindigkeit soll auf zwei verschiedenen Wegen berechnet werden, um die Äquivalenz von Kinematik und Energieerhaltung zu zeigen.</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(v_\\text{Auf} = \\sqrt{v_0^2+2gh}\\).</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Zeigen Sie: Dasselbe Ergebnis folgt aus der Energieerhaltung.</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Warum gilt \\(v_\\text{Auf} > v_0\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body"><strong>Kinematischer Weg:</strong> Berechnen Sie zunächst \\(v_y = g \\cdot t_\\text{Auf}\\) und dann \\(v_\\text{Auf} = \\sqrt{v_x^2 + v_y^2}\\). Zeigen Sie, dass sich dabei \\(v_\\text{Auf} = \\sqrt{v_0^2 + 2gh}\\) ergibt.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body"><strong>Energetischer Weg:</strong> Setzen Sie \\(E_\\text{ges} = \\tfrac{1}{2}mv_0^2 + mgh = \\tfrac{1}{2}mv_\\text{Auf}^2\\) an und lösen Sie nach \\(v_\\text{Auf}\\) auf. Vergleichen Sie das Ergebnis mit a).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Erklären Sie, warum \\(v_\\text{Auf} > v_0\\) gilt. Welche Energieumwandlung findet statt?</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
@@ -1370,12 +1385,13 @@ Erkläre die Herleitung. Erstelle 2 Aufgaben: einmal v₀=0, einmal v₀≠0.`},
 
 w4:{title:"Flugbahn skizzieren (AFB II)",
 aufgabe:`<div class="task-box">
-  <p>Stuntman: \\(v_0 = 20\\,\\text{m/s}\\), \\(h = 5{,}0\\,\\text{m}\\).</p>
-  <p>Erstellen Sie eine Wertetabelle und zeichnen Sie die Flugbahn maßstäblich in ein \\(x\\)-\\(y\\)-Koordinatensystem (y-Achse nach unten).</p>
+  <p>Bei demselben Stunt (\\(v_0 = 20\\,\\text{m/s}\\), \\(h = 5{,}0\\,\\text{m}\\)) soll die Flugbahn maßstabsgetreu gezeichnet werden. Erstellen Sie eine <strong>Wertetabelle</strong> und zeichnen Sie die <strong>Wurfparabel</strong> in ein \\(x\\)-\\(y\\)-Koordinatensystem.</p>
+  <p><strong>Koordinatensystem:</strong> \\(x\\)-Achse nach rechts (Startpunkt), \\(y\\)-Achse nach unten (positiv nach unten).</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Zeitpunkte: \\(t = 0;\\; 0{,}25;\\; 0{,}50;\\; 0{,}75;\\; 1{,}01\\,\\text{s}\\)</span></div>
-    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Formeln: \\(x(t) = v_0\\cdot t\\) &nbsp;und&nbsp; \\(y(t) = \\tfrac{1}{2}g\\,t^2\\)</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(x(t) = v_0 \\cdot t\\) und \\(y(t) = \\tfrac{1}{2}g\\,t^2\\) für \\(t = 0\\,\\text{s};\\; 0{,}25\\,\\text{s};\\; 0{,}50\\,\\text{s};\\; 0{,}75\\,\\text{s};\\; 1{,}01\\,\\text{s}\\). Fassen Sie die Ergebnisse in einer Tabelle zusammen.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Tragen Sie alle 5 Punkte maßstäblich in ein Koordinatensystem ein (Maßstab angeben!) und verbinden Sie sie zu einer Parabel. Markieren Sie Start- und Aufprallpunkt und beschriften Sie die Achsen.</span></div>
   </div>
+  <div class="hint-box">Empfohlener Maßstab: \\(x\\)-Achse: 1 cm = 2 m (bis 22 m); \\(y\\)-Achse: 1 cm = 1 m (bis 5 m). Der Aufprall liegt bei \\(t \\approx 1{,}01\\,\\text{s}\\), \\(x \\approx 20{,}2\\,\\text{m}\\).</div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">1</div><div><strong>Wertetabelle:</strong><br>
   <span class="fbox">t=0,00 s: x=0,0 m, y=0,00 m</span><br>
@@ -1391,11 +1407,11 @@ prompt:`Ich übe das Zeichnen von Wurfparabeln (Klasse 11). Erstelle eine Aufgab
 
 w5:{title:"Auffangbehälter positionieren (AFB II)",
 aufgabe:`<div class="task-box">
-  <p>Förderband: \\(v_0 = 2{,}0\\,\\text{m/s}\\), \\(h = 1{,}2\\,\\text{m}\\). Behälterbreite: \\(40\\,\\text{cm}\\), Streubreite \\(\\pm 5\\,\\text{cm}\\).</p>
+  <p>Am Ende einer Produktionslinie läuft ein Förderband waagerecht mit \\(v_0 = 2{,}0\\,\\text{m/s}\\) und endet in \\(h = 1{,}2\\,\\text{m}\\) Höhe. Die gefertigten Werkstücke sollen in einem Auffangbehälter (Breite: \\(40\\,\\text{cm}\\)) landen. Aufgrund von Fertigungstoleranzen streut die Abwurfgeschwindigkeit um \\(\\pm 5\\,\\%\\).</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die Reichweite \\(x_\\max\\).</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Das Werkstück muss im Behälter landen. In welchem Abstand vom Bandende muss die Behältermitte stehen?</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Zeigen Sie: Die Behälterbreite von \\(40\\,\\text{cm}\\) ist bei \\(\\pm 5\\,\\text{cm}\\) Streuung ausreichend.</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die Reichweite \\(x_\\text{max}\\) für die Nenngeschwindigkeit \\(v_0 = 2{,}0\\,\\text{m/s}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">In welchem Abstand vom Bandende muss die <strong>Mitte</strong> des Auffangbehälters stehen?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie die Reichweite für \\(v_\\text{min} = 0{,}95 \\cdot v_0\\) und \\(v_\\text{max} = 1{,}05 \\cdot v_0\\). Zeigen Sie rechnerisch, ob der \\(40\\,\\text{cm}\\) breite Behälter die gesamte Streubreite abdeckt.</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
@@ -1412,11 +1428,11 @@ Erstelle eine ähnliche Aufgabe: Werkstück landet in einem Behälter, ich muss 
 
 w6:{title:"Begründung: t unabhängig von v₀ (AFB III)",
 aufgabe:`<div class="task-box">
+  <p>In einem Demonstrationsexperiment werden zwei identische Kugeln gleichzeitig losgelassen: <strong>Kugel A</strong> wird horizontal abgeworfen (\\(v_0 = 10\\,\\text{m/s}\\)), <strong>Kugel B</strong> wird senkrecht fallen gelassen (\\(v_0 = 0\\)). Beide starten aus der gleichen Höhe \\(h = 2{,}0\\,\\text{m}\\).</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Begründen Sie: Warum hängt \\(t_\\text{Auf} = \\sqrt{2h/g}\\) nicht von \\(v_0\\) ab?</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Zwei Kugeln werden gleichzeitig losgelassen: eine horizontal abgeworfen (\\(v_0 = 10\\,\\text{m/s}\\)),</span></div>
-    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">die andere senkrecht fallen gelassen (\\(v_0 = 0\\)), aus gleicher Höhe \\(h = 2\\,\\text{m}\\).</span></div>
-    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Welche landet zuerst? Begründen Sie ohne Rechnung.</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die Flugzeit \\(t_\\text{Auf} = \\sqrt{2h/g}\\) für beide Kugeln. Was stellen Sie fest?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body"><strong>Begründen Sie</strong> das Ergebnis aus a): Warum hängt \\(t_\\text{Auf}\\) nicht von \\(v_0\\) ab? Stützen Sie sich dabei auf die Gleichung der Vertikalbewegung \\(y(t) = \\tfrac{1}{2}gt^2\\) und das Superpositionsprinzip.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Welche Kugel legt beim Fallen die größere <strong>Gesamtstrecke</strong> zurück – und welche hat beim Aufprall die größere <strong>Geschwindigkeit</strong>? Begründen Sie jeweils qualitativ.</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
@@ -1431,26 +1447,28 @@ Erstelle eine Frage, bei der ich den gleichzeitigen Aufprall zweier Körper begr
 
 w7:{title:"Qualitative Analyse der Wurfparabel (AFB III)",
 aufgabe:`<div class="task-box">
-  <p>Drei Körper werden aus gleicher Höhe \\(h = 5{,}0\\,\\text{m}\\) waagerecht abgeworfen:</p>
+  <p>Drei Körper werden gleichzeitig aus \\(h = 5{,}0\\,\\text{m}\\) Höhe waagerecht abgeworfen und unterscheiden sich nur in der Abwurfgeschwindigkeit:</p>
+  <ul style="margin:6px 0 10px 18px; font-size:0.875rem; line-height:1.8">
+    <li>Körper A: \\(v_0 = 0\\,\\text{m/s}\\) (senkrechter Fall)</li>
+    <li>Körper B: \\(v_0 = 5\\,\\text{m/s}\\)</li>
+    <li>Körper C: \\(v_0 = 20\\,\\text{m/s}\\)</li>
+  </ul>
+  <p><strong>Vergleichen Sie die drei Körper qualitativ</strong> (Begründung genügt, Zahlenwerte zum Belegen erlaubt):</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Körper A: \\(v_0 = 5\\,\\text{m/s}\\)</span></div>
-    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Körper B: \\(v_0 = 20\\,\\text{m/s}\\)</span></div>
-    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Körper C: \\(v_0 = 0\\) (senkrechter Fall)</span></div>
-    <div class="subtask"><span class="subtask-label">–</span><span class="subtask-body">Vergleichen Sie ohne vollständige Rechnung:</span></div>
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Flugzeit \\(t_\\text{Auf}\\)</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">horizontale Reichweite \\(x_\\max\\)</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Auftreffwinkel \\(\\alpha\\)</span></div>
-    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Auftreffgeschwindigkeit \\(|v_\\text{Auf}|\\)</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Flugzeit \\(t_\\text{Auf}\\): Welcher Körper landet zuerst – oder landen alle gleichzeitig? Begründen Sie mit \\(t_\\text{Auf} = \\sqrt{2h/g}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Horizontale Reichweite \\(x_\\text{max}\\): Für welchen Körper ist sie am größten? Wie hängt \\(x_\\text{max}\\) von \\(v_0\\) ab?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Auftreffwinkel \\(\\alpha\\): Für welchen Körper ist der Aufprall am steilsten? Begründen Sie über \\(\\tan\\alpha = v_y/v_x\\).</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Auftreffgeschwindigkeit: Welcher Körper hat die größte \\(|v_\\text{Auf}|\\) und warum? Nutzen Sie \\(v_\\text{Auf} = \\sqrt{v_0^2 + 2gh}\\).</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
-  Flugzeit \\(t_\\text{Auf}\\): <strong>A = B = C</strong>, alle \\(t = \\sqrt{2h/g} \\approx 1{,}01\\,\\text{s}\\). \\(t\\) hängt nicht von \\(v_0\\) ab.
+  Flugzeit \\(t_\\text{Auf}\\): <strong>A = B = C</strong>, alle \\(t = \\sqrt{\dfrac{2h}{g}} \\approx 1{,}01\\,\\text{s}\\). \\(t\\) hängt nicht von \\(v_0\\) ab.
 </div></div>
 <div class="sol-step"><div class="snum">b</div><div>
   Reichweite: \\(x \\propto v_0\\) → C: 0 m, A: 5,05 m, B: 20,2 m.
 </div></div>
 <div class="sol-step"><div class="snum">c</div><div>
-  \\( \\tan\\alpha = v_y/v_0 = (g\\cdot t)/v_0 \\). Kleines \\(v_0\\) → großes \\(\\alpha\\) (steiler Aufprall). C: 90° (senkrecht), A: ca. 64°, B: ca. 26°.
+  \\( \\tan\\alpha = v_y/v_0 = (g\\cdot t)/v_0 \\). Kleines \\(v_0\\) → großes \\(\\alpha\\) (steiler Aufprall). C: 90^\circ (senkrecht), A: ca. 64^\circ, B: ca. 26^\circ.
 </div></div>
 <div class="sol-step"><div class="snum">d</div><div>
   \\( v_\\text{Auf} = \\sqrt{v_0^2+2gh} \\). Für alle gilt \\(v_y = g\\cdot t \\approx 9{,}91\\,\\text{m/s}\\), aber \\(v_x\\) verschieden:<br>
@@ -1461,12 +1479,13 @@ Erkläre: Wie ändern sich Reichweite, Winkel und v_Auf, wenn v₀ vergrößert 
 
 w8:{title:"★ CNC-Fräse vs. Wurfbewegung (AFB III)",
 aufgabe:`<div class="task-box">
-  <p>CNC-Fräskopf: \\(v_x = 0{,}5\\,\\text{m/s}\\), \\(v_y = 0{,}3\\,\\text{m/s}\\) (beide gleichförmig), \\(t = 4{,}0\\,\\text{s}\\).</p>
+  <p>Ein CNC-Fräskopf bewegt sich gleichzeitig mit konstanten Geschwindigkeiten \\(v_x = 0{,}5\\,\\text{m/s}\\) und \\(v_y = 0{,}3\\,\\text{m/s}\\) in zwei Richtungen. Im Gegensatz dazu ist beim waagerechten Wurf die Vertikalbewegung beschleunigt (\\(a = g\\)).</p>
+  <p><strong>Gegeben:</strong> Beobachtungszeitraum \\(t = 4{,}0\\,\\text{s}\\).</p>
   <div class="subtasks">
-    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Wege \\(x\\) und \\(y\\) nach \\(t = 4{,}0\\,\\text{s}\\)?</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Gesamtstrecke \\(s_\\text{res}\\) vom Startpunkt?</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Winkel \\(\\beta\\) zur \\(x\\)-Achse? Resultierende Geschwindigkeit \\(v_\\text{res}\\)?</span></div>
-    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Welche Bahnform entsteht – und warum ist das beim waagerechten Wurf anders?</span></div>
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die in \\(x\\)- und \\(y\\)-Richtung zurückgelegten Wege \\(x = v_x \\cdot t\\) und \\(y = v_y \\cdot t\\) nach \\(t = 4{,}0\\,\\text{s}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie die Gesamtstrecke \\(s_\\text{res} = \\sqrt{x^2 + y^2}\\) vom Startpunkt.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie den Winkel \\(\\beta\\) der Bewegungsrichtung zur \\(x\\)-Achse sowie die resultierende Geschwindigkeit \\(v_\\text{res}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body"><strong>Vergleich mit dem waagerechten Wurf:</strong> Der CNC-Kopf bewegt sich auf einer <em>Geraden</em>, beim Wurf entsteht eine <em>Parabel</em>. Erklären Sie den physikalischen Unterschied: Was ist bei der CNC-Bewegung anders als beim Wurf?</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
@@ -1476,12 +1495,12 @@ loesung:`<div class="sol-step"><div class="snum">a</div><div>
   \\( s = \\sqrt{x^2+y^2} = \\sqrt{4{,}00+1{,}44} = \\sqrt{5{,}44} \\approx 2{,}33\\,\\text{m} \\)
 </div></div>
 <div class="sol-step"><div class="snum">c</div><div>
-  \\( \\beta = \\arctan\\!\\left(\\tfrac{v_y}{v_x}\\right) = \\arctan(0{,}6) \\approx 31°; \\quad v_\\text{res} = \\sqrt{0{,}5^2+0{,}3^2} = \\sqrt{0{,}34} \\approx 0{,}583\\,\\text{m/s} \\)
+  \\( \\beta = \\arctan\\!\\left(\\tfrac{v_y}{v_x}\\right) = \\arctan(0{,}6) \\approx 31^\circ; \\quad v_\\text{res} = \\sqrt{0{,}5^2+0{,}3^2} = \\sqrt{0{,}34} \\approx 0{,}583\\,\\text{m/s} \\)
 </div></div>
 <div class="sol-step"><div class="snum">d</div><div>
   Fräse: beide \\(v\\) konstant → <strong>Gerade</strong> (gleichförmig). Beim Wurf: \\(v_y = g\\cdot t\\) wächst mit der Zeit → <strong>Parabel</strong> (\\(y \\propto t^2\\)).
 </div></div>
-<div class="result">s ≈ 2,33 m | β ≈ 31° | v_res ≈ 0,58 m/s</div>`,
+<div class="result">s ≈ 2,33 m | β ≈ 31^\circ | v_res ≈ 0,58 m/s</div>`,
 prompt:`Ich übe den Vergleich gleichförmige Überlagerung vs. Wurfbewegung (Physik Klasse 11, Knobelaufgabe).
 Erkläre: Wann Gerade, wann Parabel? Neue Aufgabe mit anderen Geschwindigkeiten und dem expliziten Vergleich beider Situationen.`}
 };
