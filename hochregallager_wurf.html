@@ -168,6 +168,10 @@
     font-size: 1.1em; text-align: center; color: #1e40af;
   }
 
+  /* Group select buttons */
+  .group-select-btn { opacity: 0.5; transform: scale(0.95); }
+  .group-select-btn.active { opacity: 1; transform: scale(1.05); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+
   @media (max-width: 900px) {
     .groups { grid-template-columns: 1fr; }
     .experiment-steps { grid-template-columns: repeat(2, 1fr); }
@@ -219,7 +223,7 @@ MathJax = {
       <div class="step">
         <div class="num-circle">2</div>
         <h4>Messen</h4>
-        <p>\(v_0\): Strecke auf dem Tisch ÷ Zeit (Handy-Stoppuhr)</p>
+        <p>\(v_0\) messen: Handy-Zeitlupe (240 fps) oder Videoanalyse</p>
       </div>
       <div class="step">
         <div class="num-circle">3</div>
@@ -234,7 +238,7 @@ MathJax = {
     </div>
 
     <div class="formula">
-      \(g = 9{,}81\;\text{m/s}^2\) · Luftwiderstand vernachlässigt · \(y\)-Achse nach unten
+      \(g = 9{,}81\;\text{m/s}^2\) · Luftwiderstand vernachlässigt · \(y\)-Achse nach oben positiv
     </div>
   </div>
 
@@ -248,6 +252,18 @@ MathJax = {
         Das ist das <strong>Superpositionsprinzip</strong>: Die vertikale Bewegung (freier Fall) ist völlig unabhängig von der horizontalen.
       </p>
     </div>
+  </div>
+
+  <div class="card" style="border-color:#ff9800; border-width:2px;">
+    <h2 style="color:#e65100;">💭 Denkanstoß</h2>
+    <p style="font-size:1.1em; line-height:1.7;">
+      Was passiert, wenn <strong>zwei</strong> Objekte gleichzeitig von verschiedenen Positionen fallen —
+      und sich dabei <strong>entgegenfliegen</strong>?<br>
+      Können ihre Flugbahnen sich kreuzen? Und wenn ja: Bedeutet das automatisch eine <strong>Kollision</strong>?
+    </p>
+    <p style="font-size:1.05em; margin-top:10px; color:#e65100;">
+      → Genau das untersuchen Sie jetzt als Sicherheitsingenieur/in!
+    </p>
   </div>
 
   <div class="nav-btns">
@@ -269,7 +285,7 @@ MathJax = {
 
   <div class="card">
     <h2>📐 Koordinatensystem</h2>
-    <p>Ursprung am Boden unter Band A · \(x\)-Achse nach rechts · \(y\)-Achse nach oben</p>
+    <p>Ursprung am Boden unter Band A · \(x\)-Achse nach rechts · \(y\)-Achse nach oben <span style="color:#94a3b8; font-size:0.9em;">(Beispielwerte: Gruppe 1)</span></p>
     <canvas id="setupCanvas" width="800" height="420"></canvas>
   </div>
 
@@ -286,8 +302,8 @@ MathJax = {
     <div class="group-card">
       <h3 style="color:#9c27b0;">🟣 Gruppe 2</h3>
       <div class="param">
-        <b>Band A:</b> \(h_1 = 3{,}0\;\text{m}\), \(v_1 = 2{,}0\;\text{m/s}\) →<br>
-        <b>Band B:</b> \(h_2 = 1{,}5\;\text{m}\), \(v_2 = 3{,}0\;\text{m/s}\) ←<br>
+        <b>Band A:</b> \(h_1 = 2{,}0\;\text{m}\), \(v_1 = 2{,}5\;\text{m/s}\) →<br>
+        <b>Band B:</b> \(h_2 = 2{,}0\;\text{m}\), \(v_2 = 1{,}5\;\text{m/s}\) ←<br>
         <b>Abstand:</b> \(d = 2{,}0\;\text{m}\)
       </div>
     </div>
@@ -304,11 +320,16 @@ MathJax = {
   <div class="card">
     <h2>📝 Leitfragen (Gutachten)</h2>
     <ol class="tasks">
-      <li><span class="num">1.</span> <strong>Berechnen Sie</strong> für beide Pakete Flugzeit und Aufprallposition.</li>
-      <li><span class="num">2.</span> <strong>Geben Sie</strong> die Bahngleichungen \(y_A(x)\) und \(y_B(x)\) an. Eliminieren Sie \(t\).</li>
-      <li><span class="num">3.</span> <strong>Bestimmen Sie</strong> rechnerisch, ob sich die Flugbahnen schneiden. Wo?</li>
-      <li><span class="num">4.</span> <strong>Berechnen Sie</strong> die Zeiten \(t_1\) und \(t_2\), zu denen jedes Paket den Schnittpunkt erreicht.</li>
-      <li><span class="num">5.</span> <strong>Beurteilen Sie:</strong> Besteht Kollisionsgefahr? Begründen Sie!</li>
+      <li><span class="num">1.</span> <strong>Berechnen Sie</strong> für beide Pakete Flugzeit und Aufprallposition.<br>
+        <span style="color:#78909c; font-size:0.9em;">Tipp: \(t_\text{Auf} = \sqrt{2h/g}\), dann \(x_\text{Auf} = v_0 \cdot t_\text{Auf}\)</span></li>
+      <li><span class="num">2.</span> <strong>Geben Sie</strong> die Bahngleichungen \(y_A(x)\) und \(y_B(x)\) an. Eliminieren Sie \(t\).<br>
+        <span style="color:#78909c; font-size:0.9em;">Tipp: Lösen Sie \(x = v_0 \cdot t\) nach \(t\) auf und setzen Sie in \(y(t) = h - \tfrac{1}{2}g\,t^2\) ein.</span></li>
+      <li><span class="num">3.</span> <strong>Bestimmen Sie</strong> rechnerisch, ob sich die Flugbahnen schneiden. Wo?<br>
+        <span style="color:#78909c; font-size:0.9em;">Tipp: Setzen Sie \(y_A(x) = y_B(x)\) und lösen Sie die quadratische Gleichung.</span></li>
+      <li><span class="num">4.</span> <strong>Berechnen Sie</strong> die Zeiten \(t_1\) und \(t_2\), zu denen jedes Paket den Schnittpunkt erreicht.<br>
+        <span style="color:#78909c; font-size:0.9em;">Tipp: Wie lange braucht jedes Paket, um die \(x\)-Koordinate des Schnittpunkts zu erreichen?</span></li>
+      <li><span class="num">5.</span> <strong>Beurteilen Sie:</strong> Besteht Kollisionsgefahr? Begründen Sie!<br>
+        <span style="color:#78909c; font-size:0.9em;">Vergleichen Sie \(\Delta t = |t_1 - t_2|\). Was bedeutet \(\Delta t = 0\)?</span></li>
     </ol>
 
     <div style="text-align:center; margin-top:15px;">
@@ -324,8 +345,9 @@ MathJax = {
   <div class="card">
     <h2>⏱️ Arbeitszeit</h2>
     <div style="display:flex; gap:10px; margin-bottom:10px;">
-      <button class="reveal-btn" onclick="startTimer(35)">35 min starten</button>
+      <button class="reveal-btn" onclick="startTimer(35)">35 min</button>
       <button class="reveal-btn" onclick="startTimer(40)" style="background:linear-gradient(135deg,#1565c0,#0d47a1);">40 min</button>
+      <button class="reveal-btn" onclick="startTimer(45)" style="background:linear-gradient(135deg,#2e7d32,#1b5e20);">45 min</button>
       <button class="reveal-btn" onclick="stopTimer()" style="background:linear-gradient(135deg,#616161,#424242);">Stopp</button>
     </div>
     <div class="timer-bar">
@@ -346,7 +368,11 @@ MathJax = {
 <div class="phase" id="phase3">
   <div class="card">
     <h2>📊 Ergebnisvergleich</h2>
-    <p style="margin-bottom:15px;">Jede Gruppe stellt kurz vor: Schneiden sich die Bahnen? Kollisionsgefahr?</p>
+    <div style="background:#fff3e0; border:2px solid #ff9800; border-radius:10px; padding:15px; margin-bottom:20px;">
+      <strong style="color:#e65100;">👨‍🏫 Erst präsentieren, dann vergleichen!</strong><br>
+      Jede Gruppe stellt in <strong>2 Minuten</strong> ihre Ergebnisse an der Tafel vor:<br>
+      Flugzeiten, Aufprallpositionen, Schnittpunkt, Zeitvergleich, Fazit.
+    </div>
 
     <button class="reveal-btn" onclick="toggleReveal('res1')">🔵 Gruppe 1 — Lösung</button>
     <div class="hidden-content" id="res1">
@@ -361,15 +387,17 @@ MathJax = {
       </div>
     </div>
 
-    <button class="reveal-btn" onclick="toggleReveal('res2')">🟣 Gruppe 2 — Lösung</button>
+    <button class="reveal-btn" onclick="toggleReveal('res2')" style="background:linear-gradient(135deg,#c62828,#b71c1c);">🟣 Gruppe 2 — Lösung</button>
     <div class="hidden-content" id="res2">
-      <div class="card" style="border-color:#9c27b0;">
+      <div class="card" style="border-color:#c62828; border-width:2px;">
         <p>
-          <strong>Flugzeiten:</strong> \(t_{A} = \sqrt{2 \cdot 3{,}0 / 9{,}81} \approx 0{,}78\;\text{s}\), \(t_{B} = \sqrt{2 \cdot 1{,}5 / 9{,}81} \approx 0{,}55\;\text{s}\)<br>
-          <strong>Aufprall:</strong> Paket A bei \(x \approx 1{,}56\;\text{m}\), Paket B bei \(x \approx 0{,}34\;\text{m}\)<br>
-          <strong>Schnittpunkt:</strong> \((1{,}22\;\text{m}\;|\;1{,}17\;\text{m})\) — über dem Boden ✅<br>
-          <strong>Zeiten am Schnittpunkt:</strong> \(t_1 \approx 0{,}61\;\text{s}\), \(t_2 \approx 0{,}26\;\text{s}\)<br>
-          <strong>→ \(\Delta t = 0{,}35\;\text{s}\) — KEINE Kollision!</strong>
+          <strong>Flugzeiten:</strong> \(t_{A} = t_{B} = \sqrt{2 \cdot 2{,}0 / 9{,}81} \approx 0{,}64\;\text{s}\) — <em>gleich, weil \(h_1 = h_2\)!</em><br>
+          <strong>Aufprall:</strong> Paket A bei \(x \approx 1{,}60\;\text{m}\), Paket B bei \(x \approx 1{,}04\;\text{m}\)<br>
+          <strong>Schnittpunkt:</strong> \((1{,}25\;\text{m}\;|\;0{,}77\;\text{m})\) — über dem Boden ✅<br>
+          <strong>Zeiten am Schnittpunkt:</strong> \(t_1 = 1{,}25/2{,}5 = 0{,}50\;\text{s}\), \(t_2 = 0{,}75/1{,}5 = 0{,}50\;\text{s}\)<br>
+          <strong style="color:#c62828; font-size:1.1em;">→ \(\Delta t = 0{,}00\;\text{s}\) — KOLLISION! 💥</strong><br><br>
+          <strong>Warum?</strong> Wenn \(h_1 = h_2\), sind beide Pakete <strong>zu jedem Zeitpunkt auf der gleichen Höhe</strong>
+          (gleicher freier Fall). Treffen sie sich auch in \(x\), kollidieren sie zwangsläufig.
         </p>
       </div>
     </div>
@@ -392,12 +420,18 @@ MathJax = {
     <span class="emoji">💡</span>
     <strong>Kreuzende Flugbahnen ≠ Kollision!</strong><br>
     Entscheidend ist nicht <em>wo</em> sich die Bahnen kreuzen,<br>
-    sondern ob beide Objekte <strong>zur selben Zeit</strong> am selben Ort sind.
+    sondern ob beide Objekte <strong>zur selben Zeit</strong> am selben Ort sind.<br><br>
+    <strong>Sonderfall \(h_1 = h_2\):</strong> Gleiche Fallhöhe → gleicher freier Fall → <strong>Kollision garantiert</strong>, wenn sich die Bahnen kreuzen!
   </div>
 
   <div class="card">
     <h2>🔬 Interaktive Visualisierung</h2>
-    <canvas id="simCanvas" width="800" height="400"></canvas>
+    <div style="display:flex; gap:10px; justify-content:center; margin-bottom:10px;">
+      <button class="reveal-btn group-select-btn active" id="grpBtn1" onclick="selectGroup(1)" style="background:#1976d2;">🔵 Gruppe 1</button>
+      <button class="reveal-btn group-select-btn" id="grpBtn2" onclick="selectGroup(2)" style="background:#7b1fa2;">🟣 Gruppe 2</button>
+      <button class="reveal-btn group-select-btn" id="grpBtn3" onclick="selectGroup(3)" style="background:#388e3c;">🟢 Gruppe 3</button>
+    </div>
+    <canvas id="simCanvas" width="800" height="420"></canvas>
     <div style="display:flex; gap:10px; justify-content:center; margin-top:10px;">
       <button class="reveal-btn" onclick="runSimulation()" style="background:linear-gradient(135deg,#2e7d32,#1b5e20);">▶ Simulation starten</button>
       <button class="reveal-btn" onclick="resetSimulation()" style="background:linear-gradient(135deg,#616161,#424242);">↺ Reset</button>
@@ -414,14 +448,36 @@ MathJax = {
 <!-- PHASE 4: Klausurvorbereitung -->
 <!-- ============================================================ -->
 <div class="phase" id="phase4">
+  <div class="card" style="border-color:#4caf50; border-width:2px;">
+    <h2 style="color:#2e7d32;">✅ Was Sie heute gelernt haben</h2>
+    <p style="font-size:1.1em; line-height:1.7;">
+      Sie haben den <strong>waagerechten Wurf</strong> auf eine reale Ingenieursaufgabe angewandt und dabei erkannt:<br>
+      → Kreuzende Flugbahnen bedeuten <strong>nicht automatisch</strong> eine Kollision.<br>
+      → Entscheidend ist, ob \(\Delta t = 0\) am Schnittpunkt gilt.<br>
+      → Sonderfall: Gleiche Fallhöhe (\(h_1 = h_2\)) → Kollision <strong>garantiert</strong>, wenn sich die Bahnen kreuzen.
+    </p>
+  </div>
+
   <div class="card">
     <h2>📋 Klausur am 11. März — Was Sie brauchen</h2>
+    <p style="color:#64748b; margin-bottom:12px;">Die Kompetenzen <strong>W</strong> und <strong>S</strong> haben Sie heute vertieft. Prüfen Sie auch die anderen:</p>
     <ol class="tasks">
       <li><span class="num">E</span> <strong>Energieerhaltung:</strong> \(E_\text{pot} = mgh\), \(E_\text{kin} = \tfrac{1}{2}mv^2\), \(E_\text{ges} = \text{const.}\)</li>
       <li><span class="num">D</span> <strong>\(h\)-\(E\)-Diagramm:</strong> \(E_\text{pot}(h)\), \(E_\text{kin}(h)\), \(E_\text{ges}\) — maßstäblich mit Stützpunkten</li>
       <li><span class="num">P</span> <strong>Leistung &amp; Wirkungsgrad:</strong> \(P = W/t = F \cdot v\), \(\eta = P_\text{nutz}/P_\text{el}\)</li>
-      <li><span class="num">W</span> <strong>Waagerechter Wurf:</strong> \(x = v_0 t\), \(y = \tfrac{1}{2}gt^2\), \(t_\text{Auf}\), \(v_\text{Auf}\), Winkel \(\alpha\)</li>
-      <li><span class="num">S</span> <strong>Superposition begründen:</strong> Warum ist \(t_\text{Auf}\) unabhängig von \(v_0\)?</li>
+      <li style="background:#e3f2fd; border-left-color:#1565c0;"><span class="num">W</span> <strong>Waagerechter Wurf:</strong> \(x = v_0 t\), \(y = h - \tfrac{1}{2}gt^2\), \(t_\text{Auf}\), \(v_\text{Auf}\), Winkel \(\alpha\) — <em>heute geübt!</em></li>
+      <li style="background:#e3f2fd; border-left-color:#1565c0;"><span class="num">S</span> <strong>Superposition begründen:</strong> Warum ist \(t_\text{Auf}\) unabhängig von \(v_0\)? — <em>heute geübt!</em></li>
+    </ol>
+  </div>
+
+  <div class="card" style="border-color:#ff9800; border-width:2px;">
+    <h2 style="color:#e65100;">🎫 Exit-Ticket</h2>
+    <p style="font-size:1.1em; line-height:1.7; margin-bottom:10px;">
+      Beantworten Sie <strong>eine</strong> der folgenden Fragen auf einem Zettel (Name drauf!) und geben Sie ihn beim Rausgehen ab:
+    </p>
+    <ol style="font-size:1.05em; line-height:1.8; padding-left:20px;">
+      <li>Nennen Sie <strong>eine Bedingung</strong>, unter der zwei Pakete im Hochregallager tatsächlich kollidieren.</li>
+      <li>Warum ist die Flugzeit beim waagerechten Wurf <strong>unabhängig</strong> von \(v_0\)? Erklären Sie in einem Satz.</li>
     </ol>
   </div>
 
@@ -624,17 +680,71 @@ function drawSetup() {
   ctx.fillText('?', ox + d*scale/2 - 8, oy - 1.8*scale);
 }
 
-// Simulation (Phase 3)
+// Simulation (Phase 3) — supports all groups
+const simGroups = {
+  1: { h1:4, v1:3, h2:2, v2:2, d:2.5 },
+  2: { h1:2, v1:2.5, h2:2, v2:1.5, d:2 },
+  3: { h1:5, v1:4, h2:3, v2:1.5, d:3 }
+};
+let simGroup = 1;
 let simAnim = null;
+
+function selectGroup(n) {
+  simGroup = n;
+  document.querySelectorAll('.group-select-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('grpBtn'+n).classList.add('active');
+  resetSimulation();
+}
+
 function runSimulation() {
   const c = document.getElementById('simCanvas');
   const ctx = c.getContext('2d');
   const W = c.width, H = c.height;
-  const scale = 65, ox = 80, oy = H - 50;
   const g_val = 9.81;
-  const h1=4, v1=3, h2=2, v2=2, d=2.5;
+  const p = simGroups[simGroup];
+  const {h1, v1, h2, v2, d} = p;
+
+  // Dynamic scale
+  const maxY = Math.max(h1, h2) + 0.5;
+  const maxX = Math.max(d + 1, v1 * Math.sqrt(2*h1/g_val) + 0.5, 3.5);
+  const scale = Math.min((W - 160) / maxX, (H - 100) / maxY);
+  const ox = 80, oy = H - 50;
+
+  // Pre-compute intersection
+  const a1 = g_val/(2*v1*v1), a2 = g_val/(2*v2*v2);
+  // y_A = h1 - a1*x², y_B = h2 - a2*(d-x)²
+  // h1 - a1*x² = h2 - a2*(d²-2dx+x²)
+  const A = a2 - a1;
+  const B = -2*a2*d;
+  const C = h1 - h2 + a2*d*d;
+  // A*x² + B*x + C = 0 → but rearranged: (a2-a1)x² - 2a2*d*x + (h1-h2+a2*d²) = 0
+  const disc = B*B - 4*A*C;
+  let intX = -1, intY = -1;
+  if (disc >= 0 && Math.abs(A) > 0.0001) {
+    const x1 = (-B - Math.sqrt(disc))/(2*A);
+    const x2 = (-B + Math.sqrt(disc))/(2*A);
+    [x1, x2].forEach(xx => {
+      if (xx >= 0 && xx <= d) {
+        const yy = h1 - a1*xx*xx;
+        if (yy > 0) { intX = xx; intY = yy; }
+      }
+    });
+  } else if (Math.abs(A) < 0.0001) {
+    // Linear case (h1=h2 scenario)
+    const xx = -C/B;
+    if (xx >= 0 && xx <= d) {
+      const yy = h1 - a1*xx*xx;
+      if (yy > 0) { intX = xx; intY = yy; }
+    }
+  }
+  const tIntA = intX >= 0 ? intX/v1 : -1;
+  const tIntB = intX >= 0 ? (d-intX)/v2 : -1;
+  const isCollision = intX >= 0 && Math.abs(tIntA - tIntB) < 0.02;
+  const collisionT = isCollision ? (tIntA + tIntB)/2 : -1;
+
   let t = 0;
   const dt = 0.016;
+  let collisionShown = false;
 
   if (simAnim) cancelAnimationFrame(simAnim);
 
@@ -642,34 +752,38 @@ function runSimulation() {
     ctx.clearRect(0, 0, W, H);
 
     // Ground
-    ctx.fillStyle = '#d7ccc8'; ctx.fillRect(ox, oy, 4*scale, 6);
+    ctx.fillStyle = '#d7ccc8'; ctx.fillRect(ox, oy, maxX*scale + 10, 6);
 
     // Axes
     ctx.strokeStyle = 'rgba(0,0,0,0.12)'; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ox + 4*scale, oy); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ox, oy - 5*scale); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ox + maxX*scale, oy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ox, oy - maxY*scale); ctx.stroke();
     ctx.fillStyle = '#94a3b8'; ctx.font = '11px Segoe UI';
-    for (let i = 0; i <= 4; i++) ctx.fillText(i+'m', ox + i*scale - 5, oy + 18);
-    for (let i = 1; i <= 5; i++) ctx.fillText(i+'m', ox - 25, oy - i*scale + 4);
+    for (let i = 0; i <= Math.floor(maxX); i++) ctx.fillText(i+'m', ox + i*scale - 5, oy + 18);
+    for (let i = 1; i <= Math.floor(maxY); i++) ctx.fillText(i+'m', ox - 25, oy - i*scale + 4);
 
     // Bands
     ctx.fillStyle = '#1565c0'; ctx.fillRect(ox-30, oy-h1*scale-5, 40, 10);
     ctx.fillStyle = '#c62828'; ctx.fillRect(ox+d*scale-10, oy-h2*scale-5, 40, 10);
+    ctx.fillStyle = '#64b5f6'; ctx.font = 'bold 11px Segoe UI';
+    ctx.fillText('A', ox-18, oy-h1*scale-10);
+    ctx.fillStyle = '#ef9a9a';
+    ctx.fillText('B', ox+d*scale+15, oy-h2*scale-10);
 
     // Full trajectories (dashed)
     ctx.setLineDash([4,4]); ctx.lineWidth = 1.5;
     ctx.strokeStyle = 'rgba(100,181,246,0.4)';
     ctx.beginPath();
-    for (let px = 0; px <= 3; px += 0.02) {
-      const yy = h1 - (g_val/(2*v1*v1))*px*px;
+    for (let px = 0; px <= maxX; px += 0.02) {
+      const yy = h1 - a1*px*px;
       if (yy < 0) break;
       if (px===0) ctx.moveTo(ox+px*scale, oy-yy*scale); else ctx.lineTo(ox+px*scale, oy-yy*scale);
     }
     ctx.stroke();
     ctx.strokeStyle = 'rgba(239,154,154,0.4)';
     ctx.beginPath();
-    for (let px = d; px >= 0; px -= 0.02) {
-      const yy = h2 - (g_val/(2*v2*v2))*(d-px)*(d-px);
+    for (let px = d; px >= -0.5; px -= 0.02) {
+      const yy = h2 - a2*(d-px)*(d-px);
       if (yy < 0) break;
       if (px===d) ctx.moveTo(ox+px*scale, oy-yy*scale); else ctx.lineTo(ox+px*scale, oy-yy*scale);
     }
@@ -677,35 +791,79 @@ function runSimulation() {
     ctx.setLineDash([]);
 
     // Intersection marker
-    ctx.fillStyle = 'rgba(255,152,0,0.3)';
-    ctx.beginPath(); ctx.arc(ox+2.037*scale, oy-1.738*scale, 8, 0, Math.PI*2); ctx.fill();
+    if (intX >= 0) {
+      ctx.fillStyle = isCollision ? 'rgba(244,67,54,0.3)' : 'rgba(255,152,0,0.3)';
+      ctx.beginPath(); ctx.arc(ox+intX*scale, oy-intY*scale, 8, 0, Math.PI*2); ctx.fill();
+    }
 
     // Moving packages
     const xA = v1*t, yA = h1 - 0.5*g_val*t*t;
     const xB_pos = d - v2*t, yB = h2 - 0.5*g_val*t*t;
-
     const tMaxA = Math.sqrt(2*h1/g_val);
     const tMaxB = Math.sqrt(2*h2/g_val);
 
-    if (yA >= 0) {
-      ctx.fillStyle = '#2196f3';
-      ctx.beginPath(); ctx.arc(ox + xA*scale, oy - yA*scale, 8, 0, Math.PI*2); ctx.fill();
-      ctx.fillStyle = '#334155'; ctx.font = 'bold 11px Segoe UI';
-      ctx.fillText('A', ox + xA*scale - 4, oy - yA*scale + 4);
+    // Collision explosion effect
+    if (isCollision && t >= collisionT && !collisionShown) {
+      collisionShown = true;
     }
-    if (yB >= 0 && xB_pos >= 0) {
-      ctx.fillStyle = '#f44336';
-      ctx.beginPath(); ctx.arc(ox + xB_pos*scale, oy - yB*scale, 8, 0, Math.PI*2); ctx.fill();
-      ctx.fillStyle = '#334155'; ctx.font = 'bold 11px Segoe UI';
-      ctx.fillText('B', ox + xB_pos*scale - 4, oy - yB*scale + 4);
+    if (collisionShown) {
+      const elapsed = t - collisionT;
+      const r = Math.min(40, 10 + elapsed * 80);
+      const alpha = Math.max(0, 1 - elapsed * 1.5);
+      // Burst
+      ctx.fillStyle = `rgba(255,152,0,${alpha * 0.5})`;
+      ctx.beginPath(); ctx.arc(ox+intX*scale, oy-intY*scale, r, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = `rgba(255,235,59,${alpha * 0.7})`;
+      ctx.beginPath(); ctx.arc(ox+intX*scale, oy-intY*scale, r*0.5, 0, Math.PI*2); ctx.fill();
+      // Star rays
+      ctx.strokeStyle = `rgba(255,152,0,${alpha})`;
+      ctx.lineWidth = 2;
+      for (let i = 0; i < 8; i++) {
+        const angle = (Math.PI/4)*i + elapsed*2;
+        ctx.beginPath();
+        ctx.moveTo(ox+intX*scale + Math.cos(angle)*r*0.4, oy-intY*scale + Math.sin(angle)*r*0.4);
+        ctx.lineTo(ox+intX*scale + Math.cos(angle)*r, oy-intY*scale + Math.sin(angle)*r);
+        ctx.stroke();
+      }
+      // Label
+      if (alpha > 0.2) {
+        ctx.fillStyle = '#c62828'; ctx.font = 'bold 18px Segoe UI';
+        ctx.fillText('KOLLISION!', ox+intX*scale - 45, oy-intY*scale - r - 10);
+      }
     }
 
-    // Time display
+    if (!collisionShown || t - collisionT < 0.05) {
+      if (yA >= 0) {
+        ctx.fillStyle = '#2196f3';
+        ctx.beginPath(); ctx.arc(ox + xA*scale, oy - yA*scale, 8, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 10px Segoe UI';
+        ctx.fillText('A', ox + xA*scale - 4, oy - yA*scale + 4);
+      }
+      if (yB >= 0 && xB_pos >= 0) {
+        ctx.fillStyle = '#f44336';
+        ctx.beginPath(); ctx.arc(ox + xB_pos*scale, oy - yB*scale, 8, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = '#fff'; ctx.font = 'bold 10px Segoe UI';
+        ctx.fillText('B', ox + xB_pos*scale - 4, oy - yB*scale + 4);
+      }
+    }
+
+    // Time display + group label
     ctx.fillStyle = '#334155'; ctx.font = 'bold 16px Segoe UI';
-    ctx.fillText('t = ' + t.toFixed(2) + ' s', W - 130, 30);
+    ctx.fillText('t = ' + t.toFixed(2) + ' s', W - 140, 30);
+    ctx.fillStyle = '#94a3b8'; ctx.font = '13px Segoe UI';
+    ctx.fillText('Gruppe ' + simGroup, W - 140, 50);
+
+    // Δt display if intersection exists
+    if (intX >= 0 && !isCollision) {
+      ctx.fillStyle = '#e65100'; ctx.font = 'bold 14px Segoe UI';
+      ctx.fillText('Δt = ' + Math.abs(tIntA - tIntB).toFixed(2) + ' s', W - 140, 72);
+    } else if (isCollision) {
+      ctx.fillStyle = '#c62828'; ctx.font = 'bold 14px Segoe UI';
+      ctx.fillText('Δt = 0,00 s!', W - 140, 72);
+    }
 
     t += dt;
-    if (t < Math.max(tMaxA, tMaxB) + 0.3) {
+    if (t < Math.max(tMaxA, tMaxB) + 0.5) {
       simAnim = requestAnimationFrame(frame);
     }
   }
@@ -714,6 +872,7 @@ function runSimulation() {
 
 function resetSimulation() {
   if (simAnim) cancelAnimationFrame(simAnim);
+  simAnim = null;
   const c = document.getElementById('simCanvas');
   c.getContext('2d').clearRect(0, 0, c.width, c.height);
 }
@@ -727,50 +886,19 @@ document.addEventListener('keydown', e => {
 // Init
 window.addEventListener('load', () => { setTimeout(drawSetup, 500); });
 
-// Recalc Gruppe 2 and 3
-(function() {
-  const g = 9.81;
-  // Gruppe 2: h1=3, v1=2, h2=1.5, v2=3, d=2
-  const h1=3, v1=2, h2=1.5, v2=3, d2=2;
-  // yA = 3 - g/(2*4)*x^2 = 3 - 1.226x^2
-  // yB = 1.5 - g/(2*9)*(2-x)^2 = 1.5 - 0.545*(2-x)^2
-  // 3 - 1.226x^2 = 1.5 - 0.545*(4-4x+x^2)
-  // 3 - 1.226x^2 = 1.5 - 2.18 + 2.18x - 0.545x^2
-  // 3 - 1.226x^2 = -0.68 + 2.18x - 0.545x^2
-  // 3.68 = 2.18x + 0.681x^2
-  // 0.681x^2 + 2.18x - 3.68 = 0 (missing minus... let me redo)
-  // Actually: 3 + 0.68 = 2.18x - 0.545x^2 + 1.226x^2
-  // 3.68 = 2.18x + 0.681x^2
-  // 0.681x^2 + 2.18x - 3.68 = 0
-  // Wait that doesn't seem right. Let me be careful.
-  // 3 - 1.226x^2 = -0.68 + 2.18x - 0.545x^2
-  // Move everything to left:
-  // 3 + 0.68 - 2.18x - 1.226x^2 + 0.545x^2 = 0
-  // 3.68 - 2.18x - 0.681x^2 = 0
-  // 0.681x^2 + 2.18x - 3.68 = 0
-  // x = (-2.18 ± sqrt(4.752 + 10.02)) / 1.362 = (-2.18 ± sqrt(14.77)) / 1.362
-  // = (-2.18 ± 3.843) / 1.362
-  // x1 = 1.663/1.362 = 1.22
-  // x2 = -6.02/1.362 < 0
-  // y at x=1.22: 3 - 1.226*1.488 = 3 - 1.825 = 1.175 m > 0 ✓
-  // t1 = 1.22/2 = 0.61s, t2 = (2-1.22)/3 = 0.26s, Δt = 0.35s
-
-  // Gruppe 3: h1=5, v1=4, h2=3, v2=1.5, d=3
-  // yA = 5 - g/(2*16)*x^2 = 5 - 0.3066x^2
-  // yB = 3 - g/(2*2.25)*(3-x)^2 = 3 - 2.18*(3-x)^2
-  // 5 - 0.3066x^2 = 3 - 2.18*(9-6x+x^2) = 3 - 19.62 + 13.08x - 2.18x^2
-  // 5 - 0.3066x^2 = -16.62 + 13.08x - 2.18x^2
-  // 5 + 16.62 = 13.08x - 2.18x^2 + 0.3066x^2
-  // 21.62 = 13.08x - 1.8734x^2
-  // 1.8734x^2 - 13.08x + 21.62 = 0
-  // x = (13.08 ± sqrt(171.09 - 162.0)) / 3.747
-  // = (13.08 ± sqrt(9.09)) / 3.747
-  // = (13.08 ± 3.015) / 3.747
-  // x1 = 16.095/3.747 = 4.30 (outside [0,3])
-  // x2 = 10.065/3.747 = 2.69
-  // y at 2.69: 5 - 0.3066*7.24 = 5 - 2.22 = 2.78 m > 0 ✓
-  // t1 = 2.69/4 = 0.67s, t2 = (3-2.69)/1.5 = 0.207s, Δt = 0.47s
-})();
+// Solution verification
+// Gruppe 1: h1=4, v1=3, h2=2, v2=2, d=2.5
+//   tA=0.90s, tB=0.64s, xA=2.71m, xB=1.22m
+//   Intersection: (2.04m | 1.74m), t1=0.68s, t2=0.23s, Δt=0.45s → SAFE
+//
+// Gruppe 2: h1=2, v1=2.5, h2=2, v2=1.5, d=2 (h1=h2!)
+//   tA=tB=0.64s, xA=1.60m, xB=1.04m
+//   Intersection: (1.25m | 0.77m), t1=0.50s, t2=0.50s, Δt=0.00s → KOLLISION!
+//   Reason: h1=h2 → same free fall → always at same y → collision guaranteed
+//
+// Gruppe 3: h1=5, v1=4, h2=3, v2=1.5, d=3
+//   tA=1.01s, tB=0.78s, xA=4.04m, xB=1.83m
+//   Intersection: (2.69m | 2.79m), t1=0.67s, t2=0.21s, Δt=0.46s → SAFE
 </script>
 
 </body>
