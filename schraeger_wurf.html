@@ -196,6 +196,27 @@
             font-size: 0.85em;
         }
         footer a { color: #2563eb; text-decoration: none; }
+        .preset-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .btn-preset {
+            padding: 8px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            background: #f8fafc;
+            color: #475569;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+            min-width: 160px;
+        }
+        .btn-preset:hover { border-color: #2563eb; color: #2563eb; }
+        .btn-preset.active { border-color: #2563eb; background: #eff6ff; color: #2563eb; }
     </style>
 </head>
 <body>
@@ -208,11 +229,17 @@
     <div class="sim-panel">
         <canvas id="canvas" width="960" height="500"></canvas>
 
+        <div class="preset-row">
+            <button class="btn-preset" id="presetVertical">⬆ Senkrechter Wurf (α = 90°)</button>
+            <button class="btn-preset active" id="presetOpt">🎯 Optimaler Winkel (α = 45°)</button>
+            <button class="btn-preset" id="presetHorizontal">➡ Waagerechter Wurf (α = 0°)</button>
+        </div>
+
         <div class="controls">
             <div class="control-group">
                 <label>Abschusswinkel α</label>
                 <div class="slider-row">
-                    <input type="range" id="angle" min="5" max="85" value="45" step="1">
+                    <input type="range" id="angle" min="0" max="90" value="45" step="1">
                     <span class="slider-value" id="angleVal">45°</span>
                 </div>
             </div>
@@ -221,6 +248,13 @@
                 <div class="slider-row">
                     <input type="range" id="velocity" min="5" max="50" value="25" step="0.5">
                     <span class="slider-value" id="velVal">25 m/s</span>
+                </div>
+            </div>
+            <div class="control-group" style="grid-column: 1 / -1">
+                <label>Abwurfhöhe h₀</label>
+                <div class="slider-row">
+                    <input type="range" id="height" min="0" max="30" value="0" step="0.5">
+                    <span class="slider-value" id="heightVal">0 m</span>
                 </div>
             </div>
         </div>
@@ -280,11 +314,11 @@
             </div>
             <div class="formula-card">
                 <div class="fname">Vertikale Bewegung</div>
-                <div class="fmath">y(t) = v₀ · sin(α) · t − ½ g t²</div>
+                <div class="fmath">y(t) = h₀ + v₀ · sin(α) · t − ½ g t²</div>
             </div>
             <div class="formula-card">
                 <div class="fname">Maximale Höhe</div>
-                <div class="fmath">h = v₀² · sin²(α) / (2g)</div>
+                <div class="fmath">h = h₀ + v₀² · sin²(α) / (2g)</div>
             </div>
             <div class="formula-card">
                 <div class="fname">Wurfweite</div>
@@ -296,7 +330,7 @@
             </div>
             <div class="formula-card">
                 <div class="fname">Sicherheitsparabel</div>
-                <div class="fmath">y = v₀²/(2g) − g·x²/(2v₀²)</div>
+                <div class="fmath">y = h₀ + v₀²/(2g) − g·x²/(2v₀²)</div>
             </div>
         </div>
     </div>
@@ -314,8 +348,10 @@ const g = 9.81;
 // UI elements
 const angleSlider = document.getElementById('angle');
 const velSlider = document.getElementById('velocity');
+const heightSlider = document.getElementById('height');
 const angleVal = document.getElementById('angleVal');
 const velVal = document.getElementById('velVal');
+const heightVal = document.getElementById('heightVal');
 const btnStart = document.getElementById('btnStart');
 const btnPause = document.getElementById('btnPause');
 const btnReset = document.getElementById('btnReset');
@@ -323,6 +359,11 @@ const cbVectors = document.getElementById('showVectors');
 const cbComponents = document.getElementById('showComponents');
 const cbEnvelope = document.getElementById('showEnvelope');
 const cbHeight = document.getElementById('showHeight');
+
+// Presets
+const presetVertical = document.getElementById('presetVertical');
+const presetOpt = document.getElementById('presetOpt');
+const presetHorizontal = document.getElementById('presetHorizontal');
 
 // State
 let animId = null;
@@ -337,22 +378,27 @@ const timeScale = 1; // real-time
 function getParams() {
     const alpha = parseFloat(angleSlider.value) * Math.PI / 180;
     const v0 = parseFloat(velSlider.value);
-    return { alpha, v0 };
+    const h0 = parseFloat(heightSlider.value);
+    return { alpha, v0, h0 };
 }
 
-function calcTrajectory(v0, alpha) {
-    const T = 2 * v0 * Math.sin(alpha) / g;
-    const W = v0 * v0 * Math.sin(2 * alpha) / g;
-    const H = v0 * v0 * Math.sin(alpha) * Math.sin(alpha) / (2 * g);
+function calcTrajectory(v0, alpha, h0) {
+    // Flight time: solve h0 + v0*sin(α)*t - ½gt² = 0
+    const vy0 = v0 * Math.sin(alpha);
+    const disc = vy0 * vy0 + 2 * g * h0;
+    const T = (vy0 + Math.sqrt(disc)) / g;
+    const vx0 = v0 * Math.cos(alpha);
+    const W = vx0 * T;
+    const H = h0 + vy0 * vy0 / (2 * g);
     return { T, W, H };
 }
 
-function pos(t, v0, alpha) {
+function pos(t, v0, alpha, h0) {
     const vx = v0 * Math.cos(alpha);
     const vy = v0 * Math.sin(alpha);
     return {
         x: vx * t,
-        y: vy * t - 0.5 * g * t * t
+        y: h0 + vy * t - 0.5 * g * t * t
     };
 }
 
@@ -370,8 +416,9 @@ function getScale(W, H) {
     const plotW = canvas.width - margin.left - margin.right;
     const plotH = canvas.height - margin.top - margin.bottom;
     // Scale so trajectory fits with some padding
-    const maxX = Math.max(W * 1.15, 10);
-    const maxY = Math.max(H * 1.4, 5);
+    // For vertical throw (W≈0), ensure reasonable x range
+    const maxX = Math.max(W * 1.15, H * 0.5, 10);
+    const maxY = Math.max(H * 1.3, 5);
     const sx = plotW / maxX;
     const sy = plotH / maxY;
     const s = Math.min(sx, sy);
@@ -386,7 +433,7 @@ function toCanvas(px, py, scale) {
 }
 
 // Drawing
-function drawGrid(scale, v0, alpha) {
+function drawGrid(scale, v0, alpha, h0) {
     const { s, maxX, maxY, plotW, plotH } = scale;
 
     // Background
@@ -458,7 +505,7 @@ function drawGrid(scale, v0, alpha) {
     ctx.restore();
 }
 
-function drawEnvelope(scale, v0) {
+function drawEnvelope(scale, v0, h0) {
     if (!cbEnvelope.checked) return;
     const { s, maxX } = scale;
     ctx.save();
@@ -468,7 +515,8 @@ function drawEnvelope(scale, v0) {
     ctx.beginPath();
     let started = false;
     for (let px = 0; px <= maxX; px += maxX / 300) {
-        const py = v0 * v0 / (2 * g) - g * px * px / (2 * v0 * v0);
+        // Sicherheitsparabel: y = h0 + v0²/(2g) - g·x²/(2v0²)
+        const py = h0 + v0 * v0 / (2 * g) - g * px * px / (2 * v0 * v0);
         if (py < 0) break;
         const { cx, cy } = toCanvas(px, py, scale);
         if (!started) { ctx.moveTo(cx, cy); started = true; }
@@ -479,21 +527,37 @@ function drawEnvelope(scale, v0) {
     ctx.restore();
 }
 
-function drawTrajectoryPreview(scale, v0, alpha) {
-    const { T } = calcTrajectory(v0, alpha);
+function drawTrajectoryPreview(scale, v0, alpha, h0) {
+    const { T } = calcTrajectory(v0, alpha, h0);
     ctx.strokeStyle = '#bfdbfe';
     ctx.lineWidth = 1.5;
     ctx.setLineDash([4, 4]);
     ctx.beginPath();
     let started = false;
     for (let t = 0; t <= T; t += T / 200) {
-        const p = pos(t, v0, alpha);
+        const p = pos(t, v0, alpha, h0);
         const { cx, cy } = toCanvas(p.x, Math.max(p.y, 0), scale);
         if (!started) { ctx.moveTo(cx, cy); started = true; }
         else ctx.lineTo(cx, cy);
     }
     ctx.stroke();
     ctx.setLineDash([]);
+}
+
+function drawLaunchPlatform(scale, h0) {
+    if (h0 <= 0) return;
+    const o = toCanvas(0, 0, scale);
+    const top = toCanvas(0, h0, scale);
+    // Platform rectangle
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillRect(o.cx - 12, top.cy, 24, o.cy - top.cy);
+    ctx.fillStyle = '#64748b';
+    ctx.fillRect(o.cx - 16, top.cy - 3, 32, 6);
+    // Height label
+    ctx.font = '11px Segoe UI, sans-serif';
+    ctx.fillStyle = '#64748b';
+    ctx.textAlign = 'left';
+    ctx.fillText('h₀=' + h0.toFixed(1) + ' m', o.cx + 18, (top.cy + o.cy) / 2 + 4);
 }
 
 function drawTrail(scale) {
@@ -532,7 +596,8 @@ function drawArrow(x1, y1, x2, y2, color, width) {
 }
 
 function drawBall(scale, v0, alpha, t) {
-    const p = pos(t, v0, alpha);
+    const { h0 } = getParams();
+    const p = pos(t, v0, alpha, h0);
     const v = vel(t, v0, alpha);
     const { cx, cy } = toCanvas(p.x, Math.max(p.y, 0), scale);
 
@@ -569,11 +634,11 @@ function drawBall(scale, v0, alpha, t) {
     ctx.stroke();
 }
 
-function drawApex(scale, v0, alpha) {
+function drawApex(scale, v0, alpha, h0) {
     if (!cbHeight.checked) return;
-    const { H } = calcTrajectory(v0, alpha);
+    const { H } = calcTrajectory(v0, alpha, h0);
     const tApex = v0 * Math.sin(alpha) / g;
-    const p = pos(tApex, v0, alpha);
+    const p = pos(tApex, v0, alpha, h0);
     const { cx, cy } = toCanvas(p.x, p.y, scale);
 
     // Dashed line to apex
@@ -602,8 +667,8 @@ function drawApex(scale, v0, alpha) {
     ctx.fillText('h = ' + H.toFixed(2) + ' m', cx + 10, cy - 8);
 }
 
-function drawAngleArc(scale, alpha) {
-    const o = toCanvas(0, 0, scale);
+function drawAngleArc(scale, alpha, h0) {
+    const o = toCanvas(0, h0 || 0, scale);
     const r = 40;
     ctx.beginPath();
     ctx.arc(o.cx, o.cy, r, -alpha, 0);
@@ -629,10 +694,13 @@ function drawAngleArc(scale, alpha) {
     ctx.fillText('v₀', o.cx + (arrowLen + 10) * Math.cos(-alpha), o.cy + (arrowLen + 10) * Math.sin(-alpha));
 }
 
-function updateInfo(v0, alpha) {
-    const { T, W, H } = calcTrajectory(v0, alpha);
-    const vImpact = Math.sqrt(v0 * v0); // same as v0 for ground-level launch
-    const impactAngle = alpha * 180 / Math.PI; // symmetric
+function updateInfo(v0, alpha, h0) {
+    const { T, W, H } = calcTrajectory(v0, alpha, h0);
+    // Impact velocity from energy conservation: v² = v₀² + 2gh₀
+    const vImpact = Math.sqrt(v0 * v0 + 2 * g * h0);
+    const vImpactY = v0 * Math.sin(alpha) - g * T; // negative at impact
+    const vImpactX = v0 * Math.cos(alpha);
+    const impactAngle = Math.abs(Math.atan2(Math.abs(vImpactY), vImpactX)) * 180 / Math.PI;
     document.getElementById('infoRange').textContent = W.toFixed(2) + ' m';
     document.getElementById('infoHeight').textContent = H.toFixed(2) + ' m';
     document.getElementById('infoTime').textContent = T.toFixed(2) + ' s';
@@ -641,15 +709,16 @@ function updateInfo(v0, alpha) {
 }
 
 function draw() {
-    const { v0, alpha } = getParams();
-    const { T, W, H } = calcTrajectory(v0, alpha);
+    const { v0, alpha, h0 } = getParams();
+    const { T, W, H } = calcTrajectory(v0, alpha, h0);
     const scale = getScale(W, H);
 
-    drawGrid(scale, v0, alpha);
-    drawEnvelope(scale, v0);
-    drawTrajectoryPreview(scale, v0, alpha);
-    drawAngleArc(scale, alpha);
-    drawApex(scale, v0, alpha);
+    drawGrid(scale, v0, alpha, h0);
+    drawEnvelope(scale, v0, h0);
+    drawTrajectoryPreview(scale, v0, alpha, h0);
+    drawLaunchPlatform(scale, h0);
+    drawAngleArc(scale, alpha, h0);
+    drawApex(scale, v0, alpha, h0);
     drawTrail(scale);
 
     if (running || paused) {
@@ -657,7 +726,7 @@ function draw() {
         drawBall(scale, v0, alpha, t);
     }
 
-    updateInfo(v0, alpha);
+    updateInfo(v0, alpha, h0);
 }
 
 function animate(timestamp) {
@@ -666,11 +735,11 @@ function animate(timestamp) {
     const dt = (timestamp - lastTimestamp) / 1000 * timeScale;
     lastTimestamp = timestamp;
 
-    const { v0, alpha } = getParams();
-    const { T } = calcTrajectory(v0, alpha);
+    const { v0, alpha, h0 } = getParams();
+    const { T } = calcTrajectory(v0, alpha, h0);
 
     tCurrent += dt;
-    const p = pos(tCurrent, v0, alpha);
+    const p = pos(tCurrent, v0, alpha, h0);
     if (p.y >= 0 && tCurrent <= T) {
         trail.push({ x: p.x, y: p.y });
     }
@@ -679,7 +748,7 @@ function animate(timestamp) {
 
     if (tCurrent >= T) {
         // Final position
-        const pFinal = pos(T, v0, alpha);
+        const pFinal = pos(T, v0, alpha, h0);
         trail.push({ x: pFinal.x, y: 0 });
         running = false;
         draw();
@@ -725,13 +794,43 @@ function reset() {
     draw();
 }
 
+// Preset handling
+function setPreset(angle, h0) {
+    angleSlider.value = angle;
+    angleVal.textContent = angle + '°';
+    if (h0 !== undefined) {
+        heightSlider.value = h0;
+        heightVal.textContent = h0.toFixed(1) + ' m';
+    }
+    updatePresetButtons();
+    reset();
+    draw();
+}
+
+function updatePresetButtons() {
+    const a = parseInt(angleSlider.value);
+    document.querySelectorAll('.btn-preset').forEach(b => b.classList.remove('active'));
+    if (a === 90) presetVertical.classList.add('active');
+    else if (a === 45) presetOpt.classList.add('active');
+    else if (a === 0) presetHorizontal.classList.add('active');
+}
+
+presetVertical.addEventListener('click', () => setPreset(90, 0));
+presetOpt.addEventListener('click', () => setPreset(45, 0));
+presetHorizontal.addEventListener('click', () => setPreset(0, 10));
+
 // Events
 angleSlider.addEventListener('input', () => {
     angleVal.textContent = angleSlider.value + '°';
+    updatePresetButtons();
     if (!running) { reset(); draw(); }
 });
 velSlider.addEventListener('input', () => {
     velVal.textContent = parseFloat(velSlider.value).toFixed(1) + ' m/s';
+    if (!running) { reset(); draw(); }
+});
+heightSlider.addEventListener('input', () => {
+    heightVal.textContent = parseFloat(heightSlider.value).toFixed(1) + ' m';
     if (!running) { reset(); draw(); }
 });
 btnStart.addEventListener('click', startAnim);
