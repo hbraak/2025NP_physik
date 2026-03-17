@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treffer oder Unerreichbar? — Sicherheitsparabel entdecken</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 10px;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        header {
+            text-align: center;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        header h1 { font-size: 1.6em; color: #38bdf8; }
+        header .subtitle { color: #94a3b8; font-size: 0.95em; margin-top: 4px; }
+
+        .game-area {
+            background: #1e293b;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #334155;
+        }
+        canvas {
+            width: 100%;
+            display: block;
+            border-radius: 10px;
+            cursor: crosshair;
+        }
+
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .hud-item {
+            background: #334155;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .hud-item .label { font-size: 0.75em; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+        .hud-item .value { font-size: 1.3em; font-weight: 700; color: #38bdf8; }
+        .hud-item .value.gold { color: #fbbf24; }
+        .hud-item .value.green { color: #4ade80; }
+        .hud-item .value.red { color: #f87171; }
+
+        .controls-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+        .control-group {
+            flex: 1;
+            min-width: 200px;
+            background: #334155;
+            padding: 10px 15px;
+            border-radius: 8px;
+        }
+        .control-group label {
+            display: block;
+            font-size: 0.85em;
+            color: #94a3b8;
+            margin-bottom: 6px;
+        }
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        input[type="range"] {
+            flex: 1;
+            height: 6px;
+            -webkit-appearance: none;
+            background: #475569;
+            border-radius: 3px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px; height: 22px;
+            background: #38bdf8;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .slider-value {
+            min-width: 50px;
+            text-align: right;
+            font-weight: 700;
+            color: #38bdf8;
+            font-size: 1.1em;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .btn-fire { background: #dc2626; color: white; font-size: 1.1em; min-width: 120px; }
+        .btn-fire:hover { background: #ef4444; transform: scale(1.03); }
+        .btn-fire:disabled { background: #475569; color: #94a3b8; transform: none; cursor: default; }
+        .btn-predict { padding: 10px 16px; font-size: 0.95em; border: 2px solid; }
+        .btn-predict.yes { border-color: #4ade80; color: #4ade80; background: transparent; }
+        .btn-predict.yes:hover { background: #4ade8022; }
+        .btn-predict.no { border-color: #f87171; color: #f87171; background: transparent; }
+        .btn-predict.no:hover { background: #f8717122; }
+        .btn-predict.selected { color: white; }
+        .btn-predict.yes.selected { background: #4ade80; color: #0f172a; }
+        .btn-predict.no.selected { background: #f87171; color: #0f172a; }
+        .btn-reset { background: #475569; color: #e2e8f0; }
+        .btn-reset:hover { background: #64748b; }
+        .btn-skip { background: transparent; color: #94a3b8; border: 1px solid #475569; }
+        .btn-skip:hover { border-color: #94a3b8; }
+
+        .message-box {
+            margin-top: 12px;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 1em;
+            text-align: center;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .msg-info { background: #1e3a5f; border: 1px solid #2563eb; color: #93c5fd; }
+        .msg-success { background: #14532d; border: 1px solid #22c55e; color: #86efac; }
+        .msg-fail { background: #450a0a; border: 1px solid #dc2626; color: #fca5a5; }
+        .msg-reveal { background: #422006; border: 1px solid #f59e0b; color: #fde68a; }
+        .msg-bonus { background: #3b0764; border: 1px solid #a855f7; color: #d8b4fe; }
+
+        .phase-panel {
+            background: #1e293b;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid #334155;
+        }
+        .phase-panel h2 { color: #fbbf24; font-size: 1.2em; margin-bottom: 10px; }
+        .phase-panel p { color: #cbd5e1; line-height: 1.6; margin-bottom: 8px; }
+        .phase-panel .hint { color: #94a3b8; font-style: italic; font-size: 0.9em; }
+
+        .reveal-section {
+            display: none;
+            background: #1e293b;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid #f59e0b;
+        }
+        .reveal-section h2 { color: #fbbf24; font-size: 1.2em; margin-bottom: 10px; }
+        .reveal-section .formula {
+            background: #334155;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-family: 'Times New Roman', serif;
+            font-size: 1.2em;
+            text-align: center;
+            margin: 10px 0;
+            color: #fde68a;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #334155;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        footer {
+            text-align: center;
+            padding: 12px;
+            color: #475569;
+            font-size: 0.8em;
+        }
+        footer a { color: #38bdf8; text-decoration: none; }
+
+        @media (max-width: 600px) {
+            .hud { gap: 6px; }
+            .hud-item { padding: 6px 10px; flex: 1; min-width: 70px; }
+            .hud-item .value { font-size: 1em; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>🎯 Treffer oder Unerreichbar?</h1>
+        <div class="subtitle">Entdecken Sie die Grenzen des schrägen Wurfs</div>
+    </header>
+
+    <div class="game-area">
+        <div class="hud">
+            <div class="hud-item">
+                <div class="label">Runde</div>
+                <div class="value" id="hudRound">1 / 10</div>
+            </div>
+            <div class="hud-item">
+                <div class="label">Punkte</div>
+                <div class="value gold" id="hudScore">0</div>
+            </div>
+            <div class="hud-item">
+                <div class="label">Treffer</div>
+                <div class="value green" id="hudHits">0</div>
+            </div>
+            <div class="hud-item">
+                <div class="label">Fehlschüsse</div>
+                <div class="value red" id="hudMisses">0</div>
+            </div>
+            <div class="hud-item">
+                <div class="label">v₀ (fest)</div>
+                <div class="value" id="hudV0">25 m/s</div>
+            </div>
+        </div>
+
+        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:10%"></div></div>
+
+        <canvas id="canvas" width="960" height="480"></canvas>
+
+        <div class="controls-row">
+            <div class="control-group">
+                <label>Abschusswinkel α wählen:</label>
+                <div class="slider-row">
+                    <input type="range" id="angle" min="0" max="90" value="45" step="1">
+                    <span class="slider-value" id="angleVal">45°</span>
+                </div>
+            </div>
+            <div class="btn-row" id="predictRow" style="display:none">
+                <button class="btn-predict yes" id="btnPredYes">✓ Treffbar</button>
+                <button class="btn-predict no" id="btnPredNo">✗ Unerreichbar</button>
+            </div>
+            <button class="btn-fire" id="btnFire">🔥 Feuer!</button>
+        </div>
+
+        <div class="message-box msg-info" id="msgBox">
+            Ziel markiert! Wählen Sie den Winkel und feuern Sie.
+        </div>
+    </div>
+
+    <div class="phase-panel" id="phasePanel">
+        <h2 id="phaseTitle">Phase 1: Zielübungen</h2>
+        <p id="phaseDesc">Versuchen Sie, die Ziele zu treffen. Stellen Sie den Winkel ein und feuern Sie! Die Startgeschwindigkeit v₀ = 25 m/s ist fest.</p>
+        <p class="hint" id="phaseHint">💡 Tipp: Manche Ziele könnten unerreichbar sein...</p>
+    </div>
+
+    <div class="reveal-section" id="revealSection">
+        <h2>🔓 Die Sicherheitsparabel</h2>
+        <p>Sie haben entdeckt: Es gibt eine <strong>Grenze</strong>, über die hinaus kein Winkel reicht! Diese Grenze heißt <strong>Sicherheitsparabel</strong> (oder Einhüllende).</p>
+        <div class="formula">y = v₀² / (2g) − g · x² / (2v₀²)</div>
+        <p>Jeder Punkt <strong>unterhalb</strong> dieser Kurve kann mit mindestens einem Winkel getroffen werden. Punkte darüber? <strong>Unerreichbar</strong> — egal welchen Winkel Sie wählen.</p>
+        <p>Bei v₀ = 25 m/s ist die maximale Höhe <strong id="revealMaxH">—</strong> (senkrecht nach oben) und die maximale Weite <strong id="revealMaxW">—</strong> (bei 45°).</p>
+    </div>
+
+    <footer>
+        Lore-Lorentz-Schule | Physik-LK 11NP | 2025 · <a href="schraeger_wurf.html">→ Simulation</a> · <a href="index.html">← Übersicht</a>
+    </footer>
+</div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const G = 9.81;
+const V0 = 25; // fixed launch speed
+
+// --- Game State ---
+const TOTAL_ROUNDS = 10;
+const PHASE2_START = 6; // prediction mode starts at round 6
+let round = 1;
+let score = 0;
+let hits = 0;
+let misses = 0;
+let phase = 1;
+let shotsFiredThisRound = 0;
+const MAX_SHOTS_PER_ROUND = 3;
+let prediction = null; // null, 'yes', 'no'
+let roundOver = false;
+let allTrails = []; // persist old trails
+let currentTrail = [];
+let animRunning = false;
+let gameOver = false;
+
+// Target
+let target = { x: 0, y: 0, reachable: false };
+
+// Computed envelope
+const maxH_env = V0 * V0 / (2 * G);
+const maxW_env = V0 * V0 / G;
+
+// --- Physics ---
+function isReachable(x, y) {
+    return y <= V0 * V0 / (2 * G) - G * x * x / (2 * V0 * V0) + 0.01;
+}
+
+function envelopeY(x) {
+    return V0 * V0 / (2 * G) - G * x * x / (2 * V0 * V0);
+}
+
+function flightTime(alpha) {
+    return 2 * V0 * Math.sin(alpha) / G;
+}
+
+function posAt(t, alpha) {
+    return {
+        x: V0 * Math.cos(alpha) * t,
+        y: V0 * Math.sin(alpha) * t - 0.5 * G * t * t
+    };
+}
+
+function closestApproach(alpha, tx, ty) {
+    const T = flightTime(alpha);
+    let minDist = Infinity;
+    for (let t = 0; t <= T; t += T / 500) {
+        const p = posAt(t, alpha);
+        const d = Math.sqrt((p.x - tx) ** 2 + (p.y - ty) ** 2);
+        if (d < minDist) minDist = d;
+    }
+    return minDist;
+}
+
+// --- Coordinate System ---
+const margin = { left: 55, right: 25, top: 25, bottom: 45 };
+let scale = {};
+
+function calcScale() {
+    const plotW = canvas.width - margin.left - margin.right;
+    const plotH = canvas.height - margin.top - margin.bottom;
+    const maxX = maxW_env * 1.1;
+    const maxY = maxH_env * 1.3;
+    const sx = plotW / maxX;
+    const sy = plotH / maxY;
+    const s = Math.min(sx, sy);
+    scale = { s, maxX, maxY, plotW, plotH };
+}
+
+function toC(px, py) {
+    return {
+        cx: margin.left + px * scale.s,
+        cy: canvas.height - margin.bottom - py * scale.s
+    };
+}
+
+// --- Drawing ---
+function drawBackground() {
+    // Dark gradient sky
+    const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    grad.addColorStop(0, '#0f172a');
+    grad.addColorStop(1, '#1e293b');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Ground
+    const ground = toC(0, 0);
+    ctx.fillStyle = '#334155';
+    ctx.fillRect(0, ground.cy, canvas.width, canvas.height - ground.cy);
+
+    // Grid
+    ctx.strokeStyle = '#1e293b88';
+    ctx.lineWidth = 1;
+
+    function niceStep(range) {
+        const rough = range / 6;
+        const mag = Math.pow(10, Math.floor(Math.log10(rough)));
+        const norm = rough / mag;
+        if (norm < 1.5) return mag;
+        if (norm < 3.5) return 2 * mag;
+        if (norm < 7.5) return 5 * mag;
+        return 10 * mag;
+    }
+    const stepX = niceStep(scale.maxX);
+    const stepY = niceStep(scale.maxY);
+
+    ctx.font = '10px Segoe UI, sans-serif';
+    ctx.fillStyle = '#475569';
+    ctx.textAlign = 'center';
+    for (let x = 0; x <= scale.maxX; x += stepX) {
+        const c = toC(x, 0);
+        ctx.beginPath(); ctx.moveTo(c.cx, margin.top); ctx.lineTo(c.cx, ground.cy); ctx.stroke();
+        ctx.fillText(x.toFixed(0) + ' m', c.cx, canvas.height - margin.bottom + 15);
+    }
+    ctx.textAlign = 'right';
+    for (let y = stepY; y <= scale.maxY; y += stepY) {
+        const c = toC(0, y);
+        ctx.beginPath(); ctx.moveTo(margin.left, c.cy); ctx.lineTo(margin.left + scale.plotW, c.cy); ctx.stroke();
+        ctx.fillText(y.toFixed(0), margin.left - 6, c.cy + 3);
+    }
+}
+
+function drawEnvelope(revealed) {
+    if (!revealed && phase < 3) return;
+    ctx.save();
+    ctx.setLineDash([6, 4]);
+    ctx.strokeStyle = '#fbbf2488';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    let started = false;
+    for (let px = 0; px <= scale.maxX; px += 1) {
+        const py = envelopeY(px);
+        if (py < 0) break;
+        const c = toC(px, py);
+        if (!started) { ctx.moveTo(c.cx, c.cy); started = true; }
+        else ctx.lineTo(c.cx, c.cy);
+    }
+    ctx.stroke();
+
+    // Fill unreachable zone lightly
+    ctx.lineTo(toC(0, 0).cx + scale.plotW, toC(0, scale.maxY).cy);
+    ctx.lineTo(toC(0, scale.maxY).cx, toC(0, scale.maxY).cy);
+    ctx.closePath();
+    ctx.fillStyle = '#dc262610';
+    ctx.fill();
+    ctx.setLineDash([]);
+    ctx.restore();
+}
+
+function drawCannon(alpha) {
+    const o = toC(0, 0);
+    const len = 30;
+    const ex = o.cx + len * Math.cos(-alpha);
+    const ey = o.cy + len * Math.sin(-alpha);
+
+    // Base
+    ctx.beginPath();
+    ctx.arc(o.cx, o.cy, 10, 0, Math.PI, true);
+    ctx.fillStyle = '#64748b';
+    ctx.fill();
+
+    // Barrel
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 6;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(o.cx, o.cy);
+    ctx.lineTo(ex, ey);
+    ctx.stroke();
+    ctx.lineCap = 'butt';
+
+    // Angle arc
+    if (alpha > 0.05) {
+        ctx.beginPath();
+        ctx.arc(o.cx, o.cy, 22, -alpha, 0);
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        const mid = -alpha / 2;
+        ctx.font = '11px Segoe UI, sans-serif';
+        ctx.fillStyle = '#cbd5e1';
+        ctx.textAlign = 'left';
+        ctx.fillText(Math.round(alpha * 180 / Math.PI) + '°', o.cx + 26 * Math.cos(mid), o.cy + 26 * Math.sin(mid) + 4);
+    }
+}
+
+function drawTarget() {
+    const c = toC(target.x, target.y);
+    const r = 10;
+    const time = Date.now() / 500;
+    const pulse = 1 + 0.15 * Math.sin(time * 3);
+
+    // Glow
+    ctx.beginPath();
+    ctx.arc(c.cx, c.cy, r * pulse + 6, 0, 2 * Math.PI);
+    ctx.fillStyle = '#f5920b20';
+    ctx.fill();
+
+    // Outer ring
+    ctx.beginPath();
+    ctx.arc(c.cx, c.cy, r * pulse, 0, 2 * Math.PI);
+    ctx.strokeStyle = '#fbbf24';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // Inner
+    ctx.beginPath();
+    ctx.arc(c.cx, c.cy, 3, 0, 2 * Math.PI);
+    ctx.fillStyle = '#fbbf24';
+    ctx.fill();
+
+    // Crosshair
+    ctx.strokeStyle = '#fbbf2488';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(c.cx - r - 5, c.cy); ctx.lineTo(c.cx + r + 5, c.cy);
+    ctx.moveTo(c.cx, c.cy - r - 5); ctx.lineTo(c.cx, c.cy + r + 5);
+    ctx.stroke();
+
+    // Coordinates
+    ctx.font = '11px Segoe UI, sans-serif';
+    ctx.fillStyle = '#fbbf24';
+    ctx.textAlign = 'left';
+    ctx.fillText(`(${target.x.toFixed(0)} m, ${target.y.toFixed(1)} m)`, c.cx + r + 8, c.cy - 4);
+}
+
+function drawOldTrails() {
+    for (const trail of allTrails) {
+        if (trail.points.length < 2) continue;
+        ctx.strokeStyle = trail.hit ? '#4ade8044' : '#f8717144';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        const f = toC(trail.points[0].x, trail.points[0].y);
+        ctx.moveTo(f.cx, f.cy);
+        for (let i = 1; i < trail.points.length; i++) {
+            const p = toC(trail.points[i].x, trail.points[i].y);
+            ctx.lineTo(p.cx, p.cy);
+        }
+        ctx.stroke();
+    }
+}
+
+function drawCurrentTrail() {
+    if (currentTrail.length < 2) return;
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 2.5;
+    ctx.shadowColor = '#38bdf8';
+    ctx.shadowBlur = 6;
+    ctx.beginPath();
+    const f = toC(currentTrail[0].x, currentTrail[0].y);
+    ctx.moveTo(f.cx, f.cy);
+    for (let i = 1; i < currentTrail.length; i++) {
+        const p = toC(currentTrail[i].x, currentTrail[i].y);
+        ctx.lineTo(p.cx, p.cy);
+    }
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Ball at end
+    const last = currentTrail[currentTrail.length - 1];
+    const c = toC(last.x, last.y);
+    ctx.beginPath();
+    ctx.arc(c.cx, c.cy, 5, 0, 2 * Math.PI);
+    ctx.fillStyle = '#38bdf8';
+    ctx.fill();
+}
+
+function drawHitMarker(hit) {
+    const c = toC(target.x, target.y);
+    ctx.font = 'bold 20px Segoe UI, sans-serif';
+    ctx.textAlign = 'center';
+    if (hit) {
+        ctx.fillStyle = '#4ade80';
+        ctx.fillText('✓', c.cx, c.cy - 18);
+    }
+}
+
+function render() {
+    calcScale();
+    drawBackground();
+    drawEnvelope(gameOver);
+    drawOldTrails();
+    if (!gameOver) {
+        drawTarget();
+    }
+    drawCurrentTrail();
+    const alpha = parseFloat(document.getElementById('angle').value) * Math.PI / 180;
+    drawCannon(alpha);
+}
+
+// --- Target Generation ---
+function generateTarget() {
+    // Mix of reachable and unreachable targets
+    // Guarantee some unreachable ones
+    let x, y, reachable;
+
+    if (round <= 3) {
+        // Phase 1 early: mostly easy reachable targets
+        x = 10 + Math.random() * (maxW_env * 0.6);
+        const maxY_at_x = envelopeY(x);
+        y = Math.random() * maxY_at_x * 0.7;
+        reachable = true;
+    } else if (round === 4 || round === 7) {
+        // Unreachable! Place above envelope
+        x = 10 + Math.random() * (maxW_env * 0.5);
+        const envY = envelopeY(x);
+        y = envY + 2 + Math.random() * 5;
+        reachable = false;
+    } else if (round === 5 || round === 8) {
+        // Near the boundary - tricky
+        x = 10 + Math.random() * (maxW_env * 0.7);
+        const envY = envelopeY(x);
+        // Randomly above or below, close
+        if (Math.random() < 0.5) {
+            y = envY - 0.5 - Math.random() * 2;
+            reachable = true;
+        } else {
+            y = envY + 0.5 + Math.random() * 2;
+            reachable = false;
+        }
+    } else if (round === 9) {
+        // Way out of range (far away)
+        x = maxW_env * 0.8 + Math.random() * maxW_env * 0.3;
+        y = 3 + Math.random() * 5;
+        reachable = isReachable(x, y);
+    } else if (round === 10) {
+        // Right at the apex — near top of envelope
+        x = 2 + Math.random() * 8;
+        const envY = envelopeY(x);
+        y = envY + (Math.random() < 0.5 ? -1 : 2);
+        reachable = isReachable(x, y);
+    } else {
+        // Mixed
+        x = 5 + Math.random() * (maxW_env * 0.85);
+        const envY = envelopeY(x);
+        if (Math.random() < 0.5) {
+            y = Math.random() * envY * 0.8;
+            reachable = true;
+        } else {
+            y = envY + 1 + Math.random() * 5;
+            reachable = false;
+        }
+    }
+
+    y = Math.max(y, 0.5);
+    target = { x, y, reachable: isReachable(x, y) };
+}
+
+// --- Animation ---
+let animAlpha = 0;
+let animT = 0;
+let animTmax = 0;
+let animTimestamp = null;
+
+function fireShot() {
+    if (animRunning || roundOver || gameOver) return;
+    if (phase >= 2 && prediction === null) {
+        showMsg('Bitte erst vorhersagen: Treffbar oder Unerreichbar?', 'info');
+        return;
+    }
+    if (shotsFiredThisRound >= MAX_SHOTS_PER_ROUND) return;
+
+    shotsFiredThisRound++;
+    animAlpha = parseFloat(document.getElementById('angle').value) * Math.PI / 180;
+    animT = 0;
+    animTmax = flightTime(animAlpha);
+    if (animTmax < 0.1) animTmax = 0.1;
+    currentTrail = [];
+    animTimestamp = null;
+    animRunning = true;
+    document.getElementById('btnFire').disabled = true;
+    requestAnimationFrame(animStep);
+}
+
+function animStep(ts) {
+    if (!animRunning) return;
+    if (animTimestamp === null) animTimestamp = ts;
+    const dt = (ts - animTimestamp) / 1000;
+    animTimestamp = ts;
+
+    animT += dt;
+    const p = posAt(animT, animAlpha);
+    if (p.y >= 0 && animT <= animTmax) {
+        currentTrail.push({ x: p.x, y: p.y });
+    }
+
+    render();
+
+    if (animT >= animTmax || p.y < 0) {
+        // End of flight
+        const pFinal = posAt(Math.min(animT, animTmax), animAlpha);
+        currentTrail.push({ x: pFinal.x, y: Math.max(pFinal.y, 0) });
+        animRunning = false;
+
+        // Check hit (within ~2m radius)
+        const dist = closestApproach(animAlpha, target.x, target.y);
+        const hitThreshold = Math.max(2, Math.sqrt(target.x * target.x + target.y * target.y) * 0.04);
+        const isHit = dist < hitThreshold;
+
+        // Save trail
+        allTrails.push({ points: [...currentTrail], hit: isHit });
+
+        evaluateShot(isHit, dist);
+        return;
+    }
+
+    requestAnimationFrame(animStep);
+}
+
+function evaluateShot(isHit, dist) {
+    let roundScore = 0;
+    let msg = '';
+    let msgType = 'info';
+
+    if (isHit) {
+        hits++;
+        roundScore += 100;
+        msg = `🎯 Treffer! (+100 Punkte)`;
+        msgType = 'success';
+
+        // Prediction bonus
+        if (phase >= 2 && prediction === 'yes') {
+            roundScore += 50;
+            msg += ` Richtig vorhergesagt! (+50 Bonus)`;
+            msgType = 'bonus';
+        }
+        roundOver = true;
+    } else {
+        if (shotsFiredThisRound >= MAX_SHOTS_PER_ROUND) {
+            misses++;
+            if (!target.reachable) {
+                msg = `Alle ${MAX_SHOTS_PER_ROUND} Schüsse verbraucht. Dieses Ziel war tatsächlich unerreichbar! 🤔`;
+                msgType = 'reveal';
+                if (phase >= 2 && prediction === 'no') {
+                    roundScore += 150;
+                    msg += ` Richtig erkannt! (+150 Bonus)`;
+                    msgType = 'bonus';
+                }
+            } else {
+                msg = `Alle ${MAX_SHOTS_PER_ROUND} Schüsse verbraucht. Das Ziel war treffbar — nächstes Mal! (Nächster Versuch: ~${optimalAngle().toFixed(0)}° wäre gut gewesen)`;
+                msgType = 'fail';
+                if (phase >= 2 && prediction === 'yes') {
+                    roundScore += 25; // at least they knew it was reachable
+                }
+            }
+            roundOver = true;
+        } else {
+            const remaining = MAX_SHOTS_PER_ROUND - shotsFiredThisRound;
+            msg = `Daneben! (Abstand: ${dist.toFixed(1)} m) — Noch ${remaining} Schuss übrig.`;
+            msgType = 'fail';
+            document.getElementById('btnFire').disabled = false;
+            render();
+            showMsg(msg, msgType);
+            return;
+        }
+    }
+
+    score += roundScore;
+    updateHUD();
+    showMsg(msg, msgType);
+    render();
+
+    if (roundOver) {
+        document.getElementById('btnFire').textContent = round < TOTAL_ROUNDS ? '→ Nächste Runde' : '🏆 Ergebnis';
+        document.getElementById('btnFire').disabled = false;
+        document.getElementById('btnFire').onclick = nextRound;
+    }
+}
+
+function optimalAngle() {
+    // Find best angle for this target
+    let bestAngle = 45;
+    let bestDist = Infinity;
+    for (let a = 1; a <= 89; a++) {
+        const alpha = a * Math.PI / 180;
+        const d = closestApproach(alpha, target.x, target.y);
+        if (d < bestDist) { bestDist = d; bestAngle = a; }
+    }
+    return bestAngle;
+}
+
+function nextRound() {
+    if (round >= TOTAL_ROUNDS) {
+        endGame();
+        return;
+    }
+    round++;
+    shotsFiredThisRound = 0;
+    prediction = null;
+    roundOver = false;
+    currentTrail = [];
+
+    // Phase transition
+    if (round >= PHASE2_START && phase < 2) {
+        phase = 2;
+        document.getElementById('phaseTitle').textContent = 'Phase 2: Vorhersagen';
+        document.getElementById('phaseDesc').textContent = 'Jetzt wird es ernst: Sagen Sie VOR dem Schuss vorher, ob das Ziel treffbar ist oder nicht! Richtige Vorhersagen geben Bonuspunkte.';
+        document.getElementById('phaseHint').textContent = '💡 Erkennen Sie das Muster? Welche Ziele sind erreichbar, welche nicht?';
+        document.getElementById('predictRow').style.display = 'flex';
+    }
+
+    generateTarget();
+    updateHUD();
+    resetPredictionButtons();
+
+    document.getElementById('btnFire').textContent = '🔥 Feuer!';
+    document.getElementById('btnFire').onclick = fireShot;
+    document.getElementById('btnFire').disabled = false;
+
+    showMsg(phase >= 2
+        ? 'Neues Ziel! Vorhersage: Treffbar oder unerreichbar? Dann feuern.'
+        : 'Neues Ziel! Wählen Sie den Winkel und feuern Sie.', 'info');
+
+    render();
+}
+
+function endGame() {
+    gameOver = true;
+    phase = 3;
+    document.getElementById('revealSection').style.display = 'block';
+    document.getElementById('revealMaxH').textContent = maxH_env.toFixed(1) + ' m';
+    document.getElementById('revealMaxW').textContent = maxW_env.toFixed(1) + ' m';
+
+    document.getElementById('phaseTitle').textContent = '🏆 Spiel beendet!';
+    let rating = '';
+    if (score >= 1000) rating = 'Hervorragend! Sie haben die Physik im Griff! 🌟';
+    else if (score >= 600) rating = 'Gut gemacht! Sie haben das Prinzip verstanden. 👍';
+    else rating = 'Übung macht den Meister — probieren Sie es nochmal! 💪';
+    document.getElementById('phaseDesc').textContent = `Endpunktzahl: ${score} Punkte | ${hits} Treffer | ${rating}`;
+    document.getElementById('phaseHint').textContent = 'Die goldene gestrichelte Kurve zeigt die Sicherheitsparabel — die Grenze des Erreichbaren.';
+
+    document.getElementById('btnFire').textContent = '🔄 Nochmal spielen';
+    document.getElementById('btnFire').disabled = false;
+    document.getElementById('btnFire').onclick = resetGame;
+
+    render();
+    showMsg('Die Sicherheitsparabel ist jetzt sichtbar! Sehen Sie, welche Ziele erreichbar waren?', 'reveal');
+}
+
+function resetGame() {
+    round = 1; score = 0; hits = 0; misses = 0; phase = 1;
+    shotsFiredThisRound = 0; prediction = null; roundOver = false;
+    allTrails = []; currentTrail = []; gameOver = false;
+
+    document.getElementById('phaseTitle').textContent = 'Phase 1: Zielübungen';
+    document.getElementById('phaseDesc').textContent = 'Versuchen Sie, die Ziele zu treffen. Stellen Sie den Winkel ein und feuern Sie! Die Startgeschwindigkeit v₀ = 25 m/s ist fest.';
+    document.getElementById('phaseHint').textContent = '💡 Tipp: Manche Ziele könnten unerreichbar sein...';
+    document.getElementById('predictRow').style.display = 'none';
+    document.getElementById('revealSection').style.display = 'none';
+
+    document.getElementById('btnFire').textContent = '🔥 Feuer!';
+    document.getElementById('btnFire').onclick = fireShot;
+    document.getElementById('btnFire').disabled = false;
+
+    generateTarget();
+    updateHUD();
+    resetPredictionButtons();
+    showMsg('Neues Spiel! Ziel markiert — feuern Sie!', 'info');
+    render();
+}
+
+// --- UI Updates ---
+function updateHUD() {
+    document.getElementById('hudRound').textContent = `${round} / ${TOTAL_ROUNDS}`;
+    document.getElementById('hudScore').textContent = score;
+    document.getElementById('hudHits').textContent = hits;
+    document.getElementById('hudMisses').textContent = misses;
+    document.getElementById('progressFill').style.width = `${(round / TOTAL_ROUNDS) * 100}%`;
+}
+
+function showMsg(text, type) {
+    const box = document.getElementById('msgBox');
+    box.textContent = text;
+    box.className = 'message-box msg-' + (type === 'bonus' ? 'reveal' : type);
+}
+
+function resetPredictionButtons() {
+    prediction = null;
+    document.querySelectorAll('.btn-predict').forEach(b => b.classList.remove('selected'));
+}
+
+// Prediction buttons
+document.getElementById('btnPredYes').addEventListener('click', () => {
+    if (roundOver) return;
+    prediction = 'yes';
+    document.getElementById('btnPredYes').classList.add('selected');
+    document.getElementById('btnPredNo').classList.remove('selected');
+});
+document.getElementById('btnPredNo').addEventListener('click', () => {
+    if (roundOver) return;
+    prediction = 'no';
+    document.getElementById('btnPredNo').classList.add('selected');
+    document.getElementById('btnPredYes').classList.remove('selected');
+});
+
+// Angle slider
+document.getElementById('angle').addEventListener('input', function() {
+    document.getElementById('angleVal').textContent = this.value + '°';
+    if (!animRunning) render();
+});
+
+// Fire button
+document.getElementById('btnFire').onclick = fireShot;
+
+// --- Canvas Resize ---
+function resizeCanvas() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    const w = Math.min(960, rect.width - 30);
+    canvas.width = w;
+    canvas.height = Math.round(w * 0.5);
+    calcScale();
+    render();
+}
+window.addEventListener('resize', resizeCanvas);
+
+// --- Pulsing target animation ---
+function pulseLoop() {
+    if (!animRunning && !gameOver) render();
+    requestAnimationFrame(pulseLoop);
+}
+
+// --- Init ---
+resizeCanvas();
+generateTarget();
+updateHUD();
+render();
+pulseLoop();
+</script>
+</body>
+</html>
