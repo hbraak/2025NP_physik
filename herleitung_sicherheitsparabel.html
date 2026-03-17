@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herleitung der Sicherheitsparabel — Schritt für Schritt</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding: 15px;
+            line-height: 1.7;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        header {
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        header h1 { font-size: 1.7em; color: #2563eb; margin-bottom: 5px; }
+        header .subtitle { color: #64748b; font-size: 0.95em; }
+
+        .step {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            border-left: 4px solid #2563eb;
+            position: relative;
+        }
+        .step.locked {
+            border-left-color: #cbd5e1;
+        }
+        .step-number {
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #2563eb;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85em;
+        }
+        .step.locked .step-number { background: #cbd5e1; }
+        .step h2 {
+            font-size: 1.15em;
+            color: #1e293b;
+            margin-bottom: 12px;
+            padding-left: 25px;
+        }
+        .step p { color: #475569; margin-bottom: 10px; }
+
+        .math-box {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin: 12px 0;
+            text-align: center;
+            font-size: 1.1em;
+            overflow-x: auto;
+        }
+        .math-box.highlight {
+            background: #fef3c7;
+            border-color: #fbbf24;
+        }
+        .math-box.result {
+            background: #f0fdf4;
+            border-color: #4ade80;
+            border-width: 2px;
+        }
+
+        .task-box {
+            background: #fef9c3;
+            border: 1px solid #facc15;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin: 12px 0;
+        }
+        .task-box .task-label {
+            font-weight: 700;
+            color: #a16207;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .hint-card {
+            margin: 12px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        .hint-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: #f8fafc;
+            cursor: pointer;
+            font-weight: 600;
+            color: #475569;
+            font-size: 0.9em;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .hint-toggle:hover { background: #f1f5f9; }
+        .hint-toggle .arrow { transition: transform 0.3s; }
+        .hint-toggle.open .arrow { transform: rotate(90deg); }
+        .hint-content {
+            display: none;
+            padding: 15px 20px;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+        }
+        .hint-content.visible { display: block; }
+
+        .step-reveal {
+            text-align: center;
+            margin: 8px 0;
+        }
+        .btn-reveal {
+            padding: 8px 20px;
+            border: 2px solid #2563eb;
+            border-radius: 8px;
+            background: transparent;
+            color: #2563eb;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.2s;
+        }
+        .btn-reveal:hover { background: #2563eb; color: white; }
+
+        .hidden-content { display: none; }
+        .hidden-content.visible { display: block; }
+
+        .context-box {
+            background: #faf5ff;
+            border: 1px solid #d8b4fe;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin: 12px 0;
+        }
+        .context-box .ctx-label {
+            font-weight: 700;
+            color: #7c3aed;
+            font-size: 0.85em;
+            margin-bottom: 6px;
+        }
+
+        .summary-box {
+            background: #f0fdf4;
+            border: 2px solid #4ade80;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .summary-box h3 { color: #166534; margin-bottom: 10px; }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            color: #94a3b8;
+            font-size: 0.85em;
+        }
+        footer a { color: #2563eb; text-decoration: none; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>📐 Herleitung der Sicherheitsparabel</h1>
+        <div class="subtitle">Schritt für Schritt — mit Aufgaben und Hilfekarten</div>
+    </header>
+
+    <!-- STEP 1: Ausgangspunkt -->
+    <div class="step" id="step1">
+        <div class="step-number">1</div>
+        <h2>Ausgangspunkt: Die Bahngleichung</h2>
+        <p>Beim schrägen Wurf kennen Sie die Bewegungsgleichungen:</p>
+        <div class="math-box">
+            $$x(t) = v_0 \cos\alpha \cdot t \qquad y(t) = v_0 \sin\alpha \cdot t - \tfrac{1}{2}g\,t^2$$
+        </div>
+        <p>Eliminiert man die Zeit $t$, erhält man die <strong>Bahngleichung</strong> $y(x)$:</p>
+
+        <div class="task-box">
+            <div class="task-label">✏️ Aufgabe</div>
+            Lösen Sie $x(t)$ nach $t$ auf und setzen Sie in $y(t)$ ein. Nutzen Sie $\frac{1}{\cos^2\alpha} = 1 + \tan^2\alpha$.
+        </div>
+
+        <div class="hint-card">
+            <div class="hint-toggle" onclick="toggleHint(this)">
+                <span class="arrow">▶</span> Hilfekarte 1: $t$ eliminieren
+            </div>
+            <div class="hint-content">
+                Aus $x = v_0 \cos\alpha \cdot t$ folgt $t = \frac{x}{v_0 \cos\alpha}$.
+                <br>Einsetzen in $y(t)$:
+                <div class="math-box">
+                    $$y = v_0 \sin\alpha \cdot \frac{x}{v_0 \cos\alpha} - \frac{g}{2}\left(\frac{x}{v_0 \cos\alpha}\right)^2$$
+                </div>
+            </div>
+        </div>
+
+        <div class="step-reveal">
+            <button class="btn-reveal" onclick="revealContent('result1')">Ergebnis aufdecken</button>
+        </div>
+        <div class="hidden-content" id="result1">
+            <div class="math-box highlight">
+                $$y = x\,\tan\alpha \;-\; \frac{g\,x^2}{2\,v_0^2\,\cos^2\alpha}$$
+            </div>
+            <p>Mit $\frac{1}{\cos^2\alpha} = 1 + \tan^2\alpha$ wird daraus:</p>
+            <div class="math-box highlight">
+                $$\boxed{y = x\,\tan\alpha \;-\; \frac{g\,x^2}{2\,v_0^2}\,(1 + \tan^2\alpha)}$$
+            </div>
+        </div>
+    </div>
+
+    <!-- STEP 2: Substitution -->
+    <div class="step" id="step2">
+        <div class="step-number">2</div>
+        <h2>Clevere Substitution: $u = \tan\alpha$</h2>
+        <p>Der Winkel $\alpha$ steckt nur noch als $\tan\alpha$ in der Gleichung. Deshalb substituieren wir <strong>$u = \tan\alpha$</strong>.</p>
+
+        <div class="task-box">
+            <div class="task-label">✏️ Aufgabe</div>
+            Schreiben Sie die Bahngleichung mit $u$ statt $\tan\alpha$. Sortieren Sie nach Potenzen von $u$ — was für ein Gleichungstyp entsteht?
+        </div>
+
+        <div class="hint-card">
+            <div class="hint-toggle" onclick="toggleHint(this)">
+                <span class="arrow">▶</span> Hilfekarte 2: Einsetzen und sortieren
+            </div>
+            <div class="hint-content">
+                <p>Ersetzen Sie $\tan\alpha$ durch $u$:</p>
+                <div class="math-box">
+                    $$y = x\,u - \frac{g\,x^2}{2\,v_0^2}(1 + u^2)$$
+                </div>
+                <p>Ausmultiplizieren und nach $u$ sortieren...</p>
+            </div>
+        </div>
+
+        <div class="step-reveal">
+            <button class="btn-reveal" onclick="revealContent('result2')">Ergebnis aufdecken</button>
+        </div>
+        <div class="hidden-content" id="result2">
+            <p>Ausmultipliziert und zu Null umgestellt:</p>
+            <div class="math-box highlight">
+                $$\frac{g\,x^2}{2\,v_0^2}\;u^2 \;-\; x\;u \;+\; \left(y + \frac{g\,x^2}{2\,v_0^2}\right) = 0$$
+            </div>
+            <p>Das ist eine <strong>quadratische Gleichung in $u$</strong>! Die Form $au^2 + bu + c = 0$ mit:</p>
+            <div class="math-box">
+                $$a = \frac{g\,x^2}{2\,v_0^2}, \qquad b = -x, \qquad c = y + \frac{g\,x^2}{2\,v_0^2}$$
+            </div>
+        </div>
+    </div>
+
+    <!-- STEP 3: Physikalische Deutung -->
+    <div class="step" id="step3">
+        <div class="step-number">3</div>
+        <h2>Was bedeutet das physikalisch?</h2>
+
+        <div class="context-box">
+            <div class="ctx-label">🔑 Kernfrage</div>
+            <p>Die Gleichung $a\,u^2 + b\,u + c = 0$ hat als Lösung den Winkel $u = \tan\alpha$, unter dem ein Geschoss den Punkt $(x, y)$ trifft.</p>
+            <p><strong>Wie viele Lösungen hat eine quadratische Gleichung?</strong> Das hängt von der <strong>Diskriminante</strong> ab!</p>
+        </div>
+
+        <div class="task-box">
+            <div class="task-label">✏️ Aufgabe</div>
+            Berechnen Sie die Diskriminante $D = b^2 - 4ac$ und deuten Sie die drei Fälle $D > 0$, $D = 0$ und $D < 0$ physikalisch.
+        </div>
+
+        <div class="hint-card">
+            <div class="hint-toggle" onclick="toggleHint(this)">
+                <span class="arrow">▶</span> Hilfekarte 3: Physikalische Bedeutung der Diskriminante
+            </div>
+            <div class="hint-content">
+                <p>Denken Sie an das Spiel „Treffer oder Unerreichbar?":</p>
+                <ul style="margin: 8px 0 8px 20px; color: #475569;">
+                    <li><strong>$D > 0$:</strong> Zwei reelle Lösungen für $u$ → es gibt <strong>zwei Winkel</strong>, die den Punkt treffen (ein flacher und ein steiler)</li>
+                    <li><strong>$D = 0$:</strong> Genau eine Lösung → der Punkt liegt <strong>gerade noch</strong> auf der Grenze des Erreichbaren</li>
+                    <li><strong>$D < 0$:</strong> Keine reelle Lösung → der Punkt ist <strong>unerreichbar</strong></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step-reveal">
+            <button class="btn-reveal" onclick="revealContent('result3')">Ergebnis aufdecken</button>
+        </div>
+        <div class="hidden-content" id="result3">
+            <div class="math-box">
+                $$D = b^2 - 4ac = x^2 - 4\cdot\frac{g\,x^2}{2\,v_0^2}\cdot\left(y + \frac{g\,x^2}{2\,v_0^2}\right)$$
+            </div>
+            <p>Vereinfacht:</p>
+            <div class="math-box highlight">
+                $$D = x^2\left(1 - \frac{2g}{v_0^2}\,y - \frac{g^2 x^2}{v_0^4}\right)$$
+            </div>
+            <table style="margin: 10px auto; border-collapse: collapse; color: #475569;">
+                <tr><td style="padding: 6px 15px; border-bottom:1px solid #e2e8f0;"><strong>$D > 0$</strong></td><td style="padding: 6px 15px; border-bottom:1px solid #e2e8f0;">Zwei Winkel treffen → Punkt erreichbar</td></tr>
+                <tr><td style="padding: 6px 15px; border-bottom:1px solid #e2e8f0;"><strong>$D = 0$</strong></td><td style="padding: 6px 15px; border-bottom:1px solid #e2e8f0;">Genau ein Winkel → <strong>Grenzfall (Sicherheitsparabel!)</strong></td></tr>
+                <tr><td style="padding: 6px 15px;"><strong>$D < 0$</strong></td><td style="padding: 6px 15px;">Kein Winkel reicht → Punkt unerreichbar</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- STEP 4: D=0 auflösen -->
+    <div class="step" id="step4">
+        <div class="step-number">4</div>
+        <h2>Die Grenze: $D = 0$</h2>
+        <p>Die Sicherheitsparabel ist genau die Kurve, auf der $D = 0$ gilt — die Grenze zwischen erreichbar und unerreichbar.</p>
+
+        <div class="task-box">
+            <div class="task-label">✏️ Aufgabe</div>
+            Setzen Sie $D = 0$ und lösen Sie nach $y$ auf.
+        </div>
+
+        <div class="hint-card">
+            <div class="hint-toggle" onclick="toggleHint(this)">
+                <span class="arrow">▶</span> Hilfekarte 4: Nach $y$ auflösen
+            </div>
+            <div class="hint-content">
+                <p>Aus $D = 0$ folgt (für $x \neq 0$):</p>
+                <div class="math-box">
+                    $$1 - \frac{2g}{v_0^2}\,y - \frac{g^2 x^2}{v_0^4} = 0$$
+                </div>
+                <p>Lösen Sie diese Gleichung nach $y$ auf...</p>
+            </div>
+        </div>
+
+        <div class="step-reveal">
+            <button class="btn-reveal" onclick="revealContent('result4')">Ergebnis aufdecken</button>
+        </div>
+        <div class="hidden-content" id="result4">
+            <p>Umstellen nach $y$:</p>
+            <div class="math-box">
+                $$\frac{2g}{v_0^2}\,y = 1 - \frac{g^2 x^2}{v_0^4}$$
+            </div>
+            <div class="math-box result">
+                $$\boxed{y_{\text{Sicherheit}} = \frac{v_0^2}{2g} - \frac{g\,x^2}{2\,v_0^2}}$$
+            </div>
+            <p style="text-align: center; font-weight: 700; color: #166534; font-size: 1.1em;">Das ist die Sicherheitsparabel! ✓</p>
+        </div>
+    </div>
+
+    <!-- STEP 5: Interpretation -->
+    <div class="step" id="step5">
+        <div class="step-number">5</div>
+        <h2>Interpretation und Spezialfälle</h2>
+
+        <div class="task-box">
+            <div class="task-label">✏️ Aufgabe</div>
+            Berechnen Sie mit der Formel:
+            <ol style="margin: 8px 0 0 20px; color: #475569;">
+                <li>Die maximale Höhe (bei $x = 0$) — was bedeutet das physikalisch?</li>
+                <li>Die maximale Reichweite (bei $y = 0$) — vergleichen Sie mit der Wurfweite bei $\alpha = 45°$.</li>
+            </ol>
+        </div>
+
+        <div class="hint-card">
+            <div class="hint-toggle" onclick="toggleHint(this)">
+                <span class="arrow">▶</span> Hilfekarte 5: Spezialfälle einsetzen
+            </div>
+            <div class="hint-content">
+                <p><strong>Maximale Höhe</strong> ($x = 0$): Setzen Sie $x = 0$ in die Sicherheitsparabel ein.</p>
+                <p><strong>Maximale Reichweite</strong> ($y = 0$): Setzen Sie $y = 0$ und lösen Sie nach $x$ auf.</p>
+            </div>
+        </div>
+
+        <div class="step-reveal">
+            <button class="btn-reveal" onclick="revealContent('result5')">Ergebnis aufdecken</button>
+        </div>
+        <div class="hidden-content" id="result5">
+            <p><strong>Maximale Höhe</strong> bei $x = 0$:</p>
+            <div class="math-box">
+                $$y_{\max} = \frac{v_0^2}{2g}$$
+            </div>
+            <p style="color:#475569;">→ Das ist genau die Steighöhe beim <strong>senkrechten Wurf</strong> ($\alpha = 90°$). Logisch!</p>
+
+            <p><strong>Maximale Reichweite</strong> bei $y = 0$:</p>
+            <div class="math-box">
+                $$0 = \frac{v_0^2}{2g} - \frac{g\,x^2}{2\,v_0^2} \quad\Rightarrow\quad x_{\max} = \frac{v_0^2}{g}$$
+            </div>
+            <p style="color:#475569;">→ Das ist genau die <strong>Wurfweite bei $\alpha = 45°$</strong>: $w_{45°} = \frac{v_0^2 \sin 90°}{g} = \frac{v_0^2}{g}$. Passt! ✓</p>
+        </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="summary-box">
+        <h3>📋 Zusammenfassung</h3>
+        <p>Die <strong>Sicherheitsparabel</strong> trennt erreichbare von unerreichbaren Punkten:</p>
+        <div class="math-box result">
+            $$y = \frac{v_0^2}{2g} - \frac{g\,x^2}{2\,v_0^2}$$
+        </div>
+        <p><strong>Herleitungsweg:</strong> Bahngleichung → Substitution $u = \tan\alpha$ → quadratische Gleichung in $u$ → Diskriminante → $D = 0$ setzen → fertig.</p>
+        <p><strong>Benötigtes Werkzeug:</strong> Nur die pq-Formel und Umformen — kein Differenzieren nötig!</p>
+    </div>
+
+    <div style="text-align:center; margin: 15px 0;">
+        <a href="sicherheitsparabel_game.html" style="display:inline-block; padding:10px 20px; background:#2563eb; color:white; border-radius:8px; text-decoration:none; font-weight:600;">🎮 Zum Spiel</a>
+        <a href="schraeger_wurf.html" style="display:inline-block; padding:10px 20px; background:#7c3aed; color:white; border-radius:8px; text-decoration:none; font-weight:600; margin-left:8px;">📊 Zur Simulation</a>
+    </div>
+
+    <footer>
+        Lore-Lorentz-Schule | Physik-LK 11NP | 2025 · <a href="index.html">← Übersicht</a>
+    </footer>
+</div>
+
+<script>
+function toggleHint(el) {
+    el.classList.toggle('open');
+    el.nextElementSibling.classList.toggle('visible');
+}
+
+function revealContent(id) {
+    const el = document.getElementById(id);
+    el.classList.add('visible');
+    el.previousElementSibling.style.display = 'none'; // hide button
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    renderMathInElement(document.body, {
+        delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+        ],
+        throwOnError: false
+    });
+});
+</script>
+</body>
+</html>
