@@ -1,0 +1,128 @@
+[
+  {
+    "sus_id": 1,
+    "nummer": "1",
+    "name": "Ilias Aabbadi",
+    "note": "3-",
+    "np": 7,
+    "url": "https://hbraak.github.io/2025NP_physik/uebung/k20/s01/",
+    "token": "s01"
+  },
+  {
+    "sus_id": 4,
+    "nummer": "4",
+    "name": "Ali Al Daoud",
+    "note": "4-",
+    "np": 4,
+    "url": "https://hbraak.github.io/2025NP_physik/uebung/k20/s04/",
+    "token": "s04"
+  },
+  {
+    "sus_id": 6,
+    "nummer": "6",
+    "name": "Furkan Atmaca",
+    "note": "3+",
+    "np": 9,
+    "url": "https://hbraak.github.io/2025NP_physik/uebung/k20/s06/",
+    "token": "s06"
+  },
+  {
+    "sus_id": 7,
+    "nummer": "7",
+    "name": "Felix Behringer",
+    "note": "3-",
+    "np": 7,
+    "url": "https://hbraak.github.io/2025NP_physik/uebung/k20/s07/",
+    "token": "s07"
+  },
+  {
+    "sus_id": 8,
+    "nummer": "8",
+    "name": "Emir Celik",
+    "note": "3+",
+    "np": 9,
+    "url": "https://hbraak.github.io/2025NP_physik/uebung/k20/s08/",
+    "token": "s08"
+  },
+  {
+    "sus_id": 10,
+    "nummer": "10",
+    "name": "Nina Friedl",
+    "note": "4-",
+    "np": 4,
+    "url": "https://hbraak.github.io/2025NP_physik/uebung/k20/s10/",
+    "token": "s10"
+  },
+  {
+    "sus_id": 11,
+    "nummer": "11",
+    "name": "Elias Gruppe",
+    "note": "4",
+    "np": 5,
+    "url": "https://hbraak.github.io/2025NP_physik/uebung/k20/s11/",
+    "token": "s11"
+  },
+  {
+    "sus_id": 13,
+    "nummer": "13",
+    "name": "Sami Hamdan",
+    "note": "3",
+    "np": 8,
+    "url": "https://hbraak.github.io/2025NP_physik/uebung/k20/s13/",
+    "token": "s13"
+  },
+  {
+    "sus_id": 14,
+    "nummer": "14",
+    "name": "Leon Klink",
+    "note": "3-",
+    "np": 7,
+    "url": "https://hbraak.github.io/2025NP_physik/uebung/k20/s14/",
+    "token": "s14"
+  },
+  {
+    "sus_id": 15,
+    "nummer": "15",
+    "name": "Mateja Kneževic",
+    "note": "3-",
+    "np": 7,
+    "url": "https://hbraak.github.io/2025NP_physik/uebung/k20/s15/",
+    "token": "s15"
+  },
+  {
+    "sus_id": 16,
+    "nummer": "16",
+    "name": "Ben Kolsch",
+    "note": "3+",
+    "np": 9,
+    "url": "https://hbraak.github.io/2025NP_physik/uebung/k20/s16/",
+    "token": "s16"
+  },
+  {
+    "sus_id": 19,
+    "nummer": "19",
+    "name": "Talha Oulhout",
+    "note": "3+",
+    "np": 9,
+    "url": "https://hbraak.github.io/2025NP_physik/uebung/k20/s19/",
+    "token": "s19"
+  },
+  {
+    "sus_id": 21,
+    "nummer": "21",
+    "name": "Levke Schmidt",
+    "note": "4",
+    "np": 5,
+    "url": "https://hbraak.github.io/2025NP_physik/uebung/k20/s21/",
+    "token": "s21"
+  },
+  {
+    "sus_id": 24,
+    "nummer": "24",
+    "name": "Fynn Vines",
+    "note": "5-",
+    "np": 1,
+    "url": "https://hbraak.github.io/2025NP_physik/uebung/k20/s24/",
+    "token": "s24"
+  }
+]

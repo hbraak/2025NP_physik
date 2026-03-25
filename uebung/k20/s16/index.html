@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Individuelles Übungsblatt — Physik</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 25px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        header h1 { font-size: 1.6em; color: #2c3e50; margin-bottom: 8px; }
+        header p { color: #7f8c8d; font-size: 0.95em; }
+        .result-badge {
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+        .badge-ok { background: #e8f5e9; color: #2e7d32; }
+        .badge-warn { background: #fff3e0; color: #e65100; }
+        .badge-crit { background: #ffebee; color: #c62828; }
+        .intro {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            line-height: 1.6;
+        }
+        .topic-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            border-left: 4px solid #3498db;
+        }
+        .topic-card h3 { color: #2c3e50; margin-bottom: 12px; font-size: 1.15em; }
+        .topic-card h4 { color: #555; margin: 10px 0 6px; font-size: 0.95em; }
+        .topic-card ul { padding-left: 20px; line-height: 1.6; }
+        .topic-card li { margin-bottom: 6px; }
+        .weakness-list { background: #fafafa; padding: 12px; border-radius: 8px; margin-bottom: 10px; }
+        .tips { background: #e3f2fd; padding: 12px; border-radius: 8px; }
+        .tips li { color: #1565c0; }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            color: #aaa;
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Individuelles Übungsblatt</h1>
+            <p>Physik — Energie, Leistung &amp; Waagerechter Wurf</p>
+            <div class="result-badge badge-warn">3+ (9 NP, 68%)</div>
+        </header>
+        
+        <div class="intro">
+            <p>Hallo Ben,</p>
+            <p>dieses Übungsblatt wurde speziell für dich erstellt. Es zeigt dir, welche Themen du nochmal 
+            wiederholen solltest und gibt dir konkrete Tipps. Arbeite die Punkte in Ruhe durch — 
+            bei Fragen melde dich gerne!</p>
+        </div>
+        
+        
+        <div class="topic-card">
+            <h3>📌 Energieerhaltung & Diagramme</h3>
+            <div class="weakness-list">
+                <h4>Was lief nicht optimal:</h4>
+                <ul><li><strong>2c</strong> (0/5 P): Es wurde kein Diagramm gezeichnet.</li></ul>
+            </div>
+            <div class="tips">
+                <h4>💡 Tipps zum Üben:</h4>
+                <ul><li>Wiederhole die Formeln: E_pot = mgh, E_kin = ½mv², E_ges = E_pot + E_kin = const.</li>
+<li>Übe das Zeichnen von Energie-Höhe-Diagrammen mit mindestens 5 Stützpunkten.</li>
+<li>Beachte: Der Schnittpunkt von E_pot und E_kin liegt immer bei h = H/2.</li></ul>
+            </div>
+        </div>
+        <div class="topic-card">
+            <h3>📌 Leistung & Wirkungsgrad</h3>
+            <div class="weakness-list">
+                <h4>Was lief nicht optimal:</h4>
+                <ul><li><strong>3d</strong> (2/5 P): Energieverlust und Hitze als Ursache genannt, es fehlen jedoch eine zweite Ursache und die Einschätzung der Wichtigkeit.</li></ul>
+            </div>
+            <div class="tips">
+                <h4>💡 Tipps zum Üben:</h4>
+                <ul><li>P_nutz = W/t = mgh/t. Umrechnung: 1 PS = 735,5 W.</li>
+<li>Wirkungsgrad: η = P_nutz / P_el → P_el = P_nutz / η (Division, nicht Multiplikation!).</li>
+<li>Verlustursachen benennen UND physikalisch erklären (→ Wärme, Reibung, Luftwiderstand).</li></ul>
+            </div>
+        </div>
+        <div class="topic-card">
+            <h3>📌 Superposition & Waagerechter Wurf</h3>
+            <div class="weakness-list">
+                <h4>Was lief nicht optimal:</h4>
+                <ul><li><strong>4a</strong> (1/3 P): Unabhängigkeit der Bewegungen beschrieben, aber die geforderten Bewegungsgleichungen und Kräfte fehlen.</li><li><strong>4d</strong> (0/2 P): Aufgabe verlangt vy = g·t, aber Schüler berechnet stattdessen y(t) = 1/2·g·t² ≈ 173,07 (Fallhöhe); vy wurde nicht bestimmt.</li></ul>
+            </div>
+            <div class="tips">
+                <h4>💡 Tipps zum Üben:</h4>
+                <ul><li>Superpositionsprinzip: Horizontale und vertikale Bewegung sind unabhängig voneinander.</li>
+<li>Horizontal: x(t) = v₀·t (gleichförmig). Vertikal: y(t) = ½g·t² (gleichmäßig beschleunigt).</li>
+<li>Flugzeit: t = √(2h/g) — hängt NICHT von v₀ ab!</li>
+<li>Aufprallgeschwindigkeit: v_auf = √(v₀² + v_y²), Winkel: tan(α) = v_y/v₀.</li></ul>
+            </div>
+        </div>
+        
+        <footer>
+            Erstellt aus der Klausurauswertung · Bei Fragen → Herrn Braak ansprechen
+        </footer>
+    </div>
+</body>
+</html>
