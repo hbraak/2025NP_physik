@@ -3,72 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Individuelles Übungsblatt — Physik</title>
+    <title>Übungsblatt — Physik</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
         onload="renderMathInElement(document.body, {delimiters: [{left: '$', right: '$', display: false},{left: '$$', right: '$$', display: true}]});"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f7fa;
-            min-height: 100vh;
-            padding: 20px;
-            color: #333;
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f7fa; min-height: 100vh; padding: 20px; color: #333; line-height: 1.6; }
         .container { max-width: 800px; margin: 0 auto; }
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 25px;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-        header h1 { font-size: 1.6em; color: #2c3e50; margin-bottom: 8px; }
+        header { text-align: center; margin-bottom: 30px; padding: 25px; background: white; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        header h1 { font-size: 1.5em; color: #2c3e50; margin-bottom: 8px; }
         header p { color: #7f8c8d; font-size: 0.95em; }
-        .result-badge {
-            display: inline-block;
-            padding: 6px 18px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 1.1em;
-            margin-top: 10px;
-        }
-        .badge-ok { background: #e8f5e9; color: #2e7d32; }
+        .result-badge { display: inline-block; padding: 6px 18px; border-radius: 20px; font-weight: bold; font-size: 1.1em; margin-top: 10px; }
         .badge-warn { background: #fff3e0; color: #e65100; }
         .badge-crit { background: #ffebee; color: #c62828; }
-        .intro {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-            line-height: 1.6;
-        }
-        .topic-card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-            border-left: 4px solid #3498db;
-        }
-        .topic-card h3 { color: #2c3e50; margin-bottom: 12px; font-size: 1.15em; }
-        .topic-card h4 { color: #555; margin: 10px 0 6px; font-size: 0.95em; }
-        .topic-card ul { padding-left: 20px; line-height: 1.6; }
-        .topic-card li { margin-bottom: 6px; }
-        .weakness-list { background: #fafafa; padding: 12px; border-radius: 8px; margin-bottom: 10px; }
-        .tips { background: #e3f2fd; padding: 12px; border-radius: 8px; }
-        .tips li { color: #1565c0; }
-        footer {
-            text-align: center;
-            margin-top: 30px;
-            padding: 15px;
-            color: #aaa;
-            font-size: 0.85em;
-        }
+        .intro { background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+        .topic-card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); border-left: 4px solid #3498db; }
+        .topic-card h3 { color: #2c3e50; margin-bottom: 15px; font-size: 1.2em; }
+        .topic-card h4 { color: #2c3e50; margin: 16px 0 8px; font-size: 1em; }
+        .weakness-list { background: #fff8f0; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; border-left: 3px solid #e67e22; }
+        .weakness-list ul { padding-left: 18px; }
+        .weakness-list li { margin-bottom: 4px; font-size: 0.9em; color: #555; }
+        .info-table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+        .info-table td, .info-table th { padding: 6px 12px; border: 1px solid #ddd; font-size: 0.95em; }
+        .info-table tr:nth-child(even) { background: #f9f9f9; }
+        .merke { background: #e8f5e9; padding: 12px 16px; border-radius: 8px; margin: 12px 0; border-left: 3px solid #4caf50; font-size: 0.95em; }
+        .formel { text-align: center; margin: 12px 0; font-size: 1.1em; }
+        .loesung { background: #f3f8ff; padding: 12px 16px; border-radius: 8px; margin: 8px 0; border-left: 3px solid #2196f3; }
+        .aufgabe { background: #fafafa; padding: 12px 16px; border-radius: 8px; margin: 10px 0; }
+        .input-check { display: flex; gap: 8px; align-items: center; margin: 8px 0; flex-wrap: wrap; }
+        .input-check input { padding: 6px 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 1em; width: 120px; }
+        .input-check input:focus { border-color: #3498db; outline: none; }
+        .input-check button { padding: 6px 16px; background: #3498db; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.95em; }
+        .input-check button:hover { background: #2980b9; }
+        .result-ok { color: #27ae60; font-weight: bold; }
+        .result-fail { color: #e74c3c; font-weight: bold; }
+        details { margin: 6px 0; }
+        details summary { cursor: pointer; color: #3498db; font-size: 0.9em; }
+        details p { margin-top: 4px; padding: 8px; background: #f0f7ff; border-radius: 6px; font-size: 0.9em; }
+        footer { text-align: center; margin-top: 30px; padding: 15px; color: #aaa; font-size: 0.85em; }
     </style>
 </head>
 <body>
@@ -76,61 +50,280 @@
         <header>
             <h1>📚 Individuelles Übungsblatt</h1>
             <p>Physik — Energie, Leistung &amp; Waagerechter Wurf</p>
-            <div class="result-badge badge-warn">3+ (9 NP, 68%)</div>
+            <div class="result-badge badge-warn">Klausurergebnis: 3+ (9 NP, 68%)</div>
         </header>
         
         <div class="intro">
-            <p>Hallo Du,</p>
-            <p>dieses Übungsblatt wurde speziell für dich erstellt. Es zeigt dir, welche Themen du nochmal 
-            wiederholen solltest und gibt dir konkrete Tipps. Arbeite die Punkte in Ruhe durch — 
-            bei Fragen melde dich gerne!</p>
+            <p>Dieses Übungsblatt wurde speziell für dich erstellt. Es zeigt dir <strong>genau die Themen</strong>,
+            bei denen du in der Klausur Schwierigkeiten hattest.</p>
+            <p>Pro Thema findest du: <strong>Erklärung → Musteraufgabe → Übung zum Selbstrechnen</strong>. 
+            Arbeite die Punkte in Ruhe durch — bei Fragen melde dich gerne!</p>
         </div>
         
         
         <div class="topic-card">
             <h3>📌 Energieerhaltung & Diagramme</h3>
+            
             <div class="weakness-list">
-                <h4>Was lief nicht optimal:</h4>
+                <h4>🔍 Deine Klausur — was nicht geklappt hat:</h4>
                 <ul><li><strong>2c</strong> (0/5 P): Es wurde kein Diagramm gezeichnet.</li></ul>
             </div>
-            <div class="tips">
-                <h4>💡 Tipps zum Üben:</h4>
-                <ul><li>Wiederhole: $E_{\text{pot}} = mgh$, $E_{\text{kin}} = \frac{1}{2}mv^2$, $E_{\text{ges}} = E_{\text{pot}} + E_{\text{kin}} = \text{const.}$</li>
-<li>Übe das Zeichnen von Energie-Höhe-Diagrammen mit mindestens 5 Stützpunkten.</li>
-<li>Beachte: Der Schnittpunkt von $E_{\text{pot}}$ und $E_{\text{kin}}$ liegt immer bei $h = \frac{H}{2}$.</li></ul>
+            
+            
+            <h4>📖 Das Wichtigste</h4>
+            <p>Bei der Energieerhaltung gilt:</p>
+            <div class="formel">$$E_{\text{ges}} = E_{\text{pot}} + E_{\text{kin}} = \text{const.}$$</div>
+            <p>Die wichtigen Formeln:</p>
+            <table class="info-table">
+                <tr><td>Potentielle Energie</td><td>$E_{\text{pot}} = m \cdot g \cdot h$</td></tr>
+                <tr><td>Kinetische Energie</td><td>$E_{\text{kin}} = \frac{1}{2} m v^2$</td></tr>
+                <tr><td>Geschwindigkeit aus Höhe</td><td>$v = \sqrt{2gh}$</td></tr>
+            </table>
+            <div class="merke">
+                <strong>Im Diagramm (E-h):</strong><br>
+                • $E_{\text{ges}}$ = horizontale Linie (bleibt konstant)<br>
+                • $E_{\text{pot}}$ = steigt linear mit h<br>
+                • $E_{\text{kin}}$ = fällt linear (= $E_{\text{ges}} - E_{\text{pot}}$)<br>
+                • Schnittpunkt bei $h = \frac{H}{2}$ (immer in der Mitte!)
             </div>
+        
+            
+            <h4>✏️ Musteraufgabe</h4>
+            <p><em>Ein Körper (m = 800 kg) fällt aus H = 25 m. Berechne $E_{\text{pot}}$ bei h = 12,5 m.</em></p>
+            <div class="loesung">
+                <p>$E_{\text{pot}} = m \cdot g \cdot h = 800 \cdot 9{,}81 \cdot 12{,}5 = 98\,100\,\text{J}$</p>
+                <p>$E_{\text{kin}} = E_{\text{ges}} - E_{\text{pot}} = 196\,200 - 98\,100 = 98\,100\,\text{J}$</p>
+                <p>Bei halber Höhe sind $E_{\text{pot}}$ und $E_{\text{kin}}$ gleich groß!</p>
+            </div>
+        
+            
+            <h4>🎯 Jetzt du!</h4>
+            <p>Ein Stein (m = 2 kg) fällt aus H = 20 m Höhe ($g = 9{,}81\,\text{m/s}^2$).</p>
+            <div class="aufgabe">
+                <p><strong>a)</strong> Berechne die Gesamtenergie $E_{\text{ges}} = m \cdot g \cdot H$.</p>
+                <div class="input-check">
+                    <input type="number" step="any" id="u2a" placeholder="? J">
+                    <button onclick="check('u2a', 392.4, 2)">Prüfen</button>
+                    <span id="u2a-result"></span>
+                </div>
+                <details><summary>Tipp</summary><p>$E = 2 \cdot 9{,}81 \cdot 20 = ?$</p></details>
+            </div>
+            <div class="aufgabe">
+                <p><strong>b)</strong> Berechne $E_{\text{pot}}$ bei h = 10 m.</p>
+                <div class="input-check">
+                    <input type="number" step="any" id="u2b" placeholder="? J">
+                    <button onclick="check('u2b', 196.2, 2)">Prüfen</button>
+                    <span id="u2b-result"></span>
+                </div>
+            </div>
+            <div class="aufgabe">
+                <p><strong>c)</strong> Wie groß ist $E_{\text{kin}}$ bei h = 10 m?</p>
+                <div class="input-check">
+                    <input type="number" step="any" id="u2c" placeholder="? J">
+                    <button onclick="check('u2c', 196.2, 2)">Prüfen</button>
+                    <span id="u2c-result"></span>
+                </div>
+                <details><summary>Tipp</summary><p>$E_{\text{kin}} = E_{\text{ges}} - E_{\text{pot}}$</p></details>
+            </div>
+            <div class="aufgabe">
+                <p><strong>d)</strong> Mit welcher Geschwindigkeit trifft der Stein auf? ($v = \sqrt{2gH}$)</p>
+                <div class="input-check">
+                    <input type="number" step="any" id="u2d" placeholder="? m/s">
+                    <button onclick="check('u2d', 19.81, 0.5)">Prüfen</button>
+                    <span id="u2d-result"></span>
+                </div>
+                <details><summary>Tipp</summary><p>$v = \sqrt{2 \cdot 9{,}81 \cdot 20} = \sqrt{392{,}4}$</p></details>
+            </div>
+        
         </div>
         <div class="topic-card">
             <h3>📌 Leistung & Wirkungsgrad</h3>
+            
             <div class="weakness-list">
-                <h4>Was lief nicht optimal:</h4>
+                <h4>🔍 Deine Klausur — was nicht geklappt hat:</h4>
                 <ul><li><strong>3d</strong> (2/5 P): Energieverlust und Hitze als Ursache genannt, es fehlen jedoch eine zweite Ursache und die Einschätzung der Wichtigkeit.</li></ul>
             </div>
-            <div class="tips">
-                <h4>💡 Tipps zum Üben:</h4>
-                <ul><li>$P_{\text{nutz}} = \frac{W}{t} = \frac{mgh}{t}$. Umrechnung: $1\,\text{PS} = 735{,}5\,\text{W}$.</li>
-<li>Wirkungsgrad: $\eta = \frac{P_{\text{nutz}}}{P_{\text{el}}} \Rightarrow P_{\text{el}} = \frac{P_{\text{nutz}}}{\eta}$ (Division, nicht Multiplikation!).</li>
-<li>Verlustursachen benennen UND physikalisch erklären (→ Wärme, Reibung, Luftwiderstand).</li></ul>
+            
+            
+            <h4>📖 Das Wichtigste</h4>
+            <p>Die Nutzleistung berechnet sich aus der verrichteten Arbeit und der Zeit:</p>
+            <div class="formel">$$P_{\text{nutz}} = \frac{W}{t} = \frac{m \cdot g \cdot h}{t}$$</div>
+            <p>Der Wirkungsgrad beschreibt, wie viel der zugeführten Leistung tatsächlich genutzt wird:</p>
+            <div class="formel">$$\eta = \frac{P_{\text{nutz}}}{P_{\text{el}}} \quad \Rightarrow \quad P_{\text{el}} = \frac{P_{\text{nutz}}}{\eta}$$</div>
+            <table class="info-table">
+                <tr><td>Umrechnung</td><td>$1\,\text{PS} = 735{,}5\,\text{W}$</td></tr>
+                <tr><td>Verlustleistung</td><td>$P_{\text{Verlust}} = P_{\text{el}} - P_{\text{nutz}}$</td></tr>
+            </table>
+            <div class="merke">
+                <strong>Häufiger Fehler:</strong> $P_{\text{el}} = \frac{P_{\text{nutz}}}{\eta}$ — das ist eine <em>Division</em>!<br>
+                NICHT $P_{\text{el}} = P_{\text{nutz}} \cdot \eta$ (das wäre falsch rum).
             </div>
+        
+            
+            <h4>✏️ Musteraufgabe</h4>
+            <p><em>Ein Aufzug (m = 1500 kg) fährt h = 18 m in t = 20 s hoch. $\eta = 0{,}70$.</em></p>
+            <div class="loesung">
+                <p><strong>1. Hubarbeit:</strong> $W = mgh = 1500 \cdot 9{,}81 \cdot 18 = 264\,870\,\text{J}$</p>
+                <p><strong>2. Nutzleistung:</strong> $P_{\text{nutz}} = \frac{264\,870}{20} = 13\,243{,}5\,\text{W} \approx 13{,}2\,\text{kW}$</p>
+                <p><strong>3. In PS:</strong> $P = \frac{13\,243{,}5}{735{,}5} \approx 18{,}0\,\text{PS}$</p>
+                <p><strong>4. Elektrische Leistung:</strong> $P_{\text{el}} = \frac{13\,243{,}5}{0{,}70} = 18\,919\,\text{W} \approx 18{,}9\,\text{kW}$</p>
+                <p><strong>5. Verlustleistung:</strong> $P_{\text{V}} = 18\,919 - 13\,244 = 5\,675\,\text{W}$</p>
+            </div>
+        
+            
+            <h4>🎯 Jetzt du!</h4>
+            <p>Ein Kran hebt eine Last von m = 500 kg auf h = 12 m in t = 10 s. Der Wirkungsgrad beträgt $\eta = 0{,}80$.</p>
+            <div class="aufgabe">
+                <p><strong>a)</strong> Berechne die Hubarbeit $W = mgh$.</p>
+                <div class="input-check">
+                    <input type="number" step="any" id="u3a" placeholder="? J">
+                    <button onclick="check('u3a', 58860, 100)">Prüfen</button>
+                    <span id="u3a-result"></span>
+                </div>
+            </div>
+            <div class="aufgabe">
+                <p><strong>b)</strong> Berechne die Nutzleistung $P_{\text{nutz}} = W/t$.</p>
+                <div class="input-check">
+                    <input type="number" step="any" id="u3b" placeholder="? W">
+                    <button onclick="check('u3b', 5886, 10)">Prüfen</button>
+                    <span id="u3b-result"></span>
+                </div>
+            </div>
+            <div class="aufgabe">
+                <p><strong>c)</strong> Rechne in PS um ($1\,\text{PS} = 735{,}5\,\text{W}$).</p>
+                <div class="input-check">
+                    <input type="number" step="any" id="u3c" placeholder="? PS">
+                    <button onclick="check('u3c', 8.0, 0.2)">Prüfen</button>
+                    <span id="u3c-result"></span>
+                </div>
+            </div>
+            <div class="aufgabe">
+                <p><strong>d)</strong> Berechne die elektrische Leistung $P_{\text{el}} = P_{\text{nutz}} / \eta$.</p>
+                <div class="input-check">
+                    <input type="number" step="any" id="u3d" placeholder="? W">
+                    <button onclick="check('u3d', 7357.5, 50)">Prüfen</button>
+                    <span id="u3d-result"></span>
+                </div>
+                <details><summary>Tipp</summary><p>Durch $\eta$ teilen, nicht multiplizieren!</p></details>
+            </div>
+            <div class="aufgabe">
+                <p><strong>e)</strong> Wie groß ist die Verlustleistung?</p>
+                <div class="input-check">
+                    <input type="number" step="any" id="u3e" placeholder="? W">
+                    <button onclick="check('u3e', 1471.5, 50)">Prüfen</button>
+                    <span id="u3e-result"></span>
+                </div>
+            </div>
+        
         </div>
         <div class="topic-card">
             <h3>📌 Superposition & Waagerechter Wurf</h3>
+            
             <div class="weakness-list">
-                <h4>Was lief nicht optimal:</h4>
+                <h4>🔍 Deine Klausur — was nicht geklappt hat:</h4>
                 <ul><li><strong>4a</strong> (1/3 P): Unabhängigkeit der Bewegungen beschrieben, aber die geforderten Bewegungsgleichungen und Kräfte fehlen.</li><li><strong>4d</strong> (0/2 P): Aufgabe verlangt vy = g·t, aber Schüler berechnet stattdessen y(t) = 1/2·g·t² ≈ 173,07 (Fallhöhe); vy wurde nicht bestimmt.</li></ul>
             </div>
-            <div class="tips">
-                <h4>💡 Tipps zum Üben:</h4>
-                <ul><li>Superpositionsprinzip: Horizontale und vertikale Bewegung sind unabhängig voneinander.</li>
-<li>Horizontal: $x(t) = v_0 \cdot t$ (gleichförmig). Vertikal: $y(t) = \frac{1}{2}g \cdot t^2$ (gleichmäßig beschleunigt).</li>
-<li>Flugzeit: $t = \sqrt{\frac{2h}{g}}$ — hängt NICHT von $v_0$ ab!</li>
-<li>Aufprallgeschwindigkeit: $v_{\text{auf}} = \sqrt{v_0^2 + v_y^2}$, Winkel: $\tan(\alpha) = \frac{v_y}{v_0}$.</li></ul>
+            
+            
+            <h4>📖 Das Wichtigste</h4>
+            <p>Beim <strong>waagerechten Wurf</strong> überlagern sich zwei unabhängige Bewegungen:</p>
+            <table class="info-table">
+                <tr><th>Horizontal</th><th>Vertikal</th></tr>
+                <tr><td>gleichförmig</td><td>gleichmäßig beschleunigt</td></tr>
+                <tr><td>$x(t) = v_0 \cdot t$</td><td>$y(t) = \frac{1}{2}g \cdot t^2$</td></tr>
+                <tr><td>$v_x = v_0 = \text{const.}$</td><td>$v_y(t) = g \cdot t$</td></tr>
+            </table>
+            <div class="merke">
+                <strong>Wichtig:</strong><br>
+                • Flugzeit: $t = \sqrt{\frac{2h}{g}}$ — hängt <em>nicht</em> von $v_0$ ab!<br>
+                • Aufprallgeschwindigkeit: $v_{\text{auf}} = \sqrt{v_0^2 + v_y^2}$<br>
+                • Aufprallwinkel: $\tan(\alpha) = \frac{v_y}{v_0}$
             </div>
+        
+            
+            <h4>✏️ Musteraufgabe</h4>
+            <p><em>Eine Kugel rollt mit $v_0 = 3{,}0\,\text{m/s}$ von einem Tisch (h = 1,8 m).</em></p>
+            <div class="loesung">
+                <p><strong>1. Flugzeit:</strong> $t = \sqrt{\frac{2h}{g}} = \sqrt{\frac{2 \cdot 1{,}8}{9{,}81}} = \sqrt{0{,}367} = 0{,}606\,\text{s}$</p>
+                <p><strong>2. Wurfweite:</strong> $x = v_0 \cdot t = 3{,}0 \cdot 0{,}606 = 1{,}82\,\text{m}$</p>
+                <p><strong>3. Vertikale Aufprallgeschwindigkeit:</strong> $v_y = g \cdot t = 9{,}81 \cdot 0{,}606 = 5{,}94\,\text{m/s}$</p>
+                <p><strong>4. Gesamtgeschwindigkeit:</strong> $v_{\text{auf}} = \sqrt{3{,}0^2 + 5{,}94^2} = \sqrt{44{,}3} = 6{,}66\,\text{m/s}$</p>
+                <p><strong>5. Winkel:</strong> $\alpha = \arctan\left(\frac{5{,}94}{3{,}0}\right) = 63{,}2°$</p>
+            </div>
+        
+            
+            <h4>🎯 Jetzt du!</h4>
+            <p>Ein Ball rollt mit $v_0 = 5{,}0\,\text{m/s}$ von einer Kante in h = 3,2 m Höhe.</p>
+            <div class="aufgabe">
+                <p><strong>a)</strong> Berechne die Flugzeit $t = \sqrt{\frac{2h}{g}}$.</p>
+                <div class="input-check">
+                    <input type="number" step="any" id="u4a" placeholder="? s">
+                    <button onclick="check('u4a', 0.808, 0.02)">Prüfen</button>
+                    <span id="u4a-result"></span>
+                </div>
+                <details><summary>Tipp</summary><p>$t = \sqrt{\frac{2 \cdot 3{,}2}{9{,}81}} = \sqrt{0{,}652}$</p></details>
+            </div>
+            <div class="aufgabe">
+                <p><strong>b)</strong> Wie weit fliegt der Ball horizontal? ($x = v_0 \cdot t$)</p>
+                <div class="input-check">
+                    <input type="number" step="any" id="u4b" placeholder="? m">
+                    <button onclick="check('u4b', 4.04, 0.1)">Prüfen</button>
+                    <span id="u4b-result"></span>
+                </div>
+            </div>
+            <div class="aufgabe">
+                <p><strong>c)</strong> Berechne $v_y$ beim Aufprall ($v_y = g \cdot t$).</p>
+                <div class="input-check">
+                    <input type="number" step="any" id="u4c" placeholder="? m/s">
+                    <button onclick="check('u4c', 7.93, 0.2)">Prüfen</button>
+                    <span id="u4c-result"></span>
+                </div>
+            </div>
+            <div class="aufgabe">
+                <p><strong>d)</strong> Berechne die Aufprallgeschwindigkeit $v_{\text{auf}} = \sqrt{v_0^2 + v_y^2}$.</p>
+                <div class="input-check">
+                    <input type="number" step="any" id="u4d" placeholder="? m/s">
+                    <button onclick="check('u4d', 9.37, 0.2)">Prüfen</button>
+                    <span id="u4d-result"></span>
+                </div>
+            </div>
+            <div class="aufgabe">
+                <p><strong>e)</strong> Unter welchem Winkel trifft der Ball auf? $\alpha = \arctan\left(\frac{v_y}{v_0}\right)$</p>
+                <div class="input-check">
+                    <input type="number" step="any" id="u4e" placeholder="? °">
+                    <button onclick="check('u4e', 57.8, 1.0)">Prüfen</button>
+                    <span id="u4e-result"></span>
+                </div>
+                <details><summary>Tipp</summary><p>$\arctan(7{,}93 / 5{,}0)$ — Taschenrechner auf DEG stellen!</p></details>
+            </div>
+            <div class="aufgabe">
+                <p><strong>f)</strong> Hängt die Flugzeit von $v_0$ ab? Warum (nicht)?</p>
+                <details><summary>Lösung</summary><p>Nein! In $t = \sqrt{\frac{2h}{g}}$ kommt $v_0$ nicht vor. Die vertikale Bewegung ist unabhängig von der horizontalen — das ist das Superpositionsprinzip.</p></details>
+            </div>
+        
         </div>
         
         <footer>
             Erstellt aus der Klausurauswertung · Bei Fragen → Herrn Braak ansprechen
         </footer>
     </div>
+    
+    <script>
+    function check(id, expected, tolerance) {
+        const input = document.getElementById(id);
+        const result = document.getElementById(id + '-result');
+        const val = parseFloat(input.value);
+        if (isNaN(val)) { result.textContent = '⚠️ Bitte eine Zahl eingeben'; result.className = 'result-fail'; return; }
+        if (Math.abs(val - expected) <= tolerance) {
+            result.textContent = '✅ Richtig!';
+            result.className = 'result-ok';
+            input.style.borderColor = '#27ae60';
+        } else {
+            result.textContent = '❌ Nicht ganz — versuch es nochmal!';
+            result.className = 'result-fail';
+            input.style.borderColor = '#e74c3c';
+        }
+    }
+    </script>
 </body>
 </html>
