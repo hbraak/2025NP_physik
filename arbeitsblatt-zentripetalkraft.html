@@ -15,537 +15,563 @@
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js" crossorigin="anonymous"></script>
 
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Serif:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
 
 <style>
+:root {
+  --bg: #f5f2eb;
+  --surface: #ffffff;
+  --surface2: #f0ece2;
+  --border: #d4cfc4;
+  --text: #1a1915;
+  --text-muted: #6b6760;
+  --accent: #2b4c8c;
+  --accent-light: #dce6f5;
+  --green: #1a6b3a;
+  --green-light: #d4edde;
+  --formula-bg: #0f1923;
+  --afb1: #1a5c8c;  --afb1-bg: #dceef8;
+  --afb2: #7a5200;  --afb2-bg: #fef0cc;
+  --afb3: #7a1a1a;  --afb3-bg: #fde8e8;
+  --star: #b06000;  --star-bg: #fff0d0;
+  --video: #6b21a8; --video-bg: #f3e8ff;
+  --erarbeit: #0e7490; --erarbeit-bg: #e0f7fa;
+  --rechnen: #b45309; --rechnen-bg: #fef3c7;
+}
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
   font-family: 'IBM Plex Sans', sans-serif;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 30px;
-  color: #1a1915;
-  background: #ffffff;
+  background: var(--bg);
+  color: var(--text);
   line-height: 1.6;
   font-size: 14px;
 }
 
 /* ── Header ── */
-.worksheet-header {
-  text-align: center;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 2px solid #2b4c8c;
+header {
+  background: var(--accent);
+  color: white;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.22);
 }
-
-.school-line {
-  font-size: 0.85rem;
-  color: #6b6760;
-  letter-spacing: 0.5px;
-  margin-bottom: 4px;
+.header-inner {
+  max-width: 860px; margin: 0 auto;
+  padding: 20px 28px 10px;
 }
-
-h1 {
-  color: #2b4c8c;
-  font-size: 1.6rem;
-  font-weight: 700;
-  margin-bottom: 2px;
+.header-school { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.7; }
+.header-title  { font-size: 1.45rem; font-weight: 700; margin: 3px 0 4px; }
+.header-sub    { font-size: 0.8rem; opacity: 0.78; font-family: 'IBM Plex Serif', serif; font-style: italic; }
+.header-meta {
+  max-width: 860px; margin: 0 auto;
+  padding: 8px 28px 16px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.85rem; color: rgba(255,255,255,0.85);
 }
-
-.subtitle {
-  font-size: 1.0rem;
-  color: #6b6760;
-  font-weight: 400;
-  font-style: italic;
-  margin-bottom: 14px;
-}
-
-.name-date {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.95rem;
-  margin-top: 12px;
-}
-
-.name-date span {
-  display: inline-block;
-}
-
 .field-line {
   display: inline-block;
-  border-bottom: 1px solid #333;
-  width: 200px;
-  margin-left: 6px;
+  border-bottom: 1.5px solid rgba(255,255,255,0.5);
+  width: 180px; margin-left: 4px;
 }
 
-/* ── Section Headers ── */
-.section-header {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #2b4c8c;
-  margin-top: 30px;
-  margin-bottom: 14px;
-  padding-bottom: 4px;
-  border-bottom: 1px solid #d4cfc4;
+/* ── Formula strip ── */
+.formula-strip {
+  background: var(--formula-bg);
+  color: #c8e8ff;
+  padding: 10px 0;
+  overflow-x: auto;
+}
+.formula-strip-inner {
+  max-width: 860px; margin: 0 auto; padding: 0 28px;
+  display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+}
+.formula-strip-label { font-size: 0.68rem; color: rgba(255,255,255,0.4); letter-spacing: 0.1em; text-transform: uppercase; flex-shrink: 0; }
+.fchip {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 4px; padding: 3px 10px;
+  font-size: 0.82rem; white-space: nowrap;
+  color: #ddf0ff;
 }
 
-.section-header .icon {
-  margin-right: 6px;
-}
+/* ── Main ── */
+main { max-width: 860px; margin: 0 auto; padding: 24px 28px 50px; }
 
-/* ── Info Box ── */
-.info-box {
-  border-left: 4px solid #2b4c8c;
-  background: #f0f4fa;
-  padding: 15px;
-  border-radius: 0 8px 8px 0;
-  margin: 14px 0;
-  font-size: 0.92rem;
-  line-height: 1.65;
+/* ── Section cards ── */
+.teil {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 22px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
+.teil-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 20px;
+  font-weight: 700; font-size: 1.0rem;
+}
+.teil-header .teil-icon {
+  width: 36px; height: 36px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.15rem; flex-shrink: 0;
+}
+.teil-body { padding: 0 20px 20px; }
 
-/* ── Formula Box ── */
-.formula-box {
-  background: #f5f2eb;
-  border: 1.5px solid #d4cfc4;
-  border-radius: 8px;
-  padding: 15px;
-  text-align: center;
-  margin: 15px 0;
-  font-size: 1.1rem;
-}
+/* Teil-specific colors */
+.teil-video .teil-header { background: var(--video-bg); color: var(--video); }
+.teil-video .teil-icon   { background: rgba(107,33,168,0.15); }
+.teil-video              { border-color: #d8b4fe; }
+
+.teil-erarbeit .teil-header { background: var(--erarbeit-bg); color: var(--erarbeit); }
+.teil-erarbeit .teil-icon   { background: rgba(14,116,144,0.12); }
+.teil-erarbeit              { border-color: #99e9f2; }
+
+.teil-rechnen .teil-header { background: var(--rechnen-bg); color: var(--rechnen); }
+.teil-rechnen .teil-icon   { background: rgba(180,83,9,0.12); }
+.teil-rechnen              { border-color: #fcd34d; }
 
 /* ── Teacher Note ── */
 .teacher-note {
-  background: #fff3cd;
-  border: 1px solid #ffc107;
+  background: linear-gradient(135deg, #fef9c3 0%, #fef3c7 100%);
+  border: 1.5px solid #f59e0b;
   border-radius: 8px;
-  padding: 12px;
-  font-size: 0.85rem;
-  margin: 12px 0;
+  padding: 14px 16px;
+  font-size: 0.82rem;
+  margin-bottom: 16px;
   line-height: 1.55;
+  position: relative;
 }
-
-.teacher-note strong {
-  display: block;
-  margin-bottom: 4px;
-  font-size: 0.9rem;
+.teacher-note::before {
+  content: 'Lehrerhinweis';
+  position: absolute; top: -9px; left: 14px;
+  background: #f59e0b; color: white;
+  font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 1px 8px; border-radius: 3px;
 }
+.teacher-note ul { margin: 8px 0 4px 16px; }
+.teacher-note li { margin-bottom: 4px; }
 
-.teacher-note ul {
-  margin: 6px 0 6px 18px;
-}
-
-.teacher-note li {
-  margin-bottom: 3px;
+/* ── Intro text ── */
+.intro-text {
+  margin-bottom: 14px;
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  font-family: 'IBM Plex Serif', serif;
+  font-style: italic;
 }
 
 /* ── Aufgabe ── */
 .aufgabe {
-  margin-bottom: 20px;
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
 }
-
+.aufgabe-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--accent); color: white;
+  font-size: 0.78rem; font-weight: 700;
+  margin-right: 8px; flex-shrink: 0;
+  vertical-align: middle;
+}
 .aufgabe-header {
-  font-weight: 600;
-  margin-bottom: 6px;
+  font-weight: 700; font-size: 0.95rem;
+  margin-bottom: 8px;
+  display: flex; align-items: center;
 }
-
+.aufgabe-title { flex: 1; }
 .aufgabe-text {
   margin-bottom: 8px;
-  line-height: 1.6;
+  line-height: 1.65;
+  font-size: 0.9rem;
 }
-
 .aufgabe-parts {
-  margin-left: 16px;
-  margin-bottom: 8px;
+  margin: 6px 0 10px 22px;
+  font-size: 0.9rem;
 }
+.aufgabe-parts li { margin-bottom: 4px; }
 
-.aufgabe-parts li {
-  margin-bottom: 3px;
+/* ── AFB pill ── */
+.afb-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  border-radius: 4px; padding: 2px 8px; font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.03em; border: 1.5px solid transparent;
+  margin-left: auto; flex-shrink: 0;
 }
+.afb1 { background: var(--afb1-bg); color: var(--afb1); border-color: #9ac4de; }
+.afb2 { background: var(--afb2-bg); color: var(--afb2); border-color: #e8c96a; }
+.afb3 { background: var(--afb3-bg); color: var(--afb3); border-color: #e8a0a0; }
+.star-pill { background: var(--star-bg); color: var(--star); border-color: #e8c070; }
 
-/* ── Answer Lines ── */
-.answer-lines {
-  margin: 8px 0 12px 0;
-}
-
+/* ── Answer lines ── */
+.answer-lines { margin: 8px 0 4px; }
 .answer-line {
-  border-bottom: 1px solid #ccc;
-  height: 28px;
-  margin-bottom: 4px;
+  border-bottom: 1px dotted #b8b4aa;
+  height: 30px;
 }
 
 /* ── Drawing Box ── */
 .drawing-box {
-  border: 1.5px solid #999;
-  border-radius: 4px;
-  width: 150px;
-  height: 150px;
-  display: inline-block;
-  vertical-align: top;
+  border: 1.5px dashed #999;
+  border-radius: 8px;
+  width: 160px; height: 160px;
+  display: flex; align-items: center; justify-content: center;
+  color: #bbb; font-size: 0.75rem;
+  background: white;
 }
 
-/* ── Split Layout (for Aufgabe 2) ── */
+/* ── Split Layout ── */
 .split-layout {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
+  display: flex; gap: 16px; align-items: flex-start;
+}
+.split-left { flex: 1; }
+.split-right { flex: 0 0 auto; }
+
+/* ── Info Box ── */
+.info-box {
+  background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+  border: 1.5px solid #93c5fd;
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  position: relative;
+}
+.info-box::before {
+  content: 'Merke';
+  position: absolute; top: -9px; left: 14px;
+  background: #3b82f6; color: white;
+  font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 1px 8px; border-radius: 3px;
 }
 
-.split-left {
-  flex: 1;
-}
-
-.split-right {
-  flex: 0 0 auto;
+/* ── Formula box (dark) ── */
+.formula-box {
+  background: var(--formula-bg);
+  color: #c8e8ff;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: 1.15rem;
 }
 
 /* ── Table ── */
 table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 10px 0;
+  width: 100%; border-collapse: collapse; margin: 6px 0;
+  font-size: 0.88rem;
 }
-
 th, td {
-  border: 1px solid #ccc;
-  padding: 8px;
-  text-align: left;
-  font-size: 0.92rem;
+  border: 1.5px solid var(--border);
+  padding: 9px 12px; text-align: left;
 }
-
 th {
-  background: #f0f4fa;
-  font-weight: 600;
+  background: var(--accent); color: white;
+  font-weight: 600; font-size: 0.82rem;
+  letter-spacing: 0.03em;
 }
+td { background: white; }
+tr:nth-child(even) td { background: #fafaf7; }
 
 /* ── Lückentext ── */
-.lueckentext {
-  margin: 8px 0;
-  line-height: 2.0;
-}
-
-.lueckentext p {
-  margin-bottom: 6px;
-}
-
+.lueckentext { margin: 6px 0; line-height: 2.2; font-size: 0.9rem; }
+.lueckentext p { margin-bottom: 4px; }
 .luecke {
   display: inline-block;
-  border-bottom: 1px solid #333;
-  min-width: 180px;
-  margin: 0 2px;
-}
-
-/* ── Intro Text ── */
-.intro-text {
-  margin-bottom: 12px;
-  font-size: 0.95rem;
-  color: #333;
-}
-
-/* ── AFB Label ── */
-.afb-label {
-  display: inline-block;
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 1px 7px;
-  border-radius: 4px;
-  margin-left: 6px;
-  vertical-align: middle;
-}
-
-.afb-i   { background: #dceef8; color: #1a5c8c; }
-.afb-ii  { background: #fef0cc; color: #7a5200; }
-.afb-iii { background: #fde8e8; color: #7a1a1a; }
-
-/* ── Bonus Star ── */
-.bonus-star {
-  color: #b06000;
-  font-weight: 700;
+  border-bottom: 2px solid var(--accent);
+  min-width: 200px; margin: 0 3px;
 }
 
 /* ── Footer ── */
-.worksheet-footer {
-  margin-top: 30px;
-  padding-top: 10px;
-  border-top: 1px solid #d4cfc4;
-  text-align: center;
-  font-size: 0.8rem;
-  color: #6b6760;
+footer {
+  text-align: center; color: var(--text-muted); font-size: 0.73rem;
+  padding: 18px; border-top: 1px solid var(--border);
+  font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.05em;
+  max-width: 860px; margin: 0 auto;
 }
 
 /* ── Print ── */
 @media print {
-  body {
-    padding: 0;
-    background: white;
-    color: black;
-    font-size: 13px;
-  }
+  body { background: white; font-size: 12.5px; }
+  header { box-shadow: none; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .formula-strip { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .formula-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .teacher-note { display: none; }
+  .teil { box-shadow: none; break-inside: avoid; }
+  .aufgabe { break-inside: avoid; }
+  main { padding: 16px 20px 30px; }
+  th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .afb-pill { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .teil-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
 
-  .teacher-note {
-    display: none;
-  }
-
-  .info-box {
-    background: none;
-    border-left: 3px solid #000;
-  }
-
-  .formula-box {
-    background: #f5f2eb;
-    border-color: #999;
-  }
-
-  th {
-    background: none;
-  }
-
-  .worksheet-header {
-    border-bottom-color: #000;
-  }
-
-  .section-header {
-    border-bottom-color: #999;
-    color: #000;
-  }
-
-  h1 {
-    color: #000;
-  }
-
-  .worksheet-footer {
-    border-top-color: #999;
-  }
+@media (max-width: 500px) {
+  main { padding: 16px 12px 30px; }
+  .teil-body { padding: 0 14px 14px; }
+  .split-layout { flex-direction: column; }
+  .drawing-box { width: 100%; height: 140px; }
 }
 </style>
 </head>
 <body>
 
-<!-- ════════════════════════════════════════════ HEADER ════════════════════════════════════════════ -->
-<div class="worksheet-header">
-  <div class="school-line">Lore-Lorentz-Schule &middot; Physik-LK 11NP</div>
-  <h1>Arbeitsblatt: Zentripetalkraft</h1>
-  <div class="subtitle">Von der Beobachtung zur Formel</div>
-  <div class="name-date">
+<!-- ══ HEADER ══ -->
+<header>
+  <div class="header-inner">
+    <div class="header-school">Lore-Lorentz-Schule &middot; Physik-LK 11NP</div>
+    <div class="header-title">Arbeitsblatt: Zentripetalkraft</div>
+    <div class="header-sub">Von der Beobachtung zur Formel &mdash; Einstieg in die Kreisbewegung</div>
+  </div>
+  <div class="header-meta">
     <span>Name: <span class="field-line"></span></span>
     <span>Datum: <span class="field-line"></span></span>
   </div>
-</div>
+</header>
 
-<!-- ════════════════════════════════════════ TEIL 1 ════════════════════════════════════════ -->
-<div class="section-header"><span class="icon">&#x1F3AC;</span> Teil 1: Einstieg &mdash; Video-Beobachtung</div>
-
-<p class="intro-text">Schauen Sie sich das gezeigte Video aufmerksam an. Beantworten Sie die folgenden Beobachtungsfragen.</p>
-
-<div class="teacher-note">
-  <strong>Lehrerhinweis</strong>
-  Empfohlene Videos f&uuml;r den Einstieg:
-  <ul>
-    <li><strong>Kettenkarussell in Zeitlupe</strong> &mdash; Beobachtung: Ketten h&auml;ngen schr&auml;g, je schneller desto schr&auml;ger</li>
-    <li><strong>Motorrad im Looping</strong> &mdash; Frage: Warum f&auml;llt der Fahrer im h&ouml;chsten Punkt nicht herunter?</li>
-    <li><strong>M&uuml;nze auf Drehteller</strong> &mdash; Frage: Wann rutscht die M&uuml;nze weg?</li>
-    <li><strong>Wasserbecher an Schnur</strong> &mdash; Wirbeln im Kreis, Wasser f&auml;llt nicht heraus</li>
-  </ul>
-  <em>Tipp: Das Kettenkarussell eignet sich am besten f&uuml;r dieses Arbeitsblatt.</em>
-</div>
-
-<!-- Aufgabe 1 -->
-<div class="aufgabe">
-  <div class="aufgabe-header">Aufgabe 1</div>
-  <div class="aufgabe-text">Beschreiben Sie die Bewegung, die Sie beobachten. Handelt es sich um eine geradlinige oder eine gekr&uuml;mmte Bahn?</div>
-  <div class="answer-lines">
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
+<!-- ══ FORMELLEISTE ══ -->
+<div class="formula-strip">
+  <div class="formula-strip-inner">
+    <span class="formula-strip-label">Formeln</span>
+    <span class="fchip">\(v = \omega \cdot r\)</span>
+    <span class="fchip">\(T = \frac{2\pi}{\omega}\)</span>
+    <span class="fchip">\(a_Z = \frac{v^2}{r}\)</span>
+    <span class="fchip">\(F_Z = m \cdot \frac{v^2}{r} = m\omega^2 r\)</span>
+    <span class="fchip">\(F_R = \mu \cdot F_N\)</span>
   </div>
 </div>
 
-<!-- Aufgabe 2 -->
-<div class="aufgabe">
-  <div class="aufgabe-header">Aufgabe 2</div>
-  <div class="aufgabe-text">Welche Kraft/Kr&auml;fte wirken auf den sich bewegenden K&ouml;rper? Zeichnen Sie ein Kr&auml;ftediagramm in das Feld rechts.</div>
-  <div class="split-layout">
-    <div class="split-left">
+<main>
+
+<!-- ══════════════════════════════════════════════
+     TEIL 1: VIDEO-EINSTIEG
+══════════════════════════════════════════════ -->
+<div class="teil teil-video">
+  <div class="teil-header">
+    <div class="teil-icon">&#x1F3AC;</div>
+    <span>Teil 1: Einstieg &mdash; Video-Beobachtung</span>
+  </div>
+  <div class="teil-body">
+
+    <div class="teacher-note">
+      Empfohlene Videos f&uuml;r den Einstieg:
+      <ul>
+        <li><strong>Kettenkarussell in Zeitlupe</strong> &mdash; Ketten h&auml;ngen schr&auml;g, je schneller desto schr&auml;ger</li>
+        <li><strong>Motorrad im Looping</strong> &mdash; Warum f&auml;llt der Fahrer oben nicht herunter?</li>
+        <li><strong>M&uuml;nze auf Drehteller</strong> &mdash; Ab welcher Drehzahl rutscht sie weg?</li>
+        <li><strong>Wasserbecher an Schnur</strong> &mdash; Wirbeln im Kreis, Wasser f&auml;llt nicht heraus</li>
+      </ul>
+      <em>Tipp: Das Kettenkarussell eignet sich am besten f&uuml;r dieses Arbeitsblatt.</em>
+    </div>
+
+    <p class="intro-text">Schauen Sie sich das gezeigte Video aufmerksam an und beantworten Sie die folgenden Beobachtungsfragen.</p>
+
+    <!-- Aufgabe 1 -->
+    <div class="aufgabe">
+      <div class="aufgabe-header">
+        <span class="aufgabe-num">1</span>
+        <span class="aufgabe-title">Bewegung beschreiben</span>
+      </div>
+      <div class="aufgabe-text">Beschreiben Sie die Bewegung, die Sie beobachten. Handelt es sich um eine geradlinige oder eine gekr&uuml;mmte Bahn?</div>
       <div class="answer-lines">
         <div class="answer-line"></div>
         <div class="answer-line"></div>
         <div class="answer-line"></div>
       </div>
     </div>
-    <div class="split-right">
-      <div class="drawing-box"></div>
+
+    <!-- Aufgabe 2 -->
+    <div class="aufgabe">
+      <div class="aufgabe-header">
+        <span class="aufgabe-num">2</span>
+        <span class="aufgabe-title">Kr&auml;fte analysieren</span>
+      </div>
+      <div class="aufgabe-text">Welche Kr&auml;fte wirken auf den sich bewegenden K&ouml;rper? Zeichnen Sie ein Kr&auml;ftediagramm in das Feld rechts.</div>
+      <div class="split-layout">
+        <div class="split-left">
+          <div class="answer-lines">
+            <div class="answer-line"></div>
+            <div class="answer-line"></div>
+            <div class="answer-line"></div>
+          </div>
+        </div>
+        <div class="split-right">
+          <div class="drawing-box">Kr&auml;ftediagramm</div>
+        </div>
+      </div>
     </div>
+
+    <!-- Aufgabe 3 -->
+    <div class="aufgabe">
+      <div class="aufgabe-header">
+        <span class="aufgabe-num">3</span>
+        <span class="aufgabe-title">Beschleunigung begr&uuml;nden</span>
+      </div>
+      <div class="aufgabe-text">Der K&ouml;rper bewegt sich auf einer Kreisbahn mit konstantem \(|\vec{v}|\). Ist das eine beschleunigte Bewegung? Begr&uuml;nden Sie!</div>
+      <div class="answer-lines">
+        <div class="answer-line"></div>
+        <div class="answer-line"></div>
+        <div class="answer-line"></div>
+        <div class="answer-line"></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
-<!-- Aufgabe 3 -->
-<div class="aufgabe">
-  <div class="aufgabe-header">Aufgabe 3</div>
-  <div class="aufgabe-text">Der K&ouml;rper bewegt sich auf einer Kreisbahn. Trotzdem ist \(|\vec{v}|\) konstant. Ist das eine beschleunigte Bewegung? Begr&uuml;nden Sie!</div>
-  <div class="answer-lines">
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
+<!-- ══════════════════════════════════════════════
+     TEIL 2: ERARBEITUNG
+══════════════════════════════════════════════ -->
+<div class="teil teil-erarbeit">
+  <div class="teil-header">
+    <div class="teil-icon">&#x1F50D;</div>
+    <span>Teil 2: Erarbeitung &mdash; Die Zentripetalkraft</span>
+  </div>
+  <div class="teil-body">
+
+    <div class="info-box">
+      Bei einer gleichf&ouml;rmigen Kreisbewegung &auml;ndert sich st&auml;ndig die <strong>Richtung</strong> der Geschwindigkeit. Nach dem 2.&nbsp;Newtonschen Gesetz muss daf&uuml;r eine Kraft verantwortlich sein. Diese Kraft zeigt stets zum <strong>Kreismittelpunkt</strong> und hei&szlig;t <strong>Zentripetalkraft</strong> (von lat.&nbsp;<em>centrum petere</em>&nbsp;=&nbsp;den Mittelpunkt suchen).
+    </div>
+
+    <div class="formula-box">
+      \[ F_Z = m \cdot \frac{v^2}{r} = m \cdot \omega^2 \cdot r \]
+    </div>
+
+    <!-- Aufgabe 4 -->
+    <div class="aufgabe">
+      <div class="aufgabe-header">
+        <span class="aufgabe-num">4</span>
+        <span class="aufgabe-title">L&uuml;ckentext</span>
+      </div>
+      <div class="lueckentext">
+        <p>a) Die Zentripetalkraft zeigt immer in Richtung <span class="luecke"></span>.</p>
+        <p>b) Ohne Zentripetalkraft w&uuml;rde sich der K&ouml;rper nach Newton&nbsp;1 <span class="luecke"></span> weiterbewegen.</p>
+        <p>c) Beim Kettenkarussell wird \(F_Z\) durch die <span class="luecke"></span> der Kette aufgebracht.</p>
+        <p>d) Bei einer Kurvenfahrt liefert die <span class="luecke"></span> zwischen Reifen und Stra&szlig;e die Zentripetalkraft.</p>
+        <p>e) \(F_Z\) ist <span class="luecke"></span> proportional zum Quadrat der Geschwindigkeit.</p>
+      </div>
+    </div>
+
+    <!-- Aufgabe 5 -->
+    <div class="aufgabe">
+      <div class="aufgabe-header">
+        <span class="aufgabe-num">5</span>
+        <span class="aufgabe-title">Kr&auml;fte identifizieren</span>
+      </div>
+      <div class="aufgabe-text">Benennen Sie in jedem Fall die Kraft, die als Zentripetalkraft wirkt:</div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width:55%">Situation</th>
+            <th>Kraft, die \(F_Z\) aufbringt</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Stein an einer Schnur kreist</td><td></td></tr>
+          <tr><td>Auto in einer Kurve (ebene Stra&szlig;e)</td><td></td></tr>
+          <tr><td>Mond umkreist die Erde</td><td></td></tr>
+          <tr><td>Elektron umkreist den Atomkern</td><td></td></tr>
+          <tr><td>W&auml;sche in der Waschmaschinentrommel</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+
   </div>
 </div>
 
-<!-- ════════════════════════════════════════ TEIL 2 ════════════════════════════════════════ -->
-<div class="section-header"><span class="icon">&#x1F50D;</span> Teil 2: Erarbeitung &mdash; Die Zentripetalkraft</div>
+<!-- ══════════════════════════════════════════════
+     TEIL 3: RECHENAUFGABEN
+══════════════════════════════════════════════ -->
+<div class="teil teil-rechnen">
+  <div class="teil-header">
+    <div class="teil-icon">&#x270F;&#xFE0F;</div>
+    <span>Teil 3: Anwendung &mdash; Rechenaufgaben</span>
+  </div>
+  <div class="teil-body">
 
-<div class="info-box">
-  Bei einer gleichf&ouml;rmigen Kreisbewegung &auml;ndert sich st&auml;ndig die <strong>Richtung</strong> der Geschwindigkeit. Nach dem 2.&nbsp;Newtonschen Gesetz muss daf&uuml;r eine Kraft verantwortlich sein. Diese Kraft zeigt stets zum <strong>Kreismittelpunkt</strong> und hei&szlig;t <strong>Zentripetalkraft</strong> (von lat. <em>centrum petere</em> = den Mittelpunkt suchen).
-</div>
+    <!-- Aufgabe 6 -->
+    <div class="aufgabe">
+      <div class="aufgabe-header">
+        <span class="aufgabe-num">6</span>
+        <span class="aufgabe-title">Kettenkarussell</span>
+        <span class="afb-pill afb1">AFB I</span>
+      </div>
+      <div class="aufgabe-text">
+        Ein Kettenkarussell hat den Radius \(r = 6{,}0\,\text{m}\) und dreht sich mit der Umlaufdauer \(T = 5{,}0\,\text{s}\). Ein Kind hat die Masse \(m = 35\,\text{kg}\).
+      </div>
+      <ol class="aufgabe-parts" type="a">
+        <li>Berechnen Sie die Bahngeschwindigkeit \(v\).</li>
+        <li>Berechnen Sie die Zentripetalbeschleunigung \(a_Z\).</li>
+        <li>Berechnen Sie die Zentripetalkraft \(F_Z\), die auf das Kind wirkt.</li>
+        <li>Geben Sie \(F_Z\) als Vielfaches der Gewichtskraft \(F_G\) an.</li>
+      </ol>
+      <div class="answer-lines">
+        <div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>
+        <div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>
+        <div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>
+        <div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>
+      </div>
+    </div>
 
-<div class="formula-box">
-  \[ F_Z = m \cdot \frac{v^2}{r} = m \cdot \omega^2 \cdot r \]
-</div>
+    <!-- Aufgabe 7 -->
+    <div class="aufgabe">
+      <div class="aufgabe-header">
+        <span class="aufgabe-num">7</span>
+        <span class="aufgabe-title">Kurvenfahrt</span>
+        <span class="afb-pill afb2">AFB II</span>
+      </div>
+      <div class="aufgabe-text">
+        Ein PKW (\(m = 1400\,\text{kg}\)) f&auml;hrt mit \(v = 50\,\text{km/h}\) durch eine Kurve mit Radius \(r = 40\,\text{m}\). Der Haftreibungskoeffizient betr&auml;gt \(\mu = 0{,}8\).
+      </div>
+      <ol class="aufgabe-parts" type="a">
+        <li>Berechnen Sie die n&ouml;tige Zentripetalkraft.</li>
+        <li>Berechnen Sie die maximale Haftreibungskraft \(F_R = \mu \cdot m \cdot g\).</li>
+        <li>Reicht die Reibung aus? Begr&uuml;nden Sie.</li>
+        <li>Berechnen Sie die H&ouml;chstgeschwindigkeit \(v_{\text{max}}\), bei der das Auto gerade noch nicht rutscht.</li>
+      </ol>
+      <div class="answer-lines">
+        <div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>
+        <div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>
+        <div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>
+        <div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>
+        <div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>
+      </div>
+    </div>
 
-<!-- Aufgabe 4 -->
-<div class="aufgabe">
-  <div class="aufgabe-header">Aufgabe 4: L&uuml;ckentext</div>
-  <div class="aufgabe-text">Vervollst&auml;ndigen Sie:</div>
-  <div class="lueckentext">
-    <p>a) Die Zentripetalkraft zeigt immer in Richtung <span class="luecke"></span>.</p>
-    <p>b) Ohne Zentripetalkraft w&uuml;rde sich der K&ouml;rper nach dem 1.&nbsp;Newtonschen Gesetz <span class="luecke"></span> weiterbewegen.</p>
-    <p>c) Bei einem Kettenkarussell wird die Zentripetalkraft durch die <span class="luecke"></span> der Kette aufgebracht.</p>
-    <p>d) Bei einer Kurvenfahrt liefert die <span class="luecke"></span> zwischen Reifen und Stra&szlig;e die Zentripetalkraft.</p>
-    <p>e) Die Zentripetalkraft ist <span class="luecke"></span> proportional zum Quadrat der Geschwindigkeit.</p>
+    <!-- Aufgabe 8 -->
+    <div class="aufgabe">
+      <div class="aufgabe-header">
+        <span class="aufgabe-num">&#9733;</span>
+        <span class="aufgabe-title">Wasserbecher schleudern</span>
+        <span class="afb-pill star-pill">&#9733; AFB III</span>
+      </div>
+      <div class="aufgabe-text">
+        Ein Eimer Wasser (\(m = 2{,}0\,\text{kg}\)) wird an einem Seil (\(L = 1{,}0\,\text{m}\)) im Kreis geschleudert. Im h&ouml;chsten Punkt soll das Wasser nicht herausfallen.
+      </div>
+      <ol class="aufgabe-parts" type="a">
+        <li>Welche Bedingung muss im h&ouml;chsten Punkt gelten? (<em>Hinweis:</em> \(F_Z \geq F_G\))</li>
+        <li>Leiten Sie die Mindestgeschwindigkeit \(v_{\text{min}}\) her.</li>
+        <li>Berechnen Sie \(v_{\text{min}}\).</li>
+        <li>Erkl&auml;ren Sie in eigenen Worten: Warum f&auml;llt das Wasser nicht heraus?</li>
+      </ol>
+      <div class="answer-lines">
+        <div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>
+        <div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>
+        <div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>
+        <div class="answer-line"></div><div class="answer-line"></div><div class="answer-line"></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
-<!-- Aufgabe 5 -->
-<div class="aufgabe">
-  <div class="aufgabe-header">Aufgabe 5: Kr&auml;fte identifizieren</div>
-  <div class="aufgabe-text">Benennen Sie in jedem Fall die Kraft, die als Zentripetalkraft wirkt:</div>
-  <table>
-    <thead>
-      <tr>
-        <th>Situation</th>
-        <th>Kraft, die \(F_Z\) aufbringt</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Stein an einer Schnur kreist</td>
-        <td style="min-width:180px;"></td>
-      </tr>
-      <tr>
-        <td>Auto in einer Kurve</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>Mond umkreist die Erde</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>Elektron umkreist den Atomkern</td>
-        <td></td>
-      </tr>
-      <tr>
-        <td>Kleidung in der Waschmaschine</td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+</main>
 
-<!-- ════════════════════════════════════════ TEIL 3 ════════════════════════════════════════ -->
-<div class="section-header"><span class="icon">&#x270F;&#xFE0F;</span> Teil 3: Anwendung &mdash; Rechenaufgaben</div>
-
-<!-- Aufgabe 6 -->
-<div class="aufgabe">
-  <div class="aufgabe-header">Aufgabe 6 <span class="afb-label afb-i">AFB I</span> &mdash; Kettenkarussell</div>
-  <div class="aufgabe-text">
-    Ein Kettenkarussell hat den Radius \(r = 6{,}0\,\text{m}\) und dreht sich mit der Umlaufdauer \(T = 5{,}0\,\text{s}\). Ein Kind hat die Masse \(m = 35\,\text{kg}\).
-  </div>
-  <ol class="aufgabe-parts" type="a">
-    <li>Berechnen Sie die Bahngeschwindigkeit \(v\).</li>
-    <li>Berechnen Sie die Zentripetalbeschleunigung \(a_Z\).</li>
-    <li>Berechnen Sie die Zentripetalkraft \(F_Z\), die auf das Kind wirkt.</li>
-    <li>Geben Sie \(F_Z\) als Vielfaches der Gewichtskraft \(F_G\) an.</li>
-  </ol>
-  <div class="answer-lines">
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-  </div>
-</div>
-
-<!-- Aufgabe 7 -->
-<div class="aufgabe">
-  <div class="aufgabe-header">Aufgabe 7 <span class="afb-label afb-ii">AFB II</span> &mdash; Kurvenfahrt</div>
-  <div class="aufgabe-text">
-    Ein PKW (\(m = 1400\,\text{kg}\)) f&auml;hrt mit \(v = 50\,\text{km/h}\) durch eine Kurve mit dem Radius \(r = 40\,\text{m}\). Der Haftreibungskoeffizient betr&auml;gt \(\mu = 0{,}8\).
-  </div>
-  <ol class="aufgabe-parts" type="a">
-    <li>Berechnen Sie die n&ouml;tige Zentripetalkraft.</li>
-    <li>Berechnen Sie die maximale Haftreibungskraft \(F_R = \mu \cdot m \cdot g\).</li>
-    <li>Reicht die Reibung aus? Begr&uuml;nden Sie.</li>
-    <li>Berechnen Sie die H&ouml;chstgeschwindigkeit \(v_{\text{max}}\), bei der das Auto gerade noch nicht rutscht.</li>
-  </ol>
-  <div class="answer-lines">
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-  </div>
-</div>
-
-<!-- Aufgabe 8 -->
-<div class="aufgabe">
-  <div class="aufgabe-header"><span class="bonus-star">&#9733;</span> Aufgabe 8 <span class="afb-label afb-iii">AFB III</span> &mdash; Reflexion</div>
-  <div class="aufgabe-text">
-    Ein Eimer Wasser (\(m = 2{,}0\,\text{kg}\)) wird an einem Seil (\(L = 1{,}0\,\text{m}\)) im Kreis geschleudert. Im h&ouml;chsten Punkt soll das Wasser nicht herausfallen.
-  </div>
-  <ol class="aufgabe-parts" type="a">
-    <li>Welche Bedingung muss im h&ouml;chsten Punkt gelten? (<em>Hinweis:</em> \(F_Z \geq F_G\))</li>
-    <li>Leiten Sie die Mindestgeschwindigkeit \(v_{\text{min}}\) her.</li>
-    <li>Berechnen Sie \(v_{\text{min}}\).</li>
-    <li>Erkl&auml;ren Sie in eigenen Worten: Warum f&auml;llt das Wasser nicht heraus?</li>
-  </ol>
-  <div class="answer-lines">
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-    <div class="answer-line"></div>
-  </div>
-</div>
-
-<!-- ════════════════════════════════════════ FOOTER ════════════════════════════════════════ -->
-<div class="worksheet-footer">
+<footer>
   Lore-Lorentz-Schule &middot; Physik-LK 11NP &middot; Zentripetalkraft
-</div>
+</footer>
 
 <script>
   MathJax.startup.promise.then(() => MathJax.typesetPromise());
