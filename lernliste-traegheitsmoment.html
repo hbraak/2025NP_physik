@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernliste Q4: Kreisbewegung, Zentripetalkraft &amp; Trägheitsmoment</title>
+
+<!-- MathJax -->
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(','\\)'], ['$','$']], displayMath: [['\\[','\\]'], ['$$','$$']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] },
+    startup: { typeset: false }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js" crossorigin="anonymous"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Serif:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #f5f2eb;
+  --surface: #ffffff;
+  --surface2: #f0ece2;
+  --border: #d4cfc4;
+  --text: #1a1915;
+  --text-muted: #6b6760;
+  --accent: #2b4c8c;
+  --accent-light: #dce6f5;
+  --green: #1a6b3a;
+  --green-light: #d4edde;
+  --yellow-light: #fdf5d0;
+  --formula-bg: #0f1923;
+  --afb1: #1a5c8c;  --afb1-bg: #dceef8;
+  --afb2: #7a5200;  --afb2-bg: #fef0cc;
+  --afb3: #7a1a1a;  --afb3-bg: #fde8e8;
+  --star: #b06000;  --star-bg: #fff0d0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* ── Header ── */
+header {
+  background: var(--accent);
+  color: white;
+  position: sticky; top: 0; z-index: 200;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.22);
+}
+.header-inner {
+  max-width: 920px; margin: 0 auto;
+  padding: 16px 24px 8px;
+}
+.header-school { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.7; }
+.header-title  { font-size: 1.3rem; font-weight: 700; margin: 3px 0 4px; }
+.header-sub    { font-size: 0.8rem; opacity: 0.78; font-family: 'IBM Plex Serif', serif; font-style: italic; }
+.progress-wrap { max-width: 920px; margin: 0 auto; padding: 6px 24px 14px; }
+.progress-label { font-size: 0.73rem; color: rgba(255,255,255,0.7); display: flex; justify-content: space-between; margin-bottom: 4px; }
+.progress-track { height: 7px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden; }
+.progress-fill  { height: 100%; background: #7ecba0; border-radius: 4px; transition: width .5s; width: 0; }
+
+/* ── AFB legend ── */
+.afb-legend {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 0;
+}
+.afb-legend-inner {
+  max-width: 920px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+}
+.afb-legend-label { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+.afb-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  border-radius: 4px; padding: 3px 9px; font-size: 0.73rem; font-weight: 700; letter-spacing: 0.04em;
+  border: 1.5px solid transparent;
+}
+.afb1 { background: var(--afb1-bg); color: var(--afb1); border-color: #9ac4de; }
+.afb2 { background: var(--afb2-bg); color: var(--afb2); border-color: #e8c96a; }
+.afb3 { background: var(--afb3-bg); color: var(--afb3); border-color: #e8a0a0; }
+.star-pill { background: var(--star-bg); color: var(--star); border-color: #e8c070; }
+
+/* ── Formula strip ── */
+.formula-strip {
+  background: var(--formula-bg);
+  color: #c8e8ff;
+  padding: 10px 0;
+  overflow-x: auto;
+}
+.formula-strip-inner {
+  max-width: 920px; margin: 0 auto; padding: 0 24px;
+  display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+}
+.formula-strip-label { font-size: 0.68rem; color: rgba(255,255,255,0.4); letter-spacing: 0.1em; text-transform: uppercase; flex-shrink: 0; }
+.fchip {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 4px; padding: 3px 10px;
+  font-size: 0.82rem; white-space: nowrap;
+  color: #ddf0ff;
+}
+.fchip .mjx-container { display: inline !important; }
+
+/* ── Main ── */
+main { max-width: 920px; margin: 0 auto; padding: 26px 24px 60px; }
+
+/* ── Section ── */
+.section { margin-bottom: 26px; }
+.section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.section-icon {
+  width: 32px; height: 32px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.05rem; flex-shrink: 0;
+}
+.s-kreis    .section-icon { background: #e0f0ff; }
+.s-zentri   .section-icon { background: #fdecd8; }
+.s-uebergang .section-icon { background: #f5f0d8; }
+.s-traeg    .section-icon { background: #dce6f5; }
+.s-steiner  .section-icon { background: #ece0f5; }
+.s-drehimpuls .section-icon { background: #dff0e8; }
+.s-erot     .section-icon { background: #fde8e8; }
+.s-rollen   .section-icon { background: #e8f0e0; }
+.section-title { font-size: 0.98rem; font-weight: 700; }
+.section-count { font-size: 0.72rem; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; margin-left: auto; }
+
+/* ── Cards ── */
+.card-list { display: flex; flex-direction: column; gap: 5px; }
+
+.comp-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  display: flex; align-items: stretch;
+  transition: border-color .18s, box-shadow .18s;
+  overflow: hidden;
+}
+.comp-card:hover { border-color: #a8bed8; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+.comp-card.done { background: var(--green-light); border-color: #a0d4b8; }
+.comp-card.done .comp-text { text-decoration: line-through; color: #3a7a54; opacity: 0.72; }
+.comp-card.star-card { border-color: #e0c060; background: var(--yellow-light); }
+.comp-card.star-card.done { background: var(--green-light); border-color: #a0d4b8; }
+
+/* Checkbox */
+.comp-check {
+  width: 46px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.comp-check:hover { background: rgba(0,0,0,0.03); }
+.checkbox {
+  width: 19px; height: 19px;
+  border: 2px solid var(--border); border-radius: 4px;
+  background: white; display: flex; align-items: center; justify-content: center;
+  pointer-events: none; transition: all .15s;
+}
+.comp-card.done .checkbox { background: var(--green); border-color: var(--green); }
+.checkbox::after {
+  content: ''; display: none;
+  width: 4px; height: 8px;
+  border: 2px solid white; border-top: none; border-left: none;
+  transform: rotate(45deg) translateY(-1px);
+}
+.comp-card.done .checkbox::after { display: block; }
+
+/* Body */
+.comp-body { flex: 1; padding: 9px 10px; min-width: 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.comp-text { font-size: 0.875rem; line-height: 1.45; flex: 1; min-width: 160px; }
+.comp-text .mjx-container { display: inline !important; }
+
+/* AFB badge on card */
+.card-afb { flex-shrink: 0; }
+
+/* Üben button */
+.comp-btn {
+  padding: 0 14px; background: none; border: none;
+  border-left: 1.5px solid var(--border);
+  color: var(--accent); font-size: 0.76rem; font-weight: 700;
+  font-family: 'IBM Plex Sans', sans-serif;
+  cursor: pointer; white-space: nowrap; letter-spacing: 0.03em;
+  transition: background .14s;
+}
+.comp-btn:hover { background: var(--accent-light); }
+
+/* ── Modal ── */
+.overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(10,10,14,0.54); z-index: 500;
+  justify-content: center; align-items: flex-start;
+  padding: 36px 14px 20px; overflow-y: auto;
+}
+.overlay.open { display: flex; }
+.modal {
+  background: var(--surface); border-radius: 12px;
+  width: 100%; max-width: 640px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.25);
+  animation: slideUp .2s ease; overflow: hidden;
+}
+@keyframes slideUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+
+.modal-head {
+  background: var(--accent); color: white;
+  padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;
+}
+.modal-head h3 { font-size: 0.93rem; font-weight: 600; }
+.modal-close {
+  background: rgba(255,255,255,0.15); border: none; color: white;
+  width: 26px; height: 26px; border-radius: 5px; cursor: pointer; font-size: 0.9rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.modal-close:hover { background: rgba(255,255,255,0.28); }
+
+.modal-tabs { display: flex; border-bottom: 2px solid var(--border); background: var(--surface2); }
+.mtab {
+  flex: 1; padding: 9px 8px; border: none; background: none;
+  font-family: 'IBM Plex Sans', sans-serif; font-size: 0.8rem; font-weight: 600;
+  color: var(--text-muted); cursor: pointer;
+  border-bottom: 2.5px solid transparent; margin-bottom: -2px;
+  transition: color .14s;
+}
+.mtab.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--surface); }
+
+.modal-body { padding: 18px 20px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Task / solution content */
+.task-box {
+  background: var(--surface2); border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 13px 15px; font-size: 0.875rem; line-height: 1.65;
+  margin-bottom: 12px;
+}
+.task-box p { margin-bottom: 5px; }
+.task-box p:last-child { margin-bottom: 0; }
+.given {
+  display: block; font-family: 'IBM Plex Mono', monospace; font-size: 0.8em;
+  background: rgba(0,0,0,0.06); padding: 7px 10px; border-radius: 5px; margin: 7px 0;
+  line-height: 1.7;
+}
+/* Structured subtasks replacing .given */
+.subtasks {
+  margin: 8px 0 4px; display: flex; flex-direction: column; gap: 5px;
+}
+.subtask {
+  display: flex; align-items: baseline; gap: 8px;
+  font-size: 0.875rem; line-height: 1.55;
+}
+.subtask-label {
+  flex-shrink: 0; width: 20px;
+  font-weight: 700; color: var(--accent);
+}
+.subtask-body { flex: 1; }
+.hint-box {
+  background: rgba(43,76,140,0.07); border-left: 3px solid var(--accent);
+  border-radius: 0 5px 5px 0; padding: 5px 10px;
+  font-size: 0.82rem; color: var(--text-muted); margin-top: 6px;
+  font-style: italic;
+}
+.sol-toggle {
+  width: 100%; background: none; border: 1.5px solid var(--border); border-radius: 6px;
+  padding: 8px 14px; font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.8rem; font-weight: 600; color: var(--text-muted); cursor: pointer;
+  margin-bottom: 10px; transition: all .14s; text-align: left;
+}
+.sol-toggle:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.sol-box {
+  display: none; background: var(--green-light); border: 1.5px solid #a0d4b8;
+  border-radius: 8px; padding: 13px 15px; font-size: 0.855rem; line-height: 1.65;
+}
+.sol-box.open { display: block; animation: fadeIn .18s ease; }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+.sol-step { display: flex; gap: 8px; margin-bottom: 9px; }
+.sol-step:last-child { margin-bottom: 0; }
+.snum {
+  width: 19px; height: 19px; flex-shrink: 0; margin-top: 2px;
+  background: var(--green); color: white; border-radius: 50%;
+  font-size: 0.67rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.sol-step .mjx-container { display: inline !important; }
+.fbox {
+  display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 0.82em;
+  background: rgba(255,255,255,0.72); padding: 3px 8px; border-radius: 4px; margin: 2px 0;
+}
+.result {
+  display: inline-block; background: var(--green); color: white;
+  border-radius: 5px; padding: 5px 12px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.83em; font-weight: 600; margin-top: 8px;
+}
+/* for display math in modal */
+.dmath { text-align: center; margin: 8px 0; overflow-x: auto; }
+
+/* Prompt tab */
+.prompt-box {
+  background: var(--formula-bg); color: #c8e8ff;
+  border-radius: 8px; padding: 13px 15px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.77rem; line-height: 1.65;
+  white-space: pre-wrap; max-height: 230px; overflow-y: auto; margin-bottom: 12px;
+}
+.ai-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.ai-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 13px; border: 1.5px solid var(--border); border-radius: 6px;
+  font-family: 'IBM Plex Sans', sans-serif; font-size: 0.78rem; font-weight: 600;
+  cursor: pointer; text-decoration: none; background: white; color: var(--text);
+  transition: all .14s;
+}
+.ai-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.ai-btn.copy { background: var(--accent); color: white; border-color: var(--accent); }
+.ai-btn.copy:hover { background: #1e3d74; }
+
+/* Footer */
+footer {
+  text-align: center; color: var(--text-muted); font-size: 0.73rem;
+  padding: 18px; border-top: 1px solid var(--border);
+  font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.05em;
+}
+
+@media(max-width:500px) {
+  main { padding: 18px 14px 40px; }
+  .comp-btn { padding: 0 9px; font-size: 0.7rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header>
+  <div class="header-inner">
+    <div class="header-school">Lore-Lorentz-Schule &nbsp;·&nbsp; Physik-LK 11NP</div>
+    <div class="header-title">Lernliste: Kreisbewegung, Zentripetalkraft &amp; Trägheitsmoment</div>
+    <div class="header-sub">Klausurvorbereitung Q4 &nbsp;·&nbsp; Alle drei Anforderungsbereiche (AFB I–III)</div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>Ihr Fortschritt</span>
+      <span id="prog-text">0 von 0 Kompetenzen</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+  </div>
+</header>
+
+<!-- ══ AFB LEGENDE ══ -->
+<div class="afb-legend">
+  <div class="afb-legend-inner">
+    <span class="afb-legend-label">Anforderungsbereiche:</span>
+    <span class="afb-pill afb1">AFB I &nbsp;Reproduktion</span>
+    <span class="afb-pill afb2">AFB II &nbsp;Transfer</span>
+    <span class="afb-pill afb3">AFB III &nbsp;Reflexion</span>
+    <span class="afb-pill star-pill">★ Knobelaufgabe</span>
+  </div>
+</div>
+
+<!-- ══ FORMELLEISTE ══ -->
+<div class="formula-strip">
+  <div class="formula-strip-inner">
+    <span class="formula-strip-label">Formeln</span>
+    <span class="fchip">\(v = \omega \cdot r\)</span>
+    <span class="fchip">\(T = \frac{2\pi}{\omega}\)</span>
+    <span class="fchip">\(a_Z = \frac{v^2}{r} = \omega^2 r\)</span>
+    <span class="fchip">\(F_Z = m \omega^2 r\)</span>
+    <span class="fchip">\(J = \sum m_i r_i^2\)</span>
+    <span class="fchip">\(J_\text{Steiner} = J_S + md^2\)</span>
+    <span class="fchip">\(L = J\omega\)</span>
+    <span class="fchip">\(E_\text{rot} = \tfrac{1}{2}J\omega^2\)</span>
+  </div>
+</div>
+
+<main>
+
+<!-- ══════════════════════════════════════════════
+     1. GLEICHFÖRMIGE KREISBEWEGUNG
+══════════════════════════════════════════════ -->
+<div class="section s-kreis">
+  <div class="section-header">
+    <div class="section-icon">🔄</div>
+    <div class="section-title">Gleichförmige Kreisbewegung</div>
+    <div class="section-count" id="cnt-kreis"></div>
+  </div>
+  <div class="card-list" id="sec-kreis">
+
+    <div class="comp-card" data-id="z1" data-sec="kreis">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Bahngeschwindigkeit \(v = \omega \cdot r = \frac{2\pi r}{T}\) berechnen und die Größen \(\omega\), \(r\), \(T\) und \(f\) erläutern.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('z1')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="z2" data-sec="kreis">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann Winkelgeschwindigkeit \(\omega = \frac{2\pi}{T}\) und Frequenz \(f = \frac{1}{T}\) ineinander umrechnen und auf technische Beispiele anwenden (Zentrifuge, Rad, Karussell).</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('z2')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="z3" data-sec="kreis">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann begründen, warum eine gleichförmige Kreisbewegung trotz konstantem \(|\vec{v}|\) eine beschleunigte Bewegung ist (Richtungsänderung des Geschwindigkeitsvektors).</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('z3')">Üben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     2. ZENTRIPETALBESCHLEUNIGUNG & ZENTRIPETALKRAFT
+══════════════════════════════════════════════ -->
+<div class="section s-zentri">
+  <div class="section-header">
+    <div class="section-icon">⭕</div>
+    <div class="section-title">Zentripetalbeschleunigung &amp; Zentripetalkraft</div>
+    <div class="section-count" id="cnt-zentri"></div>
+  </div>
+  <div class="card-list" id="sec-zentri">
+
+    <div class="comp-card" data-id="z4" data-sec="zentri">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann \(a_Z = \frac{v^2}{r} = \omega^2 r\) berechnen und erklären, dass die Zentripetalbeschleunigung stets zum Kreismittelpunkt zeigt.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('z4')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="z5" data-sec="zentri">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann \(F_Z = m \cdot \frac{v^2}{r} = m \omega^2 r\) anwenden und die wirkende Kraft identifizieren (Seilkraft, Reibung, Gravitation).</span>
+        <span class="afb-pill afb2 card-afb">AFB I–II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('z5')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="z6" data-sec="zentri">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann Aufgaben zur Kurvenfahrt lösen: Welche Mindestreibungskraft \(F_R \geq F_Z\) braucht ein Auto in einer Kurve mit Radius \(r\) bei Geschwindigkeit \(v\)?</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('z6')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="z7" data-sec="zentri">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Zentripetalkraft in einer Waschmaschine, einem Karussell oder einer Zentrifuge berechnen und mit der Gewichtskraft vergleichen (\(F_Z/F_G\)-Vielfaches).</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('z7')">Üben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     3. VOM MASSENPUNKT ZUM AUSGEDEHNTEN KÖRPER
+══════════════════════════════════════════════ -->
+<div class="section s-uebergang">
+  <div class="section-header">
+    <div class="section-icon">🔩</div>
+    <div class="section-title">Vom Massenpunkt zum ausgedehnten Körper</div>
+    <div class="section-count" id="cnt-uebergang"></div>
+  </div>
+  <div class="card-list" id="sec-uebergang">
+
+    <div class="comp-card" data-id="j1" data-sec="uebergang">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann erklären, warum für einen ausgedehnten rotierenden Körper die einfache Formel \(F_Z = m\omega^2 r\) nicht ausreicht: Jedes Masseteilchen hat einen anderen Abstand \(r_i\) zur Drehachse.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('j1')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="j2" data-sec="uebergang">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Analogie zwischen Translation und Rotation aufstellen: Masse \(m \leftrightarrow J\), Geschwindigkeit \(v \leftrightarrow \omega\), Kraft \(F \leftrightarrow M\) (Drehmoment).</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('j2')">Üben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     4. TRÄGHEITSMOMENT — DEFINITION & BERECHNUNG
+══════════════════════════════════════════════ -->
+<div class="section s-traeg">
+  <div class="section-header">
+    <div class="section-icon">⚙️</div>
+    <div class="section-title">Trägheitsmoment — Definition &amp; Berechnung</div>
+    <div class="section-count" id="cnt-traeg"></div>
+  </div>
+  <div class="card-list" id="sec-traeg">
+
+    <div class="comp-card" data-id="j3" data-sec="traeg">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann das Trägheitsmoment \(J = \sum m_i r_i^2\) für ein System diskreter Massenpunkte berechnen (z.&nbsp;B. Hantelmodell mit zwei Massen auf einer Stange).</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('j3')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="j4" data-sec="traeg">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Trägheitsmomente der Standardkörper angeben und unterscheiden: Vollzylinder \(J = \frac{1}{2}mR^2\), Hohlzylinder \(J = mR^2\), Vollkugel \(J = \frac{2}{5}mR^2\), dünner Stab (Mitte) \(J = \frac{1}{12}mL^2\).</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('j4')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="j5" data-sec="traeg">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann erklären, warum ein Hohlzylinder bei gleichem \(m\) und \(R\) ein größeres Trägheitsmoment hat als ein Vollzylinder (Masseverteilung weiter außen → größere \(r_i\)).</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('j5')">Üben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     5. STEINERSCHER SATZ
+══════════════════════════════════════════════ -->
+<div class="section s-steiner">
+  <div class="section-header">
+    <div class="section-icon">📐</div>
+    <div class="section-title">Steinerscher Satz</div>
+    <div class="section-count" id="cnt-steiner"></div>
+  </div>
+  <div class="card-list" id="sec-steiner">
+
+    <div class="comp-card" data-id="j6" data-sec="steiner">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann den Steinerschen Satz \(J = J_S + m \cdot d^2\) formulieren und erklären: \(J_S\) = Trägheitsmoment bezüglich Schwerpunktachse, \(d\) = Abstand zur neuen Achse.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('j6')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="j7" data-sec="steiner">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann den Steinerschen Satz anwenden, z.&nbsp;B. Trägheitsmoment eines Stabs um seinen Endpunkt: \(J = \frac{1}{12}mL^2 + m\left(\frac{L}{2}\right)^2 = \frac{1}{3}mL^2\).</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('j7')">Üben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     6. DREHIMPULS & DREHIMPULSERHALTUNG
+══════════════════════════════════════════════ -->
+<div class="section s-drehimpuls">
+  <div class="section-header">
+    <div class="section-icon">🌀</div>
+    <div class="section-title">Drehimpuls &amp; Drehimpulserhaltung</div>
+    <div class="section-count" id="cnt-drehimpuls"></div>
+  </div>
+  <div class="card-list" id="sec-drehimpuls">
+
+    <div class="comp-card" data-id="d1" data-sec="drehimpuls">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann den Drehimpuls \(L = J \cdot \omega\) berechnen und die Einheit kg·m²/s angeben.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('d1')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="d2" data-sec="drehimpuls">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann den Drehimpulserhaltungssatz formulieren: Ohne äußeres Drehmoment gilt \(J_1 \omega_1 = J_2 \omega_2\).</span>
+        <span class="afb-pill afb2 card-afb">AFB I–II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('d2')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="d3" data-sec="drehimpuls">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann mit dem Drehimpulserhaltungssatz die Pirouette erklären: Arme anziehen → \(J\) sinkt → \(\omega\) steigt.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('d3')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="d4" data-sec="drehimpuls">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann beurteilen, ob der Drehimpulserhaltungssatz auf eine gegebene Situation anwendbar ist (Kriterium: kein äußeres Drehmoment) und Gegenbeispiele nennen.</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('d4')">Üben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     7. ROTATIONSENERGIE
+══════════════════════════════════════════════ -->
+<div class="section s-erot">
+  <div class="section-header">
+    <div class="section-icon">⚡</div>
+    <div class="section-title">Rotationsenergie</div>
+    <div class="section-count" id="cnt-erot"></div>
+  </div>
+  <div class="card-list" id="sec-erot">
+
+    <div class="comp-card" data-id="r1" data-sec="erot">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Rotationsenergie \(E_\text{rot} = \frac{1}{2}J\omega^2\) berechnen und die Analogie zu \(E_\text{kin} = \frac{1}{2}mv^2\) erklären.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('r1')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="r2" data-sec="erot">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Rotationsenergie eines Schwungrads berechnen und die gespeicherte Energie mit praktischen Einheiten vergleichen (kWh, Wattstunden).</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('r2')">Üben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     8. ROLLEN AUF DER SCHIEFEN EBENE
+══════════════════════════════════════════════ -->
+<div class="section s-rollen">
+  <div class="section-header">
+    <div class="section-icon">🏔️</div>
+    <div class="section-title">Rollen auf der schiefen Ebene</div>
+    <div class="section-count" id="cnt-rollen"></div>
+  </div>
+  <div class="card-list" id="sec-rollen">
+
+    <div class="comp-card" data-id="r3" data-sec="rollen">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann den Energieerhaltungssatz für rollende Körper aufstellen: \(mgh = \frac{1}{2}mv^2 + \frac{1}{2}J\omega^2\) mit der Rollbedingung \(v = \omega R\).</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('r3')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="r4" data-sec="rollen">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann berechnen, welcher von zwei Körpern (z.&nbsp;B. Vollzylinder vs. Hohlzylinder) eine schiefe Ebene schneller hinunterrollt, und das Ergebnis physikalisch begründen.</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('r4')">Üben</button>
+    </div>
+
+    <div class="comp-card star-card" data-id="r5" data-sec="rollen">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">★ Ich kann allgemein zeigen, dass die Endgeschwindigkeit beim Rollen nur vom Verhältnis \(J/(mR^2)\) abhängt und nicht von der Masse: \(v = \sqrt{\frac{2gh}{1 + J/(mR^2)}}\).</span>
+        <span class="afb-pill star-pill card-afb">★ AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('r5')">Üben</button>
+    </div>
+
+  </div>
+</div>
+
+</main>
+<footer>Lore-Lorentz-Schule &nbsp;·&nbsp; Physik-LK 11NP &nbsp;·&nbsp; Q4 Klausurvorbereitung</footer>
+
+<!-- ══ MODAL ══ -->
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="m-title">Übungsaufgabe</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-tabs">
+      <button class="mtab active" onclick="switchTab(0)">📝 Aufgabe</button>
+      <button class="mtab" onclick="switchTab(1)">✅ Lösung</button>
+      <button class="mtab" onclick="switchTab(2)">🤖 KI-Prompt</button>
+    </div>
+    <div class="modal-body">
+      <div class="tab-panel active" id="tp0"></div>
+      <div class="tab-panel" id="tp1"></div>
+      <div class="tab-panel" id="tp2"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// TASK DATA
+// ─────────────────────────────────────────────
+const T = {
+
+z1:{title:"Bahngeschwindigkeit berechnen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Ein Karussell hat den Radius \(r = 4{,}0\,\text{m}\) und dreht sich mit einer Umlaufdauer von \(T = 8{,}0\,\text{s}\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die Winkelgeschwindigkeit \(\omega\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie die Bahngeschwindigkeit \(v\) der Sitze am Rand.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Ein Kind sitzt bei \(r = 2{,}0\,\text{m}\). Wie groß ist \(v\) dort?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \( \omega = \dfrac{2\pi}{T} = \dfrac{2\pi}{8{,}0\,\text{s}} \approx 0{,}785\,\text{rad/s} \)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \( v = \omega \cdot r = 0{,}785 \cdot 4{,}0 = 3{,}14\,\text{m/s} \)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \( v = \omega \cdot r = 0{,}785 \cdot 2{,}0 = 1{,}57\,\text{m/s} \)
+</div></div>
+<div class="result">Halber Radius → halbe Bahngeschwindigkeit</div>`,
+prompt:`Ich übe Bahngeschwindigkeit und Winkelgeschwindigkeit bei der Kreisbewegung (Klasse 11). Erstelle 3 Aufgaben mit Berufsbezug (Zentrifuge, Rad, Karussell). Vollständige Lösungen.`},
+
+z2:{title:"ω, f und T umrechnen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Eine Laborzentrifuge dreht sich mit \(f = 3000\,\text{min}^{-1}\) (Umdrehungen pro Minute). Der Rotor hat den Radius \(r = 0{,}10\,\text{m}\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Rechnen Sie \(f\) in Hz (s\(^{-1}\)) um.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie die Umlaufdauer \(T\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie \(\omega\) und die Bahngeschwindigkeit \(v\) am Rotorrand.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \( f = \dfrac{3000}{60} = 50\,\text{Hz} \)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \( T = \dfrac{1}{f} = \dfrac{1}{50} = 0{,}02\,\text{s} \)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \( \omega = 2\pi f = 2\pi \cdot 50 = 314{,}2\,\text{rad/s} \)
+  <div class="dmath">\( v = \omega \cdot r = 314{,}2 \cdot 0{,}10 = 31{,}4\,\text{m/s} \)</div>
+</div></div>`,
+prompt:`Ich übe ω, T und f umrechnen (Physik Klasse 11). 3 Aufgaben mit Zentrifuge, Bohrmaschine, Windkraftanlage. Vollständige Lösungen.`},
+
+z3:{title:"Kreisbewegung = beschleunigte Bewegung (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Ein Satellit umkreist die Erde mit konstanter Bahngeschwindigkeit \(|v| = 7700\,\text{m/s}\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Erklären Sie, warum trotz konstantem \(|v|\) eine Beschleunigung vorliegt.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Zeichnen Sie für zwei Zeitpunkte den Geschwindigkeitsvektor und den Beschleunigungsvektor ein. Wohin zeigt \(a_Z\)?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Was würde passieren, wenn die Zentripetalkraft plötzlich null wäre? Erklären Sie mithilfe von Newton 1.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  Geschwindigkeit ist ein <strong>Vektor</strong>. Bei der Kreisbewegung ändert sich ständig die <em>Richtung</em> von \(\vec{v}\), auch wenn der Betrag \(|v|\) konstant bleibt. Eine Richtungsänderung bedeutet \(\Delta\vec{v} \neq \vec{0}\), also liegt eine Beschleunigung vor.
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \(\vec{v}\) steht stets tangential zur Kreisbahn. \(\vec{a}_Z\) zeigt immer <strong>radial zum Kreismittelpunkt</strong> (nach innen). Die beiden Vektoren stehen senkrecht aufeinander.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Ohne Kraft bewegt sich der Körper nach Newton 1 <strong>geradlinig-gleichförmig</strong> in tangentialer Richtung weiter — er fliegt auf einer Geraden davon.
+</div></div>`,
+prompt:`Ich übe die Begründung warum Kreisbewegung beschleunigt ist (Physik Klasse 11, AFB III). Erkläre den Unterschied Betrag vs. Richtung der Geschwindigkeit. Erstelle eine Begründungsaufgabe.`},
+
+z4:{title:"Zentripetalbeschleunigung berechnen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Ein Kettenkarussell hat den Radius \(r = 6{,}0\,\text{m}\) und die Umlaufdauer \(T = 5{,}0\,\text{s}\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die Bahngeschwindigkeit \(v\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie die Zentripetalbeschleunigung \(a_Z = v^2/r\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Geben Sie \(a_Z\) als Vielfaches von \(g\) an. Interpretieren Sie das Ergebnis.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \( v = \dfrac{2\pi r}{T} = \dfrac{2\pi \cdot 6{,}0}{5{,}0} = 7{,}54\,\text{m/s} \)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \( a_Z = \dfrac{v^2}{r} = \dfrac{7{,}54^2}{6{,}0} = \dfrac{56{,}8}{6{,}0} = 9{,}47\,\text{m/s}^2 \)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \( \dfrac{a_Z}{g} = \dfrac{9{,}47}{9{,}81} \approx 0{,}97 \)
+  <div class="dmath">\( a_Z \approx 1\,g \)</div>
+</div></div>
+<div class="result">Die Zentripetalbeschleunigung beträgt knapp 1 g</div>`,
+prompt:`Ich übe Zentripetalbeschleunigung (Physik Klasse 11). 3 Aufgaben (Karussell, Kurvenfahrt, Waschmaschine). In g-Vielfachen angeben. Vollständige Lösungen.`},
+
+z5:{title:"Zentripetalkraft anwenden (AFB I–II)",
+aufgabe:`<div class="task-box">
+  <p>Ein Kind (\(m = 30\,\text{kg}\)) sitzt in einem Kettenkarussell (\(r = 6{,}0\,\text{m}\), \(T = 5{,}0\,\text{s}\)).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \(F_Z\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Welche Kraft liefert die Zentripetalkraft? Benennen Sie die physikalische Ursache.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Ein Auto (\(m = 1200\,\text{kg}\)) fährt mit \(v = 50\,\text{km/h}\) durch eine Kurve (\(r = 80\,\text{m}\)). Berechnen Sie \(F_Z\) und benennen Sie die Kraft, die \(F_Z\) aufbringt.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  Mit \(a_Z = 9{,}47\,\text{m/s}^2\) aus z4:
+  <div class="dmath">\( F_Z = m \cdot a_Z = 30 \cdot 9{,}47 = 284\,\text{N} \)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Die <strong>Horizontalkomponente der Kettenkraft</strong> (Kettenspannung) liefert die Zentripetalkraft.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \( v = \dfrac{50}{3{,}6} = 13{,}9\,\text{m/s} \)
+  <div class="dmath">\( F_Z = \dfrac{m \cdot v^2}{r} = \dfrac{1200 \cdot 13{,}9^2}{80} = \dfrac{1200 \cdot 193}{80} \approx 2894\,\text{N} \)</div>
+  Die <strong>Haftreibung der Reifen</strong> auf der Fahrbahn liefert die Zentripetalkraft.
+</div></div>`,
+prompt:`Ich übe Zentripetalkraft und ihre Ursache (Physik Klasse 11). 3 Aufgaben: Kraft identifizieren und berechnen. Vollständige Lösungen.`},
+
+z6:{title:"Kurvenfahrt — Mindestreibung (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Ein PKW (\(m = 1400\,\text{kg}\)) fährt durch eine unüberhöhte Kurve (\(r = 50\,\text{m}\)). Der Haftreibungskoeffizient beträgt \(\mu = 0{,}8\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die maximale Haftreibungskraft \(F_{R,\text{max}} = \mu \cdot m \cdot g\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie die maximale Geschwindigkeit \(v_\text{max}\), bei der das Auto gerade noch nicht rutscht. Ansatz: \(F_{R,\text{max}} = F_Z = m \cdot v^2/r\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Was passiert physikalisch, wenn \(v > v_\text{max}\)? Erläutern Sie mithilfe von Newton 1.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \( F_{R,\text{max}} = \mu \cdot m \cdot g = 0{,}8 \cdot 1400 \cdot 9{,}81 = 10\,987\,\text{N} \approx 11{,}0\,\text{kN} \)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Ansatz: \( \mu \cdot m \cdot g = \dfrac{m \cdot v^2}{r} \) — \(m\) kürzt sich:
+  <div class="dmath">\( v_\text{max} = \sqrt{\mu \cdot g \cdot r} = \sqrt{0{,}8 \cdot 9{,}81 \cdot 50} = \sqrt{392{,}4} \approx 19{,}8\,\text{m/s} \approx 71\,\text{km/h} \)</div>
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Die Reibungskraft reicht nicht mehr für die nötige Zentripetalkraft. Das Auto bewegt sich auf einem <strong>größeren Radius</strong> als die Kurve vorgibt (es „schleudert nach außen"). Nach Newton 1 setzt sich die geradlinige Trägheitsbewegung durch.
+</div></div>`,
+prompt:`Ich übe Kurvenfahrt und Haftreibung als Zentripetalkraft (Physik Klasse 11). Erstelle 2 Aufgaben mit verschiedenen μ und r. Berechne v_max. Vollständige Lösungen.`},
+
+z7:{title:"Zentrifuge — Vielfaches von g (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>In einer Laborzentrifuge (\(r = 0{,}10\,\text{m}\), \(f = 3000\,\text{min}^{-1}\)) werden Blutproben separiert.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \(a_Z\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Geben Sie \(a_Z\) als Vielfaches von \(g\) an (sog. „g-Zahl" oder „relative Zentrifugalbeschleunigung" RZB).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Erklären Sie, warum sich in der Zentrifuge die schwereren Bestandteile nach außen absetzen.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \( \omega = 2\pi \cdot 50 = 314{,}2\,\text{rad/s} \)
+  <div class="dmath">\( a_Z = \omega^2 \cdot r = 314{,}2^2 \cdot 0{,}10 \approx 9870\,\text{m/s}^2 \)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \( \dfrac{a_Z}{g} = \dfrac{9870}{9{,}81} \approx 1006 \)
+  <div class="dmath">\( a_Z \approx 1000\,g \)</div>
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Alle Bestandteile haben denselben Radius \(r\) und dieselbe Winkelgeschwindigkeit \(\omega\). Die nötige Zentripetalkraft ist \(F_Z = m\,\omega^2 r\) — sie ist proportional zur Masse. Teilchen mit <strong>größerer Dichte</strong> (= größerer Masse bei gleichem Volumen) benötigen mehr Zentripetalkraft, als die umgebende Flüssigkeit liefert, und werden deshalb nach außen gedrückt (Trägheit).
+</div></div>`,
+prompt:`Ich übe Zentrifugenaufgaben (Physik Klasse 11, Berufsbezug Labor/Medizin). 2 Aufgaben: RZB berechnen, Prinzip der Trennung erklären. Vollständige Lösungen.`},
+
+j1:{title:"Motivation Trägheitsmoment (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Stellen Sie sich ein Rad vor (\(m = 2{,}0\,\text{kg}\), \(R = 0{,}30\,\text{m}\)), das um seine Achse rotiert mit \(\omega = 10\,\text{rad/s}\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Wenn wir das Rad als Punktmasse im Abstand \(R\) behandeln: Berechnen Sie \(F_Z = m\,\omega^2 R\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">In Wirklichkeit sind die Masseteilchen über verschiedene Abstände \(r_i\) verteilt. Erklären Sie, warum die Punktmasse-Formel das System nicht korrekt beschreibt.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Welche neue Größe brauchen wir, um die Masseverteilung zu berücksichtigen? Wie heißt sie und was ist ihre Einheit?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \( F_Z = m\,\omega^2 R = 2{,}0 \cdot 10^2 \cdot 0{,}30 = 60\,\text{N} \)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Nicht alle Masseteilchen haben denselben Abstand \(R\) zur Achse. Innere Teile haben \(r < R\), äußere \(r \approx R\). Das Produkt \(m_i \cdot r_i^2\) ist für jedes Teilchen verschieden. Die Punktmasse-Näherung überschätzt den Beitrag der inneren Masse.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Das <strong>Trägheitsmoment</strong>:
+  <div class="dmath">\( J = \sum m_i \cdot r_i^2 \quad \left[\text{kg}\cdot\text{m}^2\right] \)</div>
+  Es fasst die gesamte Masseverteilung bezüglich der Drehachse in einer einzigen Größe zusammen.
+</div></div>`,
+prompt:`Ich übe die Motivation für das Trägheitsmoment (Physik Klasse 11). Erkläre: Warum reicht F_Z=mω²r nicht für ausgedehnte Körper? Was ist J und warum braucht man es?`},
+
+j2:{title:"Analogie Translation ↔ Rotation (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Erstellen Sie eine Vergleichstabelle Translation ↔ Rotation.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Füllen Sie die Tabelle aus: Masse → ?, Geschwindigkeit → ?, Kraft → ?, Impuls → ?, \(E_\text{kin}\) → ?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Ein Objekt (\(m = 5{,}0\,\text{kg}\)) bewegt sich mit \(v = 3{,}0\,\text{m/s}\) geradlinig. Berechnen Sie \(E_\text{kin}\) und \(p\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Ein Rad (\(J = 0{,}50\,\text{kg}\cdot\text{m}^2\)) rotiert mit \(\omega = 6{,}0\,\text{rad/s}\). Berechnen Sie \(E_\text{rot}\) und \(L\). Vergleichen Sie die Strukturen der Formeln.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  <span class="fbox">m ↔ J &emsp; v ↔ ω &emsp; F ↔ M (Drehmoment) &emsp; p = mv ↔ L = Jω &emsp; E = ½mv² ↔ E = ½Jω²</span>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \( E_\text{kin} = \tfrac{1}{2} m v^2 = \tfrac{1}{2} \cdot 5{,}0 \cdot 9{,}0 = 22{,}5\,\text{J} \)
+  <br>\( p = m \cdot v = 5{,}0 \cdot 3{,}0 = 15\,\text{kg}\cdot\text{m/s} \)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \( E_\text{rot} = \tfrac{1}{2} J \omega^2 = \tfrac{1}{2} \cdot 0{,}50 \cdot 36 = 9{,}0\,\text{J} \)
+  <br>\( L = J \cdot \omega = 0{,}50 \cdot 6{,}0 = 3{,}0\,\text{kg}\cdot\text{m}^2/\text{s} \)
+</div></div>
+<div class="result">Gleiche Struktur: m → J und v → ω</div>`,
+prompt:`Ich übe die Analogie Translation ↔ Rotation (Physik Klasse 11). Erstelle eine Aufgabe mit Vergleichstabelle und parallelen Berechnungen.`},
+
+j3:{title:"J für diskrete Massenpunkte (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Ein Hantelmodell besteht aus zwei Kugeln (\(m_1 = 2{,}0\,\text{kg}\), \(m_2 = 3{,}0\,\text{kg}\)) an den Enden einer masselosen Stange (Länge \(L = 1{,}0\,\text{m}\)). Die Drehachse geht durch den Schwerpunkt.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Bestimmen Sie die Lage des Schwerpunkts (Abstand von \(m_1\)).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie das Trägheitsmoment \(J = m_1 r_1^2 + m_2 r_2^2\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Die Drehachse wird zum Ende bei \(m_1\) verschoben. Berechnen Sie das neue \(J\).</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \( x_S = \dfrac{m_2 \cdot L}{m_1 + m_2} = \dfrac{3{,}0 \cdot 1{,}0}{2{,}0 + 3{,}0} = 0{,}60\,\text{m} \) von \(m_1\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \( r_1 = 0{,}60\,\text{m} \), \( r_2 = 0{,}40\,\text{m} \)
+  <div class="dmath">\( J = 2{,}0 \cdot 0{,}36 + 3{,}0 \cdot 0{,}16 = 0{,}72 + 0{,}48 = 1{,}20\,\text{kg}\cdot\text{m}^2 \)</div>
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \( r_1 = 0 \), \( r_2 = 1{,}0\,\text{m} \)
+  <div class="dmath">\( J = 0 + 3{,}0 \cdot 1{,}0^2 = 3{,}0\,\text{kg}\cdot\text{m}^2 \)</div>
+</div></div>
+<div class="result">Achse am Ende: J ist deutlich größer als durch den Schwerpunkt</div>`,
+prompt:`Ich übe Trägheitsmoment für diskrete Massenpunkte (Physik Klasse 11). 2 Aufgaben mit Hantelmodell, verschiedene Drehachsen. Vollständige Lösungen.`},
+
+j4:{title:"Standardkörper (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Berechnen Sie das Trägheitsmoment für folgende Standardkörper:</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Vollzylinder (Schwungrad): \(m = 10\,\text{kg}\), \(R = 0{,}20\,\text{m}\). Formel: \(J = \tfrac{1}{2}mR^2\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Hohlzylinder (dünnwandiges Rohr): \(m = 5{,}0\,\text{kg}\), \(R = 0{,}15\,\text{m}\). Formel: \(J = mR^2\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Vollkugel (Bowlingkugel): \(m = 6{,}0\,\text{kg}\), \(R = 0{,}11\,\text{m}\). Formel: \(J = \tfrac{2}{5}mR^2\).</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Vergleichen Sie die drei Ergebnisse. Ordnen Sie nach der Größe von \(J/(mR^2)\). Welcher Körper hat bei gleicher Masse und gleichem Radius das größte \(J\)?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \( J = \tfrac{1}{2} \cdot 10 \cdot 0{,}04 = 0{,}20\,\text{kg}\cdot\text{m}^2 \)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \( J = 5{,}0 \cdot 0{,}0225 = 0{,}1125\,\text{kg}\cdot\text{m}^2 \)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \( J = \tfrac{2}{5} \cdot 6{,}0 \cdot 0{,}0121 = 0{,}029\,\text{kg}\cdot\text{m}^2 \)
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  <span class="fbox">J/(mR²): Hohlzylinder = 1 &gt; Vollzylinder = 0,5 &gt; Kugel = 0,4</span>
+  <br>Der <strong>Hohlzylinder</strong> hat das größte relative Trägheitsmoment, weil die gesamte Masse am Rand liegt.
+</div></div>`,
+prompt:`Ich übe Trägheitsmomente der Standardkörper (Physik Klasse 11). 3 Aufgaben mit Vollzylinder, Hohlzylinder und Kugel. Vergleich J/(mR²). Vollständige Lösungen.`},
+
+j5:{title:"Warum J_Hohlzylinder > J_Vollzylinder (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Zwei Zylinder haben jeweils \(m = 2{,}0\,\text{kg}\) und \(R = 0{,}10\,\text{m}\). Zylinder A ist ein Vollzylinder, Zylinder B ein dünnwandiger Hohlzylinder.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \(J_A\) und \(J_B\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Das Verhältnis \(J_B / J_A = \,?\)</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Begründen Sie physikalisch (ohne Rechnung), warum der Hohlzylinder das größere Trägheitsmoment hat. Beziehen Sie sich auf \(J = \sum m_i \cdot r_i^2\) und die Masseverteilung.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \( J_A = \tfrac{1}{2} \cdot 2{,}0 \cdot 0{,}01 = 0{,}010\,\text{kg}\cdot\text{m}^2 \)
+  <br>\( J_B = 2{,}0 \cdot 0{,}01 = 0{,}020\,\text{kg}\cdot\text{m}^2 \)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \( \dfrac{J_B}{J_A} = \dfrac{0{,}020}{0{,}010} = 2 \)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Beim Hohlzylinder liegt die <strong>gesamte Masse</strong> bei \(r = R\) (maximaler Abstand). Beim Vollzylinder ist auch Masse bei \(r < R\) verteilt. Da in \(J = \sum m_i \cdot r_i^2\) der Abstand <strong>quadratisch</strong> eingeht, trägt weiter außen liegende Masse überproportional bei. Deshalb hat der Hohlzylinder stets das größere \(J\).
+</div></div>`,
+prompt:`Ich übe den Vergleich Hohlzylinder vs. Vollzylinder (Physik Klasse 11, AFB III). Erkläre die Rolle der Masseverteilung für J. Neue Aufgabe mit Begründung.`},
+
+j6:{title:"Steinerscher Satz — Definition (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Ein homogener Stab hat die Masse \(m = 3{,}0\,\text{kg}\) und die Länge \(L = 1{,}2\,\text{m}\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Geben Sie das Trägheitsmoment \(J_S\) bezüglich der Schwerpunktachse (senkrecht zum Stab, durch die Mitte) an: \(J_S = \tfrac{1}{12} m L^2\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Formulieren Sie den Steinerschen Satz in Worten und als Formel.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Was bedeuten die einzelnen Größen \(J_S\), \(m\) und \(d\) im Steinerschen Satz?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \( J_S = \tfrac{1}{12} \cdot 3{,}0 \cdot 1{,}44 = 0{,}36\,\text{kg}\cdot\text{m}^2 \)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  <strong>In Worten:</strong> Das Trägheitsmoment bezüglich einer zur Schwerpunktachse parallelen Achse im Abstand \(d\) ist stets größer als \(J_S\).
+  <div class="dmath">\( J = J_S + m \cdot d^2 \)</div>
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  <span class="fbox">J_S = Trägheitsmoment um die Schwerpunktachse</span><br>
+  <span class="fbox">m = Gesamtmasse des Körpers</span><br>
+  <span class="fbox">d = Abstand zwischen den beiden parallelen Achsen</span>
+</div></div>`,
+prompt:`Ich übe den Steinerschen Satz (Physik Klasse 11). Erkläre Formulierung und Bedeutung der Größen. Einfache Rechenaufgabe mit Stab.`},
+
+j7:{title:"Steiner anwenden — Stab um Endpunkt (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Der gleiche Stab (\(m = 3{,}0\,\text{kg}\), \(L = 1{,}2\,\text{m}\)) soll nun um einen Endpunkt rotieren.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie den Abstand \(d\) der neuen Drehachse zum Schwerpunkt.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie \(J\) mit dem Steinerschen Satz.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Kontrollieren Sie: Das Ergebnis sollte \(J = \tfrac{1}{3} m L^2\) ergeben. Stimmt das?</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Um welchen Faktor ist \(J\) größer als \(J_S\)? Interpretieren Sie das Ergebnis.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \( d = \dfrac{L}{2} = 0{,}60\,\text{m} \)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \( J = J_S + m \cdot d^2 = 0{,}36 + 3{,}0 \cdot 0{,}36 = 0{,}36 + 1{,}08 = 1{,}44\,\text{kg}\cdot\text{m}^2 \)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \( \tfrac{1}{3} \cdot 3{,}0 \cdot 1{,}44 = 1{,}44\,\text{kg}\cdot\text{m}^2 \; \checkmark \)
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  \( \dfrac{J}{J_S} = \dfrac{1{,}44}{0{,}36} = 4 \)
+</div></div>
+<div class="result">Das Trägheitsmoment vervierfacht sich, wenn die Drehachse von der Mitte zum Ende verschoben wird.</div>`,
+prompt:`Ich übe Steinerschen Satz anwenden (Physik Klasse 11). 2 Aufgaben: Stab um Endpunkt und Scheibe um Randpunkt. Vollständige Lösungen mit Kontrolle.`},
+
+d1:{title:"Drehimpuls berechnen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Ein Schwungrad (Vollzylinder, \(m = 20\,\text{kg}\), \(R = 0{,}25\,\text{m}\)) dreht sich mit \(n = 1200\,\text{min}^{-1}\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \(J\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Rechnen Sie \(n\) in \(\omega\) um.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie den Drehimpuls \(L = J\omega\). Geben Sie die Einheit an.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \( J = \tfrac{1}{2} m R^2 = \tfrac{1}{2} \cdot 20 \cdot 0{,}0625 = 0{,}625\,\text{kg}\cdot\text{m}^2 \)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \( \omega = \dfrac{2\pi \cdot n}{60} = \dfrac{2\pi \cdot 1200}{60} = 125{,}7\,\text{rad/s} \)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \( L = J \cdot \omega = 0{,}625 \cdot 125{,}7 = 78{,}5\,\text{kg}\cdot\text{m}^2/\text{s} \)
+</div></div>`,
+prompt:`Ich übe Drehimpuls L=Jω berechnen (Physik Klasse 11). 3 Aufgaben mit Schwungrad, Fahrradrad, Kreisel. Vollständige Lösungen.`},
+
+d2:{title:"Drehimpulserhaltung — Formulierung (AFB I–II)",
+aufgabe:`<div class="task-box">
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Formulieren Sie den Drehimpulserhaltungssatz in Worten.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Schreiben Sie die mathematische Form auf: \(J_1 \omega_1 = J_2 \omega_2\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Ein Eiskunstläufer dreht sich anfangs mit \(\omega_1 = 2{,}0\,\text{rad/s}\) bei \(J_1 = 4{,}0\,\text{kg}\cdot\text{m}^2\) (Arme ausgestreckt). Er zieht die Arme an, sodass \(J_2 = 1{,}6\,\text{kg}\cdot\text{m}^2\). Berechnen Sie \(\omega_2\).</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Um welchen Faktor hat sich die Drehfrequenz erhöht?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  In einem abgeschlossenen System (kein äußeres Drehmoment) bleibt der <strong>Gesamtdrehimpuls erhalten</strong>.
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  <div class="dmath">\( J_1 \omega_1 = J_2 \omega_2 \)</div>
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \( \omega_2 = \dfrac{J_1 \omega_1}{J_2} = \dfrac{4{,}0 \cdot 2{,}0}{1{,}6} = 5{,}0\,\text{rad/s} \)
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Faktor: \( \dfrac{\omega_2}{\omega_1} = \dfrac{5{,}0}{2{,}0} = 2{,}5 \)
+</div></div>`,
+prompt:`Ich übe Drehimpulserhaltung (Physik Klasse 11). 2 Aufgaben: Pirouette und Drehstuhl-Experiment. Vollständige Lösungen.`},
+
+d3:{title:"Pirouette erklären (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Eine Eiskunstläuferin (\(m = 55\,\text{kg}\)) dreht eine Pirouette.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">In der Ausgangsposition (Arme und ein Bein ausgestreckt) beträgt \(J_1 = 3{,}5\,\text{kg}\cdot\text{m}^2\) und \(\omega_1 = 3{,}0\,\text{rad/s}\). Berechnen Sie \(L\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Sie zieht Arme und Bein eng an den Körper (\(J_2 = 1{,}0\,\text{kg}\cdot\text{m}^2\)). Berechnen Sie \(\omega_2\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie \(E_\text{rot}\) vor und nach dem Anziehen der Arme. Was fällt auf?</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Erklären Sie: Woher kommt die zusätzliche Rotationsenergie?</span></div>
+  </div>
+  <div class="hint-box">Hinweis: Die Eiskunstläuferin verrichtet Muskelarbeit.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \( L = J_1 \cdot \omega_1 = 3{,}5 \cdot 3{,}0 = 10{,}5\,\text{kg}\cdot\text{m}^2/\text{s} \)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \( \omega_2 = \dfrac{L}{J_2} = \dfrac{10{,}5}{1{,}0} = 10{,}5\,\text{rad/s} \)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \( E_1 = \tfrac{1}{2} \cdot 3{,}5 \cdot 9{,}0 = 15{,}75\,\text{J} \)
+  <br>\( E_2 = \tfrac{1}{2} \cdot 1{,}0 \cdot 110{,}25 = 55{,}1\,\text{J} \)
+  <div class="dmath">\( E_2 > E_1 ! \quad \Delta E = 55{,}1 - 15{,}75 = 39{,}4\,\text{J} \)</div>
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Die zusätzliche Energie \(\Delta E = 39{,}4\,\text{J}\) wird durch <strong>Muskelarbeit</strong> aufgebracht. Die Arme müssen gegen die „Zentrifugalkraft" (Trägheitskraft) nach innen gezogen werden — das kostet Energie.
+</div></div>`,
+prompt:`Ich übe Pirouette mit Drehimpulserhaltung (Physik Klasse 11). Erkläre: Warum steigt E_rot obwohl L erhalten bleibt? Woher kommt die Energie? Neue Aufgabe.`},
+
+d4:{title:"Drehimpulserhaltung beurteilen (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Beurteilen Sie für folgende Situationen, ob der Drehimpulserhaltungssatz anwendbar ist. Begründen Sie jeweils.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Ein Eiskunstläufer dreht eine Pirouette auf reibungsfreiem Eis.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Ein Rad wird durch eine Bremse abgebremst.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Zwei Zahnräder greifen ineinander (geschlossenes System betrachtet).</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Ein Kreisel auf einer Tischplatte mit Reibung.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  <strong>Ja</strong> — kein äußeres Drehmoment (Eis reibungsfrei, Schwerkraft greift an der Drehachse an → kein Drehmoment).
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  <strong>Nein</strong> — die Bremse übt ein äußeres Drehmoment aus → \(L\) nimmt ab.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  <strong>Ja</strong> — die Kräfte zwischen den Zahnrädern sind innere Kräfte → \(L_\text{ges} = \text{const.}\)
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  <strong>Nein</strong> — Reibung an der Auflagefläche erzeugt ein äußeres Drehmoment → der Kreisel wird langsamer.
+</div></div>`,
+prompt:`Ich übe Beurteilung der Anwendbarkeit der Drehimpulserhaltung (Physik Klasse 11, AFB III). 4 Situationen: entscheiden ob M_ext=0 gilt. Begründungen.`},
+
+r1:{title:"E_rot berechnen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Ein Schwungrad (Vollzylinder, \(m = 50\,\text{kg}\), \(R = 0{,}30\,\text{m}\)) dreht sich mit \(n = 3000\,\text{min}^{-1}\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \(J\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie \(\omega\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie \(E_\text{rot} = \tfrac{1}{2} J \omega^2\).</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Rechnen Sie \(E_\text{rot}\) in kWh um. (\(1\,\text{kWh} = 3{,}6 \cdot 10^6\,\text{J}\))</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \( J = \tfrac{1}{2} m R^2 = \tfrac{1}{2} \cdot 50 \cdot 0{,}09 = 2{,}25\,\text{kg}\cdot\text{m}^2 \)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \( \omega = \dfrac{2\pi \cdot 3000}{60} = 314{,}2\,\text{rad/s} \)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \( E_\text{rot} = \tfrac{1}{2} \cdot 2{,}25 \cdot 314{,}2^2 = \tfrac{1}{2} \cdot 2{,}25 \cdot 98\,742 \approx 111\,082\,\text{J} \approx 111\,\text{kJ} \)
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  \( E_\text{rot} = \dfrac{111\,082}{3{,}6 \cdot 10^6} \approx 0{,}031\,\text{kWh} \)
+</div></div>`,
+prompt:`Ich übe Rotationsenergie E_rot=½Jω² (Physik Klasse 11). 3 Aufgaben mit Schwungrad, Fahrradrad, Turbine. Umrechnung in kWh. Vollständige Lösungen.`},
+
+r2:{title:"Schwungradspeicher (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Ein Schwungrad-Energiespeicher (Vollzylinder, \(m = 200\,\text{kg}\), \(R = 0{,}50\,\text{m}\)) soll als Notstromversorgung dienen. Es dreht sich mit \(n = 10\,000\,\text{min}^{-1}\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \(J\) und \(E_\text{rot}\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Wie lange kann das Schwungrad eine Last von \(P = 5{,}0\,\text{kW}\) versorgen (verlustfrei)?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Vergleichen Sie die gespeicherte Energie mit einem Akku (\(50\,\text{Wh}\)). Um welchen Faktor ist der Akku besser/schlechter?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \( J = \tfrac{1}{2} \cdot 200 \cdot 0{,}25 = 25\,\text{kg}\cdot\text{m}^2 \)
+  <br>\( \omega = \dfrac{2\pi \cdot 10\,000}{60} = 1047\,\text{rad/s} \)
+  <div class="dmath">\( E_\text{rot} = \tfrac{1}{2} \cdot 25 \cdot 1047^2 \approx 13{,}7 \cdot 10^6\,\text{J} \approx 13{,}7\,\text{MJ} \)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \( t = \dfrac{E}{P} = \dfrac{13{,}7 \cdot 10^6}{5000} = 2740\,\text{s} \approx 45{,}7\,\text{min} \)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \( E_\text{Akku} = 50 \cdot 3600 = 180\,000\,\text{J} = 0{,}18\,\text{MJ} \)
+  <div class="dmath">\( \dfrac{E_\text{rot}}{E_\text{Akku}} = \dfrac{13{,}7}{0{,}18} \approx 76 \)</div>
+  Das Schwungrad speichert ca. <strong>76-mal mehr</strong> Energie als der Akku.
+</div></div>`,
+prompt:`Ich übe Schwungrad-Energiespeicher (Physik Klasse 11). Aufgabe: E_rot berechnen, Betriebsdauer bei gegebener Leistung. Vergleich mit Akku.`},
+
+r3:{title:"Rollen — Energieerhaltung (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Eine Vollkugel (\(m = 0{,}50\,\text{kg}\), \(R = 0{,}05\,\text{m}\)) rollt ohne Gleiten eine schiefe Ebene (\(h = 1{,}2\,\text{m}\)) hinunter.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Stellen Sie den Energieerhaltungssatz auf: \(mgh = \tfrac{1}{2}mv^2 + \tfrac{1}{2}J\omega^2\). Setzen Sie \(J = \tfrac{2}{5}mR^2\) und die Rollbedingung \(v = \omega R\) ein.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Vereinfachen Sie zu einer Formel für \(v(h)\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie die Geschwindigkeit am Fuß der Ebene.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Vergleichen Sie mit einem gleitenden (nicht rollenden) Körper gleicher Masse. Um wie viel Prozent ist der rollende Körper langsamer?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \( mgh = \tfrac{1}{2}mv^2 + \tfrac{1}{2} \cdot \tfrac{2}{5}mR^2 \cdot \dfrac{v^2}{R^2} = \tfrac{1}{2}mv^2 + \tfrac{1}{5}mv^2 = \tfrac{7}{10}mv^2 \)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  <div class="dmath">\( v = \sqrt{\dfrac{10\,g\,h}{7}} \)</div>
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \( v = \sqrt{\dfrac{10 \cdot 9{,}81 \cdot 1{,}2}{7}} = \sqrt{16{,}87} = 4{,}11\,\text{m/s} \)
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Gleiten: \( v = \sqrt{2gh} = \sqrt{23{,}54} = 4{,}85\,\text{m/s} \)
+  <div class="dmath">\( \dfrac{4{,}85 - 4{,}11}{4{,}85} \approx 15{,}3\,\% \text{ langsamer} \)</div>
+</div></div>
+<div class="result">Beim Rollen geht Energie in Rotation → Körper ist ca. 15 % langsamer</div>`,
+prompt:`Ich übe rollende Körper auf der schiefen Ebene (Physik Klasse 11). Energieerhaltung mit E_rot. 2 Aufgaben: Kugel und Zylinder. Vergleich rollend vs. gleitend.`},
+
+r4:{title:"Welcher Körper gewinnt das Rennen? (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Drei Körper gleicher Masse \(m\) und gleichem Radius \(R\) starten gleichzeitig aus der Ruhe auf einer schiefen Ebene (\(h = 0{,}80\,\text{m}\)): Vollzylinder (\(J = \tfrac{1}{2}mR^2\)), Hohlzylinder (\(J = mR^2\)), Vollkugel (\(J = \tfrac{2}{5}mR^2\)).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Leiten Sie für jeden Körper die Geschwindigkeit am Fuß der Ebene her: \(v = \sqrt{\dfrac{2gh}{1 + c}}\) mit \(c = J/(mR^2)\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie \(v\) für alle drei Körper.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Stellen Sie eine Rangfolge auf. Welcher Körper ist am schnellsten, welcher am langsamsten?</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Begründen Sie physikalisch: Warum spielt die Masse keine Rolle? Warum entscheidet nur das Verhältnis \(c = J/(mR^2)\)?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \( mgh = \tfrac{1}{2}mv^2(1+c) \) → kürze \(m\):
+  <div class="dmath">\( v = \sqrt{\dfrac{2gh}{1+c}} \)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Kugel (\(c = 0{,}4\)): \( v = \sqrt{\dfrac{2 \cdot 9{,}81 \cdot 0{,}8}{1{,}4}} = 3{,}35\,\text{m/s} \)
+  <br>Vollzylinder (\(c = 0{,}5\)): \( v = \sqrt{\dfrac{15{,}70}{1{,}5}} = 3{,}23\,\text{m/s} \)
+  <br>Hohlzylinder (\(c = 1\)): \( v = \sqrt{\dfrac{15{,}70}{2{,}0}} = 2{,}80\,\text{m/s} \)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  <span class="fbox">Kugel &gt; Vollzylinder &gt; Hohlzylinder</span>
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Die Masse \(m\) kürzt sich aus der Energiegleichung heraus. Es bleibt nur \(c = J/(mR^2)\) — das ist eine reine <strong>Geometrieeigenschaft</strong> (Masseverteilung) des Körpers. Je mehr Masse am Rand liegt (großes \(c\)), desto mehr Energie geht in die Rotation und desto langsamer wird der Körper.
+</div></div>`,
+prompt:`Ich übe das Rennen auf der schiefen Ebene (Physik Klasse 11, AFB III). 3 Körper vergleichen, Rangfolge begründen. Warum ist m irrelevant?`},
+
+r5:{title:"Allgemeine Formel v = √(2gh/(1+c)) (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Für einen rollenden Körper mit dem Formfaktor \(c = J/(mR^2)\) gilt die allgemeine Endgeschwindigkeit \(v = \sqrt{\dfrac{2gh}{1+c}}\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Leiten Sie diese Formel her aus \(mgh = \tfrac{1}{2}mv^2 + \tfrac{1}{2}J\omega^2\) und \(v = \omega R\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Zeigen Sie: Für \(c = 0\) (Gleiten ohne Rotation) ergibt sich \(v = \sqrt{2gh}\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Für welchen Wert von \(c\) wird \(v\) maximal? Für welchen minimal?</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Ein hypothetischer Körper hätte \(c = 2\). Berechnen Sie \(v\) für \(h = 1{,}0\,\text{m}\) und vergleichen Sie mit dem gleitenden Körper.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \( mgh = \tfrac{1}{2}mv^2 + \tfrac{1}{2}(cmR^2)\dfrac{v^2}{R^2} = \tfrac{1}{2}mv^2(1+c) \)
+  <div class="dmath">\( v^2 = \dfrac{2gh}{1+c} \quad \Rightarrow \quad v = \sqrt{\dfrac{2gh}{1+c}} \)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \( c = 0 \): \( v = \sqrt{\dfrac{2gh}{1+0}} = \sqrt{2gh} \; \checkmark \)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \(v\) ist <strong>maximal</strong> für \(c \to 0\) (keine Rotation, alle Energie in Translation).
+  <br>\(v\) ist <strong>minimal</strong> für \(c \to \infty\) (fast alle Energie geht in Rotation).
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  \( v = \sqrt{\dfrac{2 \cdot 9{,}81 \cdot 1{,}0}{1+2}} = \sqrt{6{,}54} = 2{,}56\,\text{m/s} \)
+  <br>Gleiten: \( v = \sqrt{2 \cdot 9{,}81 \cdot 1{,}0} = \sqrt{19{,}62} = 4{,}43\,\text{m/s} \)
+  <div class="dmath">\( \dfrac{2{,}56}{4{,}43} \approx 58\,\% \)</div>
+  Der rollende Körper erreicht nur 58 % der Gleitgeschwindigkeit.
+</div></div>`,
+prompt:`Ich übe die allgemeine Rollformel v=√(2gh/(1+c)) (Physik Klasse 11, Knobelaufgabe). Herleitung, Spezialfälle, Interpretation des Formfaktors c.`}
+
+};
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+const state = {};
+let curId = null;
+
+function loadState(){
+  try{ Object.assign(state, JSON.parse(sessionStorage.getItem('q4-traegheitsmoment')||'{}')); }catch(e){}
+}
+function saveState(){
+  try{ sessionStorage.setItem('q4-traegheitsmoment', JSON.stringify(state)); }catch(e){}
+}
+
+// ─────────────────────────────────────────────
+// TOGGLE
+// ─────────────────────────────────────────────
+function toggle(checkArea){
+  const card = checkArea.closest('.comp-card');
+  card.classList.toggle('done');
+  state[card.dataset.id] = card.classList.contains('done');
+  saveState();
+  updateProgress();
+  updateCnt(card.dataset.sec);
+}
+
+// ─────────────────────────────────────────────
+// PROGRESS
+// ─────────────────────────────────────────────
+function updateProgress(){
+  const all = document.querySelectorAll('.comp-card').length;
+  const done = document.querySelectorAll('.comp-card.done').length;
+  const pct = all ? done/all*100 : 0;
+  document.getElementById('prog-fill').style.width = pct+'%';
+  document.getElementById('prog-text').textContent = done+' von '+all+' Kompetenzen';
+}
+function updateCnt(sec){
+  const all  = document.querySelectorAll(`[data-sec="${sec}"]`).length;
+  const done = document.querySelectorAll(`[data-sec="${sec}"].done`).length;
+  const el   = document.getElementById('cnt-'+sec);
+  if(el) el.textContent = done+'/'+all;
+}
+function initState(){
+  loadState();
+  document.querySelectorAll('.comp-card').forEach(c=>{
+    if(state[c.dataset.id]) c.classList.add('done');
+  });
+  updateProgress();
+  ['kreis','zentri','uebergang','traeg','steiner','drehimpuls','erot','rollen'].forEach(s=>updateCnt(s));
+}
+
+// ─────────────────────────────────────────────
+// MODAL
+// ─────────────────────────────────────────────
+function openModal(id){
+  curId = id;
+  const d = T[id];
+  if(!d) return;
+
+  document.getElementById('m-title').textContent = d.title;
+
+  // Tab 0: Aufgabe + ausklappbare Lösung
+  document.getElementById('tp0').innerHTML =
+    d.aufgabe +
+    `<button class="sol-toggle" onclick="toggleSol()">💡 Lösung anzeigen</button>
+     <div class="sol-box" id="sol-box">${d.loesung}</div>`;
+
+  // Tab 1: Lösung direkt
+  document.getElementById('tp1').innerHTML =
+    `<div class="sol-box open">${d.loesung}</div>`;
+
+  // Tab 2: KI-Prompt
+  document.getElementById('tp2').innerHTML =
+    `<p style="font-size:.8rem;color:var(--text-muted);margin-bottom:10px">Prompt für weitere Übungsaufgaben:</p>
+     <div class="prompt-box">${d.prompt}</div>
+     <div class="ai-btns">
+       <button class="ai-btn copy" onclick="copyPrompt()">📋 Kopieren</button>
+       <a class="ai-btn" href="https://gemini.google.com" target="_blank">🚀 Google AI</a>
+       <a class="ai-btn" href="https://chatgpt.com" target="_blank">💬 ChatGPT</a>
+     </div>`;
+
+  // Reset tabs
+  document.querySelectorAll('.mtab').forEach((t,i)=>t.classList.toggle('active',i===0));
+  document.querySelectorAll('.tab-panel').forEach((p,i)=>p.classList.toggle('active',i===0));
+
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Re-render MathJax
+  if(window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise([document.getElementById('overlay')]).catch(e=>console.log(e));
+  }
+}
+
+function closeModal(){
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function overlayClick(e){ if(e.target===document.getElementById('overlay')) closeModal(); }
+
+function switchTab(i){
+  document.querySelectorAll('.mtab').forEach((t,j)=>t.classList.toggle('active',i===j));
+  document.querySelectorAll('.tab-panel').forEach((p,j)=>p.classList.toggle('active',i===j));
+  if(window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise([document.getElementById('tp'+i)]).catch(e=>console.log(e));
+  }
+}
+
+function toggleSol(){
+  const b = document.getElementById('sol-box');
+  const btn = b.previousElementSibling;
+  b.classList.toggle('open');
+  btn.textContent = b.classList.contains('open') ? '🙈 Lösung ausblenden' : '💡 Lösung anzeigen';
+  if(b.classList.contains('open') && window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise([b]).catch(e=>console.log(e));
+  }
+}
+
+function copyPrompt(){
+  if(!T[curId]) return;
+  navigator.clipboard.writeText(T[curId].prompt).then(()=>{
+    const btn = document.querySelector('.copy');
+    btn.textContent = '✅ Kopiert!';
+    setTimeout(()=>btn.textContent='📋 Kopieren', 2000);
+  });
+}
+
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', ()=>{
+  initState();
+  if(window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise().catch(e=>console.log(e));
+  }
+});
+</script>
+
+</body>
+</html>
