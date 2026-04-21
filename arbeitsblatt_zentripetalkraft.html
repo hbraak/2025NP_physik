@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interaktives Arbeitsblatt: Zentripetalkraft</title>
+
+<!-- MathJax -->
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(','\\)'], ['$','$']], displayMath: [['\\[','\\]'], ['$$','$$']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] },
+    startup: { typeset: false }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js" crossorigin="anonymous"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Serif:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #f5f2eb;
+  --surface: #ffffff;
+  --surface2: #f0ece2;
+  --border: #d4cfc4;
+  --text: #1a1915;
+  --text-muted: #6b6760;
+  --accent: #2b4c8c;
+  --accent-light: #dce6f5;
+  --green: #1a6b3a;
+  --green-light: #d4edde;
+  --red: #b91c1c;
+  --red-light: #fee2e2;
+  --formula-bg: #0f1923;
+  --afb1: #1a5c8c;  --afb1-bg: #dceef8;
+  --afb2: #7a5200;  --afb2-bg: #fef0cc;
+  --afb3: #7a1a1a;  --afb3-bg: #fde8e8;
+  --star: #b06000;  --star-bg: #fff0d0;
+  --rechnen: #b45309; --rechnen-bg: #fef3c7;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+/* -- Header -- */
+header {
+  background: var(--accent);
+  color: white;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.22);
+}
+.header-inner {
+  max-width: 860px; margin: 0 auto;
+  padding: 20px 28px 10px;
+}
+.header-school { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.7; }
+.header-title  { font-size: 1.45rem; font-weight: 700; margin: 3px 0 4px; }
+.header-sub    { font-size: 0.8rem; opacity: 0.78; font-family: 'IBM Plex Serif', serif; font-style: italic; }
+.header-meta {
+  max-width: 860px; margin: 0 auto;
+  padding: 8px 28px 16px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.85rem; color: rgba(255,255,255,0.85);
+}
+
+/* -- Progress bar -- */
+.progress-bar-wrap {
+  max-width: 860px; margin: 0 auto;
+  padding: 0 28px 14px;
+}
+.progress-bar-outer {
+  background: rgba(255,255,255,0.15);
+  border-radius: 6px; height: 8px; overflow: hidden;
+}
+.progress-bar-inner {
+  height: 100%; width: 0%;
+  background: linear-gradient(90deg, #34d399, #10b981);
+  border-radius: 6px;
+  transition: width 0.5s ease;
+}
+.progress-label {
+  font-size: 0.7rem; color: rgba(255,255,255,0.6);
+  margin-top: 4px; text-align: right;
+}
+
+/* -- Formula strip -- */
+.formula-strip {
+  background: var(--formula-bg);
+  color: #c8e8ff;
+  padding: 10px 0;
+  overflow-x: auto;
+}
+.formula-strip-inner {
+  max-width: 860px; margin: 0 auto; padding: 0 28px;
+  display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+}
+.formula-strip-label { font-size: 0.68rem; color: rgba(255,255,255,0.4); letter-spacing: 0.1em; text-transform: uppercase; flex-shrink: 0; }
+.fchip {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 4px; padding: 3px 10px;
+  font-size: 0.82rem; white-space: nowrap;
+  color: #ddf0ff;
+}
+
+/* -- Main -- */
+main { max-width: 860px; margin: 0 auto; padding: 24px 28px 50px; }
+
+/* -- Section card -- */
+.teil {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  margin-bottom: 22px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.teil-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 20px;
+  font-weight: 700; font-size: 1.0rem;
+}
+.teil-header .teil-icon {
+  width: 36px; height: 36px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.15rem; flex-shrink: 0;
+}
+.teil-body { padding: 0 20px 20px; }
+
+.teil-rechnen .teil-header { background: var(--rechnen-bg); color: var(--rechnen); }
+.teil-rechnen .teil-icon   { background: rgba(180,83,9,0.12); }
+.teil-rechnen              { border-color: #fcd34d; }
+
+/* -- Aufgabe -- */
+.aufgabe {
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  transition: border-color 0.3s;
+}
+.aufgabe.correct { border-color: var(--green); background: var(--green-light); }
+.aufgabe.incorrect { border-color: var(--red); }
+.aufgabe-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--accent); color: white;
+  font-size: 0.78rem; font-weight: 700;
+  margin-right: 8px; flex-shrink: 0;
+  vertical-align: middle;
+}
+.aufgabe.correct .aufgabe-num { background: var(--green); }
+.aufgabe-header {
+  font-weight: 700; font-size: 0.95rem;
+  margin-bottom: 8px;
+  display: flex; align-items: center;
+}
+.aufgabe-title { flex: 1; }
+.aufgabe-text {
+  margin-bottom: 10px;
+  line-height: 1.65;
+  font-size: 0.9rem;
+}
+.aufgabe-parts {
+  margin: 6px 0 10px 22px;
+  font-size: 0.9rem;
+}
+.aufgabe-parts li { margin-bottom: 6px; }
+
+/* -- AFB pills -- */
+.afb-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  border-radius: 4px; padding: 2px 8px; font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.03em; border: 1.5px solid transparent;
+  margin-left: auto; flex-shrink: 0;
+}
+.afb1 { background: var(--afb1-bg); color: var(--afb1); border-color: #9ac4de; }
+.afb2 { background: var(--afb2-bg); color: var(--afb2); border-color: #e8c96a; }
+.afb3 { background: var(--afb3-bg); color: var(--afb3); border-color: #e8a0a0; }
+.star-pill { background: var(--star-bg); color: var(--star); border-color: #e8c070; }
+
+/* -- Info box -- */
+.info-box {
+  background: linear-gradient(135deg, #e0f2fe 0%, #dbeafe 100%);
+  border: 1.5px solid #93c5fd;
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  position: relative;
+}
+.info-box::before {
+  content: 'Hinweis';
+  position: absolute; top: -9px; left: 14px;
+  background: #3b82f6; color: white;
+  font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 1px 8px; border-radius: 3px;
+}
+
+/* -- Formula box -- */
+.formula-box {
+  background: var(--formula-bg);
+  color: #c8e8ff;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: 1.15rem;
+}
+
+/* -- Interactive input fields -- */
+.input-row {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 8px; flex-wrap: wrap;
+}
+.input-row label {
+  font-size: 0.88rem; font-weight: 500;
+  min-width: 40px;
+}
+.input-field {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.92rem;
+  padding: 8px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  background: white;
+  width: 160px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  outline: none;
+}
+.input-field:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(43,76,140,0.12);
+}
+.input-field.correct {
+  border-color: var(--green);
+  background: var(--green-light);
+}
+.input-field.incorrect {
+  border-color: var(--red);
+  background: var(--red-light);
+}
+.input-unit {
+  font-size: 0.82rem; color: var(--text-muted);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* -- Check button -- */
+.check-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--accent);
+  color: white;
+  border: none; border-radius: 6px;
+  padding: 9px 18px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.85rem; font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  margin-top: 8px;
+}
+.check-btn:hover { background: #1e3a6e; }
+.check-btn:active { transform: scale(0.97); }
+.check-btn.success {
+  background: var(--green);
+}
+
+/* -- Feedback -- */
+.feedback {
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: none;
+  line-height: 1.5;
+}
+.feedback.show { display: block; }
+.feedback.correct {
+  background: var(--green-light);
+  color: var(--green);
+  border: 1px solid #86efac;
+}
+.feedback.incorrect {
+  background: var(--red-light);
+  color: var(--red);
+  border: 1px solid #fca5a5;
+}
+.feedback.partial {
+  background: var(--afb2-bg);
+  color: var(--afb2);
+  border: 1px solid #e8c96a;
+}
+
+/* -- Solution toggle -- */
+.solution-wrap {
+  margin-top: 10px;
+}
+.solution-toggle {
+  background: none; border: 1.5px dashed var(--border);
+  border-radius: 6px; padding: 6px 14px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.8rem; color: var(--text-muted);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.solution-toggle:hover { border-color: var(--accent); color: var(--accent); }
+.solution-content {
+  display: none;
+  margin-top: 8px;
+  padding: 12px 14px;
+  background: #f8f7f3;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+.solution-content.show { display: block; }
+
+/* -- Footer -- */
+footer {
+  text-align: center; color: var(--text-muted); font-size: 0.73rem;
+  padding: 18px; border-top: 1px solid var(--border);
+  font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.05em;
+  max-width: 860px; margin: 0 auto;
+}
+
+/* -- Print -- */
+@media print {
+  body { background: white; font-size: 12.5px; }
+  header { box-shadow: none; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .formula-strip { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .formula-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .teil { box-shadow: none; break-inside: avoid; }
+  .aufgabe { break-inside: avoid; }
+  main { padding: 16px 20px 30px; }
+  th { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .afb-pill { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .teil-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .check-btn { display: none; }
+  .feedback { display: none !important; }
+  .solution-toggle { display: none; }
+  .progress-bar-wrap { display: none; }
+}
+
+@media (max-width: 500px) {
+  main { padding: 16px 12px 30px; }
+  .teil-body { padding: 0 14px 14px; }
+  .input-field { width: 120px; }
+  .input-row { gap: 6px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="header-school">Lore-Lorentz-Schule &middot; Physik GK 2025</div>
+    <div class="header-title">Interaktives Arbeitsblatt: Zentripetalkraft</div>
+    <div class="header-sub">Rechnen, pr&uuml;fen, verstehen &mdash; vier Aufgaben mit steigendem Schwierigkeitsgrad</div>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-outer">
+      <div class="progress-bar-inner" id="progressBar"></div>
+    </div>
+    <div class="progress-label" id="progressLabel">0 / 4 Aufgaben gel&ouml;st</div>
+  </div>
+</header>
+
+<!-- FORMELLEISTE -->
+<div class="formula-strip">
+  <div class="formula-strip-inner">
+    <span class="formula-strip-label">Formeln</span>
+    <span class="fchip">\(v = \frac{2\pi r}{T}\)</span>
+    <span class="fchip">\(a_Z = \frac{v^2}{r}\)</span>
+    <span class="fchip">\(F_Z = m \cdot \frac{v^2}{r}\)</span>
+    <span class="fchip">\(F_R = \mu \cdot m \cdot g\)</span>
+    <span class="fchip">\(g = 9{,}81\,\frac{\text{m}}{\text{s}^2}\)</span>
+  </div>
+</div>
+
+<main>
+
+<!-- INFO -->
+<div class="info-box" style="margin-bottom:22px;">
+  Gib deine Ergebnisse als Zahlenwert in das Eingabefeld ein (z.&thinsp;B. <strong>7.54</strong>). Nutze einen <strong>Punkt</strong> oder ein <strong>Komma</strong> als Dezimaltrennzeichen. Dr&uuml;cke <em>Pr&uuml;fen</em>, um deine Antwort sofort zu kontrollieren. Toleranz: &plusmn;2&thinsp;%.
+</div>
+
+<!-- ========== AUFGABE 1 ========== -->
+<div class="teil teil-rechnen">
+  <div class="teil-header">
+    <div class="teil-icon">&#x270F;&#xFE0F;</div>
+    <span>Aufgabe 1: Kettenkarussell</span>
+  </div>
+  <div class="teil-body">
+    <div class="aufgabe" id="aufgabe1">
+      <div class="aufgabe-header">
+        <span class="aufgabe-num">1</span>
+        <span class="aufgabe-title">Bahngeschwindigkeit &amp; Zentripetalkraft</span>
+        <span class="afb-pill afb1">AFB I</span>
+      </div>
+      <div class="aufgabe-text">
+        Ein Kettenkarussell hat einen Radius von \(r = 5{,}0\,\text{m}\). Es dreht sich mit einer Umlaufdauer von \(T = 4{,}0\,\text{s}\). Ein Kind hat die Masse \(m = 40\,\text{kg}\).
+      </div>
+      <ol class="aufgabe-parts" type="a">
+        <li>Berechne die Bahngeschwindigkeit \(v\).</li>
+        <li>Berechne die Zentripetalkraft \(F_Z\), die auf das Kind wirkt.</li>
+      </ol>
+
+      <div class="input-row">
+        <label>a) \(v =\)</label>
+        <input type="text" class="input-field" id="a1v" placeholder="...">
+        <span class="input-unit">m/s</span>
+      </div>
+      <div class="input-row">
+        <label>b) \(F_Z =\)</label>
+        <input type="text" class="input-field" id="a1f" placeholder="...">
+        <span class="input-unit">N</span>
+      </div>
+
+      <button class="check-btn" onclick="checkAufgabe1()">Pr&uuml;fen</button>
+      <div class="feedback" id="fb1"></div>
+
+      <div class="solution-wrap">
+        <button class="solution-toggle" onclick="toggleSolution('sol1')">L&ouml;sungsweg anzeigen</button>
+        <div class="solution-content" id="sol1">
+          <strong>a)</strong> \(v = \frac{2\pi r}{T} = \frac{2\pi \cdot 5{,}0}{4{,}0} \approx 7{,}85\,\text{m/s}\)<br><br>
+          <strong>b)</strong> \(F_Z = m \cdot \frac{v^2}{r} = 40 \cdot \frac{7{,}85^2}{5{,}0} \approx 493\,\text{N}\)
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== AUFGABE 2 ========== -->
+<div class="teil teil-rechnen">
+  <div class="teil-header">
+    <div class="teil-icon">&#x270F;&#xFE0F;</div>
+    <span>Aufgabe 2: Kurvenfahrt</span>
+  </div>
+  <div class="teil-body">
+    <div class="aufgabe" id="aufgabe2">
+      <div class="aufgabe-header">
+        <span class="aufgabe-num">2</span>
+        <span class="aufgabe-title">Reibung in der Kurve</span>
+        <span class="afb-pill afb1">AFB I&ndash;II</span>
+      </div>
+      <div class="aufgabe-text">
+        Ein Auto (\(m = 1200\,\text{kg}\)) f&auml;hrt mit \(v = 54\,\text{km/h}\) durch eine Kurve mit dem Radius \(r = 50\,\text{m}\).
+      </div>
+      <ol class="aufgabe-parts" type="a">
+        <li>Rechne die Geschwindigkeit in m/s um.</li>
+        <li>Berechne die n&ouml;tige Zentripetalkraft.</li>
+        <li>Die Haftreibungszahl betr&auml;gt \(\mu = 0{,}7\). Berechne die maximale Haftreibungskraft. Reicht die Reibung aus?</li>
+      </ol>
+
+      <div class="input-row">
+        <label>a) \(v =\)</label>
+        <input type="text" class="input-field" id="a2v" placeholder="...">
+        <span class="input-unit">m/s</span>
+      </div>
+      <div class="input-row">
+        <label>b) \(F_Z =\)</label>
+        <input type="text" class="input-field" id="a2f" placeholder="...">
+        <span class="input-unit">N</span>
+      </div>
+      <div class="input-row">
+        <label>c) \(F_R =\)</label>
+        <input type="text" class="input-field" id="a2r" placeholder="...">
+        <span class="input-unit">N</span>
+      </div>
+
+      <button class="check-btn" onclick="checkAufgabe2()">Pr&uuml;fen</button>
+      <div class="feedback" id="fb2"></div>
+
+      <div class="solution-wrap">
+        <button class="solution-toggle" onclick="toggleSolution('sol2')">L&ouml;sungsweg anzeigen</button>
+        <div class="solution-content" id="sol2">
+          <strong>a)</strong> \(v = \frac{54}{3{,}6} = 15\,\text{m/s}\)<br><br>
+          <strong>b)</strong> \(F_Z = 1200 \cdot \frac{15^2}{50} = 5400\,\text{N}\)<br><br>
+          <strong>c)</strong> \(F_R = \mu \cdot m \cdot g = 0{,}7 \cdot 1200 \cdot 9{,}81 = 8240\,\text{N}\)<br>
+          Da \(F_R = 8240\,\text{N} > F_Z = 5400\,\text{N}\), reicht die Reibung aus.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== AUFGABE 3 ========== -->
+<div class="teil teil-rechnen">
+  <div class="teil-header">
+    <div class="teil-icon">&#x270F;&#xFE0F;</div>
+    <span>Aufgabe 3: H&ouml;chstgeschwindigkeit in der Kurve</span>
+  </div>
+  <div class="teil-body">
+    <div class="aufgabe" id="aufgabe3">
+      <div class="aufgabe-header">
+        <span class="aufgabe-num">3</span>
+        <span class="aufgabe-title">Maximale Kurvengeschwindigkeit</span>
+        <span class="afb-pill afb2">AFB II</span>
+      </div>
+      <div class="aufgabe-text">
+        Ein Motorrad (\(m = 250\,\text{kg}\)) f&auml;hrt durch eine Kurve mit \(r = 30\,\text{m}\). Der Haftreibungskoeffizient zwischen Reifen und Stra&szlig;e betr&auml;gt \(\mu = 0{,}9\).
+      </div>
+      <ol class="aufgabe-parts" type="a">
+        <li>Stelle die Bedingung auf, bei der das Motorrad gerade noch nicht rutscht: \(F_Z = F_R\).</li>
+        <li>Leite daraus die Formel f&uuml;r \(v_{\text{max}}\) her.</li>
+        <li>Berechne \(v_{\text{max}}\) in m/s und in km/h.</li>
+      </ol>
+
+      <div class="formula-box" style="font-size:1rem; margin: 12px 0;">
+        Herleitung: \(m \cdot \frac{v^2}{r} = \mu \cdot m \cdot g \implies v_{\text{max}} = \sqrt{\mu \cdot g \cdot r}\)
+      </div>
+
+      <div class="input-row">
+        <label>\(v_{\text{max}} =\)</label>
+        <input type="text" class="input-field" id="a3v" placeholder="...">
+        <span class="input-unit">m/s</span>
+      </div>
+      <div class="input-row">
+        <label>\(v_{\text{max}} =\)</label>
+        <input type="text" class="input-field" id="a3vk" placeholder="...">
+        <span class="input-unit">km/h</span>
+      </div>
+
+      <button class="check-btn" onclick="checkAufgabe3()">Pr&uuml;fen</button>
+      <div class="feedback" id="fb3"></div>
+
+      <div class="solution-wrap">
+        <button class="solution-toggle" onclick="toggleSolution('sol3')">L&ouml;sungsweg anzeigen</button>
+        <div class="solution-content" id="sol3">
+          <strong>Bedingung:</strong> \(F_Z = F_R \iff m \cdot \frac{v^2}{r} = \mu \cdot m \cdot g\)<br><br>
+          K&uuml;rzen von \(m\): \(\frac{v^2}{r} = \mu \cdot g\)<br><br>
+          \(v_{\text{max}} = \sqrt{\mu \cdot g \cdot r} = \sqrt{0{,}9 \cdot 9{,}81 \cdot 30} \approx 16{,}3\,\text{m/s} \approx 58{,}6\,\text{km/h}\)
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== AUFGABE 4 ========== -->
+<div class="teil teil-rechnen">
+  <div class="teil-header">
+    <div class="teil-icon">&#x270F;&#xFE0F;</div>
+    <span>Aufgabe 4: Looping</span>
+  </div>
+  <div class="teil-body">
+    <div class="aufgabe" id="aufgabe4">
+      <div class="aufgabe-header">
+        <span class="aufgabe-num">&#9733;</span>
+        <span class="aufgabe-title">Mindestgeschwindigkeit im Looping</span>
+        <span class="afb-pill star-pill">&#9733; AFB III</span>
+      </div>
+      <div class="aufgabe-text">
+        Ein Achterbahn-Looping hat den Radius \(r = 12\,\text{m}\). Ein Wagen mit Insassen hat die Gesamtmasse \(m = 600\,\text{kg}\).
+      </div>
+      <ol class="aufgabe-parts" type="a">
+        <li>Welche Kraft liefert im h&ouml;chsten Punkt des Loopings die Zentripetalkraft? (<em>Hinweis:</em> Im Grenzfall reicht die Gewichtskraft allein aus.)</li>
+        <li>Stelle die Bedingung f&uuml;r die Mindestgeschwindigkeit auf: \(F_Z = F_G\).</li>
+        <li>Berechne \(v_{\text{min}}\).</li>
+        <li>Berechne die Zentripetalkraft, wenn der Wagen oben mit \(v = 15\,\text{m/s}\) f&auml;hrt. Wie gro&szlig; ist dann die Normalkraft der Schiene auf den Wagen?</li>
+      </ol>
+
+      <div class="formula-box" style="font-size:1rem; margin: 12px 0;">
+        Grenzfall oben: \(F_G = F_Z \implies m \cdot g = m \cdot \frac{v_{\text{min}}^2}{r} \implies v_{\text{min}} = \sqrt{g \cdot r}\)
+      </div>
+
+      <div class="input-row">
+        <label>c) \(v_{\text{min}} =\)</label>
+        <input type="text" class="input-field" id="a4v" placeholder="...">
+        <span class="input-unit">m/s</span>
+      </div>
+      <div class="input-row">
+        <label>d) \(F_Z =\)</label>
+        <input type="text" class="input-field" id="a4fz" placeholder="...">
+        <span class="input-unit">N</span>
+      </div>
+      <div class="input-row">
+        <label>d) \(F_N =\)</label>
+        <input type="text" class="input-field" id="a4fn" placeholder="...">
+        <span class="input-unit">N</span>
+      </div>
+
+      <button class="check-btn" onclick="checkAufgabe4()">Pr&uuml;fen</button>
+      <div class="feedback" id="fb4"></div>
+
+      <div class="solution-wrap">
+        <button class="solution-toggle" onclick="toggleSolution('sol4')">L&ouml;sungsweg anzeigen</button>
+        <div class="solution-content" id="sol4">
+          <strong>a)</strong> Im h&ouml;chsten Punkt zeigen sowohl die Gewichtskraft \(F_G\) als auch die Normalkraft \(F_N\) der Schiene zum Kreismittelpunkt (nach unten). Im Grenzfall ist \(F_N = 0\), dann liefert nur \(F_G\) die Zentripetalkraft.<br><br>
+          <strong>b)</strong> \(m \cdot g = m \cdot \frac{v_{\text{min}}^2}{r}\)<br><br>
+          <strong>c)</strong> \(v_{\text{min}} = \sqrt{g \cdot r} = \sqrt{9{,}81 \cdot 12} \approx 10{,}8\,\text{m/s}\)<br><br>
+          <strong>d)</strong> \(F_Z = m \cdot \frac{v^2}{r} = 600 \cdot \frac{15^2}{12} = 11250\,\text{N}\)<br><br>
+          Oben gilt: \(F_Z = F_G + F_N\), also:<br>
+          \(F_N = F_Z - F_G = 11250 - 600 \cdot 9{,}81 = 11250 - 5886 = 5364\,\text{N}\)
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  Lore-Lorentz-Schule &middot; Physik GK 2025 &middot; Interaktives Arbeitsblatt Zentripetalkraft
+</footer>
+
+<script>
+// --- Helpers ---
+const g = 9.81;
+const tol = 0.02; // 2% tolerance
+
+function parseNum(id) {
+  const raw = document.getElementById(id).value.replace(',', '.').trim();
+  return parseFloat(raw);
+}
+
+function isClose(val, expected) {
+  if (isNaN(val)) return false;
+  return Math.abs(val - expected) / Math.abs(expected) <= tol;
+}
+
+function setFieldState(id, correct) {
+  const el = document.getElementById(id);
+  el.classList.remove('correct', 'incorrect');
+  el.classList.add(correct ? 'correct' : 'incorrect');
+}
+
+function showFeedback(id, allCorrect, partial, msg) {
+  const fb = document.getElementById(id);
+  fb.classList.remove('correct', 'incorrect', 'partial');
+  if (allCorrect) {
+    fb.className = 'feedback show correct';
+    fb.innerHTML = msg || 'Alle Antworten richtig!';
+  } else if (partial) {
+    fb.className = 'feedback show partial';
+    fb.innerHTML = msg || 'Teilweise richtig. Pr&uuml;fe die rot markierten Felder.';
+  } else {
+    fb.className = 'feedback show incorrect';
+    fb.innerHTML = msg || 'Leider noch nicht richtig. Versuche es nochmal!';
+  }
+}
+
+const solved = { 1: false, 2: false, 3: false, 4: false };
+
+function updateProgress() {
+  const count = Object.values(solved).filter(Boolean).length;
+  document.getElementById('progressBar').style.width = (count / 4 * 100) + '%';
+  document.getElementById('progressLabel').textContent = count + ' / 4 Aufgaben gel\u00f6st';
+}
+
+function markAufgabe(num, correct) {
+  const el = document.getElementById('aufgabe' + num);
+  el.classList.remove('correct', 'incorrect');
+  if (correct) {
+    el.classList.add('correct');
+    solved[num] = true;
+    updateProgress();
+  }
+}
+
+function toggleSolution(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('show');
+  if (el.classList.contains('show')) {
+    MathJax.startup.promise.then(function() { return MathJax.typesetPromise([el]); });
+  }
+}
+
+// --- Aufgabe 1: Kettenkarussell ---
+// r=5, T=4, m=40
+// v = 2*pi*5/4 = 7.854
+// Fz = 40 * 7.854^2 / 5 = 493.5
+function checkAufgabe1() {
+  const expV = 2 * Math.PI * 5.0 / 4.0;
+  const expF = 40 * expV * expV / 5.0;
+  const uv = parseNum('a1v');
+  const uf = parseNum('a1f');
+  const cv = isClose(uv, expV);
+  const cf = isClose(uf, expF);
+  setFieldState('a1v', cv);
+  setFieldState('a1f', cf);
+  const all = cv && cf;
+  showFeedback('fb1', all, cv || cf);
+  if (all) markAufgabe(1, true);
+}
+
+// --- Aufgabe 2: Kurvenfahrt ---
+// v = 54/3.6 = 15, Fz = 1200*15^2/50 = 5400, Fr = 0.7*1200*9.81 = 8240.4
+function checkAufgabe2() {
+  const expV = 54 / 3.6;
+  const expF = 1200 * expV * expV / 50;
+  const expR = 0.7 * 1200 * g;
+  const uv = parseNum('a2v');
+  const uf = parseNum('a2f');
+  const ur = parseNum('a2r');
+  const cv = isClose(uv, expV);
+  const cf = isClose(uf, expF);
+  const cr = isClose(ur, expR);
+  setFieldState('a2v', cv);
+  setFieldState('a2f', cf);
+  setFieldState('a2r', cr);
+  const all = cv && cf && cr;
+  const partial = cv || cf || cr;
+  showFeedback('fb2', all, partial && !all);
+  if (all) markAufgabe(2, true);
+}
+
+// --- Aufgabe 3: vmax ---
+// vmax = sqrt(0.9*9.81*30) = 16.27, km/h = 58.58
+function checkAufgabe3() {
+  const expV = Math.sqrt(0.9 * g * 30);
+  const expVk = expV * 3.6;
+  const uv = parseNum('a3v');
+  const uvk = parseNum('a3vk');
+  const cv = isClose(uv, expV);
+  const cvk = isClose(uvk, expVk);
+  setFieldState('a3v', cv);
+  setFieldState('a3vk', cvk);
+  const all = cv && cvk;
+  showFeedback('fb3', all, cv || cvk);
+  if (all) markAufgabe(3, true);
+}
+
+// --- Aufgabe 4: Looping ---
+// vmin = sqrt(9.81*12) = 10.85
+// Fz = 600*15^2/12 = 11250
+// Fn = 11250 - 600*9.81 = 5364
+function checkAufgabe4() {
+  const expV = Math.sqrt(g * 12);
+  const expFz = 600 * 15 * 15 / 12;
+  const expFn = expFz - 600 * g;
+  const uv = parseNum('a4v');
+  const ufz = parseNum('a4fz');
+  const ufn = parseNum('a4fn');
+  const cv = isClose(uv, expV);
+  const cfz = isClose(ufz, expFz);
+  const cfn = isClose(ufn, expFn);
+  setFieldState('a4v', cv);
+  setFieldState('a4fz', cfz);
+  setFieldState('a4fn', cfn);
+  const all = cv && cfz && cfn;
+  const partial = cv || cfz || cfn;
+  showFeedback('fb4', all, partial && !all);
+  if (all) markAufgabe(4, true);
+}
+
+// Allow Enter to trigger check
+document.querySelectorAll('.input-field').forEach(function(el) {
+  el.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      var btn = el.closest('.aufgabe').querySelector('.check-btn');
+      if (btn) btn.click();
+    }
+  });
+});
+
+// MathJax initial typeset
+MathJax.startup.promise.then(function() { return MathJax.typesetPromise(); });
+</script>
+</body>
+</html>
