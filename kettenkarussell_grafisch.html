@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Kettenkarussell – Grafische Lösung</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    max-width: 1100px;
+    margin: 1.5em auto;
+    padding: 0 1em;
+    color: #222;
+    background: #fafafa;
+  }
+  h1 { color: #234; margin-bottom: 0.2em; }
+  .subtitle { color: #666; margin-top: 0; margin-bottom: 1.5em; }
+  .container {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 1.5em;
+    align-items: start;
+  }
+  @media (max-width: 850px) {
+    .container { grid-template-columns: 1fr; }
+  }
+  .plot-area {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 1em;
+  }
+  .controls {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 1.2em;
+  }
+  .control-group {
+    margin-bottom: 1.2em;
+  }
+  .control-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.3em;
+    color: #234;
+  }
+  .control-group .value {
+    font-family: "SF Mono", "Consolas", monospace;
+    color: #c44;
+    font-weight: bold;
+  }
+  input[type="range"] {
+    width: 100%;
+  }
+  .results {
+    background: #f0f4f8;
+    border-left: 4px solid #2a6ab0;
+    padding: 0.8em 1em;
+    margin-top: 1em;
+    border-radius: 4px;
+    font-size: 0.95em;
+  }
+  .results .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.2em 0;
+    border-bottom: 1px dotted #cdd;
+  }
+  .results .row:last-child { border-bottom: none; }
+  .results .label { color: #455; }
+  .results .val {
+    font-family: "SF Mono", "Consolas", monospace;
+    font-weight: bold;
+    color: #234;
+  }
+  .results .highlight .val { color: #c44; font-size: 1.1em; }
+  svg { display: block; width: 100%; height: auto; }
+  .legend {
+    display: flex;
+    gap: 1.5em;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 0.5em;
+    font-size: 0.9em;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+  }
+  .legend-line {
+    width: 30px;
+    height: 3px;
+  }
+  .info {
+    margin-top: 1em;
+    padding: 0.8em 1em;
+    background: #fff8e7;
+    border-left: 4px solid #e0a040;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #553;
+  }
+  details {
+    margin-top: 1em;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 0.5em 1em;
+  }
+  details summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: #234;
+    padding: 0.4em 0;
+  }
+  details p { font-size: 0.92em; line-height: 1.5; }
+  .formula {
+    font-family: "Times New Roman", serif;
+    font-style: italic;
+    font-size: 1.05em;
+  }
+</style>
+</head>
+<body>
+
+<h1>Kettenkarussell – Grafische Lösung</h1>
+<p class="subtitle">
+  Schnittpunkt von <span class="formula">y<sub>1</sub> = tan α</span> und
+  <span class="formula">y<sub>2</sub> = ω²(R + ℓ sin α) / g</span>
+</p>
+
+<div class="container">
+
+  <div class="plot-area">
+    <svg id="plot" viewBox="0 0 700 500" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-line" style="background:#2a6ab0"></div>
+        <span>y₁ = tan α</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-line" style="background:#c44"></div>
+        <span>y₂ = ω²(R + ℓ sin α) / g</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-line" style="background:#080;border-radius:50%;width:10px;height:10px"></div>
+        <span>Schnittpunkt = Lösung</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="control-group">
+      <label>
+        Winkelgeschwindigkeit ω = <span class="value" id="omega-val">1,20</span> s⁻¹
+      </label>
+      <input type="range" id="omega" min="0.5" max="2.5" step="0.01" value="1.2">
+      <div style="font-size:0.85em;color:#789;margin-top:0.2em">
+        Drehzahl: <span id="rpm-val">11,5</span> min⁻¹
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label>
+        Tragring-Radius R = <span class="value" id="R-val">4,0</span> m
+      </label>
+      <input type="range" id="R" min="0" max="8" step="0.1" value="4.0">
+    </div>
+
+    <div class="control-group">
+      <label>
+        Kettenlänge ℓ = <span class="value" id="L-val">5,0</span> m
+      </label>
+      <input type="range" id="L" min="1" max="8" step="0.1" value="5.0">
+    </div>
+
+    <div class="results" id="results">
+      <div class="row highlight">
+        <span class="label">Winkel α</span>
+        <span class="val"><span id="alpha-val">48,71</span>°</span>
+      </div>
+      <div class="row">
+        <span class="label">Bahnradius r</span>
+        <span class="val"><span id="r-val">7,76</span> m</span>
+      </div>
+      <div class="row">
+        <span class="label">Auslenkung ℓ sin α</span>
+        <span class="val"><span id="aus-val">3,76</span> m</span>
+      </div>
+      <div class="row">
+        <span class="label">Bahngeschwindigkeit v</span>
+        <span class="val"><span id="v-val">9,30</span> m/s</span>
+      </div>
+      <div class="row">
+        <span class="label">Seilkraft / Gewichtskraft</span>
+        <span class="val"><span id="ratio-val">1,52</span></span>
+      </div>
+    </div>
+
+    <div class="info" id="info-box">
+      Erhöhe ω – beobachte, wie sich die rote Kurve hebt und der Schnittpunkt
+      nach rechts wandert.
+    </div>
+  </div>
+
+</div>
+
+<details>
+  <summary>Wann gibt es überhaupt eine Lösung?</summary>
+  <p>
+    Bei α = 0 ist y₁ = 0 und y₂ = ω²R/g. Ist R &gt; 0, liegt y₂ am Anfang
+    <em>über</em> y₁ – die tan-Kurve holt aber durch ihre Divergenz bei 90°
+    zwangsläufig auf, deshalb existiert immer genau ein Schnittpunkt im Bereich
+    0 ≤ α &lt; 90°.
+  </p>
+  <p>
+    <strong>Sonderfall R = 0</strong> (konisches Pendel): Beide Kurven starten
+    bei null. Eine nichttriviale Lösung existiert nur, wenn y₂ am Ursprung
+    steiler ansteigt als y₁ – also <span class="formula">ω²ℓ/g &gt; 1</span>,
+    d.h. <span class="formula">ω &gt; √(g/ℓ)</span>. Unterhalb dieser Drehzahl
+    hängt der Sitz senkrecht.
+  </p>
+</details>
+
+<details>
+  <summary>Was ändert sich, wenn ich an den Schiebereglern drehe?</summary>
+  <p>
+    <strong>ω (Drehzahl):</strong> verschiebt die rote Kurve vertikal um den
+    Faktor ω²/g. Doppeltes ω ⇒ rote Kurve viermal so hoch ⇒ Schnittpunkt deutlich
+    weiter rechts.
+  </p>
+  <p>
+    <strong>R (Tragring):</strong> hebt die rote Kurve gleichmäßig um ω²R/g
+    (parallele Verschiebung).
+  </p>
+  <p>
+    <strong>ℓ (Kettenlänge):</strong> ändert die Steigung der roten Kurve – bei
+    α = 0 hat sie die Steigung ω²ℓ/g. Lange Ketten reagieren empfindlicher.
+  </p>
+</details>
+
+<script>
+const SVG_NS = "http://www.w3.org/2000/svg";
+const g = 9.81;
+
+// Plot-Geometrie
+const W = 700, H = 500;
+const margin = {l: 60, r: 30, t: 30, b: 60};
+const plotW = W - margin.l - margin.r;
+const plotH = H - margin.t - margin.b;
+
+const ALPHA_MAX = 80; // Grad, x-Achsenbereich
+const Y_MAX = 4.0;    // y-Achsenbereich
+
+const svg = document.getElementById('plot');
+
+function xScale(alphaDeg) {
+  return margin.l + (alphaDeg / ALPHA_MAX) * plotW;
+}
+function yScale(y) {
+  return margin.t + plotH - (y / Y_MAX) * plotH;
+}
+
+// Statische Achsen aufbauen
+function setupAxes() {
+  // Hintergrund-Plotbereich
+  const bg = document.createElementNS(SVG_NS, 'rect');
+  bg.setAttribute('x', margin.l);
+  bg.setAttribute('y', margin.t);
+  bg.setAttribute('width', plotW);
+  bg.setAttribute('height', plotH);
+  bg.setAttribute('fill', '#fdfdfd');
+  bg.setAttribute('stroke', '#888');
+  svg.appendChild(bg);
+
+  // Gitterlinien und x-Achsenbeschriftung (alle 10°)
+  for (let a = 0; a <= ALPHA_MAX; a += 10) {
+    const x = xScale(a);
+    const grid = document.createElementNS(SVG_NS, 'line');
+    grid.setAttribute('x1', x);
+    grid.setAttribute('y1', margin.t);
+    grid.setAttribute('x2', x);
+    grid.setAttribute('y2', margin.t + plotH);
+    grid.setAttribute('stroke', '#e8e8e8');
+    grid.setAttribute('stroke-width', a % 30 === 0 ? '1.2' : '0.6');
+    svg.appendChild(grid);
+
+    const lbl = document.createElementNS(SVG_NS, 'text');
+    lbl.setAttribute('x', x);
+    lbl.setAttribute('y', margin.t + plotH + 18);
+    lbl.setAttribute('text-anchor', 'middle');
+    lbl.setAttribute('font-size', '12');
+    lbl.setAttribute('fill', '#445');
+    lbl.textContent = a + '°';
+    svg.appendChild(lbl);
+  }
+
+  // y-Gitterlinien und Beschriftung (alle 0,5)
+  for (let y = 0; y <= Y_MAX; y += 0.5) {
+    const yy = yScale(y);
+    const grid = document.createElementNS(SVG_NS, 'line');
+    grid.setAttribute('x1', margin.l);
+    grid.setAttribute('y1', yy);
+    grid.setAttribute('x2', margin.l + plotW);
+    grid.setAttribute('y2', yy);
+    grid.setAttribute('stroke', '#e8e8e8');
+    grid.setAttribute('stroke-width', y % 1 === 0 ? '1.2' : '0.6');
+    svg.appendChild(grid);
+
+    const lbl = document.createElementNS(SVG_NS, 'text');
+    lbl.setAttribute('x', margin.l - 8);
+    lbl.setAttribute('y', yy + 4);
+    lbl.setAttribute('text-anchor', 'end');
+    lbl.setAttribute('font-size', '12');
+    lbl.setAttribute('fill', '#445');
+    lbl.textContent = y.toFixed(1).replace('.', ',');
+    svg.appendChild(lbl);
+  }
+
+  // Achsenbeschriftung
+  const xlabel = document.createElementNS(SVG_NS, 'text');
+  xlabel.setAttribute('x', margin.l + plotW/2);
+  xlabel.setAttribute('y', H - 15);
+  xlabel.setAttribute('text-anchor', 'middle');
+  xlabel.setAttribute('font-size', '14');
+  xlabel.setAttribute('font-style', 'italic');
+  xlabel.textContent = 'α';
+  svg.appendChild(xlabel);
+
+  const ylabel = document.createElementNS(SVG_NS, 'text');
+  ylabel.setAttribute('x', 18);
+  ylabel.setAttribute('y', margin.t + plotH/2);
+  ylabel.setAttribute('text-anchor', 'middle');
+  ylabel.setAttribute('font-size', '14');
+  ylabel.setAttribute('font-style', 'italic');
+  ylabel.setAttribute('transform', `rotate(-90, 18, ${margin.t + plotH/2})`);
+  ylabel.textContent = 'y';
+  svg.appendChild(ylabel);
+}
+
+// Dynamische Elemente (werden bei jeder Aktualisierung neu erzeugt)
+let dynamicGroup = null;
+
+function clearDynamic() {
+  if (dynamicGroup) svg.removeChild(dynamicGroup);
+  dynamicGroup = document.createElementNS(SVG_NS, 'g');
+  svg.appendChild(dynamicGroup);
+}
+
+// Schnittpunkt finden via Bisektion auf f(α) = tan α − ω²(R+ℓ sin α)/g
+function findIntersection(omega, R, L) {
+  const k = omega*omega / g;
+  const f = a => Math.tan(a) - k * (R + L * Math.sin(a));
+
+  // Suche im Bereich [0,01°, 89°]
+  let lo = 0.001, hi = Math.PI/2 - 0.01;
+  let flo = f(lo), fhi = f(hi);
+
+  // Sonderfall R=0: f(0)=0 ist trivial. Suche ab kleinem positivem Winkel.
+  // Wenn f(lo) und f(hi) gleiches Vorzeichen haben, gibt es im Bereich
+  // keine nichttriviale Lösung (Pendel hängt senkrecht).
+  if (flo * fhi > 0) {
+    // Bei R=0 und ω² ℓ/g ≤ 1 keine Lösung außer α=0
+    return 0;
+  }
+
+  for (let i = 0; i < 60; i++) {
+    const mid = (lo + hi) / 2;
+    const fmid = f(mid);
+    if (fmid * flo < 0) { hi = mid; fhi = fmid; }
+    else { lo = mid; flo = fmid; }
+    if (hi - lo < 1e-9) break;
+  }
+  return (lo + hi) / 2;
+}
+
+function tanPath() {
+  // y₁ = tan α (statisch, hängt nicht von Parametern ab)
+  let d = '';
+  let started = false;
+  for (let aDeg = 0; aDeg <= ALPHA_MAX; aDeg += 0.5) {
+    const a = aDeg * Math.PI / 180;
+    const y = Math.tan(a);
+    if (y > Y_MAX * 1.1 || y < 0) {
+      started = false;
+      continue;
+    }
+    const x = xScale(aDeg);
+    const yy = yScale(y);
+    d += (started ? ' L ' : 'M ') + x.toFixed(2) + ' ' + yy.toFixed(2);
+    started = true;
+  }
+  return d;
+}
+
+function y2Path(omega, R, L) {
+  const k = omega*omega / g;
+  let d = '';
+  let started = false;
+  for (let aDeg = 0; aDeg <= ALPHA_MAX; aDeg += 0.5) {
+    const a = aDeg * Math.PI / 180;
+    const y = k * (R + L * Math.sin(a));
+    if (y > Y_MAX * 1.1) { started = false; continue; }
+    const x = xScale(aDeg);
+    const yy = yScale(y);
+    d += (started ? ' L ' : 'M ') + x.toFixed(2) + ' ' + yy.toFixed(2);
+    started = true;
+  }
+  return d;
+}
+
+function drawCurves(omega, R, L, alpha) {
+  // y₁ = tan α
+  const p1 = document.createElementNS(SVG_NS, 'path');
+  p1.setAttribute('d', tanPath());
+  p1.setAttribute('stroke', '#2a6ab0');
+  p1.setAttribute('stroke-width', '2.5');
+  p1.setAttribute('fill', 'none');
+  dynamicGroup.appendChild(p1);
+
+  // y₂
+  const p2 = document.createElementNS(SVG_NS, 'path');
+  p2.setAttribute('d', y2Path(omega, R, L));
+  p2.setAttribute('stroke', '#c44');
+  p2.setAttribute('stroke-width', '2.5');
+  p2.setAttribute('fill', 'none');
+  dynamicGroup.appendChild(p2);
+
+  // Schnittpunkt
+  if (alpha > 0.001) {
+    const aDeg = alpha * 180 / Math.PI;
+    const ys = Math.tan(alpha);
+    if (aDeg <= ALPHA_MAX && ys <= Y_MAX) {
+      const cx = xScale(aDeg);
+      const cy = yScale(ys);
+
+      // Hilfslinien
+      const vline = document.createElementNS(SVG_NS, 'line');
+      vline.setAttribute('x1', cx);
+      vline.setAttribute('y1', margin.t + plotH);
+      vline.setAttribute('x2', cx);
+      vline.setAttribute('y2', cy);
+      vline.setAttribute('stroke', '#080');
+      vline.setAttribute('stroke-dasharray', '4,3');
+      vline.setAttribute('stroke-width', '1');
+      dynamicGroup.appendChild(vline);
+
+      const hline = document.createElementNS(SVG_NS, 'line');
+      hline.setAttribute('x1', margin.l);
+      hline.setAttribute('y1', cy);
+      hline.setAttribute('x2', cx);
+      hline.setAttribute('y2', cy);
+      hline.setAttribute('stroke', '#080');
+      hline.setAttribute('stroke-dasharray', '4,3');
+      hline.setAttribute('stroke-width', '1');
+      dynamicGroup.appendChild(hline);
+
+      // Punkt
+      const dot = document.createElementNS(SVG_NS, 'circle');
+      dot.setAttribute('cx', cx);
+      dot.setAttribute('cy', cy);
+      dot.setAttribute('r', '6');
+      dot.setAttribute('fill', '#080');
+      dot.setAttribute('stroke', 'white');
+      dot.setAttribute('stroke-width', '2');
+      dynamicGroup.appendChild(dot);
+
+      // Label
+      const lbl = document.createElementNS(SVG_NS, 'text');
+      const labelX = cx + 12;
+      const labelY = Math.max(cy - 10, margin.t + 20);
+      lbl.setAttribute('x', labelX);
+      lbl.setAttribute('y', labelY);
+      lbl.setAttribute('font-size', '13');
+      lbl.setAttribute('font-weight', 'bold');
+      lbl.setAttribute('fill', '#063');
+      lbl.textContent = `α = ${aDeg.toFixed(2).replace('.', ',')}°`;
+      dynamicGroup.appendChild(lbl);
+    }
+  }
+}
+
+// Hauptaktualisierung
+function update() {
+  const omega = parseFloat(document.getElementById('omega').value);
+  const R = parseFloat(document.getElementById('R').value);
+  const L = parseFloat(document.getElementById('L').value);
+
+  // Anzeige aktualisieren
+  document.getElementById('omega-val').textContent = omega.toFixed(2).replace('.', ',');
+  document.getElementById('R-val').textContent = R.toFixed(1).replace('.', ',');
+  document.getElementById('L-val').textContent = L.toFixed(1).replace('.', ',');
+  document.getElementById('rpm-val').textContent = (omega/(2*Math.PI)*60).toFixed(1).replace('.', ',');
+
+  // Lösung berechnen
+  const alpha = findIntersection(omega, R, L);
+  const alphaDeg = alpha * 180 / Math.PI;
+  const r = R + L * Math.sin(alpha);
+  const aus = L * Math.sin(alpha);
+  const v = omega * r;
+  const ratio = alpha > 0.001 ? 1 / Math.cos(alpha) : 1;
+
+  document.getElementById('alpha-val').textContent = alphaDeg.toFixed(2).replace('.', ',');
+  document.getElementById('r-val').textContent = r.toFixed(2).replace('.', ',');
+  document.getElementById('aus-val').textContent = aus.toFixed(2).replace('.', ',');
+  document.getElementById('v-val').textContent = v.toFixed(2).replace('.', ',');
+  document.getElementById('ratio-val').textContent = ratio.toFixed(2).replace('.', ',');
+
+  // Hinweis bei R=0 ohne Lösung
+  const info = document.getElementById('info-box');
+  if (R < 0.01 && alpha < 0.01) {
+    const omegaMin = Math.sqrt(g/L);
+    info.style.background = '#fde7e7';
+    info.style.borderColor = '#c44';
+    info.innerHTML = `<strong>Sonderfall konisches Pendel (R = 0):</strong> ` +
+      `Bei dieser Drehzahl hängt der Sitz senkrecht. ` +
+      `Erst ab ω &gt; √(g/ℓ) = ${omegaMin.toFixed(2).replace('.', ',')} s⁻¹ ` +
+      `schwingt er nach außen.`;
+  } else if (alphaDeg > 60) {
+    info.style.background = '#fde7e7';
+    info.style.borderColor = '#c44';
+    info.innerHTML = `<strong>α &gt; 60°:</strong> ` +
+      `Sicherheitsgrenze überschritten. Die Seilkraft wächst hier rapide ` +
+      `(Faktor 1/cos α gegenüber F<sub>G</sub>).`;
+  } else {
+    info.style.background = '#fff8e7';
+    info.style.borderColor = '#e0a040';
+    info.innerHTML = `Erhöhe ω – beobachte, wie sich die rote Kurve hebt und ` +
+      `der Schnittpunkt nach rechts wandert.`;
+  }
+
+  // Plot neu zeichnen
+  clearDynamic();
+  drawCurves(omega, R, L, alpha);
+}
+
+// Initialisierung
+setupAxes();
+clearDynamic();
+['omega', 'R', 'L'].forEach(id => {
+  document.getElementById(id).addEventListener('input', update);
+});
+update();
+</script>
+
+</body>
+</html>
