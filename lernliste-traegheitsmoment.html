@@ -124,6 +124,7 @@ main { max-width: 920px; margin: 0 auto; padding: 26px 24px 60px; }
 .s-steiner  .section-icon { background: #ece0f5; }
 .s-drehimpuls .section-icon { background: #dff0e8; }
 .s-erot     .section-icon { background: #fde8e8; }
+.s-speicher .section-icon { background: #d8f5dc; }
 .s-rollen   .section-icon { background: #e8f0e0; }
 .section-title { font-size: 0.98rem; font-weight: 700; }
 .section-count { font-size: 0.72rem; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; margin-left: auto; }
@@ -332,8 +333,8 @@ footer {
 <header>
   <div class="header-inner">
     <div class="header-school">Lore-Lorentz-Schule &nbsp;·&nbsp; Physik-LK 11NP</div>
-    <div class="header-title">Lernliste: Kreisbewegung, Zentripetalkraft &amp; Trägheitsmoment</div>
-    <div class="header-sub">Klausurvorbereitung Q4 &nbsp;·&nbsp; Alle drei Anforderungsbereiche (AFB I–III)</div>
+    <div class="header-title">Lernliste: Kreisbewegung, Trägheitsmoment &amp; Energiespeicherung</div>
+    <div class="header-sub">Klausurvorbereitung Q4 &nbsp;·&nbsp; inkl. Schwungradspeicher &nbsp;·&nbsp; AFB I–III</div>
   </div>
   <div class="progress-wrap">
     <div class="progress-label">
@@ -367,6 +368,8 @@ footer {
     <span class="fchip">\(J_\text{Steiner} = J_S + md^2\)</span>
     <span class="fchip">\(L = J\omega\)</span>
     <span class="fchip">\(E_\text{rot} = \tfrac{1}{2}J\omega^2\)</span>
+    <span class="fchip">\(\omega = 2\pi\,n\)</span>
+    <span class="fchip">\(1\,\text{kWh} = 3{,}6 \cdot 10^6\,\text{J}\)</span>
   </div>
 </div>
 
@@ -458,6 +461,33 @@ footer {
         <span class="afb-pill afb2 card-afb">AFB II</span>
       </div>
       <button class="comp-btn" onclick="openModal('z7')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="z8" data-sec="zentri">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann am Kettenkarussell die Kräftezerlegung durchführen: Kettenkraft in Vertikal- und Horizontalkomponente zerlegen und daraus den Auslenkwinkel bestimmen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('z8')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="z9" data-sec="zentri">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Mindestgeschwindigkeit im höchsten Punkt eines Loopings/Wassereimers herleiten: \(F_Z \geq F_G\) → \(v_\text{min} = \sqrt{g \cdot r}\).</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('z9')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="z10" data-sec="zentri">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann berechnen, wie schnell sich die Erde drehen müsste, damit die Gewichtskraft am Äquator um einen bestimmten Prozentsatz abnimmt (Zentripetalkraft vs. Gravitation).</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('z10')">Üben</button>
     </div>
 
   </div>
@@ -651,7 +681,84 @@ footer {
 </div>
 
 <!-- ══════════════════════════════════════════════
-     8. ROLLEN AUF DER SCHIEFEN EBENE
+     8. SCHWUNGRADSPEICHER & ENERGIESPEICHERUNG
+══════════════════════════════════════════════ -->
+<div class="section s-speicher">
+  <div class="section-header">
+    <div class="section-icon">🔋</div>
+    <div class="section-title">Schwungradspeicher &amp; Energiespeicherung</div>
+    <div class="section-count" id="cnt-speicher"></div>
+  </div>
+  <div class="card-list" id="sec-speicher">
+
+    <div class="comp-card" data-id="e1" data-sec="speicher">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Drehzahl \(n\) (in min\(^{-1}\)) in die Winkelgeschwindigkeit \(\omega = 2\pi \cdot n/60\) umrechnen und damit \(E_\text{rot}\) berechnen.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e1')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="e2" data-sec="speicher">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Masse einer Schwungscheibe aus Geometrie und Dichte berechnen (\(m = \rho \cdot V = \rho \cdot \pi r^2 h\)) und daraus \(J\) und \(E_\text{rot}\) bestimmen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e2')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="e3" data-sec="speicher">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die gespeicherte Energie in kWh umrechnen und mit Alltagsgrößen vergleichen (Smartphone-Ladungen, LED-Betriebsdauer, \(t = E/P\)).</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e3')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="e4" data-sec="speicher">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann für eine Schwungrad-Anlage (mehrere identische Räder) die Gesamtenergie berechnen und die neue Drehzahl \(n'\) nach teilweiser Energieabgabe bestimmen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e4')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="e5" data-sec="speicher">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann Vollzylinder und Hohlzylinder als Energiespeicher vergleichen: Bei gleicher Masse speichert der Hohlzylinder mehr Energie, weil \(J_\text{hohl} > J_\text{voll}\).</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e5')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="e6" data-sec="speicher">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann Schwungräder mit Akkus und Pumpspeichern vergleichen und Vor-/Nachteile bezüglich Zeitskala, Zyklen, Selbstentladung und Energiedichte benennen.</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e6')">Üben</button>
+    </div>
+
+    <div class="comp-card star-card" data-id="e7" data-sec="speicher">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">★ Ich kann die Materialgrenze \(E_\text{rot}/m = \frac{1}{2}\,\sigma_\text{max}/\rho\) herleiten und die spezifische Energie für Stahl und Kohlefaser-Verbund berechnen und mit Li-Ion-Akkus vergleichen.</span>
+        <span class="afb-pill star-pill card-afb">★ AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e7')">Üben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     9. ROLLEN AUF DER SCHIEFEN EBENE
 ══════════════════════════════════════════════ -->
 <div class="section s-rollen">
   <div class="section-header">
@@ -1254,7 +1361,261 @@ loesung:`<div class="sol-step"><div class="snum">a</div><div>
   <div class="dmath">\\( \\dfrac{2{,}56}{4{,}43} \\approx 58\\,\\% \\)</div>
   Der rollende Körper erreicht nur 58 % der Gleitgeschwindigkeit.
 </div></div>`,
-prompt:`Ich übe die allgemeine Rollformel v=√(2gh/(1+c)) (Physik Klasse 11, Knobelaufgabe). Herleitung, Spezialfälle, Interpretation des Formfaktors c.`}
+prompt:`Ich übe die allgemeine Rollformel v=√(2gh/(1+c)) (Physik Klasse 11, Knobelaufgabe). Herleitung, Spezialfälle, Interpretation des Formfaktors c.`},
+
+z8:{title:"Kettenkarussell — Kräftezerlegung (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Die 3,0 m langen Ketten eines Kettenkarussells sind um \\(\\alpha = 30°\\) aus der Vertikalen ausgelenkt. Die Aufhängepunkte befinden sich auf einem Kreis mit Durchmesser \\(d = 6{,}0\\,\\text{m}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Zeichnen Sie eine Kräfteskizze: Gewichtskraft \\(F_G\\) und Kettenkraft \\(F_K\\). Zerlegen Sie \\(F_K\\) in eine vertikale und eine horizontale Komponente.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Bestimmen Sie den Radius der Kreisbahn und berechnen Sie die Zentripetalbeschleunigung \\(a_Z = g \\cdot \\tan\\alpha\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Begründen Sie, warum leere und besetzte Sitze um den gleichen Winkel ausgelenkt werden.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  Kräftegleichgewicht vertikal: \\(F_K \\cos\\alpha = F_G = mg\\)<br>
+  Horizontalkomponente liefert Zentripetalkraft: \\(F_K \\sin\\alpha = F_Z = m\\,a_Z\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Bahnradius: \\(r = \\frac{d}{2} + L\\sin\\alpha = 3{,}0 + 3{,}0\\cdot\\sin 30° = 3{,}0 + 1{,}5 = 4{,}5\\,\\text{m}\\)
+  <div class="dmath">\\(\\frac{F_K\\sin\\alpha}{F_K\\cos\\alpha} = \\frac{a_Z}{g} \\quad\\Rightarrow\\quad a_Z = g\\cdot\\tan 30° = 9{,}81\\cdot 0{,}577 \\approx 5{,}66\\,\\text{m/s}^2\\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Aus \\(\\tan\\alpha = a_Z/g = \\omega^2 r/g\\) folgt: Der Winkel hängt <strong>nicht von der Masse</strong> ab — \\(m\\) kürzt sich heraus. Leere und volle Sitze haben denselben Winkel, nur die Kettenkraft \\(F_K\\) ist verschieden.
+</div></div>`,
+prompt:`Ich übe Kettenkarussell mit Kräftezerlegung (Physik Klasse 11). Aufgabe: Kräfteskizze, Zentripetalbeschleunigung aus tan(α), Massenunabhängigkeit des Winkels begründen.`},
+
+z9:{title:"Looping / Wassereimer — Mindestgeschwindigkeit (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Ein Eimer Wasser (\\(m = 2{,}0\\,\\text{kg}\\)) wird an einem Seil (\\(L = 1{,}0\\,\\text{m}\\)) im vertikalen Kreis geschleudert.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Welche Bedingung muss im höchsten Punkt gelten, damit das Wasser nicht herausfällt?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Leiten Sie die Mindestgeschwindigkeit \\(v_\\text{min}\\) her.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie \\(v_\\text{min}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Erklären Sie in eigenen Worten: Warum fällt das Wasser nicht heraus?</span></div>
+  </div>
+  <div class="hint-box">Im höchsten Punkt: \\(F_Z \\geq F_G\\)</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  Im höchsten Punkt muss die Zentripetalkraft mindestens so groß sein wie die Gewichtskraft:
+  <div class="dmath">\\(\\frac{m\\,v^2}{r} \\geq m\\,g\\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(m\\) kürzen: \\(v^2/r \\geq g\\)
+  <div class="dmath">\\(v_\\text{min} = \\sqrt{g\\cdot r} = \\sqrt{g\\cdot L}\\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\(v_\\text{min} = \\sqrt{9{,}81\\cdot 1{,}0} = 3{,}13\\,\\text{m/s}\\)
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Das Wasser „möchte" sich aufgrund seiner Trägheit geradlinig weiterbewegen (Newton 1). Wenn die Geschwindigkeit groß genug ist, reicht die Gewichtskraft allein nicht aus, um den Körper auf die Kreisbahn zu zwingen — das Wasser wird nach außen (gegen den Eimerboden) gedrückt.
+</div></div>`,
+prompt:`Ich übe Looping und Wassereimer (Physik Klasse 11, AFB III). Mindestgeschwindigkeit im höchsten Punkt herleiten. 2 Aufgaben mit Looping-Bahn und Eimer.`},
+
+z10:{title:"Erdrotation — Gewichtsreduktion (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Durch die Erdrotation wird die scheinbare Gewichtskraft am Äquator reduziert, weil ein Teil der Gravitationskraft als Zentripetalkraft benötigt wird.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die aktuelle Zentripetalbeschleunigung am Äquator (\\(R_E = 6371\\,\\text{km}\\), \\(T = 24\\,\\text{h}\\)). Um wie viel Prozent reduziert sie \\(g\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Wie schnell müsste sich die Erde drehen (Umlaufdauer \\(T'\\)), damit die Gewichtskraft am Äquator um 1% reduziert wird?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Wie lang wäre dann ein „Tag"?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(\\omega = \\frac{2\\pi}{T} = \\frac{2\\pi}{86400\\,\\text{s}} = 7{,}27\\cdot 10^{-5}\\,\\text{rad/s}\\)
+  <div class="dmath">\\(a_Z = \\omega^2 R_E = (7{,}27\\cdot 10^{-5})^2 \\cdot 6{,}371\\cdot 10^6 \\approx 0{,}0337\\,\\text{m/s}^2\\)</div>
+  Reduktion: \\(0{,}0337 / 9{,}81 \\approx 0{,}34\\,\\%\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Bedingung: \\(a_Z' = 0{,}01\\cdot g = 0{,}0981\\,\\text{m/s}^2\\)
+  <div class="dmath">\\(\\omega' = \\sqrt{\\frac{a_Z'}{R_E}} = \\sqrt{\\frac{0{,}0981}{6{,}371\\cdot 10^6}} = 1{,}241\\cdot 10^{-4}\\,\\text{rad/s}\\)</div>
+  \\(T' = \\frac{2\\pi}{\\omega'} = \\frac{2\\pi}{1{,}241\\cdot 10^{-4}} \\approx 50\\,640\\,\\text{s}\\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\(T' \\approx 50\\,640\\,\\text{s} \\approx 14{,}1\\,\\text{h}\\)
+</div></div>
+<div class="result">Ein „Tag" müsste nur 14 Stunden lang sein für 1 % Gewichtsreduktion</div>`,
+prompt:`Ich übe Erdrotation und Zentripetalkraft am Äquator (Physik Klasse 11, AFB III). Aufgabe: Wie schnell müsste sich die Erde drehen für X% Gewichtsreduktion?`},
+
+e1:{title:"Töpferscheibe — Dünner Reifen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Eine Töpferscheibe besitzt eine schwere Schwungscheibe, die als <em>dünner Reifen</em> modelliert wird: \\(m = 12\\,\\text{kg}\\), \\(r = 0{,}25\\,\\text{m}\\). Die Drehzahl beträgt \\(n = 120/\\text{min}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie das Trägheitsmoment \\(J\\) (dünner Reifen: \\(J = mr^2\\)).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Wandeln Sie die Drehzahl in \\(\\omega\\) um.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie \\(E_\\text{rot}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Wie lange könnte diese Energie eine LED mit \\(P = 5\\,\\text{W}\\) betreiben?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(J = m\\,r^2 = 12 \\cdot 0{,}25^2 = 0{,}75\\,\\text{kg}\\cdot\\text{m}^2\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(n = 120/\\text{min} = 2/\\text{s}\\)
+  <div class="dmath">\\(\\omega = 2\\pi \\cdot 2 = 12{,}57\\,\\text{rad/s}\\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\(E_\\text{rot} = \\tfrac{1}{2} \\cdot 0{,}75 \\cdot 12{,}57^2 \\approx 59{,}2\\,\\text{J}\\)
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  \\(t = E/P = 59{,}2 / 5 \\approx 11{,}8\\,\\text{s}\\)
+</div></div>
+<div class="result">Nur 12 s LED-Licht — echte Speicher brauchen mehr Masse oder höhere Drehzahl</div>`,
+prompt:`Ich übe Rotationsenergie eines dünnen Reifens (Physik Klasse 11). Aufgabe: Töpferscheibe, J=mr², Drehzahl in ω umrechnen, E_rot berechnen, Betriebsdauer.`},
+
+e2:{title:"Stählerne Schwungscheibe — Masse aus Dichte (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Eine massive Stahlscheibe (Vollzylinder): \\(r = 0{,}30\\,\\text{m}\\), Dicke \\(h = 0{,}08\\,\\text{m}\\), \\(\\rho = 7850\\,\\text{kg/m}^3\\). Drehzahl \\(n = 8000/\\text{min}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die Masse \\(m = \\rho \\cdot \\pi r^2 h\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie \\(J\\) (Vollzylinder).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie \\(E_\\text{rot}\\) und geben Sie das Ergebnis in kWh an.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Wie viele Smartphone-Ladungen (je 15 Wh) entspricht das?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(V = \\pi \\cdot 0{,}30^2 \\cdot 0{,}08 \\approx 0{,}02262\\,\\text{m}^3\\)
+  <div class="dmath">\\(m = 7850 \\cdot 0{,}02262 \\approx 177{,}6\\,\\text{kg}\\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(J = \\tfrac{1}{2} \\cdot 177{,}6 \\cdot 0{,}09 \\approx 7{,}99\\,\\text{kg}\\cdot\\text{m}^2\\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\(\\omega = 2\\pi \\cdot 8000/60 \\approx 837{,}8\\,\\text{rad/s}\\)
+  <div class="dmath">\\(E_\\text{rot} = \\tfrac{1}{2} \\cdot 7{,}99 \\cdot 837{,}8^2 \\approx 2{,}80 \\cdot 10^6\\,\\text{J} \\approx 0{,}78\\,\\text{kWh}\\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  \\(780\\,\\text{Wh} / 15\\,\\text{Wh} \\approx 52\\) Smartphone-Ladungen
+</div></div>`,
+prompt:`Ich übe Schwungscheibe aus Stahl (Physik Klasse 11). Masse aus Dichte und Geometrie, J Vollzylinder, E_rot in kWh. Vergleich mit Smartphone-Akku.`},
+
+e3:{title:"Energievergleich — Alltagsgrößen (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Ein Schwungrad speichert \\(E_\\text{rot} = 2{,}8\\,\\text{MJ}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Rechnen Sie in kWh und Wh um.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Wie lange kann damit ein Laptop (\\(P = 60\\,\\text{W}\\)) betrieben werden?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Vergleichen Sie mit einer Autobatterie (ca. \\(500\\,\\text{Wh}\\)). Um welchen Faktor unterscheiden sie sich?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(2{,}8 \\cdot 10^6\\,\\text{J} / 3{,}6 \\cdot 10^6 = 0{,}778\\,\\text{kWh} = 778\\,\\text{Wh}\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(t = E/P = 2{,}8 \\cdot 10^6 / 60 = 46\\,667\\,\\text{s} \\approx 13{,}0\\,\\text{h}\\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\(778/500 \\approx 1{,}56\\) — das Schwungrad speichert ca. 56% mehr als die Autobatterie.
+</div></div>`,
+prompt:`Ich übe Energieumrechnung J ↔ kWh und Vergleich mit Alltagsspeichern (Physik Klasse 11). 3 Aufgaben: Umrechnen, Betriebsdauer, Vergleich.`},
+
+e4:{title:"Netzstabilisierung — Schwungrad-Anlage (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Eine Anlage mit \\(N = 20\\) identischen Schwungrädern (Vollzylinder, \\(m = 1500\\,\\text{kg}\\), \\(r = 0{,}60\\,\\text{m}\\), \\(n = 4500/\\text{min}\\)) dient zur Frequenzstützung.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(E_1\\) (ein Schwungrad) und \\(E_\\text{ges}\\) in MJ und kWh.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Reicht die Energie, um \\(\\Delta t = 15\\,\\text{s}\\) lang \\(P = 1\\,\\text{MW}\\) einzuspeisen?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie die neue Drehzahl \\(n'\\) nach der Energieabgabe.</span></div>
+  </div>
+  <div class="hint-box">Ansatz für c): \\(E' = E_\\text{ges} - E_\\text{bedarf}\\), dann \\(\\omega' = \\sqrt{2E'\\!/J_\\text{ges}}\\)</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(J = \\tfrac{1}{2}\\cdot 1500 \\cdot 0{,}36 = 270\\,\\text{kg}\\cdot\\text{m}^2\\)
+  <br>\\(\\omega = 2\\pi\\cdot 4500/60 \\approx 471{,}2\\,\\text{rad/s}\\)
+  <div class="dmath">\\(E_1 = \\tfrac{1}{2}\\cdot 270 \\cdot 471{,}2^2 \\approx 30{,}0\\,\\text{MJ}\\)</div>
+  \\(E_\\text{ges} = 20 \\cdot 30{,}0 = 600\\,\\text{MJ} \\approx 167\\,\\text{kWh}\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(E_\\text{bedarf} = P \\cdot \\Delta t = 10^6 \\cdot 15 = 15\\,\\text{MJ}\\)
+  <br>Das sind nur 2,5 % der Gesamtenergie — <strong>bei weitem ausreichend</strong>.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\(E' = 600 - 15 = 585\\,\\text{MJ}\\), \\(J_\\text{ges} = 20\\cdot 270 = 5400\\,\\text{kg}\\cdot\\text{m}^2\\)
+  <div class="dmath">\\(\\omega' = \\sqrt{\\frac{2\\cdot 585\\cdot 10^6}{5400}} \\approx 465{,}5\\,\\text{rad/s}\\)</div>
+  \\(n' = \\omega'/(2\\pi)\\cdot 60 \\approx 4444/\\text{min}\\)
+</div></div>
+<div class="result">Drehzahlabfall nur 1,2 % — Schwungräder ideal für kurze Hochlast</div>`,
+prompt:`Ich übe Schwungrad-Anlage zur Netzstabilisierung (Physik Klasse 11). Aufgabe: Gesamtenergie N Räder, Energieabgabe bei Leistung P für Zeit Δt, neue Drehzahl berechnen.`},
+
+e5:{title:"Vollzylinder vs. Hohlzylinder — Optimierung (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Feste Masse \\(m = 200\\,\\text{kg}\\), Außenradius \\(r_a = 0{,}40\\,\\text{m}\\), \\(n = 6000/\\text{min}\\).<br>
+  <strong>A:</strong> Vollzylinder (\\(J_A = \\tfrac{1}{2}mr_a^2\\))<br>
+  <strong>B:</strong> Hohlzylinder mit \\(r_i = 0{,}30\\,\\text{m}\\) (\\(J_B = \\tfrac{1}{2}m(r_a^2 + r_i^2)\\))</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(J_A\\), \\(J_B\\) und das jeweilige \\(E_\\text{rot}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Um welchen Faktor speichert Variante B mehr Energie?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Erklären Sie qualitativ, warum Masse am äußeren Rand die Energiedichte erhöht.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Nennen Sie zwei technische Nachteile der Masseverschiebung nach außen.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(\\omega = 2\\pi\\cdot 6000/60 \\approx 628{,}3\\,\\text{rad/s}\\)
+  <br>\\(J_A = \\tfrac{1}{2}\\cdot 200\\cdot 0{,}16 = 16{,}0\\,\\text{kg}\\cdot\\text{m}^2\\) → \\(E_A \\approx 3{,}16\\,\\text{MJ}\\)
+  <br>\\(J_B = \\tfrac{1}{2}\\cdot 200\\cdot 0{,}25 = 25{,}0\\,\\text{kg}\\cdot\\text{m}^2\\) → \\(E_B \\approx 4{,}93\\,\\text{MJ}\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(E_B/E_A = 25{,}0/16{,}0 \\approx 1{,}56\\) — <strong>56 % mehr Energie</strong> bei gleicher Masse.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  In \\(J = \\sum m_i r_i^2\\) geht \\(r\\) <strong>quadratisch</strong> ein. Beim Vollzylinder sitzt viel Masse innen (kleines \\(r_i\\)), wo sie wenig zu \\(J\\) beiträgt. Beim Hohlzylinder ist die Masse ausschließlich im äußeren Ring — maximaler Hebel.
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  1. <strong>Höhere Fliehkraftbelastung</strong> am Rand → Berstgefahr bei hoher Drehzahl.<br>
+  2. <strong>Aufwendigere Fertigung</strong>: schwieriger zu wuchten, instabiler gegen Verformung.
+</div></div>`,
+prompt:`Ich übe Vollzylinder vs. Hohlzylinder als Energiespeicher (Physik Klasse 11). Vergleich J und E_rot bei gleicher Masse. Begründung und technische Nachteile.`},
+
+e6:{title:"Speichertechnologien vergleichen (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Vergleichen Sie drei Energiespeicher-Technologien für die Stromversorgung:</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Erstellen Sie eine Tabelle mit je einem Vorteil und einem Nachteil für: Schwungrad, Li-Ion-Akku, Pumpspeicherkraftwerk.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Warum sind Schwungräder für Sekunden bis Minuten ideal, für Tagesspeicherung aber nicht?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Welche Speichertechnologie würden Sie für die Frequenzstützung eines Stromnetzes wählen? Begründen Sie.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  <span class="fbox">Schwungrad: ✓ extrem schnelle Reaktion, viele Zyklen ✗ hohe Selbstentladung (Lagerreibung)</span><br>
+  <span class="fbox">Li-Ion-Akku: ✓ hohe Energiedichte, Stundenspeicher ✗ begrenzte Zyklenzahl, Alterung</span><br>
+  <span class="fbox">Pumpspeicher: ✓ riesige Energiemengen, Tagesspeicher ✗ standortgebunden, langsame Reaktion</span>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Schwungräder verlieren durch <strong>Lagerreibung</strong> (auch bei Magnetlagern und Vakuum) kontinuierlich Energie. Die <strong>Selbstentladungsrate</strong> ist viel höher als bei Akkus. Für kurze Hochlast-Pulse sind sie ideal, weil sie ihre Energie nahezu verlustfrei in Sekundenbruchteilen abgeben können.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  <strong>Schwungrad</strong> — Frequenzstützung erfordert extrem schnelle Reaktion (Millisekunden) und viele tägliche Lade-/Entladezyklen. Genau das können Schwungräder besser als Akkus oder Pumpspeicher.
+</div></div>`,
+prompt:`Ich übe Vergleich von Energiespeichern (Physik Klasse 11, AFB III). Schwungrad vs. Akku vs. Pumpspeicher. Vor- und Nachteile, Zeitskalen, Anwendung Netzstabilisierung.`},
+
+e7:{title:"★ Materialgrenze durch Fliehkraft (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Für einen dünnen rotierenden Reifen aus Material mit Dichte \\(\\rho\\) und Zugfestigkeit \\(\\sigma_\\text{max}\\) gilt die Materialgrenze:</p>
+  <div class="dmath">\\(\\frac{E_\\text{rot}}{m}\\bigg|_\\text{max} = \\frac{1}{2}\\,\\frac{\\sigma_\\text{max}}{\\rho}\\)</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body"><strong>Herleitung:</strong> Im Reifen entsteht \\(\\sigma = \\rho\\,v^2\\) (mit \\(v = \\omega r\\)). Bei \\(\\sigma = \\sigma_\\text{max}\\): Leiten Sie die obige Formel her.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie \\(E/m\\) in Wh/kg für Stahl (\\(\\rho = 7850\\), \\(\\sigma = 1200\\,\\text{MPa}\\)) und Kohlefaser (\\(\\rho = 1500\\), \\(\\sigma = 2500\\,\\text{MPa}\\)).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Vergleichen Sie mit Li-Ion (ca. 200 Wh/kg). Welche Schlussfolgerung ziehen Sie?</span></div>
+  </div>
+  <div class="hint-box">Schlüssel: \\(E_\\text{rot}/m = \\tfrac{1}{2}v^2\\) und \\(v^2_\\text{max} = \\sigma_\\text{max}/\\rho\\). Das Ergebnis ist geometrieunabhängig!</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  Reifen: \\(J = mr^2\\), also \\(E_\\text{rot} = \\tfrac{1}{2}mr^2\\omega^2 = \\tfrac{1}{2}mv^2\\).
+  <br>Spezifisch: \\(E/m = \\tfrac{1}{2}v^2\\).
+  <br>Materialgrenze: \\(\\sigma_\\text{max} = \\rho\\,v^2_\\text{max}\\) → \\(v^2_\\text{max} = \\sigma_\\text{max}/\\rho\\).
+  <div class="dmath">\\(\\frac{E}{m}\\bigg|_\\text{max} = \\frac{1}{2}\\,\\frac{\\sigma_\\text{max}}{\\rho} \\quad\\checkmark\\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Stahl: \\(\\frac{1}{2}\\cdot\\frac{1{,}2\\cdot 10^9}{7850} \\approx 7{,}64\\cdot 10^4\\,\\text{J/kg} \\approx 21\\,\\text{Wh/kg}\\)
+  <br>Kohlefaser: \\(\\frac{1}{2}\\cdot\\frac{2{,}5\\cdot 10^9}{1500} \\approx 8{,}33\\cdot 10^5\\,\\text{J/kg} \\approx 231\\,\\text{Wh/kg}\\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Stahl (21 Wh/kg) liegt <strong>weit unter</strong> Li-Ion (200 Wh/kg).
+  <br>Kohlefaser (231 Wh/kg) <strong>übertrifft</strong> Li-Ion — bei höherer Leistungsdichte, mehr Zyklen und keiner chemischen Alterung.
+  <div class="dmath">\\(\\text{Kern: Energiedichte ist materiallimitiert, nicht geometrielimitiert.}\\)</div>
+</div></div>
+<div class="result">Faserverbund-Schwungräder können mit Li-Ion konkurrieren!</div>`,
+prompt:`Ich übe Materialgrenze für Schwungradspeicher (Physik Klasse 11, Knobelaufgabe). Herleitung E/m = σ/(2ρ), Vergleich Stahl vs. Kohlefaser vs. Li-Ion.`}
 
 };
 
@@ -1305,7 +1666,7 @@ function initState(){
     if(state[c.dataset.id]) c.classList.add('done');
   });
   updateProgress();
-  ['kreis','zentri','uebergang','traeg','steiner','drehimpuls','erot','rollen'].forEach(s=>updateCnt(s));
+  ['kreis','zentri','uebergang','traeg','steiner','drehimpuls','erot','speicher','rollen'].forEach(s=>updateCnt(s));
 }
 
 // ─────────────────────────────────────────────
