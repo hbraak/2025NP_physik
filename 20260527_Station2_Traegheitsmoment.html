@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Station 2: Kinderkarussell</title>
+<style>
+  :root { --accent: #0ea5e9; --bg: #f8f9fb; --card: #fff; --text: #1e293b; --muted: #64748b; --border: #e2e8f0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 0 0 4rem 0; }
+  .header { background: linear-gradient(135deg, #0c4a6e, #0369a1); color: #fff; padding: 1.5rem 1.2rem 1.2rem; text-align: center; position: sticky; top: 0; z-index: 100; }
+  .header h1 { font-size: 1.4rem; margin-bottom: .2rem; }
+  .header .sub { font-size: .9rem; color: #bae6fd; }
+  .progress-wrap { padding: .8rem 1.2rem; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 76px; z-index: 99; }
+  .progress-bar-bg { height: 10px; background: var(--border); border-radius: 5px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #06b6d4); border-radius: 5px; transition: width .5s ease; width: 0%; }
+  .progress-label { font-size: .8rem; color: var(--muted); margin-top: .3rem; text-align: center; }
+  .content { max-width: 700px; margin: 0 auto; padding: 1rem; }
+  .info-box { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 12px; padding: 1.2rem; margin-bottom: 1.5rem; }
+  .info-box h2 { font-size: 1.1rem; color: #0369a1; margin-bottom: .6rem; }
+  .info-box table { width: 100%; }
+  .info-box td { padding: 3px 0; }
+  .info-box td:first-child { color: var(--muted); white-space: nowrap; padding-right: 1rem; }
+  .task { background: var(--card); border-radius: 14px; margin-bottom: 1.2rem; border: 2px solid var(--border); overflow: hidden; transition: border-color .3s; }
+  .task.done { border-color: #22c55e; }
+  .task-head { display: flex; align-items: center; gap: .8rem; padding: 1rem 1.2rem; cursor: pointer; }
+  .task-check { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .3s; font-size: 1rem; }
+  .task.done .task-check { background: #22c55e; border-color: #22c55e; color: #fff; }
+  .task-title { font-weight: 600; font-size: 1.05rem; flex: 1; }
+  .task-body { padding: 0 1.2rem 1.2rem; }
+  .task-body p { margin-bottom: .6rem; }
+  .formula { background: #fafafa; border: 1px solid var(--border); border-radius: 8px; padding: .8rem 1rem; margin: .8rem 0; font-family: 'Cambria Math', 'Times New Roman', serif; font-size: 1.1rem; text-align: center; overflow-x: auto; }
+  .hints { margin-top: 1rem; }
+  .hint-btn { display: block; width: 100%; text-align: left; padding: .7rem 1rem; border: none; border-radius: 8px; font-size: .95rem; cursor: pointer; margin-bottom: .4rem; font-family: inherit; transition: all .3s; }
+  .hint-btn.level1 { background: #fef9c3; color: #854d0e; }
+  .hint-btn.level2 { background: #ffedd5; color: #9a3412; }
+  .hint-btn.level3 { background: #dcfce7; color: #166534; }
+  .hint-btn:hover { filter: brightness(.95); }
+  .hint-btn .arrow { float: right; transition: transform .3s; }
+  .hint-btn.open .arrow { transform: rotate(90deg); }
+  .hint-content { display: none; padding: .8rem 1rem; border-radius: 8px; margin-bottom: .4rem; font-size: .93rem; line-height: 1.7; }
+  .hint-content.show { display: block; }
+  .hint-content.level1 { background: #fefce8; }
+  .hint-content.level2 { background: #fff7ed; }
+  .hint-content.level3 { background: #f0fdf4; }
+  .f { font-family: 'Cambria Math', 'Times New Roman', serif; font-style: italic; }
+  .fb { font-family: 'Cambria Math', 'Times New Roman', serif; font-weight: bold; }
+  .formulas-footer { background: var(--card); border-radius: 14px; padding: 1.2rem; border: 2px solid var(--border); margin-top: 1.5rem; }
+  .formulas-footer h3 { font-size: 1rem; margin-bottom: .6rem; color: var(--muted); }
+  .confetti-wrap { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🎠 Station 2: Kinderkarussell</h1>
+  <div class="sub">Trägheitsmoment, Rotationsenergie &amp; Steinerscher Satz</div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-bar-bg"><div class="progress-bar-fill" id="pbar"></div></div>
+  <div class="progress-label" id="plabel">0 / 5 Aufgaben erledigt</div>
+</div>
+
+<div class="content">
+
+  <div class="info-box">
+    <h2>📋 Situation</h2>
+    <p>Auf einem Spielplatz steht ein einfaches Kinderkarussell: eine drehbare Metallscheibe (Vollzylinder), die von außen angeschoben wird.</p>
+    <table style="margin-top:.6rem">
+      <tr><td>Masse der Scheibe:</td><td><strong class="f">m<sub>S</sub> = 200 kg</strong></td></tr>
+      <tr><td>Radius:</td><td><strong class="f">R = 1,5 m</strong></td></tr>
+      <tr><td>Drehzahl:</td><td><strong class="f">n = 12 min⁻¹</strong></td></tr>
+    </table>
+  </div>
+
+  <!-- 2a -->
+  <div class="task" data-id="s2a1">
+    <div class="task-head" onclick="toggleDone(this)">
+      <div class="task-check">✓</div>
+      <div class="task-title">Aufgabe 2a – Trägheitsmoment der Scheibe</div>
+    </div>
+    <div class="task-body">
+      <p>Berechnen Sie das Trägheitsmoment <span class="f">J<sub>S</sub></span> der Karussellscheibe.</p>
+      <div class="hints">
+        <button class="hint-btn level1" onclick="toggleHint(this)">💡 Tipp 1 – Idee <span class="arrow">▶</span></button>
+        <div class="hint-content level1">Die Scheibe ist ein Vollzylinder. Welche Formel gilt für einen Vollzylinder?</div>
+        <button class="hint-btn level2" onclick="toggleHint(this)">🔧 Tipp 2 – Ansatz <span class="arrow">▶</span></button>
+        <div class="hint-content level2"><span class="f">J<sub>S</sub> = ½ · m · R² = ½ · 200 · 1,5² = …</span></div>
+        <button class="hint-btn level3" onclick="toggleHint(this)">✅ Lösung <span class="arrow">▶</span></button>
+        <div class="hint-content level3"><span class="fb">J<sub>S</sub> = ½ · 200 · 2,25 = 225 kg·m²</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2b -->
+  <div class="task" data-id="s2a2">
+    <div class="task-head" onclick="toggleDone(this)">
+      <div class="task-check">✓</div>
+      <div class="task-title">Aufgabe 2b – Rotationsenergie</div>
+    </div>
+    <div class="task-body">
+      <p>Berechnen Sie die Winkelgeschwindigkeit <span class="f">ω</span> und die Rotationsenergie <span class="f">E<sub>rot</sub></span> des drehenden Karussells.</p>
+      <div class="hints">
+        <button class="hint-btn level1" onclick="toggleHint(this)">💡 Tipp 1 – Idee <span class="arrow">▶</span></button>
+        <div class="hint-content level1">Vorsicht bei der Drehzahl! <span class="f">n = 12 min⁻¹</span> muss erst in s⁻¹ umgerechnet werden, bevor Sie <span class="f">ω = 2π·n</span> verwenden.</div>
+        <button class="hint-btn level2" onclick="toggleHint(this)">🔧 Tipp 2 – Ansatz <span class="arrow">▶</span></button>
+        <div class="hint-content level2"><span class="f">n = 12/60 s⁻¹ = 0,2 s⁻¹</span><br><span class="f">ω = 2π · 0,2 = …</span><br><span class="f">E<sub>rot</sub> = ½ · J · ω²</span></div>
+        <button class="hint-btn level3" onclick="toggleHint(this)">✅ Lösung <span class="arrow">▶</span></button>
+        <div class="hint-content level3">
+          <span class="f">ω = 2π · 0,2 = 1,257 rad/s</span><br>
+          <span class="fb">E<sub>rot</sub> = ½ · 225 · 1,257² = ½ · 225 · 1,58 ≈ 178 J</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2c -->
+  <div class="task" data-id="s2a3">
+    <div class="task-head" onclick="toggleDone(this)">
+      <div class="task-check">✓</div>
+      <div class="task-title">Aufgabe 2c – Kind am Rand</div>
+    </div>
+    <div class="task-body">
+      <p>Ein Kind (<span class="f">m<sub>K</sub> = 30 kg</span>) setzt sich auf den äußersten Rand der Scheibe.</p>
+      <p>a) Berechnen Sie den zusätzlichen Beitrag des Kindes zum Gesamt-Trägheitsmoment (Punktmasse im Abstand <span class="f">R</span>).</p>
+      <p>b) Bestimmen Sie das neue Gesamt-Trägheitsmoment <span class="f">J<sub>ges</sub></span>.</p>
+      <p>c) Um wie viel Prozent hat sich <span class="f">J</span> vergrößert?</p>
+      <div class="hints">
+        <button class="hint-btn level1" onclick="toggleHint(this)">💡 Tipp 1 – Idee <span class="arrow">▶</span></button>
+        <div class="hint-content level1">Das Kind sitzt am Rand (Abstand <span class="f">R</span>) – behandeln Sie es als Punktmasse. Addieren Sie den Beitrag zum <span class="f">J</span> der Scheibe.</div>
+        <button class="hint-btn level2" onclick="toggleHint(this)">🔧 Tipp 2 – Ansatz <span class="arrow">▶</span></button>
+        <div class="hint-content level2">
+          <span class="f">J<sub>Kind</sub> = m<sub>K</sub> · R² = 30 · 1,5² = …</span><br>
+          <span class="f">J<sub>ges</sub> = J<sub>S</sub> + J<sub>Kind</sub></span>
+        </div>
+        <button class="hint-btn level3" onclick="toggleHint(this)">✅ Lösung <span class="arrow">▶</span></button>
+        <div class="hint-content level3">
+          <span class="f">J<sub>Kind</sub> = 30 · 2,25 = 67,5 kg·m²</span><br>
+          <span class="fb">J<sub>ges</sub> = 225 + 67,5 = 292,5 kg·m²</span><br><br>
+          Zunahme: 67,5 / 225 · 100% = <strong>30 %</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2d -->
+  <div class="task" data-id="s2a4">
+    <div class="task-head" onclick="toggleDone(this)">
+      <div class="task-check">✓</div>
+      <div class="task-title">Aufgabe 2d – Versetzter Drehpunkt (Steiner)</div>
+    </div>
+    <div class="task-body">
+      <p>Durch Verschleiß hat sich die Lagerachse des Karussells um <span class="f">d = 0,10 m</span> vom Mittelpunkt der Scheibe verschoben.</p>
+      <p>a) Berechnen Sie das Trägheitsmoment der Scheibe bezüglich der neuen Achse mithilfe des Steinerschen Satzes.</p>
+      <p>b) Vergleichen Sie mit dem ursprünglichen Wert. Ist der Unterschied groß oder klein? Begründen Sie.</p>
+      <div class="hints">
+        <button class="hint-btn level1" onclick="toggleHint(this)">💡 Tipp 1 – Idee <span class="arrow">▶</span></button>
+        <div class="hint-content level1">Der Steinersche Satz: <span class="f">J = J<sub>S</sub> + m · d²</span>. <span class="f">J<sub>S</sub></span> ist das Ergebnis aus a), <span class="f">d = 0,10 m</span>.</div>
+        <button class="hint-btn level2" onclick="toggleHint(this)">🔧 Tipp 2 – Ansatz <span class="arrow">▶</span></button>
+        <div class="hint-content level2"><span class="f">J<sub>neu</sub> = 225 + 200 · 0,10² = 225 + 200 · 0,01 = …</span></div>
+        <button class="hint-btn level3" onclick="toggleHint(this)">✅ Lösung <span class="arrow">▶</span></button>
+        <div class="hint-content level3">
+          <span class="fb">J<sub>neu</sub> = 225 + 2 = 227 kg·m²</span><br><br>
+          Zunahme: 2 / 225 · 100% ≈ <strong>0,9 %</strong> – kaum spürbar, weil <span class="f">d ≪ R</span>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2e -->
+  <div class="task" data-id="s2a5">
+    <div class="task-head" onclick="toggleDone(this)">
+      <div class="task-check">✓</div>
+      <div class="task-title">Aufgabe 2e – Nachdenken: Kind rutscht zur Mitte</div>
+    </div>
+    <div class="task-body">
+      <p>Das Karussell dreht sich mit dem Kind am Rand. Das Kind rutscht nun langsam zur Mitte der Scheibe.</p>
+      <p>Beschreiben Sie <strong>qualitativ</strong> (ohne Rechnung), was mit der Drehgeschwindigkeit passiert und begründen Sie Ihre Antwort.</p>
+      <p style="color:var(--muted);font-size:.9rem"><em>Hinweis: Überlegen Sie, welche physikalische Größe bei diesem Vorgang erhalten bleibt.</em></p>
+      <div class="hints">
+        <button class="hint-btn level1" onclick="toggleHint(this)">💡 Tipp 1 – Idee <span class="arrow">▶</span></button>
+        <div class="hint-content level1">Welche Erhaltungsgröße gilt, wenn keine äußeren Drehmomente wirken?</div>
+        <button class="hint-btn level2" onclick="toggleHint(this)">🔧 Tipp 2 – Ansatz <span class="arrow">▶</span></button>
+        <div class="hint-content level2">
+          Der Drehimpuls <span class="f">L = J · ω</span> bleibt erhalten.<br>
+          Wenn <span class="f">J</span> kleiner wird (Kind zur Mitte), muss <span class="f">ω</span> …
+        </div>
+        <button class="hint-btn level3" onclick="toggleHint(this)">✅ Lösung <span class="arrow">▶</span></button>
+        <div class="hint-content level3">
+          Der <strong>Drehimpuls</strong> <span class="f">L = J · ω</span> ist erhalten (kein äußeres Drehmoment).<br><br>
+          Kind rutscht zur Mitte → <span class="f">J</span> wird <strong>kleiner</strong> → <span class="f">ω</span> muss <strong>größer</strong> werden → das Karussell dreht sich <strong>schneller</strong>.<br><br>
+          Das ist der <strong>Pirouetteneffekt</strong> – genau wie eine Eiskunstläuferin, die die Arme anzieht!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="formulas-footer">
+    <h3>📎 Formelsammlung</h3>
+    <div class="formula">
+      J<sub>Vollzylinder</sub> = ½·m·R² &nbsp;&nbsp; J<sub>Punktmasse</sub> = m·r² &nbsp;&nbsp; J = J<sub>S</sub> + m·d² (Steiner)
+    </div>
+    <div class="formula">
+      ω = 2π·n &nbsp;&nbsp; E<sub>rot</sub> = ½·J·ω² &nbsp;&nbsp; L = J·ω (Drehimpuls)
+    </div>
+  </div>
+
+</div>
+
+<div class="confetti-wrap" id="confetti"></div>
+
+<script>
+const STORAGE_KEY = 'station2_progress';
+function loadProgress() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e) { return {}; } }
+function saveProgress(p) { localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); }
+function updateBar() {
+  const tasks = document.querySelectorAll('.task'), done = document.querySelectorAll('.task.done').length, total = tasks.length;
+  const pct = Math.round(done / total * 100);
+  document.getElementById('pbar').style.width = pct + '%';
+  document.getElementById('plabel').textContent = done + ' / ' + total + ' Aufgaben erledigt' + (pct === 100 ? ' 🎉' : '');
+  if (pct === 100) celebrate();
+}
+function toggleDone(head) {
+  const task = head.closest('.task'); task.classList.toggle('done');
+  const p = loadProgress(); p[task.dataset.id] = task.classList.contains('done'); saveProgress(p); updateBar();
+}
+function toggleHint(btn) { const c = btn.nextElementSibling; const o = c.classList.contains('show'); btn.classList.toggle('open', !o); c.classList.toggle('show', !o); }
+function celebrate() {
+  const wrap = document.getElementById('confetti'), colors = ['#0ea5e9','#06b6d4','#22c55e','#f59e0b','#a855f7'];
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.style.cssText = `position:absolute;width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;background:${colors[Math.floor(Math.random()*5)]};border-radius:${Math.random()>.5?'50%':'2px'};left:${Math.random()*100}%;top:-10px;opacity:1;`;
+    wrap.appendChild(c);
+    c.animate([{transform:'translateY(0) rotate(0deg)',opacity:1},{transform:`translateY(${window.innerHeight+50}px) rotate(${360+Math.random()*720}deg)`,opacity:0}],{duration:1500+Math.random()*2000,easing:'cubic-bezier(.25,.46,.45,.94)'}).onfinish=()=>c.remove();
+  }
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const p = loadProgress();
+  document.querySelectorAll('.task').forEach(t => { if (p[t.dataset.id]) t.classList.add('done'); });
+  updateBar();
+});
+</script>
+</body>
+</html>

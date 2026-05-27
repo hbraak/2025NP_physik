@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Station 3: Achterbahn-Looping</title>
+<style>
+  :root { --accent: #22c55e; --bg: #f8f9fb; --card: #fff; --text: #1e293b; --muted: #64748b; --border: #e2e8f0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 0 0 4rem 0; }
+  .header { background: linear-gradient(135deg, #14532d, #166534); color: #fff; padding: 1.5rem 1.2rem 1.2rem; text-align: center; position: sticky; top: 0; z-index: 100; }
+  .header h1 { font-size: 1.4rem; margin-bottom: .2rem; }
+  .header .sub { font-size: .9rem; color: #bbf7d0; }
+  .progress-wrap { padding: .8rem 1.2rem; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 76px; z-index: 99; }
+  .progress-bar-bg { height: 10px; background: var(--border); border-radius: 5px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, #22c55e, #10b981); border-radius: 5px; transition: width .5s ease; width: 0%; }
+  .progress-label { font-size: .8rem; color: var(--muted); margin-top: .3rem; text-align: center; }
+  .content { max-width: 700px; margin: 0 auto; padding: 1rem; }
+  .info-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 1.2rem; margin-bottom: 1.5rem; }
+  .info-box h2 { font-size: 1.1rem; color: #166534; margin-bottom: .6rem; }
+  .info-box table { width: 100%; }
+  .info-box td { padding: 3px 0; }
+  .info-box td:first-child { color: var(--muted); white-space: nowrap; padding-right: 1rem; }
+
+  /* Skizze */
+  .sketch { text-align: center; margin: 1rem 0; }
+  .sketch svg { max-width: 100%; height: auto; }
+
+  .task { background: var(--card); border-radius: 14px; margin-bottom: 1.2rem; border: 2px solid var(--border); overflow: hidden; transition: border-color .3s; }
+  .task.done { border-color: #22c55e; }
+  .task-head { display: flex; align-items: center; gap: .8rem; padding: 1rem 1.2rem; cursor: pointer; }
+  .task-check { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .3s; font-size: 1rem; }
+  .task.done .task-check { background: #22c55e; border-color: #22c55e; color: #fff; }
+  .task-title { font-weight: 600; font-size: 1.05rem; flex: 1; }
+  .task-body { padding: 0 1.2rem 1.2rem; }
+  .task-body p { margin-bottom: .6rem; }
+  .formula { background: #fafafa; border: 1px solid var(--border); border-radius: 8px; padding: .8rem 1rem; margin: .8rem 0; font-family: 'Cambria Math', 'Times New Roman', serif; font-size: 1.1rem; text-align: center; overflow-x: auto; }
+  .hints { margin-top: 1rem; }
+  .hint-btn { display: block; width: 100%; text-align: left; padding: .7rem 1rem; border: none; border-radius: 8px; font-size: .95rem; cursor: pointer; margin-bottom: .4rem; font-family: inherit; transition: all .3s; }
+  .hint-btn.level1 { background: #fef9c3; color: #854d0e; }
+  .hint-btn.level2 { background: #ffedd5; color: #9a3412; }
+  .hint-btn.level3 { background: #dcfce7; color: #166534; }
+  .hint-btn:hover { filter: brightness(.95); }
+  .hint-btn .arrow { float: right; transition: transform .3s; }
+  .hint-btn.open .arrow { transform: rotate(90deg); }
+  .hint-content { display: none; padding: .8rem 1rem; border-radius: 8px; margin-bottom: .4rem; font-size: .93rem; line-height: 1.7; }
+  .hint-content.show { display: block; }
+  .hint-content.level1 { background: #fefce8; }
+  .hint-content.level2 { background: #fff7ed; }
+  .hint-content.level3 { background: #f0fdf4; }
+  .f { font-family: 'Cambria Math', 'Times New Roman', serif; font-style: italic; }
+  .fb { font-family: 'Cambria Math', 'Times New Roman', serif; font-weight: bold; }
+  .formulas-footer { background: var(--card); border-radius: 14px; padding: 1.2rem; border: 2px solid var(--border); margin-top: 1.5rem; }
+  .formulas-footer h3 { font-size: 1rem; margin-bottom: .6rem; color: var(--muted); }
+  .confetti-wrap { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🎢 Station 3: Achterbahn-Looping</h1>
+  <div class="sub">Kreisbewegung &amp; Energieerhaltung</div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-bar-bg"><div class="progress-bar-fill" id="pbar"></div></div>
+  <div class="progress-label" id="plabel">0 / 4 Aufgaben erledigt</div>
+</div>
+
+<div class="content">
+
+  <div class="info-box">
+    <h2>📋 Situation</h2>
+    <p>In einem Freizeitpark fährt ein Wagen eine Rampe hinunter und durchfährt anschließend einen kreisförmigen Looping. Reibung wird zunächst vernachlässigt.</p>
+    <table style="margin-top:.6rem">
+      <tr><td>Masse des Wagens:</td><td><strong class="f">m = 500 kg</strong></td></tr>
+      <tr><td>Radius des Loopings:</td><td><strong class="f">r = 10 m</strong></td></tr>
+    </table>
+
+    <div class="sketch">
+      <svg viewBox="0 0 480 220" width="480" height="220" xmlns="http://www.w3.org/2000/svg">
+        <!-- Rampe -->
+        <polygon points="30,190 130,190 30,50" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2"/>
+        <line x1="20" y1="190" x2="20" y2="50" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4"/>
+        <text x="10" y="125" font-size="14" fill="#64748b" font-style="italic" text-anchor="middle">h</text>
+        <!-- Wagen -->
+        <rect x="55" y="100" width="22" height="14" rx="3" fill="#3b82f6"/>
+        <!-- Boden -->
+        <line x1="130" y1="190" x2="280" y2="190" stroke="#475569" stroke-width="2.5"/>
+        <!-- Looping -->
+        <circle cx="340" cy="130" r="60" fill="none" stroke="#475569" stroke-width="2.5"/>
+        <!-- Verbindung unten -->
+        <path d="M280,190 Q310,190 310,190 A60,60 0 0,0 280,190" fill="none" stroke="#475569" stroke-width="2.5"/>
+        <!-- r-Linie -->
+        <line x1="340" y1="190" x2="340" y2="130" stroke="#64748b" stroke-width="1" stroke-dasharray="4"/>
+        <text x="352" y="165" font-size="14" fill="#64748b" font-style="italic">r</text>
+        <!-- Höchster Punkt -->
+        <circle cx="340" cy="70" r="4" fill="#ef4444"/>
+        <text x="340" y="58" font-size="12" fill="#ef4444" text-anchor="middle">höchster Punkt</text>
+        <!-- 2r -->
+        <line x1="410" y1="190" x2="410" y2="70" stroke="#22c55e" stroke-width="1" stroke-dasharray="4"/>
+        <text x="425" y="135" font-size="13" fill="#22c55e" font-style="italic">2r</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- 3a -->
+  <div class="task" data-id="s3a1">
+    <div class="task-head" onclick="toggleDone(this)">
+      <div class="task-check">✓</div>
+      <div class="task-title">Aufgabe 3a – Mindestgeschwindigkeit oben</div>
+    </div>
+    <div class="task-body">
+      <p>Im höchsten Punkt des Loopings muss der Wagen schnell genug sein, damit er nicht herunterfällt.</p>
+      <p>a) Welche Kräfte wirken im höchsten Punkt auf den Wagen?</p>
+      <p>b) Stellen Sie die Bedingung für die Mindestgeschwindigkeit <span class="f">v<sub>min</sub></span> auf (Grenzfall: Normalkraft <span class="f">F<sub>N</sub> = 0</span>).</p>
+      <p>c) Berechnen Sie <span class="f">v<sub>min</sub></span>.</p>
+      <div class="hints">
+        <button class="hint-btn level1" onclick="toggleHint(this)">💡 Tipp 1 – Idee <span class="arrow">▶</span></button>
+        <div class="hint-content level1">
+          Im höchsten Punkt wirken <strong>zwei</strong> Kräfte nach unten: die Gewichtskraft <span class="f">F<sub>G</sub></span> und die Normalkraft <span class="f">F<sub>N</sub></span> der Schiene. Zusammen liefern sie die Zentripetalkraft.<br>
+          Im Grenzfall (gerade noch oben) gilt: <span class="f">F<sub>N</sub> = 0</span>.
+        </div>
+        <button class="hint-btn level2" onclick="toggleHint(this)">🔧 Tipp 2 – Ansatz <span class="arrow">▶</span></button>
+        <div class="hint-content level2">
+          Im höchsten Punkt: <span class="f">F<sub>G</sub> + F<sub>N</sub> = m·v²/r</span><br>
+          Grenzfall <span class="f">F<sub>N</sub> = 0</span>: <span class="f">m·g = m·v<sub>min</sub>²/r</span><br>
+          → <span class="f">v<sub>min</sub> = √(g·r)</span>
+        </div>
+        <button class="hint-btn level3" onclick="toggleHint(this)">✅ Lösung <span class="arrow">▶</span></button>
+        <div class="hint-content level3">
+          <span class="f">v<sub>min</sub> = √(g·r) = √(9,81 · 10) = √98,1</span><br>
+          <span class="fb">v<sub>min</sub> ≈ 9,9 m/s</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3b -->
+  <div class="task" data-id="s3a2">
+    <div class="task-head" onclick="toggleDone(this)">
+      <div class="task-check">✓</div>
+      <div class="task-title">Aufgabe 3b – Mindesthöhe</div>
+    </div>
+    <div class="task-body">
+      <p>Bestimmen Sie mithilfe der <strong>Energieerhaltung</strong> die Mindest-Starthöhe <span class="f">h<sub>min</sub></span>, aus der der Wagen losrollen muss, um den Looping sicher zu durchfahren.</p>
+      <p style="color:var(--muted);font-size:.9rem"><em>Hinweis: Der höchste Punkt des Loopings liegt auf der Höhe 2r über dem tiefsten Punkt.</em></p>
+      <div class="hints">
+        <button class="hint-btn level1" onclick="toggleHint(this)">💡 Tipp 1 – Idee <span class="arrow">▶</span></button>
+        <div class="hint-content level1">
+          Energieerhaltung zwischen Start (Höhe <span class="f">h</span>, <span class="f">v = 0</span>) und höchstem Punkt (Höhe <span class="f">2r</span>, <span class="f">v = v<sub>min</sub></span>). Die Masse kürzt sich!
+        </div>
+        <button class="hint-btn level2" onclick="toggleHint(this)">🔧 Tipp 2 – Ansatz <span class="arrow">▶</span></button>
+        <div class="hint-content level2">
+          <span class="f">m·g·h<sub>min</sub> = ½·m·v<sub>min</sub>² + m·g·(2r)</span><br>
+          Setzen Sie <span class="f">v<sub>min</sub>² = g·r</span> ein und vereinfachen Sie.
+        </div>
+        <button class="hint-btn level3" onclick="toggleHint(this)">✅ Lösung <span class="arrow">▶</span></button>
+        <div class="hint-content level3">
+          <span class="f">g·h<sub>min</sub> = ½·g·r + g·2r</span><br>
+          <span class="f">h<sub>min</sub> = ½r + 2r = 5/2 · r</span><br>
+          <span class="fb">h<sub>min</sub> = 2,5 · 10 = 25 m</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3c -->
+  <div class="task" data-id="s3a3">
+    <div class="task-head" onclick="toggleDone(this)">
+      <div class="task-check">✓</div>
+      <div class="task-title">Aufgabe 3c – Konkreter Start aus 35 m</div>
+    </div>
+    <div class="task-body">
+      <p>Der Wagen startet tatsächlich aus der Höhe <span class="f">h = 35 m</span>.</p>
+      <p>a) Berechnen Sie die Geschwindigkeit <span class="f">v</span> im höchsten Punkt des Loopings.</p>
+      <p>b) Berechnen Sie die Normalkraft <span class="f">F<sub>N</sub></span> auf den Wagen im höchsten Punkt. Wie viele „g" spürt der Fahrer?</p>
+      <div class="hints">
+        <button class="hint-btn level1" onclick="toggleHint(this)">💡 Tipp 1 – Idee <span class="arrow">▶</span></button>
+        <div class="hint-content level1">
+          Gleicher Ansatz wie b), aber mit <span class="f">h = 35 m</span> und nach <span class="f">v</span> auflösen.<br>
+          Für <span class="f">F<sub>N</sub></span>: Im höchsten Punkt gilt <span class="f">F<sub>G</sub> + F<sub>N</sub> = m·v²/r</span>.
+        </div>
+        <button class="hint-btn level2" onclick="toggleHint(this)">🔧 Tipp 2 – Ansatz <span class="arrow">▶</span></button>
+        <div class="hint-content level2">
+          <span class="f">m·g·h = ½·m·v² + m·g·2r</span><br>
+          → <span class="f">v = √(2g(h − 2r)) = √(2 · 9,81 · (35 − 20))</span><br><br>
+          <span class="f">F<sub>N</sub> = m·v²/r − m·g</span>
+        </div>
+        <button class="hint-btn level3" onclick="toggleHint(this)">✅ Lösung <span class="arrow">▶</span></button>
+        <div class="hint-content level3">
+          <span class="f">v = √(2 · 9,81 · 15) = √294,3</span><br>
+          <span class="fb">v ≈ 17,2 m/s</span><br><br>
+          <span class="f">F<sub>N</sub> = 500 · 294,3/10 − 500 · 9,81 = 14 715 − 4 905</span><br>
+          <span class="fb">F<sub>N</sub> = 9 810 N ≈ 9,8 kN</span><br><br>
+          g-Belastung: <span class="f">F<sub>N</sub>/(m·g) + 1 ≈ 2,0 + 1 = <strong>3,0 g</strong></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3d -->
+  <div class="task" data-id="s3a4">
+    <div class="task-head" onclick="toggleDone(this)">
+      <div class="task-check">✓</div>
+      <div class="task-title">Aufgabe 3d – Realitätscheck</div>
+    </div>
+    <div class="task-body">
+      <p>Erklären Sie in eigenen Worten:</p>
+      <p>a) Warum muss die Rampe in der Realität <strong>höher</strong> sein als <span class="f">h<sub>min</sub></span>?</p>
+      <p>b) Viele moderne Achterbahnen verwenden <strong>Klothoid-Loopings</strong> (tropfenförmig) statt Kreisloopings. Welchen Vorteil hat das für die Fahrgäste? Überlegen Sie, was im tiefsten Punkt des Loopings mit der Normalkraft passiert.</p>
+      <div class="hints">
+        <button class="hint-btn level1" onclick="toggleHint(this)">💡 Tipp 1 – Idee <span class="arrow">▶</span></button>
+        <div class="hint-content level1">
+          a) Reibung entzieht dem System Energie. Was bedeutet das für <span class="f">h</span>?<br>
+          b) Was passiert im tiefsten Punkt mit der Normalkraft, wenn <span class="f">r</span> dort sehr klein ist?
+        </div>
+        <button class="hint-btn level2" onclick="toggleHint(this)">🔧 Tipp 2 – Ansatz <span class="arrow">▶</span></button>
+        <div class="hint-content level2">
+          a) Durch Reibung geht Energie „verloren" → weniger kinetische Energie oben → Rampe muss höher sein.<br>
+          b) Im tiefsten Punkt: <span class="f">F<sub>N</sub> − F<sub>G</sub> = m·v²/r</span>. Bei kleinem <span class="f">r</span> wird <span class="f">F<sub>N</sub></span> sehr groß!
+        </div>
+        <button class="hint-btn level3" onclick="toggleHint(this)">✅ Lösung <span class="arrow">▶</span></button>
+        <div class="hint-content level3">
+          <strong>a)</strong> Reibung wandelt kinetische Energie in Wärme um → weniger Geschwindigkeit oben → die Rampe muss <strong>höher</strong> sein als <span class="f">h<sub>min</sub></span>.<br><br>
+          <strong>b)</strong> Klothoid-Looping: Der Radius ist oben <strong>kleiner</strong> und unten <strong>größer</strong>.<br>
+          • Oben: kleinerer <span class="f">r</span> → weniger Geschwindigkeit nötig für die Zentripetalkraft<br>
+          • Unten: größerer <span class="f">r</span> → <strong>geringere Normalkraft</strong> → weniger g-Belastung für die Fahrgäste<br><br>
+          → Komfortabler und materialsparender!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="formulas-footer">
+    <h3>📎 Formelsammlung</h3>
+    <div class="formula">
+      F<sub>Z</sub> = m·v² / r &nbsp;&nbsp;&nbsp; E<sub>kin</sub> = ½·m·v² &nbsp;&nbsp;&nbsp; E<sub>pot</sub> = m·g·h
+    </div>
+    <div class="formula">
+      Energieerhaltung: E<sub>kin,1</sub> + E<sub>pot,1</sub> = E<sub>kin,2</sub> + E<sub>pot,2</sub>
+    </div>
+  </div>
+
+</div>
+
+<div class="confetti-wrap" id="confetti"></div>
+
+<script>
+const STORAGE_KEY = 'station3_progress';
+function loadProgress() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e) { return {}; } }
+function saveProgress(p) { localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); }
+function updateBar() {
+  const tasks = document.querySelectorAll('.task'), done = document.querySelectorAll('.task.done').length, total = tasks.length;
+  const pct = Math.round(done / total * 100);
+  document.getElementById('pbar').style.width = pct + '%';
+  document.getElementById('plabel').textContent = done + ' / ' + total + ' Aufgaben erledigt' + (pct === 100 ? ' 🎉' : '');
+  if (pct === 100) celebrate();
+}
+function toggleDone(head) {
+  const task = head.closest('.task'); task.classList.toggle('done');
+  const p = loadProgress(); p[task.dataset.id] = task.classList.contains('done'); saveProgress(p); updateBar();
+}
+function toggleHint(btn) { const c = btn.nextElementSibling; const o = c.classList.contains('show'); btn.classList.toggle('open', !o); c.classList.toggle('show', !o); }
+function celebrate() {
+  const wrap = document.getElementById('confetti'), colors = ['#22c55e','#10b981','#0ea5e9','#f59e0b','#a855f7'];
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.style.cssText = `position:absolute;width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;background:${colors[Math.floor(Math.random()*5)]};border-radius:${Math.random()>.5?'50%':'2px'};left:${Math.random()*100}%;top:-10px;opacity:1;`;
+    wrap.appendChild(c);
+    c.animate([{transform:'translateY(0) rotate(0deg)',opacity:1},{transform:`translateY(${window.innerHeight+50}px) rotate(${360+Math.random()*720}deg)`,opacity:0}],{duration:1500+Math.random()*2000,easing:'cubic-bezier(.25,.46,.45,.94)'}).onfinish=()=>c.remove();
+  }
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const p = loadProgress();
+  document.querySelectorAll('.task').forEach(t => { if (p[t.dataset.id]) t.classList.add('done'); });
+  updateBar();
+});
+</script>
+</body>
+</html>

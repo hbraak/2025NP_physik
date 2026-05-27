@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Station 1: Steilwandfahrt</title>
+<style>
+  :root { --accent: #e94560; --accent-light: #fde8ec; --bg: #f8f9fb; --card: #fff; --text: #1e293b; --muted: #64748b; --border: #e2e8f0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 0 0 4rem 0; }
+
+  /* Header */
+  .header { background: linear-gradient(135deg, #1a1a2e, #16213e); color: #fff; padding: 1.5rem 1.2rem 1.2rem; text-align: center; position: sticky; top: 0; z-index: 100; }
+  .header h1 { font-size: 1.4rem; margin-bottom: .2rem; }
+  .header .sub { font-size: .9rem; color: #aab; }
+
+  /* Progress */
+  .progress-wrap { padding: .8rem 1.2rem; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 76px; z-index: 99; }
+  .progress-bar-bg { height: 10px; background: var(--border); border-radius: 5px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #f59e0b); border-radius: 5px; transition: width .5s ease; width: 0%; }
+  .progress-label { font-size: .8rem; color: var(--muted); margin-top: .3rem; text-align: center; }
+
+  /* Content */
+  .content { max-width: 700px; margin: 0 auto; padding: 1rem; }
+
+  /* Info box */
+  .info-box { background: #f0f4ff; border: 1px solid #c7d2fe; border-radius: 12px; padding: 1.2rem; margin-bottom: 1.5rem; }
+  .info-box h2 { font-size: 1.1rem; color: #3b5998; margin-bottom: .6rem; }
+  .info-box table { width: 100%; }
+  .info-box td { padding: 3px 0; }
+  .info-box td:first-child { color: var(--muted); white-space: nowrap; padding-right: 1rem; }
+
+  /* Task card */
+  .task { background: var(--card); border-radius: 14px; margin-bottom: 1.2rem; border: 2px solid var(--border); overflow: hidden; transition: border-color .3s; }
+  .task.done { border-color: #22c55e; }
+  .task-head { display: flex; align-items: center; gap: .8rem; padding: 1rem 1.2rem; cursor: pointer; }
+  .task-check { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all .3s; font-size: 1rem; }
+  .task.done .task-check { background: #22c55e; border-color: #22c55e; color: #fff; }
+  .task-title { font-weight: 600; font-size: 1.05rem; flex: 1; }
+  .task-body { padding: 0 1.2rem 1.2rem; }
+  .task-body p { margin-bottom: .6rem; }
+
+  /* Formula box */
+  .formula { background: #fafafa; border: 1px solid var(--border); border-radius: 8px; padding: .8rem 1rem; margin: .8rem 0; font-family: 'Cambria Math', 'Times New Roman', serif; font-size: 1.1rem; text-align: center; overflow-x: auto; }
+
+  /* Hint system */
+  .hints { margin-top: 1rem; }
+  .hint-btn { display: block; width: 100%; text-align: left; padding: .7rem 1rem; border: none; border-radius: 8px; font-size: .95rem; cursor: pointer; margin-bottom: .4rem; font-family: inherit; transition: all .3s; }
+  .hint-btn.level1 { background: #fef9c3; color: #854d0e; }
+  .hint-btn.level2 { background: #ffedd5; color: #9a3412; }
+  .hint-btn.level3 { background: #dcfce7; color: #166534; }
+  .hint-btn:hover { filter: brightness(.95); }
+  .hint-btn .arrow { float: right; transition: transform .3s; }
+  .hint-btn.open .arrow { transform: rotate(90deg); }
+  .hint-content { display: none; padding: .8rem 1rem; border-radius: 8px; margin-bottom: .4rem; font-size: .93rem; line-height: 1.7; }
+  .hint-content.show { display: block; }
+  .hint-content.level1 { background: #fefce8; }
+  .hint-content.level2 { background: #fff7ed; }
+  .hint-content.level3 { background: #f0fdf4; }
+
+  /* Formulas inline */
+  .f { font-family: 'Cambria Math', 'Times New Roman', serif; font-style: italic; }
+  .fb { font-family: 'Cambria Math', 'Times New Roman', serif; font-weight: bold; }
+
+  /* Formelsammlung */
+  .formulas-footer { background: var(--card); border-radius: 14px; padding: 1.2rem; border: 2px solid var(--border); margin-top: 1.5rem; }
+  .formulas-footer h3 { font-size: 1rem; margin-bottom: .6rem; color: var(--muted); }
+
+  /* Konfetti */
+  .confetti-wrap { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🏍️ Station 1: Steilwandfahrt</h1>
+  <div class="sub">Kreisbewegung &amp; Zentripetalkraft</div>
+</div>
+
+<div class="progress-wrap">
+  <div class="progress-bar-bg"><div class="progress-bar-fill" id="pbar"></div></div>
+  <div class="progress-label" id="plabel">0 / 4 Aufgaben erledigt</div>
+</div>
+
+<div class="content">
+
+  <div class="info-box">
+    <h2>📋 Situation</h2>
+    <p>Auf einem Jahrmarkt gibt es eine Steilwand-Attraktion: Ein Motorrad fährt auf der Innenseite eines senkrechten Zylinders im Kreis. Die Zuschauer stehen oben am Rand und schauen hinunter.</p>
+    <table style="margin-top:.6rem">
+      <tr><td>Radius der Steilwand:</td><td><strong class="f">r = 8,0 m</strong></td></tr>
+      <tr><td>Geschwindigkeit:</td><td><strong class="f">v = 36 km/h</strong></td></tr>
+      <tr><td>Masse Fahrer + Motorrad:</td><td><strong class="f">m = 250 kg</strong></td></tr>
+    </table>
+  </div>
+
+  <!-- Aufgabe 1a -->
+  <div class="task" data-id="s1a1">
+    <div class="task-head" onclick="toggleDone(this)">
+      <div class="task-check">✓</div>
+      <div class="task-title">Aufgabe 1a – Zentripetalkraft</div>
+    </div>
+    <div class="task-body">
+      <p>Rechnen Sie die Geschwindigkeit in m/s um und berechnen Sie die Zentripetalkraft <span class="f">F<sub>Z</sub></span>, die auf Fahrer und Motorrad wirkt.</p>
+      <div class="hints">
+        <button class="hint-btn level1" onclick="toggleHint(this)">💡 Tipp 1 – Idee <span class="arrow">▶</span></button>
+        <div class="hint-content level1">
+          Rechnen Sie zuerst um: 36 km/h = … m/s (durch 3,6 teilen).<br>
+          Dann setzen Sie in <span class="f">F<sub>Z</sub> = m·v²/r</span> ein.
+        </div>
+        <button class="hint-btn level2" onclick="toggleHint(this)">🔧 Tipp 2 – Ansatz <span class="arrow">▶</span></button>
+        <div class="hint-content level2">
+          <span class="f">v = 36 / 3,6 = 10 m/s</span><br>
+          <span class="f">F<sub>Z</sub> = 250 · 10² / 8 = …</span>
+        </div>
+        <button class="hint-btn level3" onclick="toggleHint(this)">✅ Lösung <span class="arrow">▶</span></button>
+        <div class="hint-content level3">
+          <span class="f">v = 10 m/s</span><br>
+          <span class="fb">F<sub>Z</sub> = 250 · 100 / 8 = 3 125 N ≈ 3,1 kN</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Aufgabe 1b -->
+  <div class="task" data-id="s1a2">
+    <div class="task-head" onclick="toggleDone(this)">
+      <div class="task-check">✓</div>
+      <div class="task-title">Aufgabe 1b – Haftreibung</div>
+    </div>
+    <div class="task-body">
+      <p>Das Motorrad wird durch die Haftreibungskraft <span class="f">F<sub>R</sub></span> an der Wand gehalten (die Haftreibung wirkt hier <strong>nach oben</strong>, gegen die Gewichtskraft).</p>
+      <p>Berechnen Sie die Mindest-Haftreibungszahl <span class="f">μ</span>, damit das Motorrad nicht abrutscht.</p>
+      <p style="color:var(--muted);font-size:.9rem"><em>Hinweis: An der Grenze zum Abrutschen gilt F<sub>R</sub> = μ · F<sub>N</sub>, wobei F<sub>N</sub> hier die Normalkraft der Wand ist.</em></p>
+      <div class="hints">
+        <button class="hint-btn level1" onclick="toggleHint(this)">💡 Tipp 1 – Idee <span class="arrow">▶</span></button>
+        <div class="hint-content level1">
+          An der senkrechten Wand gibt es zwei Kräfte in vertikaler Richtung: Gewichtskraft (runter) und Haftreibung (hoch).<br>
+          Was ist die Normalkraft an einer <strong>senkrechten</strong> Wand? → Das ist die Kraft, mit der die Wand das Motorrad nach innen drückt!
+        </div>
+        <button class="hint-btn level2" onclick="toggleHint(this)">🔧 Tipp 2 – Ansatz <span class="arrow">▶</span></button>
+        <div class="hint-content level2">
+          Die Wand drückt das Motorrad nach innen → <span class="f">F<sub>N</sub> = F<sub>Z</sub></span>.<br>
+          Gleichgewicht vertikal: <span class="f">μ · F<sub>Z</sub> = m · g</span><br>
+          → <span class="f">μ = m·g / F<sub>Z</sub></span>
+        </div>
+        <button class="hint-btn level3" onclick="toggleHint(this)">✅ Lösung <span class="arrow">▶</span></button>
+        <div class="hint-content level3">
+          <span class="fb">μ = (250 · 9,81) / 3 125 = 2 452,5 / 3 125 = 0,785</span><br><br>
+          → Es wird eine Haftreibungszahl von mindestens <strong>μ ≈ 0,79</strong> benötigt.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Aufgabe 1c -->
+  <div class="task" data-id="s1a3">
+    <div class="task-head" onclick="toggleDone(this)">
+      <div class="task-check">✓</div>
+      <div class="task-title">Aufgabe 1c – Mindestgeschwindigkeit</div>
+    </div>
+    <div class="task-body">
+      <p>Ab welcher Geschwindigkeit <span class="f">v<sub>min</sub></span> kann das Motorrad an der Wand fahren, wenn die Haftreibungszahl <span class="f">μ = 0,7</span> beträgt?</p>
+      <p>Leiten Sie eine Formel her und berechnen Sie <span class="f">v<sub>min</sub></span>.</p>
+      <div class="hints">
+        <button class="hint-btn level1" onclick="toggleHint(this)">💡 Tipp 1 – Idee <span class="arrow">▶</span></button>
+        <div class="hint-content level1">
+          Setzen Sie die Bedingung <span class="f">F<sub>R</sub> ≥ F<sub>G</sub></span> auf und lösen Sie nach <span class="f">v</span> auf.
+        </div>
+        <button class="hint-btn level2" onclick="toggleHint(this)">🔧 Tipp 2 – Ansatz <span class="arrow">▶</span></button>
+        <div class="hint-content level2">
+          <span class="f">μ · (m·v²/r) = m·g</span><br>
+          Die Masse <span class="f">m</span> kürzt sich!<br>
+          → <span class="f">v<sub>min</sub> = √(g·r / μ)</span>
+        </div>
+        <button class="hint-btn level3" onclick="toggleHint(this)">✅ Lösung <span class="arrow">▶</span></button>
+        <div class="hint-content level3">
+          <span class="f">v<sub>min</sub> = √(9,81 · 8 / 0,7) = √(112,1)</span><br>
+          <span class="fb">v<sub>min</sub> ≈ 10,6 m/s ≈ 38 km/h</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Aufgabe 1d -->
+  <div class="task" data-id="s1a4">
+    <div class="task-head" onclick="toggleDone(this)">
+      <div class="task-check">✓</div>
+      <div class="task-title">Aufgabe 1d – Nachdenken</div>
+    </div>
+    <div class="task-body">
+      <p>Ein leichterer Fahrer (<span class="f">m = 180 kg</span> statt 250 kg) fährt mit der gleichen Geschwindigkeit an der gleichen Wand.</p>
+      <p>Ändert sich die Mindestgeschwindigkeit? Begründen Sie Ihre Antwort, <strong>ohne</strong> zu rechnen.</p>
+      <div class="hints">
+        <button class="hint-btn level1" onclick="toggleHint(this)">💡 Tipp 1 – Idee <span class="arrow">▶</span></button>
+        <div class="hint-content level1">
+          Schauen Sie sich Ihre Formel für <span class="f">v<sub>min</sub></span> aus Aufgabe c) an – kommt <span class="f">m</span> darin vor?
+        </div>
+        <button class="hint-btn level2" onclick="toggleHint(this)">🔧 Tipp 2 – Ansatz <span class="arrow">▶</span></button>
+        <div class="hint-content level2">
+          <span class="f">v<sub>min</sub> = √(g·r / μ)</span> – in dieser Formel taucht die Masse <strong>nicht</strong> auf. Warum?
+        </div>
+        <button class="hint-btn level3" onclick="toggleHint(this)">✅ Lösung <span class="arrow">▶</span></button>
+        <div class="hint-content level3">
+          Die Masse <span class="f">m</span> kürzt sich heraus: <span class="f">v<sub>min</sub> = √(g·r / μ)</span>.<br><br>
+          Die Mindestgeschwindigkeit hängt <strong>nicht von der Masse ab</strong> – ein leichterer Fahrer braucht dieselbe Geschwindigkeit. Das ist analog zum Kettenkarussell, wo der Auslenkungswinkel auch masseunabhängig ist.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="formulas-footer">
+    <h3>📎 Formelsammlung</h3>
+    <div class="formula">
+      F<sub>Z</sub> = m·v² / r = m·ω²·r &nbsp;&nbsp;&nbsp; F<sub>G</sub> = m·g &nbsp;&nbsp;&nbsp; v = ω·r
+    </div>
+  </div>
+
+</div>
+
+<div class="confetti-wrap" id="confetti"></div>
+
+<script>
+// Progress tracking
+const STORAGE_KEY = 'station1_progress';
+
+function loadProgress() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e) { return {}; }
+}
+function saveProgress(p) { localStorage.setItem(STORAGE_KEY, JSON.stringify(p)); }
+
+function updateBar() {
+  const tasks = document.querySelectorAll('.task');
+  const done = document.querySelectorAll('.task.done').length;
+  const total = tasks.length;
+  const pct = Math.round(done / total * 100);
+  document.getElementById('pbar').style.width = pct + '%';
+  document.getElementById('plabel').textContent = done + ' / ' + total + ' Aufgaben erledigt' + (pct === 100 ? ' 🎉' : '');
+  if (pct === 100) celebrate();
+}
+
+function toggleDone(head) {
+  const task = head.closest('.task');
+  task.classList.toggle('done');
+  const p = loadProgress();
+  p[task.dataset.id] = task.classList.contains('done');
+  saveProgress(p);
+  updateBar();
+}
+
+function toggleHint(btn) {
+  const content = btn.nextElementSibling;
+  const isOpen = content.classList.contains('show');
+  btn.classList.toggle('open', !isOpen);
+  content.classList.toggle('show', !isOpen);
+}
+
+function celebrate() {
+  const wrap = document.getElementById('confetti');
+  const colors = ['#e94560','#0ea5e9','#22c55e','#f59e0b','#a855f7'];
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.style.cssText = `position:absolute;width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;background:${colors[Math.floor(Math.random()*5)]};border-radius:${Math.random()>.5?'50%':'2px'};left:${Math.random()*100}%;top:-10px;opacity:1;`;
+    wrap.appendChild(c);
+    const dur = 1500 + Math.random() * 2000;
+    c.animate([
+      { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+      { transform: `translateY(${window.innerHeight+50}px) rotate(${360+Math.random()*720}deg)`, opacity: 0 }
+    ], { duration: dur, easing: 'cubic-bezier(.25,.46,.45,.94)' }).onfinish = () => c.remove();
+  }
+}
+
+// Restore progress on load
+document.addEventListener('DOMContentLoaded', () => {
+  const p = loadProgress();
+  document.querySelectorAll('.task').forEach(t => {
+    if (p[t.dataset.id]) t.classList.add('done');
+  });
+  updateBar();
+});
+</script>
+</body>
+</html>
