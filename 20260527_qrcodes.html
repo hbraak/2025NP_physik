@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Übungsstationen – QR-Codes</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #1a1a2e;
+    color: #eee;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  h1 {
+    font-size: 2.4rem;
+    margin-bottom: 0.3rem;
+    color: #fff;
+    text-align: center;
+  }
+  .subtitle {
+    font-size: 1.15rem;
+    color: #aab;
+    margin-bottom: 2.5rem;
+    text-align: center;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem;
+    max-width: 1100px;
+    width: 100%;
+  }
+  .card {
+    background: #16213e;
+    border-radius: 16px;
+    padding: 1.8rem 1.5rem;
+    text-align: center;
+    border: 2px solid #0f3460;
+  }
+  .card.s1 { border-color: #e94560; }
+  .card.s2 { border-color: #0ea5e9; }
+  .card.s3 { border-color: #22c55e; }
+  .card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.2rem;
+  }
+  .card .label {
+    font-size: 1rem;
+    color: #99a;
+    margin-bottom: 1.2rem;
+    line-height: 1.4;
+  }
+  .qr-wrap {
+    background: #fff;
+    border-radius: 14px;
+    padding: 14px;
+    display: inline-block;
+    margin-bottom: 0.6rem;
+  }
+  .qr-wrap img {
+    display: block;
+    width: 240px;
+    height: 240px;
+  }
+  .hint {
+    margin-top: 2.5rem;
+    font-size: 1.15rem;
+    color: #bbc;
+    text-align: center;
+    line-height: 1.6;
+  }
+  .hint strong { color: #e94560; }
+  @media (max-width: 800px) {
+    .grid { grid-template-columns: 1fr; gap: 1.5rem; max-width: 400px; }
+    h1 { font-size: 1.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<h1>📱 Arbeitsblätter herunterladen</h1>
+<p class="subtitle">Physik-LK 11NP · 27. Mai 2026 · QR-Code mit dem Handy scannen</p>
+
+<div class="grid">
+
+  <div class="card s1">
+    <h2>🏍️ Station 1</h2>
+    <p class="label">Steilwandfahrt<br>Kreisbewegung &amp; Zentripetalkraft</p>
+    <div class="qr-wrap">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&format=svg&data=https%3A%2F%2Fhbraak.github.io%2F2025NP_physik%2F20260527_Station1_Kreisbewegung.pdf" alt="QR Station 1">
+    </div>
+  </div>
+
+  <div class="card s2">
+    <h2>🎠 Station 2</h2>
+    <p class="label">Kinderkarussell<br>Trägheitsmoment &amp; Steiner</p>
+    <div class="qr-wrap">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&format=svg&data=https%3A%2F%2Fhbraak.github.io%2F2025NP_physik%2F20260527_Station2_Traegheitsmoment.pdf" alt="QR Station 2">
+    </div>
+  </div>
+
+  <div class="card s3">
+    <h2>🎢 Station 3</h2>
+    <p class="label">Achterbahn-Looping<br>Energieerhaltung</p>
+    <div class="qr-wrap">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&format=svg&data=https%3A%2F%2Fhbraak.github.io%2F2025NP_physik%2F20260527_Station3_Looping.pdf" alt="QR Station 3">
+    </div>
+  </div>
+
+</div>
+
+<p class="hint">💡 <strong>Hilfekarten</strong> liegen an jeder Station aus – erst umdrehen, wenn Sie nicht weiterkommen!</p>
+
+</body>
+</html>
