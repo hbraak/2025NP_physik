@@ -502,8 +502,8 @@ footer {
     <div class="comp-card" data-id="z13" data-sec="zentri">
       <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
       <div class="comp-body">
-        <span class="comp-text">Ich kann den Einfluss von Reibung auf die Mindesthöhe beurteilen und erklären, warum reale Achterbahnen Klothoid-Loopings statt Kreisloopings verwenden.</span>
-        <span class="afb-pill afb3 card-afb">AFB III</span>
+        <span class="comp-text">Ich kann den Einfluss von Reibung auf die Mindesthöhe beurteilen und erklären, warum die reale Starthöhe größer als \(h_\text{min} = \tfrac{5}{2}\,r\) sein muss.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
       </div>
       <button class="comp-btn" onclick="openModal('z13')">Üben</button>
     </div>
@@ -1487,27 +1487,28 @@ loesung:`<div class="sol-step"><div class="snum">a</div><div>
 <div class="result">\\(v_\\text{oben} \\approx 17{,}7\\,\\text{m/s}\\), \\(F_N \\approx 1{,}1\\,\\text{kN}\\) (ca. 1,7g Zusatzbelastung)</div>`,
 prompt:`Ich übe Looping mit gegebener Starthöhe (Physik Klasse 11, AFB II). Energieerhaltung anwenden, v_oben berechnen. 2 Aufgaben mit verschiedenen Starthöhen.`},
 
-z13:{title:"Looping — Reibung & Klothoid-Looping (AFB III)",
+z13:{title:"Looping — Reibung beurteilen (AFB II)",
 aufgabe:`<div class="task-box">
-  <p>In der Realität gibt es beim Looping Reibungsverluste und die Form ist kein Kreis, sondern eine Klothoide (tropfenförmig).</p>
+  <p>In der Realität gibt es beim Looping Reibungsverluste.</p>
   <div class="subtasks">
     <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Erklären Sie, warum bei Reibung die tatsächlich benötigte Starthöhe größer als \\(h_\\text{min} = \\tfrac{5}{2}\\,r\\) sein muss.</span></div>
-    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Erklären Sie, warum der Radius beim Klothoid-Looping oben kleiner und unten größer ist als beim Kreislooping. Welche Vorteile hat das?</span></div>
-    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Ein Kreislooping erzeugt im tiefsten Punkt typisch 6–8g Belastung, ein Klothoid-Looping nur 4–5g. Erklären Sie den Unterschied.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Eine reale Achterbahn mit \\(r = 12\\,\\text{m}\\) hat eine Startrampe von \\(h = 38\\,\\text{m}\\) statt \\(h_\\text{min} = 30\\,\\text{m}\\). Berechnen Sie die Geschwindigkeit im höchsten Punkt und vergleichen Sie mit \\(v_\\text{min}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Erklären Sie, warum Ingenieure einen Sicherheitszuschlag bei der Starthöhe einplanen.</span></div>
   </div>
 </div>`,
 loesung:`<div class="sol-step"><div class="snum">a</div><div>
-  Reibung wandelt kinetische Energie in Wärme um → weniger Geschwindigkeit im höchsten Punkt → Starthöhe muss höher als \\(\\tfrac{5}{2}r\\) sein, um \\(v_\\text{min}\\) zu erreichen. Reale Bahnen haben einen Sicherheitsfaktor.
+  Reibung wandelt kinetische Energie in Wärme um → weniger Geschwindigkeit im höchsten Punkt → Starthöhe muss höher als \\(\\tfrac{5}{2}r\\) sein, um \\(v_\\text{min}\\) zu erreichen.
 </div></div>
 <div class="sol-step"><div class="snum">b</div><div>
-  <strong>Oben kleiner Radius:</strong> \\(v_\\text{min} = \\sqrt{g\\cdot r}\\) — kleiner \\(r\\) → kleinere \\(v_\\text{min}\\) nötig → niedrigere Startrampe.<br>
-  <strong>Unten größerer Radius:</strong> \\(a_Z = v^2/r\\) — größerer \\(r\\) → kleinere Zentripetalbeschleunigung → weniger g-Belastung für Fahrgäste.
+  Ohne Reibung: \\(v_\\text{oben} = \\sqrt{2g(h-2r)} = \\sqrt{2\\cdot 9{,}81\\cdot(38-24)} = \\sqrt{274{,}7} \\approx 16{,}6\\,\\text{m/s}\\)
+  <br>Vergleich: \\(v_\\text{min} = \\sqrt{g\\cdot r} = \\sqrt{117{,}7} \\approx 10{,}9\\,\\text{m/s}\\)
+  <br>Der Sicherheitszuschlag von 8 m Höhe liefert ca. 53 % mehr Geschwindigkeit als nötig.
 </div></div>
 <div class="sol-step"><div class="snum">c</div><div>
-  Beim Kreislooping ist \\(r\\) überall gleich. Im tiefsten Punkt ist \\(v\\) maximal → \\(a_Z = v^2/r\\) sehr groß. Beim Klothoid-Looping ist \\(r\\) unten groß → trotz hoher Geschwindigkeit bleibt \\(a_Z\\) moderat.
+  Reibungsverluste sind schwer exakt vorherzusagen (Wetter, Verschleiß, Beladung). Der Zuschlag stellt sicher, dass der Wagen auch im ungünstigsten Fall sicher den Looping durchfährt.
 </div></div>
-<div class="result">Klothoid-Loopings sind komfortabler (weniger g) und effizienter (niedrigere Rampe)</div>`,
-prompt:`Ich übe Looping Reibung und Klothoid (Physik Klasse 11, AFB III). Aufgabe: Warum reale Starthöhe > 5r/2, Vorteile Klothoid-Form, g-Belastung vergleichen.`},
+<div class="result">Reale Starthöhe &gt; \\(\\tfrac{5}{2}r\\) wegen Reibungsverlusten und Sicherheitsfaktor</div>`,
+prompt:`Ich übe Looping mit Reibung (Physik Klasse 11, AFB II). Aufgabe: Warum reale Starthöhe > 5r/2? Sicherheitszuschlag berechnen und begründen.`},
 
 z10:{title:"Erdrotation — Gewichtsreduktion (AFB III)",
 aufgabe:`<div class="task-box">
