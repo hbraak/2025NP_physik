@@ -481,6 +481,33 @@ footer {
       <button class="comp-btn" onclick="openModal('z9')">Üben</button>
     </div>
 
+    <div class="comp-card" data-id="z11" data-sec="zentri">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Mindesthöhe \(h_\text{min} = \tfrac{5}{2}\,r\) für einen Looping über den Energieerhaltungssatz herleiten.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('z11')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="z12" data-sec="zentri">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Geschwindigkeit im höchsten Punkt eines Loopings bei gegebener Starthöhe berechnen: \(v_\text{oben} = \sqrt{2g(h - 2r)}\).</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('z12')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="z13" data-sec="zentri">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann den Einfluss von Reibung auf die Mindesthöhe beurteilen und erklären, warum reale Achterbahnen Klothoid-Loopings statt Kreisloopings verwenden.</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('z13')">Üben</button>
+    </div>
+
     <div class="comp-card" data-id="z10" data-sec="zentri">
       <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
       <div class="comp-body">
@@ -1411,6 +1438,76 @@ loesung:`<div class="sol-step"><div class="snum">a</div><div>
   Das Wasser „möchte" sich aufgrund seiner Trägheit geradlinig weiterbewegen (Newton 1). Wenn die Geschwindigkeit groß genug ist, reicht die Gewichtskraft allein nicht aus, um den Körper auf die Kreisbahn zu zwingen — das Wasser wird nach außen (gegen den Eimerboden) gedrückt.
 </div></div>`,
 prompt:`Ich übe Looping und Wassereimer (Physik Klasse 11, AFB III). Mindestgeschwindigkeit im höchsten Punkt herleiten. 2 Aufgaben mit Looping-Bahn und Eimer.`},
+
+z11:{title:"Looping — Mindesthöhe herleiten (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Ein Wagen startet aus der Ruhe auf einer Rampe der Höhe \\(h\\) und durchfährt einen kreisförmigen Looping mit Radius \\(r = 12\\,\\text{m}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Stellen Sie den Energieerhaltungssatz zwischen dem Startpunkt (Höhe \\(h\\), \\(v=0\\)) und dem höchsten Punkt des Loopings (Höhe \\(2r\\), \\(v_\\text{min}\\)) auf.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Setzen Sie \\(v_\\text{min}^2 = g\\cdot r\\) ein und leiten Sie \\(h_\\text{min}\\) her.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie \\(h_\\text{min}\\) für \\(r = 12\\,\\text{m}\\).</span></div>
+  </div>
+  <div class="hint-box">\\(E_\\text{pot,1} = E_\\text{kin,2} + E_\\text{pot,2}\\)</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  <div class="dmath">\\(m\\,g\\,h = \\tfrac{1}{2}\\,m\\,v_\\text{min}^2 + m\\,g\\,(2r)\\)</div>
+  Die Masse \\(m\\) kürzt sich heraus.
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Einsetzen von \\(v_\\text{min}^2 = g\\cdot r\\):
+  <div class="dmath">\\(g\\,h_\\text{min} = \\tfrac{1}{2}\\,g\\,r + g\\cdot 2r = g\\left(\\tfrac{1}{2}r + 2r\\right) = g\\cdot\\tfrac{5}{2}\\,r\\)</div>
+  <div class="dmath">\\(\\boxed{h_\\text{min} = \\tfrac{5}{2}\\,r}\\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\(h_\\text{min} = \\tfrac{5}{2}\\cdot 12 = 30\\,\\text{m}\\)
+</div></div>
+<div class="result">Die Mindesthöhe ist unabhängig von der Masse: \\(h_\\text{min} = \\tfrac{5}{2}\\,r\\)</div>`,
+prompt:`Ich übe Looping Mindesthöhe herleiten (Physik Klasse 11, AFB II). Energieerhaltung: Start → höchster Punkt. Herleitung h_min = 5r/2. 2 Aufgaben mit verschiedenen Radien.`},
+
+z12:{title:"Looping — Geschwindigkeit bei gegebener Starthöhe (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Eine Achterbahn hat einen Looping mit \\(r = 12\\,\\text{m}\\). Der Wagen startet aus \\(h = 40\\,\\text{m}\\) Höhe.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Stellen Sie den Energieerhaltungssatz auf und lösen Sie nach \\(v_\\text{oben}\\) auf.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie \\(v_\\text{oben}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie die Normalkraft auf einen Fahrgast (\\(m = 70\\,\\text{kg}\\)) im höchsten Punkt.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(m\\,g\\,h = \\tfrac{1}{2}\\,m\\,v_\\text{oben}^2 + m\\,g\\,(2r)\\)
+  <div class="dmath">\\(v_\\text{oben} = \\sqrt{2g(h - 2r)}\\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(v_\\text{oben} = \\sqrt{2\\cdot 9{,}81\\cdot(40 - 24)} = \\sqrt{313{,}9} \\approx 17{,}7\\,\\text{m/s}\\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Im höchsten Punkt: \\(F_G + F_N = \\frac{m\\,v^2}{r}\\)
+  <div class="dmath">\\(F_N = \\frac{m\\,v^2}{r} - m\\,g = 70\\cdot\\left(\\frac{17{,}7^2}{12} - 9{,}81\\right) = 70\\cdot(26{,}1 - 9{,}81) \\approx 1140\\,\\text{N}\\)</div>
+</div></div>
+<div class="result">\\(v_\\text{oben} \\approx 17{,}7\\,\\text{m/s}\\), \\(F_N \\approx 1{,}1\\,\\text{kN}\\) (ca. 1,7g Zusatzbelastung)</div>`,
+prompt:`Ich übe Looping mit gegebener Starthöhe (Physik Klasse 11, AFB II). Energieerhaltung anwenden, v_oben berechnen. 2 Aufgaben mit verschiedenen Starthöhen.`},
+
+z13:{title:"Looping — Reibung & Klothoid-Looping (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>In der Realität gibt es beim Looping Reibungsverluste und die Form ist kein Kreis, sondern eine Klothoide (tropfenförmig).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Erklären Sie, warum bei Reibung die tatsächlich benötigte Starthöhe größer als \\(h_\\text{min} = \\tfrac{5}{2}\\,r\\) sein muss.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Erklären Sie, warum der Radius beim Klothoid-Looping oben kleiner und unten größer ist als beim Kreislooping. Welche Vorteile hat das?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Ein Kreislooping erzeugt im tiefsten Punkt typisch 6–8g Belastung, ein Klothoid-Looping nur 4–5g. Erklären Sie den Unterschied.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  Reibung wandelt kinetische Energie in Wärme um → weniger Geschwindigkeit im höchsten Punkt → Starthöhe muss höher als \\(\\tfrac{5}{2}r\\) sein, um \\(v_\\text{min}\\) zu erreichen. Reale Bahnen haben einen Sicherheitsfaktor.
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  <strong>Oben kleiner Radius:</strong> \\(v_\\text{min} = \\sqrt{g\\cdot r}\\) — kleiner \\(r\\) → kleinere \\(v_\\text{min}\\) nötig → niedrigere Startrampe.<br>
+  <strong>Unten größerer Radius:</strong> \\(a_Z = v^2/r\\) — größerer \\(r\\) → kleinere Zentripetalbeschleunigung → weniger g-Belastung für Fahrgäste.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Beim Kreislooping ist \\(r\\) überall gleich. Im tiefsten Punkt ist \\(v\\) maximal → \\(a_Z = v^2/r\\) sehr groß. Beim Klothoid-Looping ist \\(r\\) unten groß → trotz hoher Geschwindigkeit bleibt \\(a_Z\\) moderat.
+</div></div>
+<div class="result">Klothoid-Loopings sind komfortabler (weniger g) und effizienter (niedrigere Rampe)</div>`,
+prompt:`Ich übe Looping Reibung und Klothoid (Physik Klasse 11, AFB III). Aufgabe: Warum reale Starthöhe > 5r/2, Vorteile Klothoid-Form, g-Belastung vergleichen.`},
 
 z10:{title:"Erdrotation — Gewichtsreduktion (AFB III)",
 aufgabe:`<div class="task-box">
