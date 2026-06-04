@@ -10,37 +10,62 @@
   @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:'IBM Plex Sans',sans-serif;background:#1a1a2e;color:#eee;
-       height:100vh;overflow:hidden;cursor:none}
+       min-height:100vh;overflow-x:hidden;cursor:none}
   body.show-cursor{cursor:default}
 
+  /* ── Slides ── */
   .slide{display:none;flex-direction:column;justify-content:center;align-items:center;
-         height:100vh;padding:2rem 4rem;position:absolute;top:0;left:0;width:100%}
+         min-height:100vh;padding:2rem clamp(1rem, 4vw, 4rem);position:absolute;top:0;left:0;width:100%;
+         overflow-y:auto}
   .slide.active{display:flex}
 
-  .slide-title h1{font-size:3.2rem;font-weight:700;color:#fff;text-align:center;margin-bottom:0.5rem}
-  .slide-title .sub{font-size:1.5rem;color:#8ecae6;text-align:center;font-weight:300}
-  .slide-title .date{font-size:1rem;color:#666;margin-top:2rem}
+  /* ── Titel ── */
+  .slide-title h1{font-size:clamp(1.6rem, 5vw, 3.2rem);font-weight:700;color:#fff;text-align:center;margin-bottom:0.5rem}
+  .slide-title .sub{font-size:clamp(0.95rem, 2.5vw, 1.5rem);color:#8ecae6;text-align:center;font-weight:300}
+  .slide-title .date{font-size:clamp(0.8rem, 1.5vw, 1rem);color:#666;margin-top:1.5rem}
 
-  .slide-head{font-size:1.8rem;font-weight:600;color:#8ecae6;margin-bottom:1.5rem;
+  /* ── Slide-Überschrift ── */
+  .slide-head{font-size:clamp(1.1rem, 3vw, 1.8rem);font-weight:600;color:#8ecae6;margin-bottom:1rem;
               text-align:center;width:100%}
+
+  /* ── Steps ── */
   .step{opacity:0;transform:translateY(18px);transition:opacity 0.5s ease,transform 0.5s ease;
-        width:100%;max-width:1100px;margin:0.4rem 0;padding:0.8rem 1.5rem;
-        border-radius:10px;font-size:1.25rem;line-height:1.7}
+        width:100%;max-width:1100px;margin:0.3rem 0;padding:0.6rem clamp(0.8rem, 2vw, 1.5rem);
+        border-radius:10px;font-size:clamp(0.9rem, 2vw, 1.25rem);line-height:1.6}
   .step.visible{opacity:1;transform:translateY(0)}
 
   .step-text{background:rgba(255,255,255,0.06)}
-  .step-eq{background:rgba(142,202,230,0.1);border-left:4px solid #8ecae6;font-size:1.5rem;text-align:center;padding:1rem 1.5rem}
-  .step-result{background:rgba(0,200,120,0.12);border-left:4px solid #00c878;font-size:1.5rem;text-align:center;padding:1rem 1.5rem}
-  .step-note{background:rgba(255,183,77,0.1);border-left:4px solid #ffb74d;font-size:1.1rem;font-style:italic;color:#ffb74d}
-  .step-question{background:rgba(255,100,100,0.1);border-left:4px solid #ff6464;font-size:1.4rem;text-align:center;color:#ff8a8a}
-  .step-table{background:rgba(142,202,230,0.08);border-left:4px solid #8ecae6;padding:1rem 1.5rem}
-  .step-table table{width:100%;border-collapse:collapse;font-size:1.15rem}
-  .step-table th{background:rgba(142,202,230,0.15);padding:0.5rem 1rem;text-align:center;border:1px solid rgba(255,255,255,0.15)}
-  .step-table td{padding:0.5rem 1rem;text-align:center;border:1px solid rgba(255,255,255,0.1)}
+  .step-eq{background:rgba(142,202,230,0.1);border-left:4px solid #8ecae6;
+           font-size:clamp(1rem, 2.5vw, 1.5rem);text-align:center;padding:0.7rem clamp(0.5rem, 2vw, 1.5rem);
+           overflow-x:auto}
+  .step-result{background:rgba(0,200,120,0.12);border-left:4px solid #00c878;
+               font-size:clamp(1rem, 2.5vw, 1.5rem);text-align:center;padding:0.7rem clamp(0.5rem, 2vw, 1.5rem);
+               overflow-x:auto}
+  .step-note{background:rgba(255,183,77,0.1);border-left:4px solid #ffb74d;
+             font-size:clamp(0.85rem, 1.8vw, 1.1rem);font-style:italic;color:#ffb74d}
+  .step-question{background:rgba(255,100,100,0.1);border-left:4px solid #ff6464;
+                 font-size:clamp(0.95rem, 2.2vw, 1.4rem);text-align:center;color:#ff8a8a}
+  .step-table{background:rgba(142,202,230,0.08);border-left:4px solid #8ecae6;
+              padding:0.7rem clamp(0.4rem, 1.5vw, 1.5rem);overflow-x:auto}
+  .step-table table{width:100%;border-collapse:collapse;font-size:clamp(0.75rem, 1.6vw, 1.15rem)}
+  .step-table th{background:rgba(142,202,230,0.15);padding:0.4rem clamp(0.3rem, 1vw, 1rem);text-align:center;border:1px solid rgba(255,255,255,0.15);white-space:nowrap}
+  .step-table td{padding:0.4rem clamp(0.3rem, 1vw, 1rem);text-align:center;border:1px solid rgba(255,255,255,0.1)}
 
+  /* ── MathJax overflow ── */
+  mjx-container{overflow-x:auto;max-width:100%;display:inline-block}
+
+  /* ── Progress / Navigation ── */
   .progress{position:fixed;bottom:0;left:0;height:4px;background:#8ecae6;transition:width 0.4s ease;z-index:100}
   .nav-hint{position:fixed;bottom:12px;right:20px;font-size:0.8rem;color:#444;z-index:100}
   .slide-counter{position:fixed;bottom:12px;left:20px;font-size:0.8rem;color:#444;z-index:100}
+
+  /* ── Mobile ── */
+  @media (max-width: 600px) {
+    .slide{padding:1.2rem 0.8rem;justify-content:flex-start;padding-top:2rem}
+    .step{margin:0.2rem 0;border-radius:8px}
+    .step-eq, .step-result{border-left-width:3px}
+    .step-table td, .step-table th{padding:0.3rem 0.4rem}
+  }
 </style>
 </head>
 <body class="show-cursor">
