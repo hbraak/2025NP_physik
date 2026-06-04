@@ -251,8 +251,6 @@ function draw() {
   // Bodies
   const active = getActiveBodies();
   const rLen = rampLen();
-  const laneSpacing = Math.min(objR * 2.5, 30);
-  const laneOffset = -(active.length - 1) / 2 * laneSpacing;
 
   active.forEach((b, i) => {
     const a = accel(b.c);
@@ -265,18 +263,11 @@ function draw() {
 
     const pos = bodyPos(s, rLen);
 
-    // Offset perpendicular to surface for lane separation
-    const perpX = Math.sin(rampAngle);
-    const perpY = -Math.cos(rampAngle);
-    const lane = laneOffset + i * laneSpacing;
-    let cx, cy;
-    if (pos.onRamp) {
-      cx = pos.x + (pos.onRamp ? perpX * lane : 0);
-      cy = pos.y + (pos.onRamp ? perpY * lane : 0) - objR;
-    } else {
-      cx = pos.x;
-      cy = pos.y - objR + lane * 0.15;
-    }
+    // Place body on the surface: offset center by objR perpendicular to surface
+    const normX = pos.onRamp ? -Math.sin(rampAngle) : 0;
+    const normY = pos.onRamp ? -Math.cos(rampAngle) : -1;
+    let cx = pos.x + normX * objR;
+    let cy = pos.y + normY * objR;
 
     // Draw body
     ctx.save();
