@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aufgaben Rotationsenergie — 11NP Physik</title>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},options:{renderActions:{addMenu:[0]}}}</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'IBM Plex Sans',sans-serif;background:#0f172a;color:#e2e8f0;
+       min-height:100vh;padding:clamp(1rem,3vw,2.5rem)}
+
+  .container{max-width:800px;margin:0 auto}
+
+  header{text-align:center;margin-bottom:2rem}
+  header h1{font-size:clamp(1.4rem,4vw,2.2rem);color:#fff;margin-bottom:0.3rem}
+  header .sub{color:#8ecae6;font-size:clamp(0.9rem,2vw,1.1rem)}
+
+  /* Progress */
+  .progress-bar{background:#1e293b;border-radius:20px;height:8px;margin-bottom:2rem;overflow:hidden}
+  .progress-fill{height:100%;background:linear-gradient(90deg,#8ecae6,#00c878);border-radius:20px;transition:width 0.5s ease;width:0%}
+  .progress-text{text-align:center;color:#64748b;font-size:0.85rem;margin-bottom:1.5rem}
+
+  /* Aufgaben-Karte */
+  .aufgabe{background:#1e293b;border-radius:16px;padding:clamp(1.2rem,3vw,2rem);margin-bottom:1.5rem;
+           border:1px solid #334155;transition:border-color 0.3s}
+  .aufgabe.solved{border-color:#00c878}
+  .aufgabe-header{display:flex;align-items:center;gap:0.8rem;margin-bottom:1rem}
+  .aufgabe-nr{background:#8ecae6;color:#0f172a;font-weight:700;width:2.2rem;height:2.2rem;
+              border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+  .aufgabe.solved .aufgabe-nr{background:#00c878}
+  .aufgabe-title{font-size:clamp(1rem,2.5vw,1.3rem);font-weight:600;color:#fff}
+  .aufgabe-pts{margin-left:auto;color:#64748b;font-size:0.85rem;white-space:nowrap}
+
+  .aufgabe-text{font-size:clamp(0.9rem,2vw,1.05rem);line-height:1.7;margin-bottom:1rem;color:#cbd5e1}
+  .aufgabe-text strong{color:#fff}
+
+  /* Daten-Box */
+  .daten{background:rgba(142,202,230,0.08);border-left:3px solid #8ecae6;padding:0.6rem 1rem;
+         border-radius:0 8px 8px 0;margin-bottom:1rem;font-size:clamp(0.85rem,1.8vw,0.95rem)}
+
+  /* Buttons */
+  .btn-row{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.8rem}
+  .btn{padding:0.5rem 1.2rem;border-radius:8px;border:none;cursor:pointer;font-family:inherit;
+       font-size:clamp(0.8rem,1.8vw,0.9rem);font-weight:500;transition:all 0.2s}
+  .btn-hint{background:#334155;color:#8ecae6}
+  .btn-hint:hover{background:#3b4d63}
+  .btn-ansatz{background:#334155;color:#ffb74d}
+  .btn-ansatz:hover{background:#3b4d63}
+  .btn-loesung{background:#334155;color:#00c878}
+  .btn-loesung:hover{background:#3b4d63}
+
+  /* Aufklapp-Boxen */
+  .reveal-box{display:none;margin-top:0.8rem;padding:0.8rem 1rem;border-radius:10px;
+              font-size:clamp(0.85rem,1.8vw,1rem);line-height:1.7;animation:fadeIn 0.3s ease}
+  .reveal-box.open{display:block}
+  .hint-box{background:rgba(142,202,230,0.1);border-left:3px solid #8ecae6}
+  .ansatz-box{background:rgba(255,183,77,0.1);border-left:3px solid #ffb74d}
+  .loesung-box{background:rgba(0,200,120,0.1);border-left:3px solid #00c878}
+  .loesung-box .label{color:#00c878;font-weight:600;margin-bottom:0.3rem}
+  .hint-box .label{color:#8ecae6;font-weight:600;margin-bottom:0.3rem}
+  .ansatz-box .label{color:#ffb74d;font-weight:600;margin-bottom:0.3rem}
+
+  /* MathJax */
+  mjx-container{overflow-x:auto;max-width:100%;display:inline-block}
+
+  @keyframes fadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
+  footer{text-align:center;color:#475569;font-size:0.8rem;margin-top:2rem;padding-top:1rem;border-top:1px solid #1e293b}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Aufgaben: Rotationsenergie</h1>
+    <div class="sub">11NP Physik &middot; Lore-Lorentz-Schule</div>
+  </header>
+
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-text" id="progressText">0 von 3 gel&ouml;st</div>
+
+  <!-- ════════════ AUFGABE 1 ════════════ -->
+  <div class="aufgabe" id="a1">
+    <div class="aufgabe-header">
+      <div class="aufgabe-nr">1</div>
+      <div class="aufgabe-title">Bowlingkugel auf der Rampe</div>
+      <div class="aufgabe-pts">12 Punkte</div>
+    </div>
+    <div class="aufgabe-text">
+      Eine Bowlingkugel (\(m = 6{,}0\;\text{kg}\), \(r = 0{,}11\;\text{m}\)) rollt ohne zu gleiten eine Rampe der H&ouml;he \(h = 2{,}5\;\text{m}\) hinunter. Die Bowlingkugel kann als <strong>Vollkugel</strong> angenommen werden.
+    </div>
+    <div class="daten">
+      <strong>Gegeben:</strong> \(m = 6{,}0\;\text{kg}\), \(r = 0{,}11\;\text{m}\), \(h = 2{,}5\;\text{m}\), \(g = 9{,}81\;\text{m/s}^2\)<br>
+      <strong>Vollkugel:</strong> \(J = \tfrac{2}{5}\,m\,r^2\)
+    </div>
+    <div class="aufgabe-text">
+      <strong>a)</strong> Berechne die Geschwindigkeit \(v\) der Kugel am Fu&szlig; der Rampe.<br>
+      <strong>b)</strong> Berechne die Winkelgeschwindigkeit \(\omega\) am Fu&szlig; der Rampe.<br>
+      <strong>c)</strong> Wie gro&szlig; w&auml;ren \(E_\text{trans}\) und \(E_\text{rot}\)? Welchen Anteil hat die Rotationsenergie an der Gesamtenergie?
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-hint" onclick="toggle('a1-hint')">Hinweis</button>
+      <button class="btn btn-ansatz" onclick="toggle('a1-ansatz')">Ansatz</button>
+      <button class="btn btn-loesung" onclick="toggleLsg('a1-lsg','a1')">L&ouml;sung</button>
+    </div>
+    <div class="reveal-box hint-box" id="a1-hint">
+      <div class="label">Hinweis</div>
+      Nutze die Energieerhaltung: Die gesamte Lageenergie \(mgh\) wird in Translations- <em>und</em> Rotationsenergie umgewandelt. Verwende die Rollbedingung \(v = \omega \cdot r\), um \(\omega\) durch \(v\) zu ersetzen.
+    </div>
+    <div class="reveal-box ansatz-box" id="a1-ansatz">
+      <div class="label">Ansatz</div>
+      <strong>a)</strong> Setze \(J = \tfrac{2}{5}mr^2\) und \(\omega = v/r\) in die Energieerhaltung ein:
+      \[mgh = \frac{1}{2}mv^2 + \frac{1}{2}\cdot\frac{2}{5}mr^2\cdot\frac{v^2}{r^2}\]
+      K&uuml;rze \(m\) und \(r^2\), l&ouml;se nach \(v\) auf.<br>
+      <strong>b)</strong> Rollbedingung: \(\omega = v/r\)<br>
+      <strong>c)</strong> Setze \(v\) in \(\frac{1}{2}mv^2\) und \(\frac{1}{5}mv^2\) ein.
+    </div>
+    <div class="reveal-box loesung-box" id="a1-lsg">
+      <div class="label">L&ouml;sung</div>
+      <strong>a)</strong>
+      \[mgh = \frac{7}{10}mv^2 \quad\Rightarrow\quad v = \sqrt{\frac{10}{7}\cdot g \cdot h}\]
+      \[v = \sqrt{\frac{10}{7}\cdot 9{,}81 \cdot 2{,}5} = \sqrt{35{,}04} \approx \underline{\underline{5{,}92\;\text{m/s}}}\]
+
+      <strong>b)</strong>
+      \[\omega = \frac{v}{r} = \frac{5{,}92}{0{,}11} \approx \underline{\underline{53{,}8\;\text{rad/s}}} \;\hat{=}\; 514\;\text{min}^{-1}\]
+
+      <strong>c)</strong>
+      \[E_\text{trans} = \frac{1}{2}\cdot 6{,}0 \cdot 5{,}92^2 = \underline{\underline{105{,}1\;\text{J}}}\]
+      \[E_\text{rot} = \frac{1}{5}\cdot 6{,}0 \cdot 5{,}92^2 = \underline{\underline{42{,}1\;\text{J}}}\]
+      Anteil Rotation: \(\frac{42{,}1}{147{,}2} = 28{,}6\,\%\) &mdash; bei einer Vollkugel gehen immer \(\frac{2}{7} \approx 28{,}6\,\%\) in die Rotation!<br>
+      Probe: \(E_\text{trans} + E_\text{rot} = 147{,}2\;\text{J} = mgh = 6{,}0 \cdot 9{,}81 \cdot 2{,}5 = 147{,}2\;\text{J}\;\checkmark\)
+    </div>
+  </div>
+
+  <!-- ════════════ AUFGABE 2 ════════════ -->
+  <div class="aufgabe" id="a2">
+    <div class="aufgabe-header">
+      <div class="aufgabe-nr">2</div>
+      <div class="aufgabe-title">Schwungrad als Energiespeicher</div>
+      <div class="aufgabe-pts">10 Punkte</div>
+    </div>
+    <div class="aufgabe-text">
+      Ein zylindrisches Schwungrad (\(m = 120\;\text{kg}\), \(r = 0{,}40\;\text{m}\)) dreht sich mit \(n = 3000\;\text{min}^{-1}\).
+    </div>
+    <div class="daten">
+      <strong>Gegeben:</strong> \(m = 120\;\text{kg}\), \(r = 0{,}40\;\text{m}\), \(n = 3000\;\text{min}^{-1}\)<br>
+      <strong>Vollzylinder:</strong> \(J = \tfrac{1}{2}\,m\,r^2\)
+    </div>
+    <div class="aufgabe-text">
+      <strong>a)</strong> Berechne das Tr&auml;gheitsmoment \(J\) und die Winkelgeschwindigkeit \(\omega\).<br>
+      <strong>b)</strong> Wie viel Rotationsenergie ist im Schwungrad gespeichert?<br>
+      <strong>c)</strong> Auf welche H&ouml;he k&ouml;nnte man das Schwungrad mit dieser Energie heben?
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-hint" onclick="toggle('a2-hint')">Hinweis</button>
+      <button class="btn btn-ansatz" onclick="toggle('a2-ansatz')">Ansatz</button>
+      <button class="btn btn-loesung" onclick="toggleLsg('a2-lsg','a2')">L&ouml;sung</button>
+    </div>
+    <div class="reveal-box hint-box" id="a2-hint">
+      <div class="label">Hinweis</div>
+      Rechne zuerst die Drehzahl \(n\) in die Winkelgeschwindigkeit \(\omega\) um: \(\omega = 2\pi \cdot n\). Achte auf die Einheiten &mdash; \(n\) muss in \(\text{s}^{-1}\) eingesetzt werden!
+    </div>
+    <div class="reveal-box ansatz-box" id="a2-ansatz">
+      <div class="label">Ansatz</div>
+      <strong>a)</strong> \(J = \tfrac{1}{2}mr^2\), \(\;\omega = 2\pi \cdot \frac{n}{60}\)<br>
+      <strong>b)</strong> \(E_\text{rot} = \tfrac{1}{2}J\omega^2\)<br>
+      <strong>c)</strong> \(E_\text{rot} = mgh \;\Rightarrow\; h = \frac{E_\text{rot}}{mg}\)
+    </div>
+    <div class="reveal-box loesung-box" id="a2-lsg">
+      <div class="label">L&ouml;sung</div>
+      <strong>a)</strong>
+      \[J = \frac{1}{2}\cdot 120 \cdot 0{,}40^2 = \underline{\underline{9{,}6\;\text{kg}\cdot\text{m}^2}}\]
+      \[\omega = 2\pi \cdot \frac{3000}{60} = 2\pi \cdot 50 = \underline{\underline{314{,}2\;\text{rad/s}}}\]
+
+      <strong>b)</strong>
+      \[E_\text{rot} = \frac{1}{2}\cdot 9{,}6 \cdot 314{,}2^2 = \frac{1}{2}\cdot 9{,}6 \cdot 98\,722 \approx \underline{\underline{473{,}9\;\text{kJ}}}\]
+
+      <strong>c)</strong>
+      \[h = \frac{E_\text{rot}}{mg} = \frac{473\,900}{120 \cdot 9{,}81} = \underline{\underline{402{,}6\;\text{m}}}\]
+      Das entspricht etwa der H&ouml;he des K&ouml;lner Doms (157 m) &mdash; mal 2,5!
+    </div>
+  </div>
+
+  <!-- ════════════ AUFGABE 3 ════════════ -->
+  <div class="aufgabe" id="a3">
+    <div class="aufgabe-header">
+      <div class="aufgabe-nr">3</div>
+      <div class="aufgabe-title">Wettrennen: Dose vs. Ball</div>
+      <div class="aufgabe-pts">14 Punkte</div>
+    </div>
+    <div class="aufgabe-text">
+      Eine volle Konservendose (<strong>Vollzylinder</strong>) und ein Tennisball (<strong>Hohlkugel</strong>) rollen gleichzeitig dieselbe Rampe (\(h = 1{,}2\;\text{m}\)) hinunter. Beide starten aus der Ruhe.
+    </div>
+    <div class="daten">
+      <strong>Vollzylinder:</strong> \(J = \tfrac{1}{2}\,m\,r^2\) &emsp;
+      <strong>Hohlkugel (d&uuml;nnwandig):</strong> \(J = \tfrac{2}{3}\,m\,r^2\)
+    </div>
+    <div class="aufgabe-text">
+      <strong>a)</strong> Leite f&uuml;r beide K&ouml;rper eine Formel f&uuml;r die Geschwindigkeit \(v\) am Fu&szlig; der Rampe her.<br>
+      <strong>b)</strong> Berechne die Geschwindigkeit \(v\) f&uuml;r beide und bestimme, wer das Rennen gewinnt.<br>
+      <strong>c)</strong> Erkl&auml;re <em>ohne Rechnung</em>, warum das Ergebnis unabh&auml;ngig von Masse und Radius ist.
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-hint" onclick="toggle('a3-hint')">Hinweis</button>
+      <button class="btn btn-ansatz" onclick="toggle('a3-ansatz')">Ansatz</button>
+      <button class="btn btn-loesung" onclick="toggleLsg('a3-lsg','a3')">L&ouml;sung</button>
+    </div>
+    <div class="reveal-box hint-box" id="a3-hint">
+      <div class="label">Hinweis</div>
+      Schreibe das Tr&auml;gheitsmoment allgemein als \(J = c \cdot m \cdot r^2\), wobei \(c\) eine Formkonstante ist (z.B. \(c = \tfrac{1}{2}\) f&uuml;r Vollzylinder). Setze das in die Energieerhaltung ein und schau, was sich k&uuml;rzt!
+    </div>
+    <div class="reveal-box ansatz-box" id="a3-ansatz">
+      <div class="label">Ansatz</div>
+      Mit \(J = c\,m\,r^2\) und Rollbedingung \(\omega = v/r\):
+      \[mgh = \frac{1}{2}mv^2 + \frac{1}{2}\cdot c\,m\,r^2 \cdot \frac{v^2}{r^2} = \frac{1}{2}mv^2(1+c)\]
+      K&uuml;rze \(m\) und l&ouml;se nach \(v\) auf. Dann setze \(c = \tfrac{1}{2}\) bzw. \(c = \tfrac{2}{3}\) ein.
+    </div>
+    <div class="reveal-box loesung-box" id="a3-lsg">
+      <div class="label">L&ouml;sung</div>
+      <strong>a)</strong> Allgemeine Herleitung:
+      \[mgh = \frac{1}{2}mv^2(1+c) \quad\Rightarrow\quad v = \sqrt{\frac{2gh}{1+c}}\]
+
+      <strong>Vollzylinder</strong> (\(c = \tfrac{1}{2}\)):
+      \[v_\text{Zyl} = \sqrt{\frac{2gh}{1+\frac{1}{2}}} = \sqrt{\frac{2gh}{\frac{3}{2}}} = \sqrt{\frac{4gh}{3}}\]
+
+      <strong>Hohlkugel</strong> (\(c = \tfrac{2}{3}\)):
+      \[v_\text{HK} = \sqrt{\frac{2gh}{1+\frac{2}{3}}} = \sqrt{\frac{2gh}{\frac{5}{3}}} = \sqrt{\frac{6gh}{5}}\]
+
+      <strong>b)</strong> Einsetzen von \(h = 1{,}2\;\text{m}\):
+      \[v_\text{Zyl} = \sqrt{\frac{4 \cdot 9{,}81 \cdot 1{,}2}{3}} = \sqrt{15{,}70} = \underline{\underline{3{,}96\;\text{m/s}}}\]
+      \[v_\text{HK} = \sqrt{\frac{6 \cdot 9{,}81 \cdot 1{,}2}{5}} = \sqrt{14{,}13} = \underline{\underline{3{,}76\;\text{m/s}}}\]
+
+      <strong>Die Konservendose gewinnt!</strong> Sie hat ein kleineres \(c\), also geht weniger Energie in die Rotation.
+
+      <strong>c)</strong> In der Formel \(v = \sqrt{\frac{2gh}{1+c}}\) kommen weder \(m\) noch \(r\) vor &mdash; beides hat sich gek&uuml;rzt! Die Geschwindigkeit h&auml;ngt nur von der <strong>Massenverteilung</strong> (Form, ausgedr&uuml;ckt durch \(c\)) und der H&ouml;he \(h\) ab. Ein schwerer und ein leichter Vollzylinder kommen gleich schnell an.
+    </div>
+  </div>
+
+  <footer>
+    Lore-Lorentz-Schule &middot; Physik 11NP &middot; Rotationsenergie<br>
+    <a href="index.html" style="color:#8ecae6;text-decoration:none">&larr; Zur&uuml;ck zur &Uuml;bersicht</a>
+  </footer>
+</div>
+
+<script>
+function toggle(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+  if (el.classList.contains('open') && window.MathJax) MathJax.typesetPromise([el]);
+}
+
+let solved = new Set();
+function toggleLsg(id, aufgabeId) {
+  toggle(id);
+  const el = document.getElementById(id);
+  if (el.classList.contains('open')) {
+    solved.add(aufgabeId);
+    document.getElementById(aufgabeId).classList.add('solved');
+  }
+  updateProgress();
+}
+
+function updateProgress() {
+  const pct = (solved.size / 3) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = solved.size + ' von 3 gelöst';
+}
+</script>
+</body>
+</html>

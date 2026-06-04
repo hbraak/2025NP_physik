@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rampen-Rennen — Rotationsenergie-Simulation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'IBM Plex Sans',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
+
+  .app{max-width:900px;margin:0 auto;padding:clamp(0.8rem,2vw,2rem)}
+
+  header{text-align:center;margin-bottom:1.5rem}
+  header h1{font-size:clamp(1.3rem,3.5vw,2rem);color:#fff}
+  header .sub{color:#8ecae6;font-size:clamp(0.8rem,2vw,1rem);margin-top:0.2rem}
+
+  /* Canvas */
+  .canvas-wrap{position:relative;width:100%;aspect-ratio:16/9;background:#1e293b;border-radius:16px;
+               overflow:hidden;border:1px solid #334155;margin-bottom:1rem}
+  canvas{width:100%;height:100%;display:block}
+
+  /* Controls */
+  .controls{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-bottom:1rem}
+  @media(max-width:500px){.controls{grid-template-columns:1fr}}
+
+  .ctrl-group{background:#1e293b;border-radius:12px;padding:clamp(0.8rem,2vw,1.2rem);border:1px solid #334155}
+  .ctrl-label{font-size:clamp(0.75rem,1.5vw,0.85rem);color:#8ecae6;font-weight:600;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em}
+  .ctrl-group label{display:block;font-size:clamp(0.8rem,1.8vw,0.95rem);color:#cbd5e1;margin:0.3rem 0;cursor:pointer}
+  .ctrl-group input[type=range]{width:100%;accent-color:#8ecae6;margin:0.3rem 0}
+  .ctrl-group .val{color:#fff;font-weight:600;font-size:clamp(0.9rem,2vw,1.1rem)}
+
+  .checkbox-row{display:flex;align-items:center;gap:0.6rem}
+  .checkbox-row input[type=checkbox]{width:1.1rem;height:1.1rem;accent-color:#8ecae6}
+
+  /* Buttons */
+  .btn-row{display:flex;gap:0.6rem;flex-wrap:wrap;margin-bottom:1rem}
+  .btn{padding:0.6rem 1.5rem;border-radius:10px;border:none;cursor:pointer;font-family:inherit;
+       font-size:clamp(0.85rem,2vw,1rem);font-weight:600;transition:all 0.2s}
+  .btn-start{background:#00c878;color:#0f172a}
+  .btn-start:hover{background:#00e088}
+  .btn-reset{background:#334155;color:#e2e8f0}
+  .btn-reset:hover{background:#475569}
+  .btn:disabled{opacity:0.4;cursor:not-allowed}
+
+  /* Ergebnis */
+  .results{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.6rem}
+  .result-card{background:#1e293b;border-radius:10px;padding:0.8rem;border:1px solid #334155;text-align:center}
+  .result-card .name{font-size:clamp(0.75rem,1.5vw,0.85rem);color:#94a3b8;margin-bottom:0.3rem}
+  .result-card .value{font-size:clamp(1.1rem,2.5vw,1.4rem);font-weight:700;color:#fff}
+  .result-card .unit{font-size:clamp(0.7rem,1.3vw,0.8rem);color:#64748b}
+
+  /* Legende */
+  .legend{display:flex;flex-wrap:wrap;gap:0.8rem;justify-content:center;margin:0.8rem 0}
+  .legend-item{display:flex;align-items:center;gap:0.4rem;font-size:clamp(0.75rem,1.5vw,0.9rem)}
+  .legend-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0}
+
+  /* Energie-Balken */
+  .energy-bars{margin-top:1rem}
+  .ebar{margin-bottom:0.6rem}
+  .ebar-label{font-size:clamp(0.75rem,1.5vw,0.85rem);color:#94a3b8;margin-bottom:0.2rem;display:flex;justify-content:space-between}
+  .ebar-track{height:14px;background:#0f172a;border-radius:7px;overflow:hidden;display:flex}
+  .ebar-trans{background:#8ecae6;height:100%;transition:width 0.1s}
+  .ebar-rot{background:#ffb74d;height:100%;transition:width 0.1s}
+
+  footer{text-align:center;color:#475569;font-size:0.8rem;margin-top:1.5rem;padding-top:1rem;border-top:1px solid #1e293b}
+  footer a{color:#8ecae6;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Rampen-Rennen</h1>
+    <div class="sub">Welcher K&ouml;rper rollt schneller? &mdash; Rotationsenergie-Simulation</div>
+  </header>
+
+  <div class="canvas-wrap">
+    <canvas id="sim"></canvas>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#8ecae6"></div>Vollkugel</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#00c878"></div>Vollzylinder</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ffb74d"></div>Hohlzylinder</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ff6464"></div>Gleiten (ohne Rotation)</div>
+  </div>
+
+  <div class="controls">
+    <div class="ctrl-group">
+      <div class="ctrl-label">Rampenh&ouml;he</div>
+      <input type="range" id="heightSlider" min="0.5" max="5" step="0.1" value="2.0">
+      <div class="val"><span id="heightVal">2,0</span> m</div>
+    </div>
+    <div class="ctrl-group">
+      <div class="ctrl-label">K&ouml;rper anzeigen</div>
+      <label class="checkbox-row"><input type="checkbox" id="chkKugel" checked> Vollkugel (\(c = 2/5\))</label>
+      <label class="checkbox-row"><input type="checkbox" id="chkZylinder" checked> Vollzylinder (\(c = 1/2\))</label>
+      <label class="checkbox-row"><input type="checkbox" id="chkHohl" checked> Hohlzylinder (\(c = 1\))</label>
+      <label class="checkbox-row"><input type="checkbox" id="chkGleit" checked> Gleiten (kein \(J\))</label>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-start" id="btnStart" onclick="startSim()">&#9654; Start</button>
+    <button class="btn btn-reset" onclick="resetSim()">&#8635; Zur&uuml;ck</button>
+  </div>
+
+  <div class="energy-bars" id="energyBars"></div>
+
+  <div class="results" id="results"></div>
+
+  <footer>
+    Lore-Lorentz-Schule &middot; Physik 11NP &middot;
+    <a href="aufgaben_rotationsenergie.html">Aufgaben</a> &middot;
+    <a href="rotationsenergie.html">Herleitung</a> &middot;
+    <a href="index.html">&larr; &Uuml;bersicht</a>
+  </footer>
+</div>
+
+<script>
+const canvas = document.getElementById('sim');
+const ctx = canvas.getContext('2d');
+
+const bodies = [
+  {id:'kugel',  name:'Vollkugel',    c:2/5, color:'#8ecae6', check:'chkKugel'},
+  {id:'zyl',    name:'Vollzylinder', c:1/2, color:'#00c878', check:'chkZylinder'},
+  {id:'hohl',   name:'Hohlzylinder', c:1,   color:'#ffb74d', check:'chkHohl'},
+  {id:'gleit',  name:'Gleiten',      c:0,   color:'#ff6464', check:'chkGleit'},
+];
+
+let W, H, dpr;
+let rampH = 2.0;
+let running = false;
+let finished = false;
+let t = 0;
+let animId;
+
+// Physics scale
+const g = 9.81;
+const rampAngle = Math.PI/6; // 30°
+const rampLen = () => rampH / Math.sin(rampAngle);
+
+// Pixel geometry
+let rampTop, rampBot, flatEnd, objR;
+
+function resize() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  dpr = window.devicePixelRatio || 1;
+  W = rect.width;
+  H = rect.height;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  objR = Math.max(10, Math.min(W * 0.025, 18));
+  const margin = objR + 5;
+  const rampPixH = H * 0.6;
+  const rampPixL = rampPixH / Math.sin(rampAngle);
+
+  rampTop = {x: margin + 10, y: H * 0.15};
+  rampBot = {x: rampTop.x + rampPixL * Math.cos(rampAngle), y: rampTop.y + rampPixH};
+  flatEnd = {x: W - margin, y: rampBot.y};
+}
+
+function getActiveBodies() {
+  return bodies.filter(b => document.getElementById(b.check).checked);
+}
+
+// Position along ramp: s = distance traveled
+function bodyPos(s, rLen) {
+  const rampPixL = rampBot.x - rampTop.x;
+  const scale = rampPixL / rLen;
+  if (s * scale <= rampPixL) {
+    const frac = s / rLen;
+    return {
+      x: rampTop.x + frac * (rampBot.x - rampTop.x),
+      y: rampTop.y + frac * (rampBot.y - rampTop.y),
+      onRamp: true,
+      angle: -s / (objR / (W * 0.025) * 0.11) // visual rotation
+    };
+  } else {
+    const extra = s * scale - rampPixL;
+    return {
+      x: rampBot.x + extra,
+      y: rampBot.y,
+      onRamp: false,
+      angle: -s / (objR / (W * 0.025) * 0.11)
+    };
+  }
+}
+
+// Acceleration on ramp: a = g sin(theta) / (1 + c)
+function accel(c) {
+  return g * Math.sin(rampAngle) / (1 + c);
+}
+
+// Speed at bottom
+function vBottom(c) {
+  return Math.sqrt(2 * g * rampH / (1 + c));
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = '#1e293b';
+  ctx.fillRect(0, 0, W, H);
+
+  // Ramp
+  ctx.beginPath();
+  ctx.moveTo(rampTop.x - 5, rampTop.y);
+  ctx.lineTo(rampBot.x, rampBot.y + 3);
+  ctx.lineTo(rampTop.x - 5, rampBot.y + 3);
+  ctx.closePath();
+  ctx.fillStyle = '#334155';
+  ctx.fill();
+
+  // Ramp surface
+  ctx.beginPath();
+  ctx.moveTo(rampTop.x - 5, rampTop.y);
+  ctx.lineTo(rampBot.x, rampBot.y + 3);
+  ctx.strokeStyle = '#475569';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Ground
+  ctx.beginPath();
+  ctx.moveTo(rampBot.x, rampBot.y + 3);
+  ctx.lineTo(flatEnd.x, flatEnd.y + 3);
+  ctx.strokeStyle = '#475569';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Height label
+  ctx.save();
+  ctx.fillStyle = '#8ecae6';
+  ctx.font = `${Math.max(11, W*0.018)}px 'IBM Plex Sans'`;
+  ctx.textAlign = 'center';
+  const midY = (rampTop.y + rampBot.y) / 2;
+  ctx.fillText('h = ' + rampH.toFixed(1) + ' m', rampTop.x - 5, midY);
+
+  // Arrow
+  ctx.beginPath();
+  ctx.moveTo(rampTop.x - 25, rampTop.y + 5);
+  ctx.lineTo(rampTop.x - 25, rampBot.y - 2);
+  ctx.strokeStyle = '#8ecae680';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.restore();
+
+  // Bodies
+  const active = getActiveBodies();
+  const rLen = rampLen();
+  const laneSpacing = Math.min(objR * 2.5, 30);
+  const laneOffset = -(active.length - 1) / 2 * laneSpacing;
+
+  active.forEach((b, i) => {
+    const a = accel(b.c);
+    let s;
+    if (!running && !finished) {
+      s = 0;
+    } else {
+      s = 0.5 * a * t * t;
+    }
+
+    const pos = bodyPos(s, rLen);
+
+    // Offset perpendicular to surface for lane separation
+    const perpX = Math.sin(rampAngle);
+    const perpY = -Math.cos(rampAngle);
+    const lane = laneOffset + i * laneSpacing;
+    let cx, cy;
+    if (pos.onRamp) {
+      cx = pos.x + (pos.onRamp ? perpX * lane : 0);
+      cy = pos.y + (pos.onRamp ? perpY * lane : 0) - objR;
+    } else {
+      cx = pos.x;
+      cy = pos.y - objR + lane * 0.15;
+    }
+
+    // Draw body
+    ctx.save();
+    ctx.translate(cx, cy);
+
+    if (b.id !== 'gleit') {
+      // Rotating circle
+      ctx.beginPath();
+      ctx.arc(0, 0, objR, 0, Math.PI * 2);
+      ctx.fillStyle = b.color + '30';
+      ctx.fill();
+      ctx.strokeStyle = b.color;
+      ctx.lineWidth = b.id === 'hohl' ? 3 : 2;
+      ctx.stroke();
+
+      // Rotation indicator
+      if (b.id !== 'gleit') {
+        ctx.rotate(pos.angle);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(objR * 0.8, 0);
+        ctx.strokeStyle = b.color;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        // Second spoke
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(-objR * 0.8, 0);
+        ctx.strokeStyle = b.color + '60';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+
+      if (b.id === 'zyl') {
+        // Fill for Vollzylinder
+        ctx.beginPath();
+        ctx.arc(0, 0, objR * 0.5, 0, Math.PI * 2);
+        ctx.fillStyle = b.color + '40';
+        ctx.fill();
+      }
+    } else {
+      // Gleiten: square block
+      ctx.fillStyle = b.color + '40';
+      ctx.strokeStyle = b.color;
+      ctx.lineWidth = 2;
+      const s = objR * 1.4;
+      ctx.fillRect(-s/2, -s/2, s, s);
+      ctx.strokeRect(-s/2, -s/2, s, s);
+    }
+
+    ctx.restore();
+
+    // Label
+    ctx.fillStyle = b.color;
+    ctx.font = `${Math.max(10, W*0.015)}px 'IBM Plex Sans'`;
+    ctx.textAlign = 'left';
+    if (!running && !finished) {
+      ctx.fillText(b.name, cx + objR + 6, cy + 4);
+    }
+  });
+
+  // Update energy bars
+  if (running || finished) {
+    updateEnergy(active, rLen);
+  }
+}
+
+function updateEnergy(active, rLen) {
+  const container = document.getElementById('energyBars');
+  let html = '';
+  active.forEach(b => {
+    const a = accel(b.c);
+    const s = Math.min(0.5 * a * t * t, rLen);
+    const hCur = rampH * (1 - s / rLen);
+    const vCur = Math.min(a * t, vBottom(b.c));
+    const ePot = 1 * g * hCur; // per unit mass
+    const eTrans = 0.5 * vCur * vCur;
+    const eRot = 0.5 * b.c * vCur * vCur;
+    const eTotal = g * rampH;
+    const pctTrans = (eTrans / eTotal) * 100;
+    const pctRot = (eRot / eTotal) * 100;
+
+    html += `<div class="ebar">
+      <div class="ebar-label"><span style="color:${b.color}">${b.name}</span><span>v = ${vCur.toFixed(1)} m/s</span></div>
+      <div class="ebar-track">
+        <div class="ebar-trans" style="width:${pctTrans}%"></div>
+        <div class="ebar-rot" style="width:${pctRot}%"></div>
+      </div>
+    </div>`;
+  });
+  html += '<div style="display:flex;gap:1rem;margin-top:0.3rem;font-size:0.75rem;color:#94a3b8">' +
+    '<span><span style="color:#8ecae6">&#9632;</span> E_trans</span>' +
+    '<span><span style="color:#ffb74d">&#9632;</span> E_rot</span>' +
+    '<span style="color:#475569">&#9632; E_pot (Rest)</span></div>';
+  container.innerHTML = html;
+}
+
+function showResults() {
+  const active = getActiveBodies();
+  const container = document.getElementById('results');
+  // Sort by speed (fastest first)
+  const sorted = active.map(b => ({...b, v: vBottom(b.c)})).sort((a,b) => b.v - a.v);
+  let html = '';
+  sorted.forEach((b, i) => {
+    const medal = i === 0 ? ' 🥇' : i === 1 ? ' 🥈' : i === 2 ? ' 🥉' : '';
+    const rotPct = (b.c / (1 + b.c) * 100).toFixed(0);
+    html += `<div class="result-card" style="border-color:${b.color}">
+      <div class="name" style="color:${b.color}">${b.name}${medal}</div>
+      <div class="value">${b.v.toFixed(2)}</div>
+      <div class="unit">m/s</div>
+      <div class="name" style="margin-top:0.4rem">${rotPct}% Rotation</div>
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
+function startSim() {
+  if (running) return;
+  running = true;
+  finished = false;
+  t = 0;
+  document.getElementById('btnStart').disabled = true;
+  document.getElementById('results').innerHTML = '';
+  animate();
+}
+
+function resetSim() {
+  running = false;
+  finished = false;
+  t = 0;
+  if (animId) cancelAnimationFrame(animId);
+  document.getElementById('btnStart').disabled = false;
+  document.getElementById('results').innerHTML = '';
+  document.getElementById('energyBars').innerHTML = '';
+  draw();
+}
+
+let lastTime;
+function animate(ts) {
+  if (!lastTime) lastTime = ts;
+  const dt = Math.min((ts - lastTime) / 1000, 0.05);
+  lastTime = ts;
+  t += dt;
+
+  // Check if all bodies reached bottom
+  const active = getActiveBodies();
+  const rLen = rampLen();
+  const allDone = active.every(b => {
+    const s = 0.5 * accel(b.c) * t * t;
+    return s >= rLen * 1.3; // a bit past the ramp
+  });
+
+  draw();
+
+  if (allDone) {
+    running = false;
+    finished = true;
+    lastTime = undefined;
+    document.getElementById('btnStart').disabled = false;
+    showResults();
+    draw();
+    return;
+  }
+
+  animId = requestAnimationFrame(animate);
+}
+
+// Slider
+const slider = document.getElementById('heightSlider');
+slider.addEventListener('input', () => {
+  rampH = parseFloat(slider.value);
+  document.getElementById('heightVal').textContent = rampH.toFixed(1).replace('.', ',');
+  if (!running) { resetSim(); draw(); }
+});
+
+// Checkbox changes
+bodies.forEach(b => {
+  document.getElementById(b.check).addEventListener('change', () => {
+    if (!running) draw();
+  });
+});
+
+// Init
+window.addEventListener('resize', () => { resize(); draw(); });
+resize();
+draw();
+</script>
+</body>
+</html>
