@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rotationsenergie – Herleitung & Aufgaben</title>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],packages:{'[+]':['cancel']}},loader:{load:['[tex]/cancel']},options:{renderActions:{addMenu:[0]}}}</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'IBM Plex Sans',sans-serif;background:#1a1a2e;color:#eee;
+       height:100vh;overflow:hidden;cursor:none}
+  body.show-cursor{cursor:default}
+
+  .slide{display:none;flex-direction:column;justify-content:center;align-items:center;
+         height:100vh;padding:2rem 4rem;position:absolute;top:0;left:0;width:100%}
+  .slide.active{display:flex}
+
+  .slide-title h1{font-size:3.2rem;font-weight:700;color:#fff;text-align:center;margin-bottom:0.5rem}
+  .slide-title .sub{font-size:1.5rem;color:#8ecae6;text-align:center;font-weight:300}
+  .slide-title .date{font-size:1rem;color:#666;margin-top:2rem}
+
+  .slide-head{font-size:1.8rem;font-weight:600;color:#8ecae6;margin-bottom:1.5rem;
+              text-align:center;width:100%}
+  .step{opacity:0;transform:translateY(18px);transition:opacity 0.5s ease,transform 0.5s ease;
+        width:100%;max-width:1100px;margin:0.4rem 0;padding:0.8rem 1.5rem;
+        border-radius:10px;font-size:1.25rem;line-height:1.7}
+  .step.visible{opacity:1;transform:translateY(0)}
+
+  .step-text{background:rgba(255,255,255,0.06)}
+  .step-eq{background:rgba(142,202,230,0.1);border-left:4px solid #8ecae6;font-size:1.5rem;text-align:center;padding:1rem 1.5rem}
+  .step-result{background:rgba(0,200,120,0.12);border-left:4px solid #00c878;font-size:1.5rem;text-align:center;padding:1rem 1.5rem}
+  .step-note{background:rgba(255,183,77,0.1);border-left:4px solid #ffb74d;font-size:1.1rem;font-style:italic;color:#ffb74d}
+  .step-question{background:rgba(255,100,100,0.1);border-left:4px solid #ff6464;font-size:1.4rem;text-align:center;color:#ff8a8a}
+  .step-table{background:rgba(142,202,230,0.08);border-left:4px solid #8ecae6;padding:1rem 1.5rem}
+  .step-table table{width:100%;border-collapse:collapse;font-size:1.15rem}
+  .step-table th{background:rgba(142,202,230,0.15);padding:0.5rem 1rem;text-align:center;border:1px solid rgba(255,255,255,0.15)}
+  .step-table td{padding:0.5rem 1rem;text-align:center;border:1px solid rgba(255,255,255,0.1)}
+
+  .progress{position:fixed;bottom:0;left:0;height:4px;background:#8ecae6;transition:width 0.4s ease;z-index:100}
+  .nav-hint{position:fixed;bottom:12px;right:20px;font-size:0.8rem;color:#444;z-index:100}
+  .slide-counter{position:fixed;bottom:12px;left:20px;font-size:0.8rem;color:#444;z-index:100}
+</style>
+</head>
+<body class="show-cursor">
+
+<!-- ══════════════ SLIDE 0: Titel ══════════════ -->
+<div class="slide slide-title active" data-steps="0">
+  <h1>Rotationsenergie</h1>
+  <div class="sub">Von der Translation zur Rotation &mdash; Energieerhaltung erweitert</div>
+  <div class="date">11NP Physik &middot; Lore-Lorentz-Schule</div>
+</div>
+
+<!-- ══════════════ SLIDE 1: Analogie ══════════════ -->
+<div class="slide" data-steps="4">
+  <div class="slide-head">Die gro&szlig;e Analogie: Translation &harr; Rotation</div>
+
+  <div class="step step-text" data-step="1">
+    Ihr kennt die kinetische Energie eines K&ouml;rpers, der sich <strong>geradlinig</strong> bewegt:
+  </div>
+
+  <div class="step step-eq" data-step="2">
+    \[E_\text{kin} = \frac{1}{2}\,m\,v^2\]
+  </div>
+
+  <div class="step step-text" data-step="3">
+    Jetzt &uuml;bersetzen wir alles in die Sprache der <strong>Rotation</strong>:
+  </div>
+
+  <div class="step step-table" data-step="4">
+    <table>
+      <tr><th>Translation</th><th></th><th>Rotation</th></tr>
+      <tr><td>Masse \(m\)</td><td>&rarr;</td><td>Tr&auml;gheitsmoment \(J\)</td></tr>
+      <tr><td>Geschwindigkeit \(v\)</td><td>&rarr;</td><td>Winkelgeschwindigkeit \(\omega\)</td></tr>
+      <tr><td>\(E_\text{kin} = \tfrac{1}{2}mv^2\)</td><td>&rarr;</td><td>\(E_\text{rot} = \tfrac{1}{2}J\omega^2\)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 2: Formel ══════════════ -->
+<div class="slide" data-steps="4">
+  <div class="slide-head">Rotationsenergie</div>
+
+  <div class="step step-text" data-step="1">
+    Ein rotierender K&ouml;rper besitzt Energie &mdash; auch wenn sein Schwerpunkt stillsteht!
+  </div>
+
+  <div class="step step-result" data-step="2">
+    \[\boxed{E_\text{rot} = \frac{1}{2}\,J\,\omega^2}\]
+  </div>
+
+  <div class="step step-text" data-step="3">
+    <strong>\(J\)</strong> = Tr&auml;gheitsmoment in kg&middot;m&sup2; &mdash; <em>wie schwer</em> ist es, den K&ouml;rper zu drehen?<br>
+    <strong>\(\omega\)</strong> = Winkelgeschwindigkeit in rad/s &mdash; <em>wie schnell</em> dreht er sich?
+  </div>
+
+  <div class="step step-note" data-step="4">
+    Beispiel: Ein Schwungrad in einer Fabrik speichert Energie &mdash; rein durch Rotation, ohne sich von der Stelle zu bewegen.
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 3: Rollen ══════════════ -->
+<div class="slide" data-steps="5">
+  <div class="slide-head">Rollen = Translation + Rotation</div>
+
+  <div class="step step-text" data-step="1">
+    Wenn eine Kugel eine Rampe hinunterrollt, bewegt sie sich <strong>vorw&auml;rts</strong> (Translation) und <strong>dreht</strong> sich gleichzeitig (Rotation).
+  </div>
+
+  <div class="step step-eq" data-step="2">
+    \[E_\text{gesamt} = \underbrace{\frac{1}{2}\,m\,v^2}_{E_\text{trans}} + \underbrace{\frac{1}{2}\,J\,\omega^2}_{E_\text{rot}}\]
+  </div>
+
+  <div class="step step-text" data-step="3">
+    <strong>Rollbedingung</strong> (kein Rutschen): Der Kontaktpunkt steht still &rArr;
+  </div>
+
+  <div class="step step-result" data-step="4">
+    \[\boxed{v = \omega \cdot r} \qquad\text{bzw.}\qquad \omega = \frac{v}{r}\]
+  </div>
+
+  <div class="step step-note" data-step="5">
+    Damit k&ouml;nnen wir \(\omega\) durch \(v\) ersetzen &mdash; und alles nur mit \(v\) ausdr&uuml;cken!
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 4: Vollkugel Herleitung ══════════════ -->
+<div class="slide" data-steps="6">
+  <div class="slide-head">Beispiel: Vollkugel rollt die Rampe hinunter</div>
+
+  <div class="step step-text" data-step="1">
+    Tr&auml;gheitsmoment einer Vollkugel: \(J = \tfrac{2}{5}\,m\,r^2\)
+  </div>
+
+  <div class="step step-text" data-step="2">
+    Einsetzen in \(E_\text{rot}\) mit Rollbedingung \(\omega = v/r\):
+  </div>
+
+  <div class="step step-eq" data-step="3">
+    \[E_\text{rot} = \frac{1}{2} \cdot \frac{2}{5}\,m\,r^2 \cdot \frac{v^2}{r^2} = \frac{1}{5}\,m\,v^2\]
+  </div>
+
+  <div class="step step-text" data-step="4">
+    Gesamtenergie beim Rollen:
+  </div>
+
+  <div class="step step-eq" data-step="5">
+    \[E_\text{gesamt} = \frac{1}{2}\,m\,v^2 + \frac{1}{5}\,m\,v^2 = \frac{7}{10}\,m\,v^2\]
+  </div>
+
+  <div class="step step-note" data-step="6">
+    Die rollende Kugel braucht <strong>mehr Energie</strong> als eine gleitende! Ein Teil der Lageenergie geht in die Drehung &mdash; sie kommt unten <strong>langsamer</strong> an.
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 5: Energieerhaltung ══════════════ -->
+<div class="slide" data-steps="5">
+  <div class="slide-head">Energieerhaltung: Gleiten vs. Rollen</div>
+
+  <div class="step step-text" data-step="1">
+    Eine Kugel (Masse \(m\)) startet aus der H&ouml;he \(h\) in Ruhe. Wie schnell ist sie unten?
+  </div>
+
+  <div class="step step-text" data-step="2">
+    <strong>Fall 1: Gleiten</strong> (ohne Reibung, keine Rotation):
+  </div>
+
+  <div class="step step-eq" data-step="3">
+    \[mgh = \frac{1}{2}mv^2 \qquad\Rightarrow\qquad v_\text{gleit} = \sqrt{2gh}\]
+  </div>
+
+  <div class="step step-text" data-step="4">
+    <strong>Fall 2: Rollen</strong> (Vollkugel, \(J = \tfrac{2}{5}mr^2\)):
+  </div>
+
+  <div class="step step-eq" data-step="5">
+    \[mgh = \frac{7}{10}mv^2 \qquad\Rightarrow\qquad v_\text{roll} = \sqrt{\frac{10}{7}\,g\,h} \approx \sqrt{1{,}43\,g\,h}\]
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 6: Vergleich ══════════════ -->
+<div class="slide" data-steps="4">
+  <div class="slide-head">Vergleich: Wie viel langsamer ist Rollen?</div>
+
+  <div class="step step-eq" data-step="1">
+    \[\frac{v_\text{roll}}{v_\text{gleit}} = \sqrt{\frac{10/7}{2}} = \sqrt{\frac{5}{7}} \approx 0{,}845\]
+  </div>
+
+  <div class="step step-text" data-step="2">
+    Die rollende Kugel erreicht nur <strong>84,5%</strong> der Geschwindigkeit einer gleitenden Kugel!
+  </div>
+
+  <div class="step step-text" data-step="3">
+    <strong>Wohin geht der Rest?</strong><br>
+    &bull; Beim Gleiten: 100% in \(E_\text{trans}\)<br>
+    &bull; Beim Rollen: 71,4% in \(E_\text{trans}\), 28,6% in \(E_\text{rot}\)
+  </div>
+
+  <div class="step step-question" data-step="4">
+    Wer gewinnt das Rennen die Rampe hinunter &mdash; eine Vollkugel oder ein Hohlzylinder?
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 7: Wettrennen ══════════════ -->
+<div class="slide" data-steps="5">
+  <div class="slide-head">Das gro&szlig;e Rampen-Rennen</div>
+
+  <div class="step step-table" data-step="1">
+    <table>
+      <tr><th>K&ouml;rper</th><th>\(J\)</th><th>\(E_\text{gesamt}\)</th><th>\(v\) am Fu&szlig;</th></tr>
+      <tr><td>Gleiten (kein Drehen)</td><td>&mdash;</td><td>\(\tfrac{1}{2}mv^2\)</td><td>\(\sqrt{2gh}\)</td></tr>
+      <tr><td>Vollkugel</td><td>\(\tfrac{2}{5}mr^2\)</td><td>\(\tfrac{7}{10}mv^2\)</td><td>\(\sqrt{\tfrac{10}{7}gh}\)</td></tr>
+      <tr><td>Vollzylinder</td><td>\(\tfrac{1}{2}mr^2\)</td><td>\(\tfrac{3}{4}mv^2\)</td><td>\(\sqrt{\tfrac{4}{3}gh}\)</td></tr>
+      <tr><td>Hohlzylinder</td><td>\(mr^2\)</td><td>\(mv^2\)</td><td>\(\sqrt{gh}\)</td></tr>
+    </table>
+  </div>
+
+  <div class="step step-text" data-step="2">
+    <strong>Reihenfolge im Ziel:</strong> 1. Gleiten &gt; 2. Vollkugel &gt; 3. Vollzylinder &gt; 4. Hohlzylinder
+  </div>
+
+  <div class="step step-note" data-step="3">
+    Je mehr Masse <em>au&szlig;en</em> sitzt (gro&szlig;es \(J\)), desto mehr Energie geht in die Rotation &mdash; desto langsamer die Translation!
+  </div>
+
+  <div class="step step-text" data-step="4">
+    Und das Beste: Die <strong>Masse</strong> und der <strong>Radius</strong> k&uuml;rzen sich! Das Ergebnis h&auml;ngt nur von der <strong>Massenverteilung</strong> (Form) ab.
+  </div>
+
+  <div class="step step-question" data-step="5">
+    Testet es selbst: Lasst verschiedene Dosen und B&auml;lle eine Rampe hinunterrollen!
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 8: Zahlenbeispiel ══════════════ -->
+<div class="slide" data-steps="5">
+  <div class="slide-head">Rechenbeispiel: Kugel auf Rampe</div>
+
+  <div class="step step-question" data-step="1">
+    Eine Vollkugel (\(m = 2{,}0\;\text{kg}\), \(r = 0{,}10\;\text{m}\)) rollt aus \(h = 3{,}0\;\text{m}\) H&ouml;he los. Berechne \(v\), \(\omega\), \(E_\text{trans}\) und \(E_\text{rot}\) am Fu&szlig;.
+  </div>
+
+  <div class="step step-eq" data-step="2">
+    \[v = \sqrt{\frac{10}{7}\cdot 9{,}81 \cdot 3{,}0} = \sqrt{42{,}04} \approx \color{#00c878}{6{,}48\;\text{m/s}}\]
+  </div>
+
+  <div class="step step-eq" data-step="3">
+    \[\omega = \frac{v}{r} = \frac{6{,}48}{0{,}10} = \color{#00c878}{64{,}8\;\text{rad/s}} \quad\hat{=}\; 619\;\text{min}^{-1}\]
+  </div>
+
+  <div class="step step-eq" data-step="4">
+    \[E_\text{trans} = \frac{1}{2}\cdot 2{,}0 \cdot 6{,}48^2 = \color{#00c878}{42{,}0\;\text{J}}\]
+  </div>
+
+  <div class="step step-eq" data-step="5">
+    \[E_\text{rot} = \frac{1}{5}\cdot 2{,}0 \cdot 6{,}48^2 = \color{#00c878}{16{,}8\;\text{J}} \qquad \text{Summe: } 58{,}8\;\text{J} = mgh\;\checkmark\]
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 9: Zusammenfassung ══════════════ -->
+<div class="slide" data-steps="5">
+  <div class="slide-head">Zusammenfassung</div>
+
+  <div class="step step-result" data-step="1">
+    \[E_\text{rot} = \frac{1}{2}\,J\,\omega^2\]
+  </div>
+
+  <div class="step step-result" data-step="2">
+    Rollbedingung: \(\;v = \omega \cdot r\)
+  </div>
+
+  <div class="step step-result" data-step="3">
+    Rollen: \(\;E_\text{gesamt} = \frac{1}{2}mv^2 + \frac{1}{2}J\omega^2\)
+  </div>
+
+  <div class="step step-result" data-step="4">
+    Energieerhaltung: \(\;mgh = \frac{1}{2}mv^2 + \frac{1}{2}J\omega^2\)
+  </div>
+
+  <div class="step step-note" data-step="5">
+    Die Form entscheidet, nicht die Masse! Je weiter die Masse vom Zentrum entfernt &rarr; gr&ouml;&szlig;eres \(J\) &rarr; langsamer.
+  </div>
+</div>
+
+<!-- ── Progress bar ── -->
+<div class="progress" id="progress"></div>
+<div class="slide-counter" id="slideCounter"></div>
+<div class="nav-hint" id="navHint">&larr; &rarr; oder Klick</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+let currentSlide = 0;
+let currentStep = 0;
+let busy = false;
+let touchStartX = 0;
+
+function safeTypeset() {
+  try { if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise(); }
+  catch(e) {}
+}
+
+function updateProgress() {
+  const pct = (currentSlide / (slides.length - 1)) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+  document.getElementById('slideCounter').textContent = (currentSlide + 1) + ' / ' + slides.length;
+}
+
+function showSlide(idx) {
+  slides.forEach(s => s.classList.remove('active'));
+  slides[idx].classList.add('active');
+  slides[idx].querySelectorAll('.step').forEach(s => s.classList.remove('visible'));
+  currentStep = 0;
+  updateProgress();
+  safeTypeset();
+}
+
+function revealNextStep() {
+  const steps = slides[currentSlide].querySelectorAll('.step');
+  if (currentStep < steps.length) {
+    steps[currentStep].classList.add('visible');
+    currentStep++;
+    safeTypeset();
+    return true;
+  }
+  return false;
+}
+
+function next() {
+  if (busy) return;
+  busy = true;
+  setTimeout(() => { busy = false; }, 200);
+  if (!revealNextStep()) {
+    if (currentSlide < slides.length - 1) {
+      currentSlide++;
+      showSlide(currentSlide);
+    }
+  }
+}
+
+function prev() {
+  if (busy) return;
+  busy = true;
+  setTimeout(() => { busy = false; }, 200);
+  if (currentStep > 0) {
+    const steps = slides[currentSlide].querySelectorAll('.step');
+    currentStep--;
+    steps[currentStep].classList.remove('visible');
+  } else if (currentSlide > 0) {
+    currentSlide--;
+    showSlide(currentSlide);
+    const steps = slides[currentSlide].querySelectorAll('.step');
+    steps.forEach(s => s.classList.add('visible'));
+    currentStep = steps.length;
+  }
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); next(); }
+  if (e.key === 'ArrowLeft' || e.key === 'Backspace') { e.preventDefault(); prev(); }
+  if (e.key === 'f' || e.key === 'F') {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  }
+});
+
+document.addEventListener('touchstart', function(e) {
+  touchStartX = e.changedTouches[0].clientX;
+}, {passive: true});
+
+document.addEventListener('touchend', function(e) {
+  e.preventDefault();
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 50) { if (dx < 0) next(); else prev(); }
+  else { if (e.changedTouches[0].clientX > window.innerWidth * 0.3) next(); else prev(); }
+}, {passive: false});
+
+document.addEventListener('click', function(e) {
+  if (e.clientX > window.innerWidth * 0.3) next();
+  else prev();
+});
+
+showSlide(0);
+setTimeout(function() { document.getElementById('navHint').style.opacity = '0'; }, 4000);
+</script>
+</body>
+</html>

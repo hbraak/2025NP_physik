@@ -168,6 +168,27 @@
         </header>
         
         <div class="material-grid">
+            <a href="rotationsenergie.html" class="material-card" data-url="rotationsenergie.html">
+                <div class="card-header">
+                    <div class="card-icon green">🔄</div>
+                    <div class="card-title">Rotationsenergie — Herleitung & Aufgaben</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Von der Translation zur Rotation: E_rot = 1/2 J &omega;&sup2;, Rollbedingung, Energieerhaltung beim Rollen. Vollkugel vs. Hohlzylinder &mdash; wer gewinnt das Rampen-Rennen?
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Rotationsenergie</span>
+                            <span class="tag">Rollbedingung</span>
+                            <span class="tag">Energieerhaltung</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-rotationsenergie"></div>
+                </div>
+            </a>
+
             <a href="20260527_Station1_Kreisbewegung.html" class="material-card" data-url="20260527_Station1_Kreisbewegung.html">
                 <div class="card-header">
                     <div class="card-icon blue">🏍️</div>
@@ -612,6 +633,7 @@
         
         // QR-Codes generieren wenn Seite geladen
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-rotationsenergie', 'rotationsenergie.html');
             generateQR('qr-station1', '20260527_Station1_Kreisbewegung.html');
             generateQR('qr-station2', '20260527_Station2_Traegheitsmoment.html');
             generateQR('qr-station3', '20260527_Station3_Looping.html');
