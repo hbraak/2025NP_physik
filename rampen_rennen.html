@@ -398,9 +398,10 @@ function startSim() {
   running = true;
   finished = false;
   t = 0;
+  lastTime = undefined;
   document.getElementById('btnStart').disabled = true;
   document.getElementById('results').innerHTML = '';
-  animate();
+  animId = requestAnimationFrame(animate);
 }
 
 function resetSim() {
