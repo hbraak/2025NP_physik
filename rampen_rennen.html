@@ -154,12 +154,17 @@ function resize() {
 
   objR = Math.max(10, Math.min(W * 0.025, 18));
   const margin = objR + 5;
-  const rampPixH = H * 0.6;
+
+  // Rampenhöhe skaliert mit dem Slider (0.5–5m → 15%–75% der Canvas-Höhe)
+  const hFrac = 0.15 + (rampH - 0.5) / (5 - 0.5) * 0.60;
+  const rampPixH = H * hFrac;
   const rampPixL = rampPixH / Math.sin(rampAngle);
 
-  rampTop = {x: margin + 10, y: H * 0.15};
-  rampBot = {x: rampTop.x + rampPixL * Math.cos(rampAngle), y: rampTop.y + rampPixH};
-  flatEnd = {x: W - margin, y: rampBot.y};
+  // Boden immer unten, Rampe wächst nach oben
+  const groundY = H * 0.88;
+  rampBot = {x: margin + 10 + rampPixL * Math.cos(rampAngle), y: groundY};
+  rampTop = {x: margin + 10, y: groundY - rampPixH};
+  flatEnd = {x: W - margin, y: groundY};
 }
 
 function getActiveBodies() {
@@ -441,7 +446,7 @@ const slider = document.getElementById('heightSlider');
 slider.addEventListener('input', () => {
   rampH = parseFloat(slider.value);
   document.getElementById('heightVal').textContent = rampH.toFixed(1).replace('.', ',');
-  if (!running) { resetSim(); draw(); }
+  if (!running) { resize(); resetSim(); }
 });
 
 // Checkbox changes
