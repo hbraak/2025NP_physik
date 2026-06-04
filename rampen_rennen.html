@@ -176,7 +176,7 @@ function bodyPos(s, rLen) {
       x: rampTop.x + frac * (rampBot.x - rampTop.x),
       y: rampTop.y + frac * (rampBot.y - rampTop.y),
       onRamp: true,
-      angle: -s / (objR / (W * 0.025) * 0.11) // visual rotation
+      angle: s / (objR / (W * 0.025) * 0.11) // visual rotation
     };
   } else {
     const extra = s * scale - rampPixL;
@@ -184,7 +184,7 @@ function bodyPos(s, rLen) {
       x: rampBot.x + extra,
       y: rampBot.y,
       onRamp: false,
-      angle: -s / (objR / (W * 0.025) * 0.11)
+      angle: s / (objR / (W * 0.025) * 0.11)
     };
   }
 }
