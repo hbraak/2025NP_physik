@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vollzylinder — Schalenmethode</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'IBM Plex Sans',sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
+  .app{max-width:960px;margin:0 auto;padding:clamp(0.8rem,2vw,2rem)}
+
+  header{text-align:center;margin-bottom:1.2rem}
+  header h1{font-size:clamp(1.3rem,3.5vw,2rem);color:#fff}
+  header .sub{color:#8ecae6;font-size:clamp(0.8rem,2vw,1rem);margin-top:0.2rem}
+
+  .views{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+  @media(max-width:600px){.views{grid-template-columns:1fr}}
+
+  .view-box{background:#1e293b;border-radius:16px;overflow:hidden;border:1px solid #334155;position:relative}
+  .view-box .label{position:absolute;top:8px;left:12px;font-size:0.75rem;color:#8ecae6;font-weight:600;
+    text-transform:uppercase;letter-spacing:0.05em;z-index:1}
+  canvas{width:100%;height:100%;display:block}
+
+  .controls{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-bottom:1rem}
+  @media(max-width:500px){.controls{grid-template-columns:1fr}}
+  .ctrl-group{background:#1e293b;border-radius:12px;padding:clamp(0.8rem,2vw,1.2rem);border:1px solid #334155}
+  .ctrl-label{font-size:clamp(0.75rem,1.5vw,0.85rem);color:#8ecae6;font-weight:600;margin-bottom:0.5rem;
+    text-transform:uppercase;letter-spacing:0.05em}
+  .ctrl-group input[type=range]{width:100%;accent-color:#8ecae6;margin:0.3rem 0}
+  .ctrl-group .val{color:#fff;font-weight:600;font-size:clamp(0.9rem,2vw,1.1rem)}
+
+  .btn-row{display:flex;gap:0.6rem;flex-wrap:wrap;margin-bottom:1rem}
+  .btn{padding:0.6rem 1.5rem;border-radius:10px;border:none;cursor:pointer;font-family:inherit;
+    font-size:clamp(0.85rem,2vw,1rem);font-weight:600;transition:all 0.2s}
+  .btn-play{background:#00c878;color:#0f172a}
+  .btn-play:hover{background:#00e088}
+  .btn-reset{background:#334155;color:#e2e8f0}
+  .btn-reset:hover{background:#475569}
+  .btn-mode{background:#7c3aed;color:#fff}
+  .btn-mode:hover{background:#8b5cf6}
+  .btn.active{box-shadow:0 0 0 2px #8ecae6}
+
+  .formulas{background:#1e293b;border-radius:12px;padding:clamp(0.8rem,2vw,1.2rem);border:1px solid #334155;
+    margin-bottom:1rem}
+  .formula-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem;align-items:center}
+  .formula-item{text-align:center;flex:1;min-width:200px}
+  .formula-item .ftitle{font-size:0.75rem;color:#94a3b8;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.3rem}
+  .formula-item .fmath{font-size:clamp(0.9rem,2vw,1.1rem);color:#fff}
+  .highlight-v{color:#8ecae6}
+  .highlight-j{color:#ffb74d}
+  .highlight-shell{color:#00c878}
+
+  .info-bar{display:flex;flex-wrap:wrap;gap:0.6rem;margin-bottom:1rem}
+  .info-card{background:#1e293b;border-radius:10px;padding:0.6rem 1rem;border:1px solid #334155;flex:1;min-width:120px;text-align:center}
+  .info-card .ic-label{font-size:0.7rem;color:#94a3b8;margin-bottom:0.2rem}
+  .info-card .ic-val{font-size:clamp(1rem,2.5vw,1.3rem);font-weight:700;color:#fff}
+
+  footer{text-align:center;color:#475569;font-size:0.8rem;margin-top:1.5rem;padding-top:1rem;border-top:1px solid #1e293b}
+  footer a{color:#8ecae6;text-decoration:none}
+</style>
+<script>
+  MathJax = {tex:{inlineMath:[['\\(','\\)']]},svg:{fontCache:'global'}};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>Vollzylinder &mdash; Schalenmethode</h1>
+    <div class="sub">Zerlegung in Hohlzylinder-Schalen f&uuml;r Volumen &amp; Tr&auml;gheitsmoment</div>
+  </header>
+
+  <div class="views">
+    <div class="view-box" style="aspect-ratio:1/1">
+      <div class="label">Draufsicht (Querschnitt)</div>
+      <canvas id="cvTop"></canvas>
+    </div>
+    <div class="view-box" style="aspect-ratio:1/1">
+      <div class="label">Seitenansicht</div>
+      <canvas id="cvSide"></canvas>
+    </div>
+  </div>
+
+  <div class="info-bar">
+    <div class="info-card">
+      <div class="ic-label">Aktuelle Schale r</div>
+      <div class="ic-val" id="infoR">0,0 cm</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-label">Schalenvolumen dV</div>
+      <div class="ic-val highlight-v" id="infoDV">&mdash;</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-label">Summe V(r)</div>
+      <div class="ic-val highlight-v" id="infoV">0</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-label">Summe J(r)</div>
+      <div class="ic-val highlight-j" id="infoJ">0</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="ctrl-group">
+      <div class="ctrl-label">Anzahl Schalen</div>
+      <input type="range" id="sliderN" min="3" max="30" step="1" value="8">
+      <div class="val"><span id="valN">8</span> Schalen</div>
+    </div>
+    <div class="ctrl-group">
+      <div class="ctrl-label">Schale hervorheben</div>
+      <input type="range" id="sliderK" min="0" max="7" step="1" value="3">
+      <div class="val">Schale <span id="valK">4</span> von <span id="valKmax">8</span></div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-play" id="btnAnimate" onclick="toggleAnim()">&#9654; Animation</button>
+    <button class="btn btn-reset" onclick="resetAll()">&#8635; Zur&uuml;ck</button>
+    <button class="btn btn-mode" id="btnMode" onclick="toggleMode()">Modus: Volumen</button>
+  </div>
+
+  <div class="formulas">
+    <div class="formula-row">
+      <div class="formula-item">
+        <div class="ftitle">Schalenvolumen</div>
+        <div class="fmath">\(dV = 2\pi r \cdot dr \cdot L\)</div>
+      </div>
+      <div class="formula-item">
+        <div class="ftitle">Gesamtvolumen</div>
+        <div class="fmath">\(\displaystyle V = \int_0^R 2\pi r\,L\,dr = \pi R^2 L\)</div>
+      </div>
+      <div class="formula-item">
+        <div class="ftitle">Tr&auml;gheitsmoment</div>
+        <div class="fmath">\(\displaystyle J = \int_0^R r^2\,\rho\,2\pi r\,L\,dr = \tfrac{1}{2}mR^2\)</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Lore-Lorentz-Schule &middot; Physik/Mathe 12NP &middot;
+    <a href="index.html">&larr; &Uuml;bersicht</a>
+  </footer>
+</div>
+
+<script>
+// === CONFIG ===
+const R_cm = 8;    // Zylinderradius in cm
+const L_cm = 15;   // Zylinderlänge in cm
+const rho = 2.7;   // g/cm³ (Aluminium)
+
+let N = 8;         // Anzahl Schalen
+let K = 3;         // hervorgehobene Schale (0-basiert)
+let mode = 'volume'; // 'volume' oder 'inertia'
+let animRunning = false;
+let animId = null;
+let animK = 0;
+let animDir = 1;
+
+// Canvases
+const cvTop = document.getElementById('cvTop');
+const cvSide = document.getElementById('cvSide');
+const ctxT = cvTop.getContext('2d');
+const ctxS = cvSide.getContext('2d');
+
+function resize() {
+  [cvTop, cvSide].forEach(cv => {
+    const rect = cv.parentElement.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    cv.width = rect.width * dpr;
+    cv.height = rect.height * dpr;
+    cv.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0);
+    cv._w = rect.width;
+    cv._h = rect.height;
+  });
+  draw();
+}
+
+function shellColor(i, total, highlighted) {
+  if (i === highlighted) return '#00c878';
+  // Gradient from inside to outside
+  const t = i / (total - 1);
+  if (mode === 'volume') {
+    // Blue gradient
+    const r = Math.round(30 + t * 100);
+    const g = Math.round(100 + t * 100);
+    const b = Math.round(180 + t * 60);
+    return `rgb(${r},${g},${b})`;
+  } else {
+    // Orange gradient (more orange = more r² contribution)
+    const r = Math.round(180 + t * 75);
+    const g = Math.round(120 + t * 50);
+    const b = Math.round(40 - t * 20);
+    return `rgb(${r},${g},${b})`;
+  }
+}
+
+function drawTop() {
+  const W = cvTop._w, H = cvTop._h;
+  const cx = W / 2, cy = H / 2;
+  const scale = Math.min(W, H) * 0.4 / R_cm;
+
+  ctxT.clearRect(0, 0, W, H);
+  ctxT.fillStyle = '#1e293b';
+  ctxT.fillRect(0, 0, W, H);
+
+  const dr = R_cm / N;
+
+  // Draw shells from outside in
+  for (let i = N - 1; i >= 0; i--) {
+    const rOuter = (i + 1) * dr * scale;
+    const rInner = i * dr * scale;
+    const col = shellColor(i, N, K);
+
+    // Ring
+    ctxT.beginPath();
+    ctxT.arc(cx, cy, rOuter, 0, Math.PI * 2);
+    ctxT.arc(cx, cy, rInner, 0, Math.PI * 2, true);
+    ctxT.fillStyle = col + (i === K ? 'cc' : '55');
+    ctxT.fill();
+
+    ctxT.beginPath();
+    ctxT.arc(cx, cy, rOuter, 0, Math.PI * 2);
+    ctxT.strokeStyle = col;
+    ctxT.lineWidth = i === K ? 2.5 : 0.8;
+    ctxT.stroke();
+  }
+
+  // Inner circle border
+  ctxT.beginPath();
+  ctxT.arc(cx, cy, dr * scale * 0.02, 0, Math.PI * 2);
+  ctxT.fillStyle = '#475569';
+  ctxT.fill();
+
+  // Highlighted shell annotations
+  const rMid = (K + 0.5) * dr * scale;
+  const rOuter = (K + 1) * dr * scale;
+  const rInner = K * dr * scale;
+
+  // r arrow
+  ctxT.beginPath();
+  ctxT.moveTo(cx, cy);
+  ctxT.lineTo(cx + rMid, cy);
+  ctxT.strokeStyle = '#00c878';
+  ctxT.lineWidth = 2;
+  ctxT.setLineDash([4, 3]);
+  ctxT.stroke();
+  ctxT.setLineDash([]);
+
+  // r label
+  ctxT.fillStyle = '#00c878';
+  ctxT.font = `bold ${Math.max(12, W * 0.035)}px 'IBM Plex Sans'`;
+  ctxT.textAlign = 'center';
+  ctxT.fillText('r', cx + rMid / 2, cy - 8);
+
+  // dr bracket
+  const angle = -Math.PI / 4;
+  const x1 = cx + rInner * Math.cos(angle);
+  const y1 = cy + rInner * Math.sin(angle);
+  const x2 = cx + rOuter * Math.cos(angle);
+  const y2 = cy + rOuter * Math.sin(angle);
+  ctxT.beginPath();
+  ctxT.moveTo(x1, y1);
+  ctxT.lineTo(x2, y2);
+  ctxT.strokeStyle = '#fff';
+  ctxT.lineWidth = 2;
+  ctxT.stroke();
+
+  // dr label
+  const xMid = (x1 + x2) / 2;
+  const yMid = (y1 + y2) / 2;
+  ctxT.fillStyle = '#fff';
+  ctxT.font = `bold ${Math.max(11, W * 0.03)}px 'IBM Plex Sans'`;
+  ctxT.fillText('dr', xMid + 12, yMid - 4);
+
+  // R label
+  ctxT.beginPath();
+  ctxT.moveTo(cx, cy);
+  const aR = Math.PI / 6;
+  ctxT.lineTo(cx + R_cm * scale * Math.cos(aR), cy - R_cm * scale * Math.sin(aR));
+  ctxT.strokeStyle = '#8ecae680';
+  ctxT.lineWidth = 1;
+  ctxT.setLineDash([3, 3]);
+  ctxT.stroke();
+  ctxT.setLineDash([]);
+  ctxT.fillStyle = '#8ecae6';
+  ctxT.font = `${Math.max(12, W * 0.035)}px 'IBM Plex Sans'`;
+  ctxT.fillText('R', cx + R_cm * scale * 0.5 * Math.cos(aR) - 5, cy - R_cm * scale * 0.5 * Math.sin(aR) - 6);
+}
+
+function drawSide() {
+  const W = cvSide._w, H = cvSide._h;
+  const scaleR = Math.min(W, H) * 0.35 / R_cm;
+  const scaleL = Math.min(W, H) * 0.6 / L_cm;
+  const scale = Math.min(scaleR, scaleL);
+
+  const cx = W / 2;
+  const top = H * 0.15;
+  const bot = top + L_cm * scale;
+
+  ctxS.clearRect(0, 0, W, H);
+  ctxS.fillStyle = '#1e293b';
+  ctxS.fillRect(0, 0, W, H);
+
+  const dr = R_cm / N;
+
+  // Draw shells from outside in (side view = rectangles)
+  for (let i = N - 1; i >= 0; i--) {
+    const rOuter = (i + 1) * dr * scale;
+    const rInner = i * dr * scale;
+    const col = shellColor(i, N, K);
+
+    // Left half
+    ctxS.fillStyle = col + (i === K ? 'cc' : '44');
+    ctxS.fillRect(cx - rOuter, top, rOuter - rInner, bot - top);
+    // Right half
+    ctxS.fillRect(cx + rInner, top, rOuter - rInner, bot - top);
+
+    // Borders
+    ctxS.strokeStyle = col;
+    ctxS.lineWidth = i === K ? 2.5 : 0.5;
+    ctxS.strokeRect(cx - rOuter, top, rOuter - rInner, bot - top);
+    ctxS.strokeRect(cx + rInner, top, rOuter - rInner, bot - top);
+  }
+
+  // Highlight shell — explode it slightly
+  if (true) {
+    const rO = (K + 1) * dr * scale;
+    const rI = K * dr * scale;
+    const explode = 6;
+
+    ctxS.strokeStyle = '#00c878';
+    ctxS.lineWidth = 2.5;
+    ctxS.setLineDash([4, 3]);
+    // Left
+    ctxS.strokeRect(cx - rO - explode, top - explode, rO - rI, bot - top + 2 * explode);
+    // Right
+    ctxS.strokeRect(cx + rI + explode, top - explode, rO - rI, bot - top + 2 * explode);
+    ctxS.setLineDash([]);
+  }
+
+  // Axis
+  ctxS.beginPath();
+  ctxS.moveTo(cx, top - 15);
+  ctxS.lineTo(cx, bot + 15);
+  ctxS.strokeStyle = '#47556980';
+  ctxS.lineWidth = 1;
+  ctxS.setLineDash([3, 3]);
+  ctxS.stroke();
+  ctxS.setLineDash([]);
+
+  // L bracket
+  const xBr = cx + R_cm * scale + 15;
+  ctxS.beginPath();
+  ctxS.moveTo(xBr, top);
+  ctxS.lineTo(xBr, bot);
+  ctxS.strokeStyle = '#8ecae680';
+  ctxS.lineWidth = 1;
+  ctxS.stroke();
+  // Arrow heads
+  ctxS.beginPath();
+  ctxS.moveTo(xBr - 4, top + 6);
+  ctxS.lineTo(xBr, top);
+  ctxS.lineTo(xBr + 4, top + 6);
+  ctxS.strokeStyle = '#8ecae680';
+  ctxS.stroke();
+  ctxS.beginPath();
+  ctxS.moveTo(xBr - 4, bot - 6);
+  ctxS.lineTo(xBr, bot);
+  ctxS.lineTo(xBr + 4, bot - 6);
+  ctxS.stroke();
+
+  ctxS.fillStyle = '#8ecae6';
+  ctxS.font = `${Math.max(12, W * 0.035)}px 'IBM Plex Sans'`;
+  ctxS.textAlign = 'center';
+  ctxS.fillText('L', xBr + 12, (top + bot) / 2 + 4);
+}
+
+function updateInfo() {
+  const dr = R_cm / N;
+  const r = (K + 0.5) * dr;  // Mittlerer Radius der Schale
+  const rO = (K + 1) * dr;
+  const rI = K * dr;
+
+  // Schalenvolumen: 2π r dr L (Näherung) oder exakt π(rO²-rI²)L
+  const dV = Math.PI * (rO * rO - rI * rI) * L_cm; // cm³
+  // Cumulative V up to shell K
+  let Vcum = Math.PI * rO * rO * L_cm;
+  // Cumulative J
+  let Jcum = 0;
+  const m_total = rho * Math.PI * R_cm * R_cm * L_cm;
+  for (let i = 0; i <= K; i++) {
+    const ro = (i + 1) * dr;
+    const ri = i * dr;
+    const dm = rho * Math.PI * (ro * ro - ri * ri) * L_cm;
+    const rm = (ro + ri) / 2;
+    Jcum += dm * rm * rm;
+  }
+
+  document.getElementById('infoR').textContent = r.toFixed(1).replace('.', ',') + ' cm';
+  document.getElementById('infoDV').textContent = dV.toFixed(1).replace('.', ',') + ' cm\u00B3';
+  document.getElementById('infoV').textContent = Vcum.toFixed(0).replace('.', ',') + ' cm\u00B3';
+
+  // J in g·cm² -> convert to kg·m² for display? Let's keep g·cm²
+  document.getElementById('infoJ').textContent = Jcum.toFixed(0) + ' g\u00B7cm\u00B2';
+}
+
+function draw() {
+  drawTop();
+  drawSide();
+  updateInfo();
+}
+
+// Slider N
+const sliderN = document.getElementById('sliderN');
+sliderN.addEventListener('input', () => {
+  N = parseInt(sliderN.value);
+  document.getElementById('valN').textContent = N;
+  // Adjust K
+  const sliderK = document.getElementById('sliderK');
+  sliderK.max = N - 1;
+  if (K >= N) K = N - 1;
+  sliderK.value = K;
+  document.getElementById('valK').textContent = K + 1;
+  document.getElementById('valKmax').textContent = N;
+  draw();
+});
+
+// Slider K
+const sliderK = document.getElementById('sliderK');
+sliderK.addEventListener('input', () => {
+  K = parseInt(sliderK.value);
+  document.getElementById('valK').textContent = K + 1;
+  draw();
+});
+
+// Mode toggle
+function toggleMode() {
+  mode = mode === 'volume' ? 'inertia' : 'volume';
+  document.getElementById('btnMode').textContent =
+    mode === 'volume' ? 'Modus: Volumen' : 'Modus: Tr\u00E4gheitsmoment';
+  draw();
+}
+
+// Animation
+function toggleAnim() {
+  if (animRunning) {
+    animRunning = false;
+    cancelAnimationFrame(animId);
+    document.getElementById('btnAnimate').innerHTML = '&#9654; Animation';
+    return;
+  }
+  animRunning = true;
+  animK = 0;
+  animDir = 1;
+  document.getElementById('btnAnimate').innerHTML = '&#9724; Stopp';
+  let lastStep = 0;
+  function step(ts) {
+    if (!animRunning) return;
+    if (ts - lastStep > 500) {
+      K = animK;
+      sliderK.value = K;
+      document.getElementById('valK').textContent = K + 1;
+      draw();
+      animK += animDir;
+      if (animK >= N) { animDir = -1; animK = N - 2; }
+      if (animK < 0) { animDir = 1; animK = 1; }
+      lastStep = ts;
+    }
+    animId = requestAnimationFrame(step);
+  }
+  animId = requestAnimationFrame(step);
+}
+
+function resetAll() {
+  animRunning = false;
+  if (animId) cancelAnimationFrame(animId);
+  document.getElementById('btnAnimate').innerHTML = '&#9654; Animation';
+  N = 8; K = 3; mode = 'volume';
+  sliderN.value = N;
+  sliderK.value = K;
+  sliderK.max = N - 1;
+  document.getElementById('valN').textContent = N;
+  document.getElementById('valK').textContent = K + 1;
+  document.getElementById('valKmax').textContent = N;
+  document.getElementById('btnMode').textContent = 'Modus: Volumen';
+  draw();
+}
+
+window.addEventListener('resize', resize);
+resize();
+</script>
+</body>
+</html>

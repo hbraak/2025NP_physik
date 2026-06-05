@@ -189,6 +189,28 @@
                 </div>
             </a>
 
+            <a href="vollzylinder_schalen.html" class="material-card" data-url="vollzylinder_schalen.html">
+                <div class="card-header">
+                    <div class="card-icon purple">&#x1f9e9;</div>
+                    <div class="card-title">Vollzylinder &mdash; Schalenmethode</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Interaktive Zerlegung eines Vollzylinders in Hohlzylinder-Schalen. Draufsicht &amp; Seitenansicht, Volumen und Tr&auml;gheitsmoment Schritt f&uuml;r Schritt aufbauen.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Schalenmethode</span>
+                            <span class="tag">Rotationsintegral</span>
+                            <span class="tag">Tr&auml;gheitsmoment</span>
+                            <span class="tag">Interaktiv</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-schalen"></div>
+                </div>
+            </a>
+
             <a href="aufgaben_rotationsenergie.html" class="material-card" data-url="aufgaben_rotationsenergie.html">
                 <div class="card-header">
                     <div class="card-icon blue">📝</div>
@@ -678,6 +700,7 @@
         // QR-Codes generieren wenn Seite geladen
         document.addEventListener('DOMContentLoaded', function() {
             generateQR('qr-rotationsenergie', 'rotationsenergie.html');
+            generateQR('qr-schalen', 'vollzylinder_schalen.html');
             generateQR('qr-aufgaben-rot', 'aufgaben_rotationsenergie.html');
             generateQR('qr-rampen-rennen', 'rampen_rennen.html');
             generateQR('qr-station1', '20260527_Station1_Kreisbewegung.html');
