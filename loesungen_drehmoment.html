@@ -787,6 +787,158 @@
   </div>
 </div>
 
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- KNOBELAUFGABE 7: Winkel                                 -->
+<!-- ════════════════════════════════════════════════════════ -->
+<div class="task knobel" id="k3">
+  <div class="task-header" onclick="toggleTask('k3')">
+    <span class="icon">🧠</span>
+    <h2>Knobelaufgabe 7: Der schiefe Tritt <span class="knobel-badge">KNOBEL</span></h2>
+    <span class="chevron">▸</span>
+  </div>
+  <div class="task-body">
+
+    <div class="aufgabe-text">
+
+      <svg viewBox="0 0 400 260" style="width:100%;max-width:360px;display:block;margin:0 auto 1rem">
+        <!-- Pedal-Arm -->
+        <line x1="200" y1="200" x2="200" y2="60" stroke="#e2e8f0" stroke-width="4" stroke-linecap="round"/>
+        <!-- Drehpunkt -->
+        <circle cx="200" cy="200" r="8" fill="#ffb74d" stroke="#e2e8f0" stroke-width="2"/>
+        <text x="215" y="215" fill="#ffb74d" font-size="13">Achse</text>
+        <!-- Pedal -->
+        <rect x="185" y="48" width="30" height="12" rx="3" fill="#64748b"/>
+        <!-- Kraft-Pfeil (schräg, 60°) -->
+        <line x1="200" y1="55" x2="130" y2="95" stroke="#ff6464" stroke-width="3" marker-end="url(#arrowR)"/>
+        <text x="115" y="100" fill="#ff6464" font-size="14" font-weight="600">F = 120 N</text>
+        <!-- Winkel-Bogen -->
+        <path d="M 200,80 A 25,25 0 0,0 183,90" fill="none" stroke="#00c878" stroke-width="2"/>
+        <text x="172" y="82" fill="#00c878" font-size="14" font-weight="600">&alpha; = 60&deg;</text>
+        <!-- r-Beschriftung -->
+        <line x1="206" y1="200" x2="206" y2="60" stroke="#8ecae6" stroke-width="1" stroke-dasharray="4"/>
+        <text x="212" y="135" fill="#8ecae6" font-size="13">r = 18 cm</text>
+        <!-- Arrow marker -->
+        <defs>
+          <marker id="arrowR" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6" fill="#ff6464"/>
+          </marker>
+        </defs>
+      </svg>
+
+      Ein Radfahrer tritt mit \(F = 120\;\text{N}\) auf das Pedal. Die Pedalkurbel ist \(r = 18\;\text{cm}\) lang. Der Fu&szlig; dr&uuml;ckt aber nicht senkrecht, sondern unter einem Winkel von \(\alpha = 60°\) zur Kurbel.<br><br>
+
+      <strong>a)</strong> Berechnen Sie das Drehmoment. Warum ist es <em>nicht</em> einfach \(120 \cdot 0{,}18\)?<br>
+      <strong>b)</strong> Bei welchem Winkel \(\alpha\) w&auml;re das Drehmoment maximal? Wie gro&szlig; w&auml;re es dann?<br>
+      <strong>c)</strong> Der Radfahrer tritt mit gleicher Kraft, aber die Kurbel steht jetzt fast oben (Totpunkt, \(\alpha = 10°\)). Berechnen Sie das Drehmoment und vergleichen Sie mit Teilaufgabe a).<br>
+      <strong>d)</strong> Erkl&auml;ren Sie mit der Formel, warum Radfahrer &bdquo;runde Tritte&ldquo; trainieren und Klickpedale benutzen.
+    </div>
+
+    <!-- 7a -->
+    <div class="subtask">
+      <div class="subtask-label">a) Drehmoment bei \(\alpha = 60°\)</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp: Warum nicht einfach \(F \cdot r\)?</span>
+        </button>
+        <div class="hint-content tipp">
+          Nur die Komponente der Kraft, die <strong>senkrecht</strong> zur Kurbel steht, erzeugt ein Drehmoment. Die Komponente entlang der Kurbel &bdquo;dr&uuml;ckt&ldquo; nur auf die Achse.<br>
+          Allgemeine Formel: \(M = F \cdot r \cdot \sin(\alpha)\)
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>📝</span><span class="label">Rechenweg</span>
+        </button>
+        <div class="hint-content schritt">
+          \[M = F \cdot r \cdot \sin(\alpha) = 120\;\text{N} \cdot 0{,}18\;\text{m} \cdot \sin(60°)\]
+          \[M = 120 \cdot 0{,}18 \cdot 0{,}866\]
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>✅</span><span class="label">L&ouml;sung</span>
+        </button>
+        <div class="hint-content antwort">
+          \[M = 18{,}7\;\text{Nm}\]
+          Zum Vergleich: W&auml;re die Kraft senkrecht (\(90°\)), g&auml;be es \(21{,}6\;\text{Nm}\). Durch den schr&auml;gen Tritt &bdquo;verschenkt&ldquo; man ca. 13% des Drehmoments!
+        </div>
+      </div>
+    </div>
+
+    <!-- 7b -->
+    <div class="subtask">
+      <div class="subtask-label">b) Maximales Drehmoment</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp</span>
+        </button>
+        <div class="hint-content tipp">
+          Wann wird \(\sin(\alpha)\) maximal? Denken Sie an den Graphen der Sinusfunktion.
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>✅</span><span class="label">L&ouml;sung</span>
+        </button>
+        <div class="hint-content antwort">
+          \(\sin(\alpha)\) ist maximal bei \(\alpha = 90°\), dann gilt \(\sin(90°) = 1\).
+          \[M_\text{max} = 120 \cdot 0{,}18 \cdot 1 = 21{,}6\;\text{Nm}\]
+          → Senkrecht treten ist am effizientesten!
+        </div>
+      </div>
+    </div>
+
+    <!-- 7c -->
+    <div class="subtask">
+      <div class="subtask-label">c) Am Totpunkt (\(\alpha = 10°\))</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp</span>
+        </button>
+        <div class="hint-content tipp">
+          Gleiche Formel, nur \(\alpha = 10°\). Wie gro&szlig; ist \(\sin(10°)\)?
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>📝</span><span class="label">Rechenweg</span>
+        </button>
+        <div class="hint-content schritt">
+          \[M = 120 \cdot 0{,}18 \cdot \sin(10°) = 21{,}6 \cdot 0{,}174\]
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>✅</span><span class="label">L&ouml;sung</span>
+        </button>
+        <div class="hint-content antwort">
+          \[M = 3{,}75\;\text{Nm}\]
+          Das ist nur <strong>17% des Maximalwerts</strong> und nur <strong>20% von Teilaufgabe a)</strong>!<br>
+          Am Totpunkt geht fast die gesamte Kraft in die Achse statt ins Drehen &mdash; man tritt quasi &bdquo;ins Leere&ldquo;.
+        </div>
+      </div>
+    </div>
+
+    <!-- 7d -->
+    <div class="subtask">
+      <div class="subtask-label">d) Warum &bdquo;runde Tritte&ldquo; und Klickpedale?</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp</span>
+        </button>
+        <div class="hint-content tipp">
+          Denken Sie an den Winkel \(\alpha\) w&auml;hrend einer ganzen Pedalumdrehung. Wann ist \(\sin(\alpha)\) klein, wann gro&szlig;?
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>✅</span><span class="label">Musterantwort</span>
+        </button>
+        <div class="hint-content antwort">
+          Beim normalen Treten wirkt die Kraft nur in der &bdquo;Power-Phase&ldquo; (Kurbel ca. 1–5 Uhr) effektiv.<br>
+          Am <strong>oberen und unteren Totpunkt</strong> ist \(\alpha \approx 0°\) → \(\sin(\alpha) \approx 0\) → fast kein Drehmoment!<br><br>
+          <strong>Klickpedale</strong> erlauben es, den Fu&szlig; auch nach oben zu <strong>ziehen</strong>. So kann man &uuml;ber die Totpunkte hinweg Kraft aus&uuml;ben und den Winkel \(\alpha\) &uuml;ber die gesamte Umdrehung m&ouml;glichst nahe an \(90°\) halten → h&ouml;heres <strong>mittleres Drehmoment</strong>.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 </div><!-- /container -->
 
 <!-- ── Footer ── -->
