@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drehmoment – Lösungen &amp; Knobelaufgaben</title>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},options:{renderActions:{addMenu:[0]}}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'IBM Plex Sans',sans-serif;background:#0f172a;color:#e2e8f0;
+       min-height:100vh;overflow-x:hidden;line-height:1.6}
+
+  /* ── Layout ── */
+  .container{max-width:900px;margin:0 auto;padding:1.5rem clamp(1rem,3vw,2rem) 6rem}
+
+  /* ── Header ── */
+  .page-header{text-align:center;padding:2rem 0 1.5rem;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:2rem}
+  .page-header h1{font-size:clamp(1.4rem,4vw,2.2rem);font-weight:700;color:#fff;margin-bottom:0.3rem}
+  .page-header .sub{font-size:clamp(0.85rem,2vw,1.1rem);color:#8ecae6;font-weight:300}
+
+  /* ── Aufgaben-Karten ── */
+  .task{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);
+        border-radius:12px;margin-bottom:1.5rem;overflow:hidden}
+  .task-header{padding:0.9rem 1.2rem;cursor:pointer;display:flex;align-items:center;gap:0.8rem;
+               transition:background 0.2s}
+  .task-header:hover{background:rgba(255,255,255,0.05)}
+  .task-header .icon{font-size:1.3rem}
+  .task-header h2{font-size:clamp(0.95rem,2.2vw,1.2rem);font-weight:600;flex:1}
+  .task-header .chevron{font-size:1.2rem;transition:transform 0.3s;color:#64748b}
+  .task.open .task-header .chevron{transform:rotate(90deg)}
+  .task-body{display:none;padding:0 1.2rem 1rem}
+  .task.open .task-body{display:block}
+
+  /* ── Aufgabentext ── */
+  .aufgabe-text{background:rgba(142,202,230,0.08);border-left:4px solid #8ecae6;
+                padding:0.7rem 1rem;border-radius:0 8px 8px 0;margin-bottom:1rem;
+                font-size:clamp(0.85rem,1.8vw,1rem);color:#94a3b8}
+
+  /* ── Teilaufgaben ── */
+  .subtask{margin-bottom:1.2rem}
+  .subtask-label{font-weight:600;color:#8ecae6;font-size:clamp(0.9rem,2vw,1.05rem);margin-bottom:0.4rem}
+
+  /* ── Hilfe-Buttons ── */
+  .hints{display:flex;flex-direction:column;gap:0.4rem}
+  .hint-btn{background:none;border:1px solid rgba(255,183,77,0.3);color:#ffb74d;
+            padding:0.45rem 0.9rem;border-radius:8px;cursor:pointer;text-align:left;
+            font-family:inherit;font-size:clamp(0.8rem,1.6vw,0.92rem);transition:all 0.2s;
+            display:flex;align-items:center;gap:0.5rem}
+  .hint-btn:hover{background:rgba(255,183,77,0.1);border-color:rgba(255,183,77,0.5)}
+  .hint-btn .label{font-weight:500}
+  .hint-btn.revealed{border-color:rgba(255,183,77,0.15);color:#a07030;cursor:default}
+  .hint-btn.revealed:hover{background:none}
+
+  .hint-content{display:none;padding:0.6rem 0.9rem;margin-top:0.2rem;border-radius:8px;
+                font-size:clamp(0.85rem,1.7vw,1rem);animation:fadeIn 0.4s ease}
+  .hint-content.visible{display:block}
+
+  .hint-content.tipp{background:rgba(255,183,77,0.08);border-left:3px solid #ffb74d;color:#ffd699}
+  .hint-content.schritt{background:rgba(142,202,230,0.08);border-left:3px solid #8ecae6}
+  .hint-content.loesung{background:rgba(0,200,120,0.08);border-left:3px solid #00c878}
+  .hint-content.antwort{background:rgba(0,200,120,0.12);border-left:3px solid #00c878;
+                        font-weight:500;font-size:clamp(0.95rem,2vw,1.15rem)}
+
+  @keyframes fadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
+  /* ── Knobelaufgaben ── */
+  .knobel-badge{display:inline-block;background:rgba(255,100,100,0.15);color:#ff8a8a;
+                padding:0.15rem 0.6rem;border-radius:99px;font-size:0.75rem;font-weight:600;
+                margin-left:0.5rem;vertical-align:middle}
+  .task.knobel{border-color:rgba(255,100,100,0.2)}
+  .task.knobel .task-header h2{color:#ff8a8a}
+
+  /* ── MathJax ── */
+  mjx-container{overflow-x:auto;max-width:100%;display:inline-block}
+
+  /* ── Footer ── */
+  .footer-links{position:fixed;bottom:0;left:0;right:0;background:rgba(15,23,42,0.95);
+                backdrop-filter:blur(8px);border-top:1px solid rgba(255,255,255,0.08);
+                display:flex;justify-content:center;gap:1.5rem;padding:0.6rem;z-index:100}
+  .footer-links a{color:#64748b;text-decoration:none;font-size:0.85rem;transition:color 0.3s}
+  .footer-links a:hover{color:#8ecae6}
+
+  /* ── Alle öffnen/schließen ── */
+  .toggle-all{background:rgba(142,202,230,0.1);border:1px solid rgba(142,202,230,0.3);
+              color:#8ecae6;padding:0.5rem 1.2rem;border-radius:8px;cursor:pointer;
+              font-family:inherit;font-size:0.9rem;margin-bottom:1.5rem;transition:all 0.2s}
+  .toggle-all:hover{background:rgba(142,202,230,0.2)}
+
+  /* ── Mobile ── */
+  @media(max-width:600px){
+    .container{padding:1rem 0.7rem 5rem}
+    .task-header{padding:0.7rem 0.8rem}
+    .task-body{padding:0 0.8rem 0.8rem}
+    .aufgabe-text{padding:0.5rem 0.7rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- HEADER                                                  -->
+<!-- ════════════════════════════════════════════════════════ -->
+<div class="page-header">
+  <h1>🔧 Drehmoment &mdash; L&ouml;sungen &amp; Knobeleien</h1>
+  <div class="sub">Gestufte Hilfen: Tipp → Rechenweg → L&ouml;sung</div>
+</div>
+
+<button class="toggle-all" onclick="toggleAll()">Alle Aufgaben aufklappen</button>
+
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- AUFGABE 1: Radmutter                                    -->
+<!-- ════════════════════════════════════════════════════════ -->
+<div class="task" id="a1">
+  <div class="task-header" onclick="toggleTask('a1')">
+    <span class="icon">🔩</span>
+    <h2>Aufgabe 1: Radmutter anziehen</h2>
+    <span class="chevron">▸</span>
+  </div>
+  <div class="task-body">
+
+    <div class="aufgabe-text">
+      Radmutter: \(M = 120\;\text{Nm}\), Kraft senkrecht (\(\alpha = 90°\)).
+    </div>
+
+    <!-- 1a -->
+    <div class="subtask">
+      <div class="subtask-label">a) Schl&uuml;ssel mit \(r = 30\;\text{cm}\)</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp 1: Welche Formel?</span>
+        </button>
+        <div class="hint-content tipp">
+          Da \(\alpha = 90°\) und \(\sin(90°) = 1\), vereinfacht sich die Formel zu: \(M = F \cdot r\). Stellen Sie nach \(F\) um.
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>📐</span><span class="label">Tipp 2: Einheiten!</span>
+        </button>
+        <div class="hint-content tipp">
+          Rechnen Sie den Hebelarm in Meter um: \(30\;\text{cm} = 0{,}30\;\text{m}\).
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>📝</span><span class="label">Rechenweg</span>
+        </button>
+        <div class="hint-content schritt">
+          \[F = \frac{M}{r} = \frac{120\;\text{Nm}}{0{,}30\;\text{m}}\]
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>✅</span><span class="label">L&ouml;sung</span>
+        </button>
+        <div class="hint-content antwort">
+          \[F = 400\;\text{N}\]
+          Das entspricht etwa der Gewichtskraft von 40&thinsp;kg &mdash; ordentlich viel!
+        </div>
+      </div>
+    </div>
+
+    <!-- 1b -->
+    <div class="subtask">
+      <div class="subtask-label">b) Radkreuz mit \(r = 50\;\text{cm}\)</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp</span>
+        </button>
+        <div class="hint-content tipp">
+          Gleiche Formel, nur \(r = 0{,}50\;\text{m}\). Wie &auml;ndert sich \(F\)?
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>📝</span><span class="label">Rechenweg</span>
+        </button>
+        <div class="hint-content schritt">
+          \[F = \frac{120\;\text{Nm}}{0{,}50\;\text{m}}\]
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>✅</span><span class="label">L&ouml;sung</span>
+        </button>
+        <div class="hint-content antwort">
+          \[F = 240\;\text{N}\]
+          L&auml;ngerer Hebel → weniger Kraft n&ouml;tig. Verh&auml;ltnis: \(\frac{50}{30} = \frac{5}{3}\), also \(\frac{3}{5}\) der Kraft.
+        </div>
+      </div>
+    </div>
+
+    <!-- 1c -->
+    <div class="subtask">
+      <div class="subtask-label">c) Warum Drehmomentschl&uuml;ssel?</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp</span>
+        </button>
+        <div class="hint-content tipp">
+          Was passiert, wenn man zu fest oder zu locker anzieht? Denken Sie an Sicherheit.
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>✅</span><span class="label">Musterantwort</span>
+        </button>
+        <div class="hint-content antwort">
+          <strong>Zu fest:</strong> Gewinde kann besch&auml;digt werden, Bolzen kann brechen.<br>
+          <strong>Zu locker:</strong> Rad kann sich l&ouml;sen → Unfallgefahr!<br>
+          Der Drehmomentschl&uuml;ssel klickt bei exakt \(120\;\text{Nm}\) und verhindert &Uuml;ber-/Unterspannung.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- AUFGABE 2: Brechstange                                  -->
+<!-- ════════════════════════════════════════════════════════ -->
+<div class="task" id="a2">
+  <div class="task-header" onclick="toggleTask('a2')">
+    <span class="icon">🪛</span>
+    <h2>Aufgabe 2: Brechstange</h2>
+    <span class="chevron">▸</span>
+  </div>
+  <div class="task-body">
+
+    <div class="aufgabe-text">
+      Brechstange: \(r = 80\;\text{cm}\), \(F = 250\;\text{N}\) senkrecht. Bolzen l&ouml;st sich bei \(M = 150\;\text{Nm}\).
+    </div>
+
+    <!-- 2a -->
+    <div class="subtask">
+      <div class="subtask-label">a) Erzeugtes Drehmoment</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp</span>
+        </button>
+        <div class="hint-content tipp">
+          Senkrecht heißt \(\alpha = 90°\). Setzen Sie in \(M = F \cdot r\) ein. Einheiten beachten!
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>📝</span><span class="label">Rechenweg</span>
+        </button>
+        <div class="hint-content schritt">
+          \[M = F \cdot r = 250\;\text{N} \cdot 0{,}80\;\text{m}\]
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>✅</span><span class="label">L&ouml;sung</span>
+        </button>
+        <div class="hint-content antwort">
+          \[M = 200\;\text{Nm}\]
+        </div>
+      </div>
+    </div>
+
+    <!-- 2b -->
+    <div class="subtask">
+      <div class="subtask-label">b) Reicht die Kraft?</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp</span>
+        </button>
+        <div class="hint-content tipp">
+          Vergleichen Sie: Ist das erzeugte \(M\) gr&ouml;&szlig;er als die ben&ouml;tigten \(150\;\text{Nm}\)?
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>✅</span><span class="label">L&ouml;sung</span>
+        </button>
+        <div class="hint-content antwort">
+          <strong>Ja!</strong> \(200\;\text{Nm} > 150\;\text{Nm}\) &mdash; der Bolzen l&ouml;st sich. Es bleiben sogar \(50\;\text{Nm}\) Reserve.
+        </div>
+      </div>
+    </div>
+
+    <!-- 2c -->
+    <div class="subtask">
+      <div class="subtask-label">c) Zwei M&ouml;glichkeiten, \(M\) zu erh&ouml;hen</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp</span>
+        </button>
+        <div class="hint-content tipp">
+          Schauen Sie die Formel an: \(M = F \cdot r\). An welchen Stellschrauben k&ouml;nnen Sie drehen?
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>✅</span><span class="label">L&ouml;sung</span>
+        </button>
+        <div class="hint-content antwort">
+          <strong>1.</strong> Gr&ouml;&szlig;ere Kraft \(F\) aufbringen (z.&thinsp;B. mit K&ouml;rpergewicht dr&uuml;cken).<br>
+          <strong>2.</strong> L&auml;ngeren Hebel \(r\) verwenden (z.&thinsp;B. Rohr &uuml;ber die Brechstange schieben = &bdquo;Verl&auml;ngerung&ldquo;).
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- AUFGABE 3: Schwungrad                                   -->
+<!-- ════════════════════════════════════════════════════════ -->
+<div class="task" id="a3">
+  <div class="task-header" onclick="toggleTask('a3')">
+    <span class="icon">⚙️</span>
+    <h2>Aufgabe 3: Schwungrad anwerfen</h2>
+    <span class="chevron">▸</span>
+  </div>
+  <div class="task-body">
+
+    <div class="aufgabe-text">
+      Schwungrad: \(J = 0{,}5\;\text{kg·m}^2\), Ziel: \(\omega = 60\;\text{rad/s}\), \(M = 10\;\text{Nm}\).
+    </div>
+
+    <!-- 3a -->
+    <div class="subtask">
+      <div class="subtask-label">a) Winkelbeschleunigung \(\alpha\)</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp: Welches Gesetz?</span>
+        </button>
+        <div class="hint-content tipp">
+          Newton f&uuml;r Rotation: \(M = J \cdot \alpha\). L&ouml;sen Sie nach \(\alpha\) auf.
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>📝</span><span class="label">Rechenweg</span>
+        </button>
+        <div class="hint-content schritt">
+          \[\alpha = \frac{M}{J} = \frac{10\;\text{Nm}}{0{,}5\;\text{kg·m}^2}\]
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>✅</span><span class="label">L&ouml;sung</span>
+        </button>
+        <div class="hint-content antwort">
+          \[\alpha = 20\;\frac{\text{rad}}{\text{s}^2}\]
+        </div>
+      </div>
+    </div>
+
+    <!-- 3b -->
+    <div class="subtask">
+      <div class="subtask-label">b) Zeit bis Zieldrehzahl</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp: Analogie zur Translation</span>
+        </button>
+        <div class="hint-content tipp">
+          \(\omega = \alpha \cdot t\) ist das Rotations-Analogon zu \(v = a \cdot t\). Stellen Sie nach \(t\) um.
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>📝</span><span class="label">Rechenweg</span>
+        </button>
+        <div class="hint-content schritt">
+          \[t = \frac{\omega}{\alpha} = \frac{60\;\text{rad/s}}{20\;\text{rad/s}^2}\]
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>✅</span><span class="label">L&ouml;sung</span>
+        </button>
+        <div class="hint-content antwort">
+          \[t = 3\;\text{s}\]
+          In nur 3 Sekunden auf voller Drehzahl!
+        </div>
+      </div>
+    </div>
+
+    <!-- 3c -->
+    <div class="subtask">
+      <div class="subtask-label">c) Rotationsenergie</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp: Formel</span>
+        </button>
+        <div class="hint-content tipp">
+          \(E_\text{rot} = \frac{1}{2}\,J\,\omega^2\) &mdash; Analogon zu \(E_\text{kin} = \frac{1}{2}\,m\,v^2\).
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>📝</span><span class="label">Rechenweg</span>
+        </button>
+        <div class="hint-content schritt">
+          \[E_\text{rot} = \frac{1}{2} \cdot 0{,}5\;\text{kg·m}^2 \cdot (60)^2\;\frac{\text{rad}^2}{\text{s}^2} = \frac{1}{2} \cdot 0{,}5 \cdot 3600\]
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>✅</span><span class="label">L&ouml;sung</span>
+        </button>
+        <div class="hint-content antwort">
+          \[E_\text{rot} = 900\;\text{J}\]
+          Das reicht, um eine 90&thinsp;kg-Person ca. 1&thinsp;m hochzuheben!
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- AUFGABE 4: Kran (Stern)                                 -->
+<!-- ════════════════════════════════════════════════════════ -->
+<div class="task" id="a4">
+  <div class="task-header" onclick="toggleTask('a4')">
+    <span class="icon">⭐</span>
+    <h2>Aufgabe 4: Kran mit Seiltrommel</h2>
+    <span class="chevron">▸</span>
+  </div>
+  <div class="task-body">
+
+    <div class="aufgabe-text">
+      Kran: \(m = 200\;\text{kg}\), Seiltrommel \(r = 15\;\text{cm}\), \(J = 2\;\text{kg·m}^2\), \(g = 9{,}81\;\text{m/s}^2\).
+    </div>
+
+    <!-- 4a -->
+    <div class="subtask">
+      <div class="subtask-label">a) Drehmoment f&uuml;r konstante Geschwindigkeit</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp 1: Was passiert bei konstanter Geschwindigkeit?</span>
+        </button>
+        <div class="hint-content tipp">
+          Konstante Geschwindigkeit → keine Beschleunigung → Gleichgewicht. Die Seilkraft muss genau die Gewichtskraft ausgleichen: \(F_\text{Seil} = m \cdot g\).
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp 2: Vom Seil zum Drehmoment</span>
+        </button>
+        <div class="hint-content tipp">
+          Das Seil zieht am Rand der Trommel (Radius \(r\)) und erzeugt ein Drehmoment: \(M = F_\text{Seil} \cdot r\).
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>📝</span><span class="label">Rechenweg</span>
+        </button>
+        <div class="hint-content schritt">
+          \[M = m \cdot g \cdot r = 200\;\text{kg} \cdot 9{,}81\;\frac{\text{m}}{\text{s}^2} \cdot 0{,}15\;\text{m}\]
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>✅</span><span class="label">L&ouml;sung</span>
+        </button>
+        <div class="hint-content antwort">
+          \[M = 294{,}3\;\text{Nm} \approx 294\;\text{Nm}\]
+        </div>
+      </div>
+    </div>
+
+    <!-- 4b -->
+    <div class="subtask">
+      <div class="subtask-label">b) Zus&auml;tzliches Drehmoment f&uuml;r Beschleunigung</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp: Zwei Anteile!</span>
+        </button>
+        <div class="hint-content tipp">
+          Jetzt wird die Trommel beschleunigt (\(\alpha = 4\;\text{rad/s}^2\)). Das zus&auml;tzliche Drehmoment kommt aus \(M = J \cdot \alpha\).
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>📝</span><span class="label">Rechenweg</span>
+        </button>
+        <div class="hint-content schritt">
+          \[M_\text{zusätzlich} = J \cdot \alpha = 2\;\text{kg·m}^2 \cdot 4\;\frac{\text{rad}}{\text{s}^2}\]
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>✅</span><span class="label">L&ouml;sung</span>
+        </button>
+        <div class="hint-content antwort">
+          \[M_\text{zusätzlich} = 8\;\text{Nm}\]
+          <br>
+          <strong>Gesamt:</strong> \(M_\text{ges} = 294 + 8 = 302\;\text{Nm}\)<br>
+          <em>Beachte: Die 8&thinsp;Nm sind nur ~3% des Gesamtdrehmoments. Die Tr&auml;gheit der Trommel spielt hier kaum eine Rolle &mdash; die Last dominiert!</em>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- KNOBELAUFGABE 5: Wippe                                  -->
+<!-- ════════════════════════════════════════════════════════ -->
+<div class="task knobel" id="k1">
+  <div class="task-header" onclick="toggleTask('k1')">
+    <span class="icon">🧠</span>
+    <h2>Knobelaufgabe 5: Die unfaire Wippe <span class="knobel-badge">KNOBEL</span></h2>
+    <span class="chevron">▸</span>
+  </div>
+  <div class="task-body">
+
+    <div class="aufgabe-text">
+      Zwei Freunde sitzen auf einer 4&thinsp;m langen Wippe. Ahmed (\(m_1 = 80\;\text{kg}\)) sitzt ganz am rechten Ende, 2&thinsp;m vom Drehpunkt.
+      Bea (\(m_2 = 55\;\text{kg}\)) sitzt links, ebenfalls 2&thinsp;m vom Drehpunkt.<br><br>
+      <strong>a)</strong> In welche Richtung kippt die Wippe?<br>
+      <strong>b)</strong> Wo muss der Drehpunkt verschoben werden, damit Gleichgewicht herrscht?<br>
+      <strong>c)</strong> Alternativ: Bea nimmt ihren 12&thinsp;kg schweren Rucksack auf den Scho&szlig;. Wo m&uuml;sste sie jetzt sitzen (Drehpunkt wieder in der Mitte)?<br>
+      <strong>d)</strong> Bea springt pl&ouml;tzlich ab. Mit welcher Winkelbeschleunigung kippt Ahmeds Seite nach unten, wenn der Balken ein Tr&auml;gheitsmoment von \(J_\text{Balken} = 40\;\text{kg·m}^2\) hat?
+    </div>
+
+    <!-- 5a -->
+    <div class="subtask">
+      <div class="subtask-label">a) Kipprichtung</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp</span>
+        </button>
+        <div class="hint-content tipp">
+          Berechnen Sie die Drehmomente beider Seiten: \(M = F_G \cdot r\). Die Seite mit dem gr&ouml;&szlig;eren Drehmoment kippt nach unten.
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>✅</span><span class="label">L&ouml;sung</span>
+        </button>
+        <div class="hint-content antwort">
+          \(M_\text{Ahmed} = 80 \cdot 9{,}81 \cdot 2 = 1569{,}6\;\text{Nm}\)<br>
+          \(M_\text{Bea} = 55 \cdot 9{,}81 \cdot 2 = 1079{,}1\;\text{Nm}\)<br><br>
+          Die Wippe kippt nach <strong>rechts</strong> (Ahmeds Seite).
+        </div>
+      </div>
+    </div>
+
+    <!-- 5b -->
+    <div class="subtask">
+      <div class="subtask-label">b) Drehpunkt verschieben</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp: Hebelgesetz aufstellen</span>
+        </button>
+        <div class="hint-content tipp">
+          Nennen Sie den Abstand Drehpunkt–Ahmed \(r_1\) und Drehpunkt–Bea \(r_2 = 4 - r_1\).<br>
+          Gleichgewicht: \(m_1 \cdot r_1 = m_2 \cdot r_2\)
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>📝</span><span class="label">Rechenweg</span>
+        </button>
+        <div class="hint-content schritt">
+          \[80 \cdot r_1 = 55 \cdot (4 - r_1)\]
+          \[80\,r_1 = 220 - 55\,r_1\]
+          \[135\,r_1 = 220\]
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>✅</span><span class="label">L&ouml;sung</span>
+        </button>
+        <div class="hint-content antwort">
+          \[r_1 = \frac{220}{135} \approx 1{,}63\;\text{m}\]
+          Der Drehpunkt muss ca. <strong>37&thinsp;cm Richtung Ahmed</strong> verschoben werden (von 2,0&thinsp;m auf 1,63&thinsp;m zu Ahmed).
+        </div>
+      </div>
+    </div>
+
+    <!-- 5c -->
+    <div class="subtask">
+      <div class="subtask-label">c) Bea mit Rucksack (\(12\;\text{kg}\))</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp</span>
+        </button>
+        <div class="hint-content tipp">
+          Bea + Rucksack = \(67\;\text{kg}\). Drehpunkt ist wieder in der Mitte, Ahmed bei \(r = 2\;\text{m}\).<br>
+          \(80 \cdot 2 = 67 \cdot r_\text{Bea}\). L&ouml;sen nach \(r_\text{Bea}\).
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>✅</span><span class="label">L&ouml;sung</span>
+        </button>
+        <div class="hint-content antwort">
+          \[r_\text{Bea} = \frac{80 \cdot 2}{67} = \frac{160}{67} \approx 2{,}39\;\text{m}\]
+          Bea m&uuml;sste <strong>39&thinsp;cm weiter au&szlig;en</strong> sitzen &mdash; aber die Wippe ist nur 2&thinsp;m lang auf ihrer Seite! ❌<br>
+          <em>→ Der Rucksack reicht nicht aus, um das Gleichgewicht herzustellen.</em>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5d -->
+    <div class="subtask">
+      <div class="subtask-label">d) Bea springt ab &mdash; Winkelbeschleunigung</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp 1: Resultierendes Drehmoment?</span>
+        </button>
+        <div class="hint-content tipp">
+          Wenn Bea weg ist, wirkt nur noch Ahmeds Gewichtskraft als Drehmoment: \(M = m_1 \cdot g \cdot r_1\).
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp 2: Gesamtes Tr&auml;gheitsmoment</span>
+        </button>
+        <div class="hint-content tipp">
+          Ahmed als Punktmasse auf der Wippe: \(J_\text{ges} = J_\text{Balken} + m_1 \cdot r_1^2\)
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>📝</span><span class="label">Rechenweg</span>
+        </button>
+        <div class="hint-content schritt">
+          \[M = 80 \cdot 9{,}81 \cdot 2 = 1569{,}6\;\text{Nm}\]
+          \[J_\text{ges} = 40 + 80 \cdot 2^2 = 40 + 320 = 360\;\text{kg·m}^2\]
+          \[\alpha = \frac{M}{J_\text{ges}} = \frac{1569{,}6}{360}\]
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>✅</span><span class="label">L&ouml;sung</span>
+        </button>
+        <div class="hint-content antwort">
+          \[\alpha \approx 4{,}36\;\frac{\text{rad}}{\text{s}^2}\]
+          Das ist &uuml;berraschend heftig &mdash; die Wippe knallt schnell nach unten! Deshalb: Nie einfach abspringen. 😄
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════ -->
+<!-- KNOBELAUFGABE 6: Mobile                                 -->
+<!-- ════════════════════════════════════════════════════════ -->
+<div class="task knobel" id="k2">
+  <div class="task-header" onclick="toggleTask('k2')">
+    <span class="icon">🧠</span>
+    <h2>Knobelaufgabe 6: Das Mobile <span class="knobel-badge">KNOBEL</span></h2>
+    <span class="chevron">▸</span>
+  </div>
+  <div class="task-body">
+
+    <div class="aufgabe-text">
+      Ein Mobile besteht aus drei Ebenen. An jedem waagerechten Stab h&auml;ngt ein Faden, der den Stab im Gleichgewicht h&auml;lt.<br><br>
+
+      <svg viewBox="0 0 480 340" style="width:100%;max-width:420px;display:block;margin:0 auto 1rem">
+        <!-- Aufhängung -->
+        <line x1="240" y1="10" x2="240" y2="40" stroke="#8ecae6" stroke-width="2"/>
+        <circle cx="240" cy="10" r="4" fill="#8ecae6"/>
+
+        <!-- Ebene 1 -->
+        <line x1="120" y1="40" x2="360" y2="40" stroke="#e2e8f0" stroke-width="3"/>
+        <circle cx="240" cy="40" r="5" fill="#ffb74d"/>
+        <text x="242" y="35" fill="#ffb74d" font-size="12" text-anchor="start">Aufh&auml;ngung</text>
+
+        <!-- Links: Gewicht 300g -->
+        <line x1="120" y1="40" x2="120" y2="90" stroke="#8ecae6" stroke-width="1.5"/>
+        <rect x="100" y="90" width="40" height="30" rx="5" fill="#1565C0" opacity="0.6"/>
+        <text x="120" y="110" fill="#fff" font-size="13" text-anchor="middle">300 g</text>
+
+        <!-- Rechts: Stab 2 -->
+        <line x1="360" y1="40" x2="360" y2="80" stroke="#8ecae6" stroke-width="1.5"/>
+
+        <!-- Ebene 2 -->
+        <line x1="260" y1="80" x2="440" y2="80" stroke="#e2e8f0" stroke-width="3"/>
+        <circle cx="360" cy="80" r="5" fill="#ffb74d"/>
+        <text x="362" y="75" fill="#ffb74d" font-size="11" text-anchor="start">?</text>
+
+        <!-- Links Ebene 2: Gewicht ? -->
+        <line x1="260" y1="80" x2="260" y2="130" stroke="#8ecae6" stroke-width="1.5"/>
+        <rect x="240" y="130" width="40" height="30" rx="5" fill="#ff6464" opacity="0.5"/>
+        <text x="260" y="150" fill="#fff" font-size="13" text-anchor="middle">? g</text>
+
+        <!-- Rechts Ebene 2: Stab 3 -->
+        <line x1="440" y1="80" x2="440" y2="120" stroke="#8ecae6" stroke-width="1.5"/>
+
+        <!-- Ebene 3 -->
+        <line x1="370" y1="120" x2="460" y2="120" stroke="#e2e8f0" stroke-width="3"/>
+        <circle cx="440" cy="120" r="5" fill="#ffb74d"/>
+        <text x="442" y="115" fill="#ffb74d" font-size="11" text-anchor="start">Mitte</text>
+
+        <!-- Links Ebene 3 -->
+        <line x1="370" y1="120" x2="370" y2="170" stroke="#8ecae6" stroke-width="1.5"/>
+        <rect x="350" y="170" width="40" height="30" rx="5" fill="#1565C0" opacity="0.6"/>
+        <text x="370" y="190" fill="#fff" font-size="13" text-anchor="middle">100 g</text>
+
+        <!-- Rechts Ebene 3 -->
+        <line x1="460" y1="120" x2="460" y2="170" stroke="#8ecae6" stroke-width="1.5"/>
+        <rect x="440" y="170" width="40" height="30" rx="5" fill="#1565C0" opacity="0.6"/>
+        <text x="460" y="190" fill="#fff" font-size="13" text-anchor="middle">100 g</text>
+
+        <!-- Maße -->
+        <text x="120" y="58" fill="#94a3b8" font-size="11" text-anchor="middle">120 cm</text>
+        <line x1="122" y1="47" x2="238" y2="47" stroke="#475569" stroke-width="0.8" stroke-dasharray="3"/>
+
+        <text x="360" y="58" fill="#94a3b8" font-size="11" text-anchor="middle">120 cm</text>
+        <line x1="242" y1="47" x2="358" y2="47" stroke="#475569" stroke-width="0.8" stroke-dasharray="3"/>
+
+        <text x="310" y="98" fill="#94a3b8" font-size="11" text-anchor="middle">100 cm</text>
+        <line x1="262" y1="87" x2="358" y2="87" stroke="#475569" stroke-width="0.8" stroke-dasharray="3"/>
+
+        <text x="400" y="98" fill="#94a3b8" font-size="11" text-anchor="middle">80 cm</text>
+        <line x1="362" y1="87" x2="438" y2="87" stroke="#475569" stroke-width="0.8" stroke-dasharray="3"/>
+
+        <text x="405" y="138" fill="#94a3b8" font-size="11" text-anchor="middle">70 cm</text>
+        <line x1="372" y1="127" x2="438" y2="127" stroke="#475569" stroke-width="0.8" stroke-dasharray="3"/>
+
+        <text x="450" y="138" fill="#94a3b8" font-size="11" text-anchor="middle">20 cm</text>
+        <line x1="442" y1="127" x2="458" y2="127" stroke="#475569" stroke-width="0.8" stroke-dasharray="3"/>
+      </svg>
+
+      <strong>a)</strong> An der untersten Ebene h&auml;ngen links \(100\;\text{g}\) und rechts \(100\;\text{g}\). Der Stab ist 90&thinsp;cm lang, links 70&thinsp;cm und rechts 20&thinsp;cm. Ist dieser Stab im Gleichgewicht?<br>
+      <strong>b)</strong> Die gesamte Ebene 3 h&auml;ngt an der rechten Seite von Ebene 2 (80&thinsp;cm vom Aufh&auml;ngepunkt). Links h&auml;ngt ein unbekanntes Gewicht (100&thinsp;cm vom Aufh&auml;ngepunkt). Wie schwer muss es sein?<br>
+      <strong>c)</strong> Die gesamte Ebene 2 h&auml;ngt an der rechten Seite von Ebene 1 (120&thinsp;cm vom Aufh&auml;ngepunkt). Links h&auml;ngt ein 300&thinsp;g-Gewicht (ebenfalls 120&thinsp;cm). Pr&uuml;fen Sie: Ist Ebene 1 im Gleichgewicht?
+    </div>
+
+    <!-- 6a -->
+    <div class="subtask">
+      <div class="subtask-label">a) Ebene 3: Gleichgewicht?</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp</span>
+        </button>
+        <div class="hint-content tipp">
+          Hebelgesetz: \(m_L \cdot r_L \stackrel{?}{=} m_R \cdot r_R\). Setzen Sie ein: \(100 \cdot 70\) vs. \(100 \cdot 20\).
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>✅</span><span class="label">L&ouml;sung</span>
+        </button>
+        <div class="hint-content antwort">
+          \(100 \cdot 70 = 7000\) &ensp;vs.&ensp; \(100 \cdot 20 = 2000\)<br><br>
+          <strong>Nein!</strong> Ebene 3 ist <strong>nicht</strong> im Gleichgewicht &mdash; sie kippt nach links. Der Aufh&auml;ngepunkt m&uuml;sste in der Mitte (bei 45&thinsp;cm) liegen, damit es passt. Hier stimmt etwas am Mobile nicht!<br>
+          <em>→ Entweder den Faden verschieben oder die Massen anpassen.</em>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6b -->
+    <div class="subtask">
+      <div class="subtask-label">b) Ebene 2: Unbekanntes Gewicht</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp 1: Gesamtlast von Ebene 3</span>
+        </button>
+        <div class="hint-content tipp">
+          Egal ob Ebene 3 intern im Gleichgewicht ist: die <strong>Gesamtmasse</strong>, die an Ebene 2 rechts zieht, ist \(100 + 100 = 200\;\text{g}\).
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp 2: Hebelgesetz Ebene 2</span>
+        </button>
+        <div class="hint-content tipp">
+          \(m_? \cdot 100\;\text{cm} = 200\;\text{g} \cdot 80\;\text{cm}\)
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>✅</span><span class="label">L&ouml;sung</span>
+        </button>
+        <div class="hint-content antwort">
+          \[m_? = \frac{200 \cdot 80}{100} = 160\;\text{g}\]
+        </div>
+      </div>
+    </div>
+
+    <!-- 6c -->
+    <div class="subtask">
+      <div class="subtask-label">c) Ebene 1: Gleichgewicht pr&uuml;fen</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>💡</span><span class="label">Tipp: Gesamtlast rechts</span>
+        </button>
+        <div class="hint-content tipp">
+          An Ebene 1 rechts h&auml;ngt die <strong>gesamte Ebene 2</strong>: das sind \(160 + 200 = 360\;\text{g}\).
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>📝</span><span class="label">Rechenweg</span>
+        </button>
+        <div class="hint-content schritt">
+          Links: \(300\;\text{g} \cdot 120\;\text{cm} = 36\,000\)<br>
+          Rechts: \(360\;\text{g} \cdot 120\;\text{cm} = 43\,200\)
+        </div>
+
+        <button class="hint-btn" onclick="reveal(this)">
+          <span>✅</span><span class="label">L&ouml;sung</span>
+        </button>
+        <div class="hint-content antwort">
+          \(36\,000 \neq 43\,200\) → <strong>Nicht im Gleichgewicht!</strong><br><br>
+          Die rechte Seite ist schwerer. Um es auszugleichen, m&uuml;sste das linke Gewicht
+          \(m = \frac{43\,200}{120} = 360\;\text{g}\) betragen &mdash; oder der Aufh&auml;ngepunkt nach rechts verschoben werden.<br>
+          <em>→ Dieses Mobile braucht noch Feintuning! Wer hat es gebaut? 😉</em>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<!-- ── Footer ── -->
+<div class="footer-links">
+  <a href="AB_Drehmoment.pdf">📄 Arbeitsblatt</a>
+  <a href="drehmoment.html">🖥️ Pr&auml;sentation</a>
+  <a href="index.html">📋 &Uuml;bersicht</a>
+</div>
+
+<script>
+function toggleTask(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+
+function toggleAll() {
+  const tasks = document.querySelectorAll('.task');
+  const allOpen = [...tasks].every(t => t.classList.contains('open'));
+  tasks.forEach(t => {
+    if (allOpen) t.classList.remove('open');
+    else t.classList.add('open');
+  });
+  document.querySelector('.toggle-all').textContent =
+    allOpen ? 'Alle Aufgaben aufklappen' : 'Alle Aufgaben zuklappen';
+}
+
+function reveal(btn) {
+  if (btn.classList.contains('revealed')) return;
+  btn.classList.add('revealed');
+  const content = btn.nextElementSibling;
+  content.classList.add('visible');
+  // Re-render MathJax for newly revealed content
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([content]);
+  }
+}
+</script>
+
+</body>
+</html>
