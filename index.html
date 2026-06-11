@@ -168,6 +168,27 @@
         </header>
         
         <div class="material-grid">
+            <a href="drehmoment.html" class="material-card" data-url="drehmoment.html">
+                <div class="card-header">
+                    <div class="card-icon blue">&#x1f527;</div>
+                    <div class="card-title">Drehmoment &mdash; Kraft trifft Hebel</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Vom Pit-Stop zur Physik: M = F &middot; r, Hebelgesetz, Newton f&uuml;r Rotation M = J &middot; &alpha;. Interaktive Pr&auml;sentation mit Schritt-f&uuml;r-Schritt-Herleitung.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Drehmoment</span>
+                            <span class="tag">Hebelgesetz</span>
+                            <span class="tag">Winkelbeschleunigung</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-drehmoment"></div>
+                </div>
+            </a>
+
             <a href="rotationsenergie.html" class="material-card" data-url="rotationsenergie.html">
                 <div class="card-header">
                     <div class="card-icon green">🔄</div>
@@ -699,6 +720,7 @@
         
         // QR-Codes generieren wenn Seite geladen
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-drehmoment', 'drehmoment.html');
             generateQR('qr-rotationsenergie', 'rotationsenergie.html');
             generateQR('qr-schalen', 'vollzylinder_schalen.html');
             generateQR('qr-aufgaben-rot', 'aufgaben_rotationsenergie.html');
