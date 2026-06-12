@@ -121,6 +121,7 @@ main { max-width: 920px; margin: 0 auto; padding: 26px 24px 60px; }
 .s-hebel      .section-icon { background: #fdecd8; }
 .s-rotdyn     .section-icon { background: #dce6f5; }
 .s-anwendung  .section-icon { background: #d8f5dc; }
+.s-drehimpuls .section-icon { background: #dff0e8; }
 .section-title { font-size: 0.98rem; font-weight: 700; }
 .section-count { font-size: 0.72rem; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; margin-left: auto; }
 
@@ -362,6 +363,7 @@ footer a:hover { text-decoration: underline; }
     <span class="fchip">\(\omega = \alpha \cdot t\)</span>
     <span class="fchip">\(E_\text{rot} = \tfrac{1}{2}J\omega^2\)</span>
     <span class="fchip">\(J = \sum m_i r_i^2\)</span>
+    <span class="fchip">\(L = J \cdot \omega\)</span>
   </div>
 </div>
 
@@ -527,6 +529,54 @@ footer a:hover { text-decoration: underline; }
         <span class="afb-pill star-pill card-afb">&#9733; Knobel</span>
       </div>
       <button class="comp-btn" onclick="openModal('a4')">&#220;ben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- 5. DREHIMPULS & DREHIMPULSERHALTUNG -->
+<div class="section s-drehimpuls">
+  <div class="section-header">
+    <div class="section-icon">🌀</div>
+    <div class="section-title">Drehimpuls &amp; Drehimpulserhaltung</div>
+    <div class="section-count" id="cnt-drehimpuls"></div>
+  </div>
+  <div class="card-list" id="sec-drehimpuls">
+
+    <div class="comp-card" data-id="di1" data-sec="drehimpuls">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann den Drehimpuls \(L = J \cdot \omega\) berechnen und die Einheit kg&middot;m&sup2;/s angeben.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('di1')">&Uuml;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="di2" data-sec="drehimpuls">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann den Drehimpulserhaltungssatz formulieren: Ohne &auml;u&szlig;eres Drehmoment gilt \(J_1 \omega_1 = J_2 \omega_2\).</span>
+        <span class="afb-pill afb2 card-afb">AFB I&ndash;II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('di2')">&Uuml;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="di3" data-sec="drehimpuls">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann mit dem Drehimpulserhaltungssatz die Pirouette erkl&auml;ren: Arme anziehen &rarr; \(J\) sinkt &rarr; \(\omega\) steigt.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('di3')">&Uuml;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="di4" data-sec="drehimpuls">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann beurteilen, ob der Drehimpulserhaltungssatz auf eine gegebene Situation anwendbar ist (Kriterium: kein &auml;u&szlig;eres Drehmoment) und Gegenbeispiele nennen.</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('di4')">&Uuml;ben</button>
     </div>
 
   </div>
@@ -807,6 +857,100 @@ loesung:`<div class="sol-step"><div class="snum">a</div><div>
 <div class="result">Am Totpunkt nur 3,75 Nm vs. 18,7 Nm bei 60\u00b0 \u2014 Faktor 5!</div>`,
 prompt:`Erkl\u00e4re mir Schritt f\u00fcr Schritt, warum Radfahrer \u201erunde Tritte\u201c trainieren und was am Totpunkt physikalisch passiert (Winkelabh\u00e4ngigkeit sin \u03b1). Ich bin Sch\u00fcler/in der 11. Klasse an einem Berufskolleg.`},
 
+di1:{title:"Drehimpuls berechnen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Ein Schwungrad (Vollzylinder, \\(m = 20\\,\\text{kg}\\), \\(R = 0{,}25\\,\\text{m}\\)) dreht sich mit \\(n = 1200\\,\\text{min}^{-1}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(J\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Rechnen Sie \\(n\\) in \\(\\omega\\) um.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie den Drehimpuls \\(L = J\\omega\\). Geben Sie die Einheit an.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( J = \\tfrac{1}{2} m R^2 = \\tfrac{1}{2} \\cdot 20 \\cdot 0{,}0625 = 0{,}625\\,\\text{kg}\\cdot\\text{m}^2 \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( \\omega = \\dfrac{2\\pi \\cdot n}{60} = \\dfrac{2\\pi \\cdot 1200}{60} = 125{,}7\\,\\text{rad/s} \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( L = J \\cdot \\omega = 0{,}625 \\cdot 125{,}7 = 78{,}5\\,\\text{kg}\\cdot\\text{m}^2/\\text{s} \\)
+</div></div>`,
+prompt:`Ich \u00fcbe Drehimpuls L=J\u03c9 berechnen (Physik Klasse 11). 3 Aufgaben mit Schwungrad, Fahrradrad, Kreisel. Vollst\u00e4ndige L\u00f6sungen.`},
+
+di2:{title:"Drehimpulserhaltung \u2014 Formulierung (AFB I\u2013II)",
+aufgabe:`<div class="task-box">
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Formulieren Sie den Drehimpulserhaltungssatz in Worten.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Schreiben Sie die mathematische Form auf: \\(J_1 \\omega_1 = J_2 \\omega_2\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Ein Eiskustl\u00e4ufer dreht sich anfangs mit \\(\\omega_1 = 2{,}0\\,\\text{rad/s}\\) bei \\(J_1 = 4{,}0\\,\\text{kg}\\cdot\\text{m}^2\\) (Arme ausgestreckt). Er zieht die Arme an, sodass \\(J_2 = 1{,}6\\,\\text{kg}\\cdot\\text{m}^2\\). Berechnen Sie \\(\\omega_2\\).</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Um welchen Faktor hat sich die Drehfrequenz erh\u00f6ht?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  In einem abgeschlossenen System (kein \u00e4u\u00dferes Drehmoment) bleibt der <strong>Gesamtdrehimpuls erhalten</strong>.
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  <div class="dmath">\\( J_1 \\omega_1 = J_2 \\omega_2 \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( \\omega_2 = \\dfrac{J_1 \\omega_1}{J_2} = \\dfrac{4{,}0 \\cdot 2{,}0}{1{,}6} = 5{,}0\\,\\text{rad/s} \\)
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Faktor: \\( \\dfrac{\\omega_2}{\\omega_1} = \\dfrac{5{,}0}{2{,}0} = 2{,}5 \\)
+</div></div>`,
+prompt:`Ich \u00fcbe Drehimpulserhaltung (Physik Klasse 11). 2 Aufgaben: Pirouette und Drehstuhl-Experiment. Vollst\u00e4ndige L\u00f6sungen.`},
+
+di3:{title:"Pirouette erkl\u00e4ren (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Eine Eiskustl\u00e4uferin (\\(m = 55\\,\\text{kg}\\)) dreht eine Pirouette.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">In der Ausgangsposition (Arme und ein Bein ausgestreckt) betr\u00e4gt \\(J_1 = 3{,}5\\,\\text{kg}\\cdot\\text{m}^2\\) und \\(\\omega_1 = 3{,}0\\,\\text{rad/s}\\). Berechnen Sie \\(L\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Sie zieht Arme und Bein eng an den K\u00f6rper (\\(J_2 = 1{,}0\\,\\text{kg}\\cdot\\text{m}^2\\)). Berechnen Sie \\(\\omega_2\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie \\(E_\\text{rot}\\) vor und nach dem Anziehen der Arme. Was f\u00e4llt auf?</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Erkl\u00e4ren Sie: Woher kommt die zus\u00e4tzliche Rotationsenergie?</span></div>
+  </div>
+  <div class="hint-box">Hinweis: Die Eiskustl\u00e4uferin verrichtet Muskelarbeit.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( L = J_1 \\cdot \\omega_1 = 3{,}5 \\cdot 3{,}0 = 10{,}5\\,\\text{kg}\\cdot\\text{m}^2/\\text{s} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( \\omega_2 = \\dfrac{L}{J_2} = \\dfrac{10{,}5}{1{,}0} = 10{,}5\\,\\text{rad/s} \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( E_1 = \\tfrac{1}{2} \\cdot 3{,}5 \\cdot 9{,}0 = 15{,}75\\,\\text{J} \\)
+  <br>\\( E_2 = \\tfrac{1}{2} \\cdot 1{,}0 \\cdot 110{,}25 = 55{,}1\\,\\text{J} \\)
+  <div class="dmath">\\( E_2 > E_1 ! \\quad \\Delta E = 55{,}1 - 15{,}75 = 39{,}4\\,\\text{J} \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Die zus\u00e4tzliche Energie \\(\\Delta E = 39{,}4\\,\\text{J}\\) wird durch <strong>Muskelarbeit</strong> aufgebracht. Die Arme m\u00fcssen gegen die \u201eZentrifugalkraft\u201c (Tr\u00e4gheitskraft) nach innen gezogen werden \u2014 das kostet Energie.
+</div></div>`,
+prompt:`Ich \u00fcbe Pirouette mit Drehimpulserhaltung (Physik Klasse 11). Erkl\u00e4re: Warum steigt E_rot obwohl L erhalten bleibt? Woher kommt die Energie? Neue Aufgabe.`},
+
+di4:{title:"Drehimpulserhaltung beurteilen (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Beurteilen Sie f\u00fcr folgende Situationen, ob der Drehimpulserhaltungssatz anwendbar ist. Begr\u00fcnden Sie jeweils.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Ein Eiskustl\u00e4ufer dreht eine Pirouette auf reibungsfreiem Eis.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Ein Rad wird durch eine Bremse abgebremst.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Zwei Zahnr\u00e4der greifen ineinander (geschlossenes System betrachtet).</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Ein Kreisel auf einer Tischplatte mit Reibung.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  <strong>Ja</strong> \u2014 kein \u00e4u\u00dferes Drehmoment (Eis reibungsfrei, Schwerkraft greift an der Drehachse an \u2192 kein Drehmoment).
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  <strong>Nein</strong> \u2014 die Bremse \u00fcbt ein \u00e4u\u00dferes Drehmoment aus \u2192 \\(L\\) nimmt ab.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  <strong>Ja</strong> \u2014 die Kr\u00e4fte zwischen den Zahnr\u00e4dern sind innere Kr\u00e4fte \u2192 \\(L_\\text{ges} = \\text{const.}\\)
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  <strong>Nein</strong> \u2014 Reibung an der Auflagefl\u00e4che erzeugt ein \u00e4u\u00dferes Drehmoment \u2192 der Kreisel wird langsamer.
+</div></div>`,
+prompt:`Ich \u00fcbe Beurteilung der Anwendbarkeit der Drehimpulserhaltung (Physik Klasse 11, AFB III). 4 Situationen: entscheiden ob M_ext=0 gilt. Begr\u00fcndungen.`},
+
 a4:{title:"\u2605 Wippe + Abspringen (Knobel)",
 aufgabe:`<div class="task-box">
   <p>Ahmed (\\(m = 80\\,\\text{kg}\\)) sitzt auf einer Wippe, \\(r = 2\\,\\text{m}\\) vom Drehpunkt entfernt. Bea springt pl\u00f6tzlich ab. Der Balken hat ein Tr\u00e4gheitsmoment \\(J_\\text{Balken} = 40\\,\\text{kg\u00b7m}^2\\).</p>
@@ -878,7 +1022,7 @@ function initState(){
     if(state[c.dataset.id]) c.classList.add('done');
   });
   updateProgress();
-  ['grundlagen','hebel','rotdyn','anwendung'].forEach(s=>updateCnt(s));
+  ['grundlagen','hebel','rotdyn','anwendung','drehimpuls'].forEach(s=>updateCnt(s));
 }
 
 // -----------------------------------------
