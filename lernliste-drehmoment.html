@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernliste: Drehmoment, Hebelgesetz &amp; Rotationsdynamik</title>
+
+<!-- MathJax -->
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(','\\)'], ['$','$']], displayMath: [['\\[','\\]'], ['$$','$$']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] },
+    startup: { typeset: false }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js" crossorigin="anonymous"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Serif:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #f5f2eb;
+  --surface: #ffffff;
+  --surface2: #f0ece2;
+  --border: #d4cfc4;
+  --text: #1a1915;
+  --text-muted: #6b6760;
+  --accent: #2b4c8c;
+  --accent-light: #dce6f5;
+  --green: #1a6b3a;
+  --green-light: #d4edde;
+  --yellow-light: #fdf5d0;
+  --formula-bg: #0f1923;
+  --afb1: #1a5c8c;  --afb1-bg: #dceef8;
+  --afb2: #7a5200;  --afb2-bg: #fef0cc;
+  --afb3: #7a1a1a;  --afb3-bg: #fde8e8;
+  --star: #b06000;  --star-bg: #fff0d0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* -- Header -- */
+header {
+  background: var(--accent);
+  color: white;
+  position: sticky; top: 0; z-index: 200;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.22);
+}
+.header-inner {
+  max-width: 920px; margin: 0 auto;
+  padding: 16px 24px 8px;
+}
+.header-school { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.7; }
+.header-title  { font-size: 1.3rem; font-weight: 700; margin: 3px 0 4px; }
+.header-sub    { font-size: 0.8rem; opacity: 0.78; font-family: 'IBM Plex Serif', serif; font-style: italic; }
+.progress-wrap { max-width: 920px; margin: 0 auto; padding: 6px 24px 14px; }
+.progress-label { font-size: 0.73rem; color: rgba(255,255,255,0.7); display: flex; justify-content: space-between; margin-bottom: 4px; }
+.progress-track { height: 7px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden; }
+.progress-fill  { height: 100%; background: #7ecba0; border-radius: 4px; transition: width .5s; width: 0; }
+
+/* -- AFB legend -- */
+.afb-legend {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 0;
+}
+.afb-legend-inner {
+  max-width: 920px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+}
+.afb-legend-label { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+.afb-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  border-radius: 4px; padding: 3px 9px; font-size: 0.73rem; font-weight: 700; letter-spacing: 0.04em;
+  border: 1.5px solid transparent;
+}
+.afb1 { background: var(--afb1-bg); color: var(--afb1); border-color: #9ac4de; }
+.afb2 { background: var(--afb2-bg); color: var(--afb2); border-color: #e8c96a; }
+.afb3 { background: var(--afb3-bg); color: var(--afb3); border-color: #e8a0a0; }
+.star-pill { background: var(--star-bg); color: var(--star); border-color: #e8c070; }
+
+/* -- Formula strip -- */
+.formula-strip {
+  background: var(--formula-bg);
+  color: #c8e8ff;
+  padding: 10px 0;
+  overflow-x: auto;
+}
+.formula-strip-inner {
+  max-width: 920px; margin: 0 auto; padding: 0 24px;
+  display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+}
+.formula-strip-label { font-size: 0.68rem; color: rgba(255,255,255,0.4); letter-spacing: 0.1em; text-transform: uppercase; flex-shrink: 0; }
+.fchip {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 4px; padding: 3px 10px;
+  font-size: 0.82rem; white-space: nowrap;
+  color: #ddf0ff;
+}
+.fchip .mjx-container { display: inline !important; }
+
+/* -- Main -- */
+main { max-width: 920px; margin: 0 auto; padding: 26px 24px 60px; }
+
+/* -- Section -- */
+.section { margin-bottom: 26px; }
+.section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.section-icon {
+  width: 32px; height: 32px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.05rem; flex-shrink: 0;
+}
+.s-grundlagen .section-icon { background: #e0f0ff; }
+.s-hebel      .section-icon { background: #fdecd8; }
+.s-rotdyn     .section-icon { background: #dce6f5; }
+.s-anwendung  .section-icon { background: #d8f5dc; }
+.section-title { font-size: 0.98rem; font-weight: 700; }
+.section-count { font-size: 0.72rem; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; margin-left: auto; }
+
+/* -- Cards -- */
+.card-list { display: flex; flex-direction: column; gap: 5px; }
+
+.comp-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  display: flex; align-items: stretch;
+  transition: border-color .18s, box-shadow .18s;
+  overflow: hidden;
+}
+.comp-card:hover { border-color: #a8bed8; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+.comp-card.done { background: var(--green-light); border-color: #a0d4b8; }
+.comp-card.done .comp-text { text-decoration: line-through; color: #3a7a54; opacity: 0.72; }
+.comp-card.star-card { border-color: #e0c060; background: var(--yellow-light); }
+.comp-card.star-card.done { background: var(--green-light); border-color: #a0d4b8; }
+
+/* Checkbox */
+.comp-check {
+  width: 46px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.comp-check:hover { background: rgba(0,0,0,0.03); }
+.checkbox {
+  width: 19px; height: 19px;
+  border: 2px solid var(--border); border-radius: 4px;
+  background: white; display: flex; align-items: center; justify-content: center;
+  pointer-events: none; transition: all .15s;
+}
+.comp-card.done .checkbox { background: var(--green); border-color: var(--green); }
+.checkbox::after {
+  content: ''; display: none;
+  width: 4px; height: 8px;
+  border: 2px solid white; border-top: none; border-left: none;
+  transform: rotate(45deg) translateY(-1px);
+}
+.comp-card.done .checkbox::after { display: block; }
+
+/* Body */
+.comp-body { flex: 1; padding: 9px 10px; min-width: 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.comp-text { font-size: 0.875rem; line-height: 1.45; flex: 1; min-width: 160px; }
+.comp-text .mjx-container { display: inline !important; }
+
+/* AFB badge on card */
+.card-afb { flex-shrink: 0; }
+
+/* Ueben button */
+.comp-btn {
+  padding: 0 14px; background: none; border: none;
+  border-left: 1.5px solid var(--border);
+  color: var(--accent); font-size: 0.76rem; font-weight: 700;
+  font-family: 'IBM Plex Sans', sans-serif;
+  cursor: pointer; white-space: nowrap; letter-spacing: 0.03em;
+  transition: background .14s;
+}
+.comp-btn:hover { background: var(--accent-light); }
+
+/* -- Modal -- */
+.overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(10,10,14,0.54); z-index: 500;
+  justify-content: center; align-items: flex-start;
+  padding: 36px 14px 20px; overflow-y: auto;
+}
+.overlay.open { display: flex; }
+.modal {
+  background: var(--surface); border-radius: 12px;
+  width: 100%; max-width: 640px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.25);
+  animation: slideUp .2s ease; overflow: hidden;
+}
+@keyframes slideUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+
+.modal-head {
+  background: var(--accent); color: white;
+  padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;
+}
+.modal-head h3 { font-size: 0.93rem; font-weight: 600; }
+.modal-close {
+  background: rgba(255,255,255,0.15); border: none; color: white;
+  width: 26px; height: 26px; border-radius: 5px; cursor: pointer; font-size: 0.9rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.modal-close:hover { background: rgba(255,255,255,0.28); }
+
+.modal-tabs { display: flex; border-bottom: 2px solid var(--border); background: var(--surface2); }
+.mtab {
+  flex: 1; padding: 9px 8px; border: none; background: none;
+  font-family: 'IBM Plex Sans', sans-serif; font-size: 0.8rem; font-weight: 600;
+  color: var(--text-muted); cursor: pointer;
+  border-bottom: 2.5px solid transparent; margin-bottom: -2px;
+  transition: color .14s;
+}
+.mtab.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--surface); }
+
+.modal-body { padding: 18px 20px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Task / solution content */
+.task-box {
+  background: var(--surface2); border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 13px 15px; font-size: 0.875rem; line-height: 1.65;
+  margin-bottom: 12px;
+}
+.task-box p { margin-bottom: 5px; }
+.task-box p:last-child { margin-bottom: 0; }
+.given {
+  display: block; font-family: 'IBM Plex Mono', monospace; font-size: 0.8em;
+  background: rgba(0,0,0,0.06); padding: 7px 10px; border-radius: 5px; margin: 7px 0;
+  line-height: 1.7;
+}
+.subtasks {
+  margin: 8px 0 4px; display: flex; flex-direction: column; gap: 5px;
+}
+.subtask {
+  display: flex; align-items: baseline; gap: 8px;
+  font-size: 0.875rem; line-height: 1.55;
+}
+.subtask-label {
+  flex-shrink: 0; width: 20px;
+  font-weight: 700; color: var(--accent);
+}
+.subtask-body { flex: 1; }
+.hint-box {
+  background: rgba(43,76,140,0.07); border-left: 3px solid var(--accent);
+  border-radius: 0 5px 5px 0; padding: 5px 10px;
+  font-size: 0.82rem; color: var(--text-muted); margin-top: 6px;
+  font-style: italic;
+}
+.sol-toggle {
+  width: 100%; background: none; border: 1.5px solid var(--border); border-radius: 6px;
+  padding: 8px 14px; font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.8rem; font-weight: 600; color: var(--text-muted); cursor: pointer;
+  margin-bottom: 10px; transition: all .14s; text-align: left;
+}
+.sol-toggle:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.sol-box {
+  display: none; background: var(--green-light); border: 1.5px solid #a0d4b8;
+  border-radius: 8px; padding: 13px 15px; font-size: 0.855rem; line-height: 1.65;
+}
+.sol-box.open { display: block; animation: fadeIn .18s ease; }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+.sol-step { display: flex; gap: 8px; margin-bottom: 9px; }
+.sol-step:last-child { margin-bottom: 0; }
+.snum {
+  width: 19px; height: 19px; flex-shrink: 0; margin-top: 2px;
+  background: var(--green); color: white; border-radius: 50%;
+  font-size: 0.67rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.sol-step .mjx-container { display: inline !important; }
+.fbox {
+  display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 0.82em;
+  background: rgba(255,255,255,0.72); padding: 3px 8px; border-radius: 4px; margin: 2px 0;
+}
+.result {
+  display: inline-block; background: var(--green); color: white;
+  border-radius: 5px; padding: 5px 12px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.83em; font-weight: 600; margin-top: 8px;
+}
+.dmath { text-align: center; margin: 8px 0; overflow-x: auto; }
+
+/* Prompt tab */
+.prompt-box {
+  background: var(--formula-bg); color: #c8e8ff;
+  border-radius: 8px; padding: 13px 15px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.77rem; line-height: 1.65;
+  white-space: pre-wrap; max-height: 230px; overflow-y: auto; margin-bottom: 12px;
+}
+.ai-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.ai-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 13px; border: 1.5px solid var(--border); border-radius: 6px;
+  font-family: 'IBM Plex Sans', sans-serif; font-size: 0.78rem; font-weight: 600;
+  cursor: pointer; text-decoration: none; background: white; color: var(--text);
+  transition: all .14s;
+}
+.ai-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.ai-btn.copy { background: var(--accent); color: white; border-color: var(--accent); }
+.ai-btn.copy:hover { background: #1e3d74; }
+
+/* Footer */
+footer {
+  text-align: center; color: var(--text-muted); font-size: 0.73rem;
+  padding: 18px; border-top: 1px solid var(--border);
+  font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.05em;
+}
+footer a { color: var(--accent); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+@media(max-width:500px) {
+  main { padding: 18px 14px 40px; }
+  .comp-btn { padding: 0 9px; font-size: 0.7rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="header-school">Lore-Lorentz-Schule &nbsp;&middot;&nbsp; Physik 11NP</div>
+    <div class="header-title">Lernliste: Drehmoment, Hebelgesetz &amp; Rotationsdynamik</div>
+    <div class="header-sub">Klausurvorbereitung &nbsp;&middot;&nbsp; inkl. Anwendungen &nbsp;&middot;&nbsp; AFB I&ndash;III</div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>Ihr Fortschritt</span>
+      <span id="prog-text">0 von 0 Kompetenzen</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+  </div>
+</header>
+
+<!-- AFB LEGENDE -->
+<div class="afb-legend">
+  <div class="afb-legend-inner">
+    <span class="afb-legend-label">Anforderungsbereiche:</span>
+    <span class="afb-pill afb1">AFB I &nbsp;Reproduktion</span>
+    <span class="afb-pill afb2">AFB II &nbsp;Transfer</span>
+    <span class="afb-pill afb3">AFB III &nbsp;Reflexion</span>
+    <span class="afb-pill star-pill">&#9733; Knobelaufgabe</span>
+  </div>
+</div>
+
+<!-- FORMELLEISTE -->
+<div class="formula-strip">
+  <div class="formula-strip-inner">
+    <span class="formula-strip-label">Formeln</span>
+    <span class="fchip">\(M = F \cdot r \cdot \sin\alpha\)</span>
+    <span class="fchip">\(F_1 \cdot r_1 = F_2 \cdot r_2\)</span>
+    <span class="fchip">\(M = J \cdot \alpha\)</span>
+    <span class="fchip">\(\alpha = M / J\)</span>
+    <span class="fchip">\(\omega = \alpha \cdot t\)</span>
+    <span class="fchip">\(E_\text{rot} = \tfrac{1}{2}J\omega^2\)</span>
+    <span class="fchip">\(J = \sum m_i r_i^2\)</span>
+  </div>
+</div>
+
+<main>
+
+<!-- 1. DREHMOMENT - GRUNDLAGEN -->
+<div class="section s-grundlagen">
+  <div class="section-header">
+    <div class="section-icon">&#128295;</div>
+    <div class="section-title">Drehmoment &ndash; Grundlagen</div>
+    <div class="section-count" id="cnt-grundlagen"></div>
+  </div>
+  <div class="card-list" id="sec-grundlagen">
+
+    <div class="comp-card" data-id="d1" data-sec="grundlagen">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann das Drehmoment \(M = F \cdot r \cdot \sin(\alpha)\) berechnen und die Bedeutung des Winkels \(\alpha\) erkl&auml;ren.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('d1')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="d2" data-sec="grundlagen">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann erkl&auml;ren, warum nur die senkrechte Kraftkomponente ein Drehmoment erzeugt, und den wirksamen Hebelarm bestimmen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('d2')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="d3" data-sec="grundlagen">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Einheit des Drehmoments \([M] = 1\,\text{Nm}\) herleiten und von der Einheit der Energie \((1\,\text{J} = 1\,\text{Nm})\) abgrenzen.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('d3')">&#220;ben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- 2. HEBELGESETZ -->
+<div class="section s-hebel">
+  <div class="section-header">
+    <div class="section-icon">&#9878;&#65039;</div>
+    <div class="section-title">Hebelgesetz</div>
+    <div class="section-count" id="cnt-hebel"></div>
+  </div>
+  <div class="card-list" id="sec-hebel">
+
+    <div class="comp-card" data-id="h1" data-sec="hebel">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann das Hebelgesetz \(F_1 \cdot r_1 = F_2 \cdot r_2\) anwenden und unbekannte Gr&ouml;&szlig;en berechnen.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('h1')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="h2" data-sec="hebel">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann ein mehrstufiges Hebelsystem (z.&nbsp;B. Mobile) von unten nach oben durchrechnen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('h2')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="h3" data-sec="hebel">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Gleichgewichtsbedingung \(\sum M_i = 0\) aufstellen und auf Alltagssituationen anwenden.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('h3')">&#220;ben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- 3. ROTATIONSDYNAMIK: M = J * alpha -->
+<div class="section s-rotdyn">
+  <div class="section-header">
+    <div class="section-icon">&#9881;&#65039;</div>
+    <div class="section-title">Rotationsdynamik: \(M = J \cdot \alpha\)</div>
+    <div class="section-count" id="cnt-rotdyn"></div>
+  </div>
+  <div class="card-list" id="sec-rotdyn">
+
+    <div class="comp-card" data-id="r1" data-sec="rotdyn">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann mit \(M = J \cdot \alpha\) die Winkelbeschleunigung eines K&ouml;rpers berechnen.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('r1')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="r2" data-sec="rotdyn">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Analogie zwischen Translation \((F = ma)\) und Rotation \((M = J\alpha)\) erkl&auml;ren und Gr&ouml;&szlig;en zuordnen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('r2')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="r3" data-sec="rotdyn">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Zeit berechnen, bis ein K&ouml;rper eine bestimmte Winkelgeschwindigkeit erreicht \((\omega = \alpha \cdot t)\).</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('r3')">&#220;ben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- 4. ANWENDUNGEN & VERKNUEPFUNG -->
+<div class="section s-anwendung">
+  <div class="section-header">
+    <div class="section-icon">&#127959;&#65039;</div>
+    <div class="section-title">Anwendungen &amp; Verkn&uuml;pfung</div>
+    <div class="section-count" id="cnt-anwendung"></div>
+  </div>
+  <div class="card-list" id="sec-anwendung">
+
+    <div class="comp-card" data-id="a1" data-sec="anwendung">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann bei einem Kran mit Seiltrommel das n&ouml;tige Motor-Drehmoment berechnen (Last + Trommelbeschleunigung).</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('a1')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="a2" data-sec="anwendung">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Rotationsenergie \(E_\text{rot} = \tfrac{1}{2}J\omega^2\) eines beschleunigten K&ouml;rpers berechnen und als Energiespeicher interpretieren.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('a2')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card" data-id="a3" data-sec="anwendung">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann erkl&auml;ren, warum Radfahrer &bdquo;runde Tritte&ldquo; trainieren und was am Totpunkt passiert (Winkelabh&auml;ngigkeit \(\sin\alpha\)).</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('a3')">&#220;ben</button>
+    </div>
+
+    <div class="comp-card star-card" data-id="a4" data-sec="anwendung">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">&#9733; Ich kann bei einem zusammengesetzten Problem (Wippe + Abspringen) sowohl Hebelgesetz als auch \(M = J\alpha\) anwenden.</span>
+        <span class="afb-pill star-pill card-afb">&#9733; Knobel</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('a4')">&#220;ben</button>
+    </div>
+
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <a href="AB_Drehmoment.pdf">Arbeitsblatt</a> &nbsp;&middot;&nbsp;
+  <a href="loesungen_drehmoment.html">L&ouml;sungen</a> &nbsp;&middot;&nbsp;
+  <a href="drehmoment.html">Pr&auml;sentation</a> &nbsp;&middot;&nbsp;
+  <a href="index.html">&Uuml;bersicht</a>
+  <br>Lore-Lorentz-Schule &nbsp;&middot;&nbsp; Physik 11NP &nbsp;&middot;&nbsp; Drehmoment &amp; Hebelgesetz
+</footer>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="m-title">&Uuml;bungsaufgabe</h3>
+      <button class="modal-close" onclick="closeModal()">&#10005;</button>
+    </div>
+    <div class="modal-tabs">
+      <button class="mtab active" onclick="switchTab(0)">&#128221; Aufgabe</button>
+      <button class="mtab" onclick="switchTab(1)">&#9989; L&ouml;sung</button>
+      <button class="mtab" onclick="switchTab(2)">&#129302; KI-Prompt</button>
+    </div>
+    <div class="modal-body">
+      <div class="tab-panel active" id="tp0"></div>
+      <div class="tab-panel" id="tp1"></div>
+      <div class="tab-panel" id="tp2"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// -----------------------------------------
+// TASK DATA
+// -----------------------------------------
+const T = {
+
+d1:{title:"Drehmoment berechnen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Eine Radmutter muss mit einem Drehmoment von \\(M = 120\\,\\text{Nm}\\) angezogen werden. Der Radschl\u00fcssel ist \\(r = 30\\,\\text{cm}\\) lang. Die Kraft wirkt senkrecht zum Schl\u00fcssel (\\(\\alpha = 90°\\)).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die n\u00f6tige Kraft \\(F\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Wie \u00e4ndert sich \\(F\\), wenn ein Verl\u00e4ngerungsrohr den Hebelarm auf \\(60\\,\\text{cm}\\) verdoppelt?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( M = F \\cdot r \\cdot \\sin(90°) = F \\cdot r \\)
+  <div class="dmath">\\( F = \\dfrac{M}{r} = \\dfrac{120}{0{,}30} = 400\\,\\text{N} \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( F = \\dfrac{120}{0{,}60} = 200\\,\\text{N} \\)
+</div></div>
+<div class="result">Doppelter Hebelarm \u2192 halbe Kraft</div>`,
+prompt:`Erkl\u00e4re mir Schritt f\u00fcr Schritt, wie ich das Drehmoment M = F\u00b7r\u00b7sin(\u03b1) berechne und die ben\u00f6tigte Kraft bei gegebenem Drehmoment bestimme. Ich bin Sch\u00fcler/in der 11. Klasse an einem Berufskolleg.`},
+
+d2:{title:"Senkrechte Kraftkomponente (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>An einer Fahrrad-Pedalkurbel (\\(r = 18\\,\\text{cm}\\)) greift eine Kraft \\(F = 120\\,\\text{N}\\) unter dem Winkel \\(\\alpha = 60°\\) zur Kurbel an.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie das Drehmoment \\(M\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Erkl\u00e4ren Sie, warum man nicht einfach \\(M = F \\cdot r\\) rechnen darf.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  <div class="dmath">\\( M = F \\cdot r \\cdot \\sin\\alpha = 120 \\cdot 0{,}18 \\cdot \\sin(60°) = 120 \\cdot 0{,}18 \\cdot 0{,}866 \\approx 18{,}7\\,\\text{Nm} \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Nur die Komponente \\(F_\\perp = F \\cdot \\sin\\alpha\\), die <strong>senkrecht</strong> zum Hebelarm steht, erzeugt ein Drehmoment. Die parallele Komponente \\(F_\\parallel = F \\cdot \\cos\\alpha\\) dr\u00fcckt lediglich auf die Achse, ohne zu drehen.
+</div></div>
+<div class="result">Nur \\(F_\\perp = F \\cdot \\sin\\alpha\\) dreht!</div>`,
+prompt:`Erkl\u00e4re mir Schritt f\u00fcr Schritt, warum nur die senkrechte Kraftkomponente ein Drehmoment erzeugt und wie ich den wirksamen Hebelarm bestimme. Ich bin Sch\u00fcler/in der 11. Klasse an einem Berufskolleg.`},
+
+d3:{title:"Einheit Nm vs. Joule (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Das Drehmoment hat die Einheit \\([M] = 1\\,\\text{Nm}\\). Die Energie hat ebenfalls die Einheit \\([E] = 1\\,\\text{J} = 1\\,\\text{Nm}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Warum schreibt man bei Drehmomenten \\(\\text{Nm}\\) und nicht \\(\\text{J}\\) (Joule), obwohl die Einheiten gleich sind?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Erl\u00e4utern Sie den Unterschied: In welcher Richtung wirken Kraft und Weg bei Drehmoment bzw. bei Arbeit?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  Es handelt sich um <strong>verschiedene physikalische Gr\u00f6\u00dfen</strong> mit zuf\u00e4llig gleicher Einheit. Man schreibt Nm (statt J), um klarzustellen, dass es um ein Drehmoment geht und nicht um Energie.
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  <strong>Drehmoment:</strong> Kraft \\(\\times\\) Hebelarm \u2014 Kraft und Hebelarm stehen <strong>senkrecht</strong> zueinander.<br>
+  <strong>Arbeit/Energie:</strong> Kraft \\(\\times\\) Weg \u2014 Kraft und Weg sind <strong>parallel</strong> (in dieselbe Richtung).
+</div></div>`,
+prompt:`Erkl\u00e4re mir Schritt f\u00fcr Schritt, warum die Einheit des Drehmoments (Nm) zwar gleich der Einheit der Energie (Joule) ist, man aber trotzdem unterscheidet. Ich bin Sch\u00fcler/in der 11. Klasse an einem Berufskolleg.`},
+
+h1:{title:"Hebelgesetz anwenden (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Eine Wippe ist 4 m lang. Ahmed (\\(m_1 = 80\\,\\text{kg}\\)) sitzt rechts, 2 m vom Drehpunkt entfernt. Bea (\\(m_2 = 55\\,\\text{kg}\\)) sitzt links.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Wo muss der Drehpunkt sein, damit die Wippe im Gleichgewicht ist?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Kontrollieren Sie Ihr Ergebnis mit dem Hebelgesetz.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  Hebelgesetz: \\( F_1 \\cdot r_1 = F_2 \\cdot r_2 \\)
+  <br>Mit \\(F = m \\cdot g\\) und \\(r_2 = 4 - r_1\\):
+  <div class="dmath">\\( 80 \\cdot r_1 = 55 \\cdot (4 - r_1) \\)</div>
+  \\( 80\\,r_1 = 220 - 55\\,r_1 \\)
+  <br>\\( 135\\,r_1 = 220 \\)
+  <div class="dmath">\\( r_1 \\approx 1{,}63\\,\\text{m} \\quad \\text{(von Ahmed)} \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Kontrolle: \\( r_2 = 4 - 1{,}63 = 2{,}37\\,\\text{m} \\)
+  <br>\\( 80 \\cdot 1{,}63 = 130{,}4 \\) und \\( 55 \\cdot 2{,}37 = 130{,}4 \\; \\checkmark \\)
+</div></div>
+<div class="result">Drehpunkt bei 1,63 m von Ahmed</div>`,
+prompt:`Erkl\u00e4re mir Schritt f\u00fcr Schritt, wie ich das Hebelgesetz F\u2081\u00b7r\u2081 = F\u2082\u00b7r\u2082 anwende und unbekannte Gr\u00f6\u00dfen berechne. Ich bin Sch\u00fcler/in der 11. Klasse an einem Berufskolleg.`},
+
+h2:{title:"Mehrstufiges Hebelsystem (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Ein Mobile hat in der untersten Ebene zwei Gewichte: \\(m_1 = 100\\,\\text{g}\\) links bei \\(r_1 = 70\\,\\text{cm}\\) und \\(m_2 = 100\\,\\text{g}\\) rechts bei \\(r_2 = 20\\,\\text{cm}\\) vom Aufh\u00e4ngepunkt.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Ist diese Ebene im Gleichgewicht? Begr\u00fcnden Sie rechnerisch.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Wohin kippt das Mobile?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Wie m\u00fcsste \\(m_2\\) ge\u00e4ndert werden, damit Gleichgewicht herrscht?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( M_\\text{links} = 100 \\cdot 70 = 7000\\,\\text{g\u00b7cm} \\)
+  <br>\\( M_\\text{rechts} = 100 \\cdot 20 = 2000\\,\\text{g\u00b7cm} \\)
+  <div class="dmath">\\( 7000 \\neq 2000 \\quad \\Rightarrow \\text{kein Gleichgewicht} \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Das Mobile <strong>kippt nach links</strong>, weil \\(M_\\text{links} > M_\\text{rechts}\\).
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( m_2 = \\dfrac{m_1 \\cdot r_1}{r_2} = \\dfrac{100 \\cdot 70}{20} = 350\\,\\text{g} \\)
+</div></div>`,
+prompt:`Erkl\u00e4re mir Schritt f\u00fcr Schritt, wie ich ein mehrstufiges Hebelsystem (z.B. ein Mobile) von unten nach oben durchrechne. Ich bin Sch\u00fcler/in der 11. Klasse an einem Berufskolleg.`},
+
+h3:{title:"Gleichgewichtsbedingung (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Eine Brechstange ist \\(80\\,\\text{cm}\\) lang. Am Ende wird senkrecht eine Kraft \\(F = 250\\,\\text{N}\\) aufgebracht. Ein Bolzen l\u00f6st sich erst bei einem Drehmoment von \\(M_\\text{l\u00f6se} = 150\\,\\text{Nm}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie das erzeugte Drehmoment.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Reicht das Drehmoment zum L\u00f6sen des Bolzens?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Was k\u00f6nnte man tun, wenn es nicht reicht?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  <div class="dmath">\\( M = F \\cdot r = 250 \\cdot 0{,}80 = 200\\,\\text{Nm} \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( 200\\,\\text{Nm} > 150\\,\\text{Nm} \\) \u2192 <strong>Ja, es reicht.</strong>
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Falls es nicht reichen w\u00fcrde: <strong>L\u00e4ngeren Hebel</strong> verwenden (Verl\u00e4ngerungsrohr) oder <strong>gr\u00f6\u00dfere Kraft</strong> aufbringen.
+</div></div>
+<div class="result">M = 200 Nm > 150 Nm \u2192 Bolzen l\u00f6st sich</div>`,
+prompt:`Erkl\u00e4re mir Schritt f\u00fcr Schritt, wie ich die Gleichgewichtsbedingung \u03a3M\u1d62 = 0 aufstelle und auf Alltagssituationen anwende. Ich bin Sch\u00fcler/in der 11. Klasse an einem Berufskolleg.`},
+
+r1:{title:"Winkelbeschleunigung berechnen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Ein Schwungrad hat das Tr\u00e4gheitsmoment \\(J = 0{,}5\\,\\text{kg\u00b7m}^2\\). Es wirkt ein Drehmoment \\(M = 10\\,\\text{Nm}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die Winkelbeschleunigung \\(\\alpha\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Was passiert mit \\(\\alpha\\), wenn \\(J\\) verdoppelt wird bei gleichem \\(M\\)?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  <div class="dmath">\\( \\alpha = \\dfrac{M}{J} = \\dfrac{10}{0{,}5} = 20\\,\\text{rad/s}^2 \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( \\alpha = \\dfrac{10}{1{,}0} = 10\\,\\text{rad/s}^2 \\)
+  <br>Doppeltes Tr\u00e4gheitsmoment \u2192 halbe Winkelbeschleunigung.
+</div></div>
+<div class="result">\\(\\alpha = 20\\,\\text{rad/s}^2\\)</div>`,
+prompt:`Erkl\u00e4re mir Schritt f\u00fcr Schritt, wie ich mit M = J\u00b7\u03b1 die Winkelbeschleunigung eines K\u00f6rpers berechne. Ich bin Sch\u00fcler/in der 11. Klasse an einem Berufskolleg.`},
+
+r2:{title:"Analogie Translation \u2194 Rotation (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Ordnen Sie die Gr\u00f6\u00dfen der Translation den entsprechenden Gr\u00f6\u00dfen der Rotation zu:</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Kraft \\(F\\) \u2194 ?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Masse \\(m\\) \u2194 ?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Beschleunigung \\(a\\) \u2194 ?</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Geschwindigkeit \\(v\\) \u2194 ?</span></div>
+    <div class="subtask"><span class="subtask-label">e)</span><span class="subtask-body">Weg \\(s\\) \u2194 ?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( F \\leftrightarrow M \\) (Drehmoment)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( m \\leftrightarrow J \\) (Tr\u00e4gheitsmoment)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\( a \\leftrightarrow \\alpha \\) (Winkelbeschleunigung)
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  \\( v \\leftrightarrow \\omega \\) (Winkelgeschwindigkeit)
+</div></div>
+<div class="sol-step"><div class="snum">e</div><div>
+  \\( s \\leftrightarrow \\varphi \\) (Drehwinkel)
+</div></div>
+<div class="result">F\u2194M, m\u2194J, a\u2194\u03b1, v\u2194\u03c9, s\u2194\u03c6</div>`,
+prompt:`Erkl\u00e4re mir Schritt f\u00fcr Schritt die Analogie zwischen Translation (F=ma) und Rotation (M=J\u03b1) und ordne alle Gr\u00f6\u00dfen einander zu. Ich bin Sch\u00fcler/in der 11. Klasse an einem Berufskolleg.`},
+
+r3:{title:"Winkelgeschwindigkeit berechnen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Das Schwungrad aus Aufgabe 7 (\\(J = 0{,}5\\,\\text{kg\u00b7m}^2\\), \\(\\alpha = 20\\,\\text{rad/s}^2\\)) startet aus der Ruhe.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Wie lange dauert es, bis \\(\\omega = 60\\,\\text{rad/s}\\) erreicht ist?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Welcher Drehzahl \\(n\\) (in \\(\\text{min}^{-1}\\)) entspricht das?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  <div class="dmath">\\( t = \\dfrac{\\omega}{\\alpha} = \\dfrac{60}{20} = 3\\,\\text{s} \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( n = \\dfrac{\\omega}{2\\pi} \\cdot 60 = \\dfrac{60}{2\\pi} \\cdot 60 \\approx 573\\,\\text{min}^{-1} \\)
+</div></div>
+<div class="result">Nach 3 s erreicht das Schwungrad 60 rad/s \u2248 573 U/min</div>`,
+prompt:`Erkl\u00e4re mir Schritt f\u00fcr Schritt, wie ich die Zeit berechne, bis ein K\u00f6rper eine bestimmte Winkelgeschwindigkeit erreicht (\u03c9 = \u03b1\u00b7t). Ich bin Sch\u00fcler/in der 11. Klasse an einem Berufskolleg.`},
+
+a1:{title:"Kran-Drehmoment (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Ein Kran hebt eine Last \\(m = 200\\,\\text{kg}\\) mit einer Seiltrommel (Radius \\(r = 15\\,\\text{cm}\\)) mit konstanter Geschwindigkeit.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie das n\u00f6tige Motor-Drehmoment \\(M\\) f\u00fcr konstante Geschwindigkeit.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Warum ist bei konstanter Geschwindigkeit keine Beschleunigung n\u00f6tig?</span></div>
+  </div>
+  <div class="hint-box">Hinweis: Bei konstanter Geschwindigkeit muss nur die Gewichtskraft \u00fcberwunden werden.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  Die Seilkraft muss die Gewichtskraft aufbringen:
+  <div class="dmath">\\( M = m \\cdot g \\cdot r = 200 \\cdot 9{,}81 \\cdot 0{,}15 = 294{,}3\\,\\text{Nm} \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Bei konstanter Geschwindigkeit ist \\(a = 0\\). Die Nettokraft ist null \u2014 die Seilkraft kompensiert exakt die Gewichtskraft (Newton 1). Es wird kein zus\u00e4tzliches Drehmoment f\u00fcr Beschleunigung ben\u00f6tigt.
+</div></div>
+<div class="result">\\(M = 294{,}3\\,\\text{Nm}\\)</div>`,
+prompt:`Erkl\u00e4re mir Schritt f\u00fcr Schritt, wie ich bei einem Kran mit Seiltrommel das n\u00f6tige Motor-Drehmoment berechne. Ich bin Sch\u00fcler/in der 11. Klasse an einem Berufskolleg.`},
+
+a2:{title:"Rotationsenergie berechnen (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Das Schwungrad aus Aufgabe 7 hat \\(J = 0{,}5\\,\\text{kg\u00b7m}^2\\) und dreht sich mit \\(\\omega = 60\\,\\text{rad/s}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die Rotationsenergie \\(E_\\text{rot}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Wie lange k\u00f6nnte diese Energie eine LED-Lampe mit \\(P = 10\\,\\text{W}\\) betreiben?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  <div class="dmath">\\( E_\\text{rot} = \\tfrac{1}{2} J \\omega^2 = \\tfrac{1}{2} \\cdot 0{,}5 \\cdot 60^2 = 0{,}25 \\cdot 3600 = 900\\,\\text{J} \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( t = \\dfrac{E}{P} = \\dfrac{900}{10} = 90\\,\\text{s} = 1{,}5\\,\\text{min} \\)
+</div></div>
+<div class="result">\\(E_\\text{rot} = 900\\,\\text{J}\\) \u2014 reicht f\u00fcr 1,5 min LED-Licht</div>`,
+prompt:`Erkl\u00e4re mir Schritt f\u00fcr Schritt, wie ich die Rotationsenergie E_rot = \u00bdJ\u03c9\u00b2 berechne und als Energiespeicher interpretiere. Ich bin Sch\u00fcler/in der 11. Klasse an einem Berufskolleg.`},
+
+a3:{title:"Runde Tritte & Totpunkt (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Ein Radfahrer tritt mit \\(F = 120\\,\\text{N}\\) auf eine Pedalkurbel (\\(r = 18\\,\\text{cm}\\)).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie das Drehmoment bei \\(\\alpha = 10°\\) (nahe Totpunkt).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Vergleichen Sie mit \\(\\alpha = 60°\\) (optimale Stellung).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Erkl\u00e4ren Sie, warum Radfahrer \u201erunde Tritte\u201c trainieren.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  <div class="dmath">\\( M = 120 \\cdot 0{,}18 \\cdot \\sin(10°) = 21{,}6 \\cdot 0{,}174 \\approx 3{,}75\\,\\text{Nm} \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  <div class="dmath">\\( M = 120 \\cdot 0{,}18 \\cdot \\sin(60°) = 21{,}6 \\cdot 0{,}866 \\approx 18{,}7\\,\\text{Nm} \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Am Totpunkt (\\(\\alpha \\approx 0°\\) oder \\(180°\\)) ist \\(\\sin\\alpha \\approx 0\\) \u2014 fast die gesamte Kraft geht in die Achse, ohne zu drehen. Beim \u201erunden Tritt\u201c versucht man, die Kraft \u00fcber den gesamten Umlauf m\u00f6glichst <strong>senkrecht zur Kurbel</strong> aufzubringen, um auch in der N\u00e4he der Totpunkte ein Drehmoment zu erzeugen.
+</div></div>
+<div class="result">Am Totpunkt nur 3,75 Nm vs. 18,7 Nm bei 60\u00b0 \u2014 Faktor 5!</div>`,
+prompt:`Erkl\u00e4re mir Schritt f\u00fcr Schritt, warum Radfahrer \u201erunde Tritte\u201c trainieren und was am Totpunkt physikalisch passiert (Winkelabh\u00e4ngigkeit sin \u03b1). Ich bin Sch\u00fcler/in der 11. Klasse an einem Berufskolleg.`},
+
+a4:{title:"\u2605 Wippe + Abspringen (Knobel)",
+aufgabe:`<div class="task-box">
+  <p>Ahmed (\\(m = 80\\,\\text{kg}\\)) sitzt auf einer Wippe, \\(r = 2\\,\\text{m}\\) vom Drehpunkt entfernt. Bea springt pl\u00f6tzlich ab. Der Balken hat ein Tr\u00e4gheitsmoment \\(J_\\text{Balken} = 40\\,\\text{kg\u00b7m}^2\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie das Drehmoment, das durch Ahmeds Gewichtskraft entsteht.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie das Gesamt-Tr\u00e4gheitsmoment \\(J_\\text{ges} = J_\\text{Balken} + m \\cdot r^2\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie die Winkelbeschleunigung \\(\\alpha\\), mit der die Wippe kippt.</span></div>
+  </div>
+  <div class="hint-box">Hinweis: Ahmed wird als Punktmasse im Abstand \\(r\\) von der Drehachse behandelt.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  <div class="dmath">\\( M = m \\cdot g \\cdot r = 80 \\cdot 9{,}81 \\cdot 2 = 1569{,}6\\,\\text{Nm} \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  <div class="dmath">\\( J_\\text{ges} = J_\\text{Balken} + m \\cdot r^2 = 40 + 80 \\cdot 4 = 360\\,\\text{kg\u00b7m}^2 \\)</div>
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  <div class="dmath">\\( \\alpha = \\dfrac{M}{J_\\text{ges}} = \\dfrac{1569{,}6}{360} \\approx 4{,}36\\,\\text{rad/s}^2 \\)</div>
+</div></div>
+<div class="result">\\(\\alpha \\approx 4{,}36\\,\\text{rad/s}^2\\) \u2014 Hebelgesetz + Rotationsdynamik kombiniert!</div>`,
+prompt:`Erkl\u00e4re mir Schritt f\u00fcr Schritt, wie ich bei einem zusammengesetzten Problem (Wippe + Abspringen) sowohl das Hebelgesetz als auch M = J\u00b7\u03b1 anwende. Ich bin Sch\u00fcler/in der 11. Klasse an einem Berufskolleg.`}
+
+};
+
+// -----------------------------------------
+// STATE (localStorage)
+// -----------------------------------------
+const state = {};
+let curId = null;
+
+function loadState(){
+  try{ Object.assign(state, JSON.parse(localStorage.getItem('lernliste-drehmoment')||'{}')); }catch(e){}
+}
+function saveState(){
+  try{ localStorage.setItem('lernliste-drehmoment', JSON.stringify(state)); }catch(e){}
+}
+
+// -----------------------------------------
+// TOGGLE
+// -----------------------------------------
+function toggle(checkArea){
+  const card = checkArea.closest('.comp-card');
+  card.classList.toggle('done');
+  state[card.dataset.id] = card.classList.contains('done');
+  saveState();
+  updateProgress();
+  updateCnt(card.dataset.sec);
+}
+
+// -----------------------------------------
+// PROGRESS
+// -----------------------------------------
+function updateProgress(){
+  const all = document.querySelectorAll('.comp-card').length;
+  const done = document.querySelectorAll('.comp-card.done').length;
+  const pct = all ? done/all*100 : 0;
+  document.getElementById('prog-fill').style.width = pct+'%';
+  document.getElementById('prog-text').textContent = done+' von '+all+' Kompetenzen';
+}
+function updateCnt(sec){
+  const all  = document.querySelectorAll(`[data-sec="${sec}"]`).length;
+  const done = document.querySelectorAll(`[data-sec="${sec}"].done`).length;
+  const el   = document.getElementById('cnt-'+sec);
+  if(el) el.textContent = done+'/'+all;
+}
+function initState(){
+  loadState();
+  document.querySelectorAll('.comp-card').forEach(c=>{
+    if(state[c.dataset.id]) c.classList.add('done');
+  });
+  updateProgress();
+  ['grundlagen','hebel','rotdyn','anwendung'].forEach(s=>updateCnt(s));
+}
+
+// -----------------------------------------
+// MODAL
+// -----------------------------------------
+function openModal(id){
+  curId = id;
+  const d = T[id];
+  if(!d) return;
+
+  document.getElementById('m-title').textContent = d.title;
+
+  // Tab 0: Aufgabe + ausklappbare Loesung
+  document.getElementById('tp0').innerHTML =
+    d.aufgabe +
+    `<button class="sol-toggle" onclick="toggleSol()">&#128161; L\u00f6sung anzeigen</button>
+     <div class="sol-box" id="sol-box">${d.loesung}</div>`;
+
+  // Tab 1: Loesung direkt
+  document.getElementById('tp1').innerHTML =
+    `<div class="sol-box open">${d.loesung}</div>`;
+
+  // Tab 2: KI-Prompt
+  document.getElementById('tp2').innerHTML =
+    `<p style="font-size:.8rem;color:var(--text-muted);margin-bottom:10px">Prompt f\u00fcr weitere \u00dcbungsaufgaben:</p>
+     <div class="prompt-box">${d.prompt}</div>
+     <div class="ai-btns">
+       <button class="ai-btn copy" onclick="copyPrompt()">&#128203; Kopieren</button>
+       <a class="ai-btn" href="https://gemini.google.com" target="_blank">&#128640; Google AI</a>
+       <a class="ai-btn" href="https://chatgpt.com" target="_blank">&#128172; ChatGPT</a>
+     </div>`;
+
+  // Reset tabs
+  document.querySelectorAll('.mtab').forEach((t,i)=>t.classList.toggle('active',i===0));
+  document.querySelectorAll('.tab-panel').forEach((p,i)=>p.classList.toggle('active',i===0));
+
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Re-render MathJax
+  if(window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise([document.getElementById('overlay')]).catch(e=>console.log(e));
+  }
+}
+
+function closeModal(){
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function overlayClick(e){ if(e.target===document.getElementById('overlay')) closeModal(); }
+
+function switchTab(i){
+  document.querySelectorAll('.mtab').forEach((t,j)=>t.classList.toggle('active',i===j));
+  document.querySelectorAll('.tab-panel').forEach((p,j)=>p.classList.toggle('active',i===j));
+  if(window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise([document.getElementById('tp'+i)]).catch(e=>console.log(e));
+  }
+}
+
+function toggleSol(){
+  const b = document.getElementById('sol-box');
+  const btn = b.previousElementSibling;
+  b.classList.toggle('open');
+  btn.innerHTML = b.classList.contains('open') ? '&#128584; L\u00f6sung ausblenden' : '&#128161; L\u00f6sung anzeigen';
+  if(b.classList.contains('open') && window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise([b]).catch(e=>console.log(e));
+  }
+}
+
+function copyPrompt(){
+  if(!T[curId]) return;
+  navigator.clipboard.writeText(T[curId].prompt).then(()=>{
+    const btn = document.querySelector('.copy');
+    btn.innerHTML = '&#9989; Kopiert!';
+    setTimeout(()=>btn.innerHTML='&#128203; Kopieren', 2000);
+  });
+}
+
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+
+// -----------------------------------------
+// INIT
+// -----------------------------------------
+window.addEventListener('DOMContentLoaded', ()=>{
+  initState();
+  if(window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise().catch(e=>console.log(e));
+  }
+});
+</script>
+
+</body>
+</html>
