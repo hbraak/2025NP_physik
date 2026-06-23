@@ -56,7 +56,8 @@
   .diagram svg{width:100%;height:auto}
 
   /* ── MathJax overflow ── */
-  mjx-container{overflow-x:auto;max-width:100%;display:inline-block}
+  mjx-container{max-width:100%}
+  mjx-container[display="true"]{overflow-x:auto;overflow-y:hidden}
 
   /* ── Progress / Navigation ── */
   .progress{position:fixed;top:0;left:0;height:4px;background:#8ecae6;transition:width 0.4s ease;z-index:100}
