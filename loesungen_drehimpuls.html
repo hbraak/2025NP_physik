@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drehimpuls – Lösungen &amp; Knobelaufgaben</title>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']]},options:{renderActions:{addMenu:[0]}}};</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'IBM Plex Sans',sans-serif;background:#0f172a;color:#e2e8f0;
+       min-height:100vh;overflow-x:hidden;line-height:1.6}
+
+  /* ── Layout ── */
+  .container{max-width:900px;margin:0 auto;padding:1.5rem clamp(1rem,3vw,2rem) 6rem}
+
+  /* ── Header ── */
+  .page-header{text-align:center;padding:2rem 0 1.5rem;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:2rem}
+  .page-header h1{font-size:clamp(1.4rem,4vw,2.2rem);font-weight:700;color:#fff;margin-bottom:0.3rem}
+  .page-header .sub{font-size:clamp(0.85rem,2vw,1.1rem);color:#8ecae6;font-weight:300}
+
+  /* ── Aufgaben-Karten ── */
+  .task{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);
+        border-radius:12px;margin-bottom:1.5rem;overflow:hidden}
+  .task-header{padding:0.9rem 1.2rem;cursor:pointer;display:flex;align-items:center;gap:0.8rem;
+               transition:background 0.2s}
+  .task-header:hover{background:rgba(255,255,255,0.05)}
+  .task-header .icon{font-size:1.3rem}
+  .task-header h2{font-size:clamp(0.95rem,2.2vw,1.2rem);font-weight:600;flex:1}
+  .task-header .chevron{font-size:1.2rem;transition:transform 0.3s;color:#64748b}
+  .task.open .task-header .chevron{transform:rotate(90deg)}
+  .task-body{display:none;padding:0 1.2rem 1rem}
+  .task.open .task-body{display:block}
+
+  /* ── Aufgabentext ── */
+  .aufgabe-text{background:rgba(142,202,230,0.08);border-left:4px solid #8ecae6;
+                padding:0.7rem 1rem;border-radius:0 8px 8px 0;margin-bottom:1rem;
+                font-size:clamp(0.85rem,1.8vw,1rem);color:#94a3b8}
+
+  /* ── Teilaufgaben ── */
+  .subtask{margin-bottom:1.2rem}
+  .subtask-label{font-weight:600;color:#8ecae6;font-size:clamp(0.9rem,2vw,1.05rem);margin-bottom:0.4rem}
+
+  /* ── Hilfe-Buttons ── */
+  .hints{display:flex;flex-direction:column;gap:0.4rem}
+  .hint-btn{background:none;border:1px solid rgba(255,183,77,0.3);color:#ffb74d;
+            padding:0.45rem 0.9rem;border-radius:8px;cursor:pointer;text-align:left;
+            font-family:inherit;font-size:clamp(0.8rem,1.6vw,0.92rem);transition:all 0.2s;
+            display:flex;align-items:center;gap:0.5rem}
+  .hint-btn:hover{background:rgba(255,183,77,0.1);border-color:rgba(255,183,77,0.5)}
+  .hint-btn .label{font-weight:500}
+  .hint-btn.revealed{border-color:rgba(255,183,77,0.15);color:#a07030;cursor:default}
+  .hint-btn.revealed:hover{background:none}
+
+  .hint-content{display:none;padding:0.6rem 0.9rem;margin-top:0.2rem;border-radius:8px;
+                font-size:clamp(0.85rem,1.7vw,1rem);animation:fadeIn 0.4s ease}
+  .hint-content.visible{display:block}
+
+  .hint-content.tipp{background:rgba(255,183,77,0.08);border-left:3px solid #ffb74d;color:#ffd699}
+  .hint-content.schritt{background:rgba(142,202,230,0.08);border-left:3px solid #8ecae6}
+  .hint-content.loesung{background:rgba(0,200,120,0.08);border-left:3px solid #00c878}
+  .hint-content.antwort{background:rgba(0,200,120,0.12);border-left:3px solid #00c878;
+                        font-weight:500;font-size:clamp(0.95rem,2vw,1.15rem)}
+
+  @keyframes fadeIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+
+  /* ── Knobelaufgaben ── */
+  .knobel-badge{display:inline-block;background:rgba(255,100,100,0.15);color:#ff8a8a;
+                padding:0.15rem 0.6rem;border-radius:99px;font-size:0.75rem;font-weight:600;
+                margin-left:0.5rem;vertical-align:middle}
+  .task.knobel{border-color:rgba(255,100,100,0.2)}
+  .task.knobel .task-header h2{color:#ff8a8a}
+
+  /* ── MathJax ── */
+  mjx-container{overflow-x:auto;max-width:100%;display:inline-block}
+
+  /* ── Footer ── */
+  .footer-links{position:fixed;bottom:0;left:0;right:0;background:rgba(15,23,42,0.95);
+                backdrop-filter:blur(8px);border-top:1px solid rgba(255,255,255,0.08);
+                display:flex;justify-content:center;gap:1.5rem;padding:0.6rem;z-index:100}
+  .footer-links a{color:#64748b;text-decoration:none;font-size:0.85rem;transition:color 0.3s}
+  .footer-links a:hover{color:#8ecae6}
+
+  /* ── Alle öffnen/schließen ── */
+  .toggle-all{background:rgba(142,202,230,0.1);border:1px solid rgba(142,202,230,0.3);
+              color:#8ecae6;padding:0.5rem 1.2rem;border-radius:8px;cursor:pointer;
+              font-family:inherit;font-size:0.9rem;margin-bottom:1.5rem;transition:all 0.2s}
+  .toggle-all:hover{background:rgba(142,202,230,0.2)}
+
+  /* ── Mobile ── */
+  @media(max-width:600px){
+    .container{padding:1rem 0.7rem 5rem}
+    .task-header{padding:0.7rem 0.8rem}
+    .task-body{padding:0 0.8rem 0.8rem}
+    .aufgabe-text{padding:0.5rem 0.7rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="page-header">
+  <h1>🌀 Drehimpuls &mdash; L&ouml;sungen &amp; Knobeleien</h1>
+  <div class="sub">Gestufte Hilfen: Tipp → Rechenweg → L&ouml;sung</div>
+</div>
+
+<button class="toggle-all" onclick="toggleAll()">Alle Aufgaben aufklappen</button>
+
+<!-- ════════════ AUFGABE 1: Pirouette ════════════ -->
+<div class="task" id="a1">
+  <div class="task-header" onclick="toggleTask('a1')">
+    <span class="icon">⛸️</span>
+    <h2>Aufgabe 1: Pirouette</h2>
+    <span class="chevron">▸</span>
+  </div>
+  <div class="task-body">
+
+    <div class="aufgabe-text">
+      Ausgestreckte Arme: \(J_1 = 4{,}0\;\text{kg·m}^2\), \(\omega_1 = 3{,}0\;\text{rad/s}\).
+      Arme angelegt: \(J_2 = 1{,}2\;\text{kg·m}^2\).
+    </div>
+
+    <div class="subtask">
+      <div class="subtask-label">a) Warum bleibt der Drehimpuls erhalten?</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)"><span>💡</span><span class="label">Tipp</span></button>
+        <div class="hint-content tipp">Welche Bedingung muss erf&uuml;llt sein, damit \(L\) konstant ist?</div>
+        <button class="hint-btn" onclick="reveal(this)"><span>✅</span><span class="label">Musterantwort</span></button>
+        <div class="hint-content antwort">
+          Auf die L&auml;uferin wirkt (n&auml;herungsweise reibungsfrei) <strong>kein &auml;u&szlig;eres Drehmoment</strong> (\(M=0\)).
+          Das Anlegen der Arme ist eine <em>innere</em> Kraft. Daher gilt \(L = J\cdot\omega = \text{const}\).
+        </div>
+      </div>
+    </div>
+
+    <div class="subtask">
+      <div class="subtask-label">b) Neue Winkelgeschwindigkeit \(\omega_2\)</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)"><span>💡</span><span class="label">Tipp: Ansatz</span></button>
+        <div class="hint-content tipp">Drehimpulserhaltung: \(J_1\,\omega_1 = J_2\,\omega_2\). Nach \(\omega_2\) umstellen.</div>
+        <button class="hint-btn" onclick="reveal(this)"><span>📝</span><span class="label">Rechenweg</span></button>
+        <div class="hint-content schritt">\[\omega_2 = \frac{J_1\,\omega_1}{J_2} = \frac{4{,}0 \cdot 3{,}0}{1{,}2}\;\text{rad/s}\]</div>
+        <button class="hint-btn" onclick="reveal(this)"><span>✅</span><span class="label">L&ouml;sung</span></button>
+        <div class="hint-content antwort">\[\omega_2 = 10\;\text{rad/s}\] Mehr als 3-mal so schnell.</div>
+      </div>
+    </div>
+
+    <div class="subtask">
+      <div class="subtask-label">c) Rotationsenergie vorher und nachher</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)"><span>💡</span><span class="label">Tipp</span></button>
+        <div class="hint-content tipp">\(E_{\text{rot}} = \tfrac{1}{2}\,J\,\omega^2\) &mdash; einmal mit \(J_1,\omega_1\), einmal mit \(J_2,\omega_2\).</div>
+        <button class="hint-btn" onclick="reveal(this)"><span>📝</span><span class="label">Rechenweg</span></button>
+        <div class="hint-content schritt">
+          \[E_1 = \tfrac{1}{2}\cdot 4{,}0 \cdot 3{,}0^2 = \tfrac{1}{2}\cdot 4{,}0 \cdot 9\]
+          \[E_2 = \tfrac{1}{2}\cdot 1{,}2 \cdot 10^2 = \tfrac{1}{2}\cdot 1{,}2 \cdot 100\]
+        </div>
+        <button class="hint-btn" onclick="reveal(this)"><span>✅</span><span class="label">L&ouml;sung</span></button>
+        <div class="hint-content antwort">\[E_1 = 18\;\text{J}\qquad E_2 = 60\;\text{J}\]</div>
+      </div>
+    </div>
+
+    <div class="subtask">
+      <div class="subtask-label">d) Woher kommt die zus&auml;tzliche Energie?</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)"><span>💡</span><span class="label">Tipp</span></button>
+        <div class="hint-content tipp">Die Arme „wollen" nach au&szlig;en. Wer h&auml;lt dagegen, und was tut er dabei?</div>
+        <button class="hint-btn" onclick="reveal(this)"><span>✅</span><span class="label">Musterantwort</span></button>
+        <div class="hint-content antwort">
+          Aus der <strong>Muskelarbeit</strong>: Die L&auml;uferin muss die Arme gegen die nach au&szlig;en gerichtete
+          Tr&auml;gheit (Zentrifugaltendenz) nach innen ziehen und verrichtet dabei <strong>Arbeit</strong>.
+          Diese erh&ouml;ht die Rotationsenergie. \(L\) bleibt erhalten, \(E_{\text{rot}}\) nicht.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════ AUFGABE 2: Drehstuhl ════════════ -->
+<div class="task" id="a2">
+  <div class="task-header" onclick="toggleTask('a2')">
+    <span class="icon">🪑</span>
+    <h2>Aufgabe 2: Drehstuhl mit Hanteln</h2>
+    <span class="chevron">▸</span>
+  </div>
+  <div class="task-body">
+
+    <div class="aufgabe-text">
+      Hanteln je \(m = 2{,}0\;\text{kg}\); K&ouml;rper+Stuhl \(J_K = 1{,}0\;\text{kg·m}^2\).
+      Ausgestreckt: \(r_1 = 0{,}80\;\text{m}\), \(\omega_1 = 1{,}5\;\text{rad/s}\). Angelegt: \(r_2 = 0{,}20\;\text{m}\).
+    </div>
+
+    <div class="subtask">
+      <div class="subtask-label">a) Gesamttr&auml;gheitsmoment \(J_1\)</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)"><span>💡</span><span class="label">Tipp</span></button>
+        <div class="hint-content tipp">\(J_1 = J_K + 2\cdot m\cdot r_1^2\) (zwei Hanteln!).</div>
+        <button class="hint-btn" onclick="reveal(this)"><span>📝</span><span class="label">Rechenweg</span></button>
+        <div class="hint-content schritt">\[J_1 = 1{,}0 + 2\cdot 2{,}0 \cdot 0{,}80^2 = 1{,}0 + 2{,}56\]</div>
+        <button class="hint-btn" onclick="reveal(this)"><span>✅</span><span class="label">L&ouml;sung</span></button>
+        <div class="hint-content antwort">\[J_1 = 3{,}56\;\text{kg·m}^2\]</div>
+      </div>
+    </div>
+
+    <div class="subtask">
+      <div class="subtask-label">b) Tr&auml;gheitsmoment angelegt \(J_2\)</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)"><span>📝</span><span class="label">Rechenweg</span></button>
+        <div class="hint-content schritt">\[J_2 = 1{,}0 + 2\cdot 2{,}0 \cdot 0{,}20^2 = 1{,}0 + 0{,}16\]</div>
+        <button class="hint-btn" onclick="reveal(this)"><span>✅</span><span class="label">L&ouml;sung</span></button>
+        <div class="hint-content antwort">\[J_2 = 1{,}16\;\text{kg·m}^2\]</div>
+      </div>
+    </div>
+
+    <div class="subtask">
+      <div class="subtask-label">c) Neue Winkelgeschwindigkeit \(\omega_2\)</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)"><span>💡</span><span class="label">Tipp</span></button>
+        <div class="hint-content tipp">Wieder Drehimpulserhaltung: \(\omega_2 = \dfrac{J_1\,\omega_1}{J_2}\).</div>
+        <button class="hint-btn" onclick="reveal(this)"><span>📝</span><span class="label">Rechenweg</span></button>
+        <div class="hint-content schritt">\[\omega_2 = \frac{3{,}56 \cdot 1{,}5}{1{,}16} = \frac{5{,}34}{1{,}16}\;\text{rad/s}\]</div>
+        <button class="hint-btn" onclick="reveal(this)"><span>✅</span><span class="label">L&ouml;sung</span></button>
+        <div class="hint-content antwort">\[\omega_2 \approx 4{,}6\;\text{rad/s}\] Rund 3-mal so schnell.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════ AUFGABE 3: Schwungrad ════════════ -->
+<div class="task" id="a3">
+  <div class="task-header" onclick="toggleTask('a3')">
+    <span class="icon">🔄</span>
+    <h2>Aufgabe 3: Schwungrad als Energiespeicher</h2>
+    <span class="chevron">▸</span>
+  </div>
+  <div class="task-body">
+
+    <div class="aufgabe-text">
+      Schwungrad: \(J = 12\;\text{kg·m}^2\), \(\omega = 300\;\text{rad/s}\).
+    </div>
+
+    <div class="subtask">
+      <div class="subtask-label">a) Drehimpuls \(L\)</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)"><span>📝</span><span class="label">Rechenweg</span></button>
+        <div class="hint-content schritt">\[L = J\cdot\omega = 12 \cdot 300\]</div>
+        <button class="hint-btn" onclick="reveal(this)"><span>✅</span><span class="label">L&ouml;sung</span></button>
+        <div class="hint-content antwort">\[L = 3600\;\text{kg·m}^2/\text{s}\]</div>
+      </div>
+    </div>
+
+    <div class="subtask">
+      <div class="subtask-label">b) Gespeicherte Rotationsenergie</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)"><span>📝</span><span class="label">Rechenweg</span></button>
+        <div class="hint-content schritt">\[E = \tfrac{1}{2}\,J\,\omega^2 = \tfrac{1}{2}\cdot 12 \cdot 300^2\]</div>
+        <button class="hint-btn" onclick="reveal(this)"><span>✅</span><span class="label">L&ouml;sung</span></button>
+        <div class="hint-content antwort">\[E = 540\,000\;\text{J} = 540\;\text{kJ}\]</div>
+      </div>
+    </div>
+
+    <div class="subtask">
+      <div class="subtask-label">c) Abgegebene Energie bis \(\omega' = 150\;\text{rad/s}\)</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)"><span>💡</span><span class="label">Tipp</span></button>
+        <div class="hint-content tipp">Restenergie \(E'\) berechnen, dann \(\Delta E = E - E'\). Achtung: \(\omega^2\)!</div>
+        <button class="hint-btn" onclick="reveal(this)"><span>📝</span><span class="label">Rechenweg</span></button>
+        <div class="hint-content schritt">
+          \[E' = \tfrac{1}{2}\cdot 12 \cdot 150^2 = 135\,000\;\text{J}\]
+          \[\Delta E = 540\,\text{kJ} - 135\,\text{kJ}\]
+        </div>
+        <button class="hint-btn" onclick="reveal(this)"><span>✅</span><span class="label">L&ouml;sung</span></button>
+        <div class="hint-content antwort">\[\Delta E = 405\;\text{kJ}\] Halbe Drehzahl &rarr; nur ein Viertel der Energie bleibt.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════ AUFGABE 4: Drallrad (Knobel) ════════════ -->
+<div class="task knobel" id="a4">
+  <div class="task-header" onclick="toggleTask('a4')">
+    <span class="icon">🛰️</span>
+    <h2>Aufgabe 4: Drallrad im Satellit <span class="knobel-badge">Knobel</span></h2>
+    <span class="chevron">▸</span>
+  </div>
+  <div class="task-body">
+
+    <div class="aufgabe-text">
+      Satellit \(J_S = 200\;\text{kg·m}^2\), anfangs in Ruhe (\(L_{\text{ges}}=0\)).
+      Drallrad \(J_R = 0{,}5\;\text{kg·m}^2\) wird auf \(\omega_R = 400\;\text{rad/s}\) hochgefahren.
+    </div>
+
+    <div class="subtask">
+      <div class="subtask-label">a) Winkelgeschwindigkeit \(\omega_S\) des Satelliten</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)"><span>💡</span><span class="label">Tipp</span></button>
+        <div class="hint-content tipp">Gesamtdrehimpuls bleibt null: \(J_R\,\omega_R + J_S\,\omega_S = 0\). Also \(\omega_S = -\dfrac{J_R\,\omega_R}{J_S}\).</div>
+        <button class="hint-btn" onclick="reveal(this)"><span>📝</span><span class="label">Rechenweg</span></button>
+        <div class="hint-content schritt">\[|\omega_S| = \frac{J_R\,\omega_R}{J_S} = \frac{0{,}5 \cdot 400}{200} = \frac{200}{200}\]</div>
+        <button class="hint-btn" onclick="reveal(this)"><span>✅</span><span class="label">L&ouml;sung</span></button>
+        <div class="hint-content antwort">\[\omega_S = 1{,}0\;\text{rad/s}\] &mdash; <strong>gegenl&auml;ufig</strong> zum Rad.</div>
+      </div>
+    </div>
+
+    <div class="subtask">
+      <div class="subtask-label">b) Zeit f&uuml;r eine 90°-Drehung</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)"><span>💡</span><span class="label">Tipp</span></button>
+        <div class="hint-content tipp">\(90° = \tfrac{\pi}{2}\;\text{rad}\) und \(\varphi = \omega_S \cdot t\).</div>
+        <button class="hint-btn" onclick="reveal(this)"><span>📝</span><span class="label">Rechenweg</span></button>
+        <div class="hint-content schritt">\[t = \frac{\varphi}{\omega_S} = \frac{\pi/2}{1{,}0}\;\text{s}\]</div>
+        <button class="hint-btn" onclick="reveal(this)"><span>✅</span><span class="label">L&ouml;sung</span></button>
+        <div class="hint-content antwort">\[t \approx 1{,}57\;\text{s}\]</div>
+      </div>
+    </div>
+
+    <div class="subtask">
+      <div class="subtask-label">c) Warum ohne Treibstoff?</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)"><span>✅</span><span class="label">Musterantwort</span></button>
+        <div class="hint-content antwort">
+          Es wird kein Masse-Ausstoß ben&ouml;tigt: Der Drehimpuls wird nur <strong>intern umverteilt</strong>
+          (Rad schnell &rarr; Satellit langsam gegenl&auml;ufig). Solange \(L_{\text{ges}}=0\) bleibt,
+          kann der Satellit allein durch Beschleunigen/Abbremsen des Rades ausgerichtet werden.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════ AUFGABE 5: Karussell (Knobel) ════════════ -->
+<div class="task knobel" id="a5">
+  <div class="task-header" onclick="toggleTask('a5')">
+    <span class="icon">🎠</span>
+    <h2>Aufgabe 5: Karussell <span class="knobel-badge">Knobel</span></h2>
+    <span class="chevron">▸</span>
+  </div>
+  <div class="task-body">
+
+    <div class="aufgabe-text">
+      Karussell (Scheibe) \(J_K = 250\;\text{kg·m}^2\), \(\omega_1 = 0{,}8\;\text{rad/s}\).
+      Kind \(m = 40\;\text{kg}\) am Rand (\(r_1 = 2{,}0\;\text{m}\)), geht nach innen auf \(r_2 = 0{,}5\;\text{m}\).
+    </div>
+
+    <div class="subtask">
+      <div class="subtask-label">a) Gesamttr&auml;gheitsmoment \(J_1\)</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)"><span>📝</span><span class="label">Rechenweg</span></button>
+        <div class="hint-content schritt">\[J_1 = J_K + m\,r_1^2 = 250 + 40\cdot 2{,}0^2 = 250 + 160\]</div>
+        <button class="hint-btn" onclick="reveal(this)"><span>✅</span><span class="label">L&ouml;sung</span></button>
+        <div class="hint-content antwort">\[J_1 = 410\;\text{kg·m}^2\]</div>
+      </div>
+    </div>
+
+    <div class="subtask">
+      <div class="subtask-label">b) Tr&auml;gheitsmoment nach innen \(J_2\)</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)"><span>📝</span><span class="label">Rechenweg</span></button>
+        <div class="hint-content schritt">\[J_2 = 250 + 40\cdot 0{,}5^2 = 250 + 10\]</div>
+        <button class="hint-btn" onclick="reveal(this)"><span>✅</span><span class="label">L&ouml;sung</span></button>
+        <div class="hint-content antwort">\[J_2 = 260\;\text{kg·m}^2\]</div>
+      </div>
+    </div>
+
+    <div class="subtask">
+      <div class="subtask-label">c) Neue Winkelgeschwindigkeit \(\omega_2\)</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)"><span>📝</span><span class="label">Rechenweg</span></button>
+        <div class="hint-content schritt">\[\omega_2 = \frac{J_1\,\omega_1}{J_2} = \frac{410\cdot 0{,}8}{260} = \frac{328}{260}\;\text{rad/s}\]</div>
+        <button class="hint-btn" onclick="reveal(this)"><span>✅</span><span class="label">L&ouml;sung</span></button>
+        <div class="hint-content antwort">\[\omega_2 \approx 1{,}26\;\text{rad/s}\]</div>
+      </div>
+    </div>
+
+    <div class="subtask">
+      <div class="subtask-label">d) Was sp&uuml;rt das Kind? Vergleich zur Pirouette</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)"><span>✅</span><span class="label">Musterantwort</span></button>
+        <div class="hint-content antwort">
+          Das Karussell wird beim Hineingehen schneller &mdash; das Kind muss sich festhalten und verrichtet
+          (wie die Eisl&auml;uferin) Arbeit gegen die nach au&szlig;en gerichtete Tr&auml;gheit.
+          Gleiches Prinzip: \(J\) sinkt &rarr; \(\omega\) steigt bei erhaltenem \(L\).
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════════ AUFGABE 6: Pulsar (Knobel) ════════════ -->
+<div class="task knobel" id="a6">
+  <div class="task-header" onclick="toggleTask('a6')">
+    <span class="icon">💫</span>
+    <h2>Aufgabe 6: Vom Stern zum Pulsar <span class="knobel-badge">Knobel</span></h2>
+    <span class="chevron">▸</span>
+  </div>
+  <div class="task-body">
+
+    <div class="aufgabe-text">
+      Stern als Vollkugel \(J = \tfrac{2}{5}m r^2\). Radius schrumpft auf \(\tfrac{1}{100\,000}\),
+      Masse bleibt erhalten. Anfangs-Umlaufdauer \(T_1 = 25\;\text{Tage}\).
+    </div>
+
+    <div class="subtask">
+      <div class="subtask-label">a) Warum dreht er sich schneller?</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)"><span>✅</span><span class="label">Musterantwort</span></button>
+        <div class="hint-content antwort">
+          Es wirkt kein &auml;u&szlig;eres Drehmoment &rarr; \(L = J\,\omega = \text{const}\).
+          Beim Schrumpfen wird die Masse n&auml;her an die Achse gebracht, \(J\) sinkt stark
+          (\(J\propto r^2\)) &rarr; \(\omega\) muss entsprechend steigen.
+        </div>
+      </div>
+    </div>
+
+    <div class="subtask">
+      <div class="subtask-label">b) Faktoren f&uuml;r \(J\) und \(\omega\)</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)"><span>💡</span><span class="label">Tipp</span></button>
+        <div class="hint-content tipp">\(J\propto r^2\). Wenn \(r\) um Faktor \(10^5\) kleiner wird, wie &auml;ndert sich \(r^2\)?</div>
+        <button class="hint-btn" onclick="reveal(this)"><span>📝</span><span class="label">Rechenweg</span></button>
+        <div class="hint-content schritt">\[J \propto r^2 \;\Rightarrow\; J \text{ wird } (10^5)^2 = 10^{10}\text{-mal kleiner}\] \[L=\text{const}\;\Rightarrow\; \omega \text{ wird } 10^{10}\text{-mal gr&ouml;&szlig;er}\]</div>
+        <button class="hint-btn" onclick="reveal(this)"><span>✅</span><span class="label">L&ouml;sung</span></button>
+        <div class="hint-content antwort">\(J\): Faktor \(10^{-10}\)&nbsp;&nbsp;|&nbsp;&nbsp;\(\omega\): Faktor \(10^{10}\).</div>
+      </div>
+    </div>
+
+    <div class="subtask">
+      <div class="subtask-label">c) Neue Umlaufdauer</div>
+      <div class="hints">
+        <button class="hint-btn" onclick="reveal(this)"><span>💡</span><span class="label">Tipp</span></button>
+        <div class="hint-content tipp">\(\omega\uparrow\) um \(10^{10}\) bedeutet \(T\downarrow\) um \(10^{10}\). Erst \(T_1\) in Sekunden.</div>
+        <button class="hint-btn" onclick="reveal(this)"><span>📝</span><span class="label">Rechenweg</span></button>
+        <div class="hint-content schritt">\[T_1 = 25\cdot 86\,400\;\text{s} = 2{,}16\cdot 10^{6}\;\text{s}\] \[T_2 = \frac{T_1}{10^{10}} = \frac{2{,}16\cdot 10^{6}}{10^{10}}\;\text{s}\]</div>
+        <button class="hint-btn" onclick="reveal(this)"><span>✅</span><span class="label">L&ouml;sung</span></button>
+        <div class="hint-content antwort">\[T_2 \approx 2{,}2\cdot 10^{-4}\;\text{s} \approx 0{,}22\;\text{ms}\] Der Pulsar rotiert tausende Male pro Sekunde!</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div>
+
+<div class="footer-links">
+  <a href="AB_Drehimpuls.pdf">📄 Arbeitsblatt</a>
+  <a href="drehimpuls.html">🖥️ Pr&auml;sentation</a>
+  <a href="index.html">📋 &Uuml;bersicht</a>
+</div>
+
+<script>
+function toggleTask(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+
+function toggleAll() {
+  const tasks = document.querySelectorAll('.task');
+  const allOpen = [...tasks].every(t => t.classList.contains('open'));
+  tasks.forEach(t => {
+    if (allOpen) t.classList.remove('open');
+    else t.classList.add('open');
+  });
+  document.querySelector('.toggle-all').textContent =
+    allOpen ? 'Alle Aufgaben aufklappen' : 'Alle Aufgaben zuklappen';
+}
+
+function reveal(btn) {
+  if (btn.classList.contains('revealed')) return;
+  btn.classList.add('revealed');
+  const content = btn.nextElementSibling;
+  content.classList.add('visible');
+  if (window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise([content]);
+  }
+}
+</script>
+
+</body>
+</html>
