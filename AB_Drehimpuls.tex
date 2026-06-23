@@ -1,0 +1,195 @@
+\documentclass[11pt,a4paper,parskip=half]{scrartcl}
+\usepackage[ngerman]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb}
+\usepackage{siunitx}
+\usepackage[most]{tcolorbox}
+\usepackage{fontawesome5}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage[left=2.0cm,right=2.0cm,top=2.2cm,bottom=1.8cm]{geometry}
+
+\sisetup{locale=DE, per-mode=symbol}
+
+% ── Farben ──────────────────────────────────────────
+\definecolor{aufgabeblau}{HTML}{1565C0}
+\definecolor{merkegruen}{HTML}{2E7D32}
+\definecolor{hinweisorange}{HTML}{E65100}
+
+% ── Box-Definitionen ───────────────────────────────
+\newtcolorbox{merkebox}{
+  colback=merkegruen!5,
+  colframe=merkegruen,
+  coltitle=white,
+  colbacktitle=merkegruen,
+  title={\faBookOpen\hspace{6pt}Merke},
+  fonttitle=\bfseries,
+  boxrule=0.6pt,
+  arc=2pt,
+  top=4pt, bottom=4pt, left=6pt, right=6pt
+}
+
+\newtcolorbox{aufgabebox}[1]{
+  colback=aufgabeblau!4,
+  colframe=aufgabeblau,
+  coltitle=white,
+  colbacktitle=aufgabeblau,
+  title={\faPen\hspace{6pt}#1},
+  fonttitle=\bfseries,
+  boxrule=0.6pt,
+  arc=2pt,
+  top=4pt, bottom=4pt, left=6pt, right=6pt
+}
+
+\newtcolorbox{sternbox}[1]{
+  colback=hinweisorange!5,
+  colframe=hinweisorange,
+  coltitle=white,
+  colbacktitle=hinweisorange,
+  title={\faStar\hspace{6pt}#1},
+  fonttitle=\bfseries,
+  boxrule=0.6pt,
+  arc=2pt,
+  top=4pt, bottom=4pt, left=6pt, right=6pt
+}
+
+% ── Kopf-/Fußzeile ─────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textbf{Physik 11NP}}
+\chead{Lore-Lorentz-Schule}
+\rhead{\textbf{23.06.2026}}
+\lfoot{Drehimpuls -- Arbeitsblatt}
+\rfoot{Seite \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ── Dokument ────────────────────────────────────────
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries Drehimpuls\,---\,Arbeitsblatt}\\[2pt]
+  {\small Name: \rule{5cm}{0.4pt} \hfill Datum: \rule{3cm}{0.4pt}}
+\end{center}
+
+\vspace{-2pt}
+
+% ── Merke-Box ───────────────────────────────────────
+\begin{merkebox}
+\begin{itemize}[leftmargin=1.2em, itemsep=2pt, topsep=0pt]
+  \item \textbf{Drehimpuls:}\quad $L = J \cdot \omega$\,,\quad
+        Einheit: $\si{\kilogram\metre\squared\per\second}$
+  \item \textbf{Drehimpulserhaltung} (ohne \"au\ss{}eres Drehmoment, $M=0$):\quad
+        $L = J \cdot \omega = \text{const}$\,,\quad also $J_1\,\omega_1 = J_2\,\omega_2$
+  \item \textbf{Drehmoment \"andert Drehimpuls:}\quad $M = \dfrac{\Delta L}{\Delta t}$
+  \item \textbf{Rotationsenergie:}\quad $E_{\text{rot}} = \tfrac{1}{2}\,J\,\omega^2$
+\end{itemize}
+\end{merkebox}
+
+\vspace{4pt}
+
+% ── Aufgabe 1 ───────────────────────────────────────
+\begin{aufgabebox}{Aufgabe 1: Pirouette}
+Eine Eiskunstl\"auferin dreht sich mit \textbf{ausgestreckten Armen}:
+$J_1 = \SI{4{,}0}{\kilogram\metre\squared}$ und $\omega_1 = \SI{3{,}0}{\radian\per\second}$.
+Dann legt sie die Arme \textbf{eng an}: $J_2 = \SI{1{,}2}{\kilogram\metre\squared}$.
+
+\begin{enumerate}[label=\alph*), leftmargin=1.5em, itemsep=1pt]
+  \item Begr\"unden Sie, warum hier der Drehimpuls erhalten bleibt.
+  \item Berechnen Sie die neue Winkelgeschwindigkeit $\omega_2$.
+  \item Berechnen Sie die Rotationsenergie vorher ($E_1$) und nachher ($E_2$).
+  \item Die Energie hat zugenommen. Woher kommt sie, wenn niemand die L\"auferin anschiebt?
+\end{enumerate}
+\end{aufgabebox}
+
+\vspace{20pt}
+
+% ── Aufgabe 2 ───────────────────────────────────────
+\begin{aufgabebox}{Aufgabe 2: Drehstuhl mit Hanteln}
+Eine Person sitzt auf einem reibungsarmen Drehstuhl und h\"alt in jeder Hand
+eine Hantel ($m = \SI{2{,}0}{\kilogram}$). K\"orper und Stuhl haben zusammen
+das Tr\"agheitsmoment $J_K = \SI{1{,}0}{\kilogram\metre\squared}$.
+Mit \textbf{ausgestreckten Armen} (je $r_1 = \SI{0{,}80}{\metre}$) dreht sie sich
+mit $\omega_1 = \SI{1{,}5}{\radian\per\second}$.
+
+\begin{enumerate}[label=\alph*), leftmargin=1.5em, itemsep=1pt]
+  \item Berechnen Sie das Gesamttr\"agheitsmoment $J_1$.\\
+        \textit{Hinweis:}\; Hantel als Punktmasse: $J_{\text{Hantel}} = m\cdot r^2$ (zwei St\"uck!).
+  \item Sie zieht die Hanteln dicht an die Drehachse ($r_2 = \SI{0{,}20}{\metre}$).
+        Berechnen Sie $J_2$.
+  \item Welche Winkelgeschwindigkeit $\omega_2$ stellt sich ein?
+\end{enumerate}
+\end{aufgabebox}
+
+\vspace{20pt}
+
+% ── Aufgabe 3 ───────────────────────────────────────
+\begin{aufgabebox}{Aufgabe 3: Schwungrad als Energiespeicher}
+Ein Schwungrad-Speicher (z.\,B. zur Netzstabilisierung) hat das Tr\"agheitsmoment
+$J = \SI{12}{\kilogram\metre\squared}$ und rotiert mit $\omega = \SI{300}{\radian\per\second}$.
+
+\begin{enumerate}[label=\alph*), leftmargin=1.5em, itemsep=1pt]
+  \item Berechnen Sie den Drehimpuls $L$.
+  \item Berechnen Sie die gespeicherte Rotationsenergie $E_{\text{rot}}$.
+  \item Das Schwungrad gibt Energie ab, bis die Drehzahl auf
+        $\omega' = \SI{150}{\radian\per\second}$ gesunken ist.
+        Wie viel Energie ($\si{\kilo\joule}$) wurde abgegeben?
+\end{enumerate}
+\end{aufgabebox}
+
+\newpage
+
+% ── Aufgabe 4 (Stern) ──────────────────────────────
+\begin{sternbox}{Aufgabe 4 (Knobelaufgabe): Drallrad im Satellit}
+Ein Satellit (Tr\"agheitsmoment $J_S = \SI{200}{\kilogram\metre\squared}$) schwebt
+antriebslos und ruht zun\"achst ($L_{\text{ges}} = 0$). Zur Lageregelung wird ein
+inneres \emph{Drallrad} ($J_R = \SI{0{,}5}{\kilogram\metre\squared}$) auf
+$\omega_R = \SI{400}{\radian\per\second}$ hochgefahren.
+
+\begin{enumerate}[label=\alph*), leftmargin=1.5em, itemsep=1pt]
+  \item Mit welcher Winkelgeschwindigkeit $\omega_S$ dreht sich der Satellit dann
+        (und in welche Richtung)?\\
+        \textit{Hinweis:} Gesamtdrehimpuls bleibt null: $J_R\,\omega_R = J_S\,\omega_S$.
+  \item Wie lange dauert es, bis der Satellit um $90^\circ$ ($\tfrac{\pi}{2}$) gedreht ist?
+  \item Erkl\"aren Sie, warum diese Methode der Lageregelung \textbf{ohne Treibstoff} auskommt.
+\end{enumerate}
+\end{sternbox}
+
+\vspace{16pt}
+
+% ── Aufgabe 5 (Stern) ──────────────────────────────
+\begin{sternbox}{Aufgabe 5 (Knobelaufgabe): Karussell}
+Ein Kinderkarussell (als Scheibe, $J_K = \SI{250}{\kilogram\metre\squared}$)
+dreht sich mit $\omega_1 = \SI{0{,}8}{\radian\per\second}$. Am Rand
+($r_1 = \SI{2{,}0}{\metre}$) steht ein Kind ($m = \SI{40}{\kilogram}$).
+
+\begin{enumerate}[label=\alph*), leftmargin=1.5em, itemsep=1pt]
+  \item Berechnen Sie das Gesamttr\"agheitsmoment $J_1$ (Kind als Punktmasse).
+  \item Das Kind geht nach innen bis $r_2 = \SI{0{,}5}{\metre}$. Berechnen Sie $J_2$.
+  \item Welche Winkelgeschwindigkeit $\omega_2$ hat das Karussell jetzt?
+  \item Beschreiben Sie, was das Kind dabei sp\"urt, und vergleichen Sie es mit der Pirouette.
+\end{enumerate}
+\end{sternbox}
+
+\vspace{16pt}
+
+% ── Aufgabe 6 (Stern) ──────────────────────────────
+\begin{sternbox}{Aufgabe 6 (Knobelaufgabe): Vom Stern zum Pulsar}
+Ein rotierender Stern kollabiert am Ende seines Lebens zu einem winzigen
+\emph{Neutronenstern}. Sein Radius schrumpft dabei auf $\tfrac{1}{100\,000}$
+des urspr\"unglichen Wertes. Modellieren Sie den Stern als Vollkugel:
+$J = \tfrac{2}{5}\,m\,r^2$ (Masse bleibt erhalten).
+
+\begin{enumerate}[label=\alph*), leftmargin=1.5em, itemsep=1pt]
+  \item Begr\"unden Sie mit der Drehimpulserhaltung, warum sich der Stern beim
+        Schrumpfen \textbf{schneller} dreht.
+  \item Um welchen Faktor \"andert sich das Tr\"agheitsmoment $J$, wenn der Radius
+        um den Faktor $100\,000$ kleiner wird? Um welchen Faktor steigt $\omega$?
+  \item Der Stern drehte sich urspr\"unglich einmal in \SI{25}{\day}.
+        Berechnen Sie die neue Umlaufdauer (in Sekunden bzw. Millisekunden).
+\end{enumerate}
+\end{sternbox}
+
+\end{document}
