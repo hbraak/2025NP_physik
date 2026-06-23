@@ -189,6 +189,27 @@
                 </div>
             </a>
 
+            <a href="drehimpuls.html" class="material-card" data-url="drehimpuls.html">
+                <div class="card-header">
+                    <div class="card-icon blue">&#x1F300;</div>
+                    <div class="card-title">Drehimpuls &mdash; warum sich Drehungen „merken"</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            L = J &middot; &omega;, Drehimpulserhaltung und M = &Delta;L/&Delta;t. Interaktive Pr&auml;sentation mit Pirouetten-Simulator sowie Alltags- &amp; Technikbeispielen.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Drehimpuls</span>
+                            <span class="tag">Erhaltungssatz</span>
+                            <span class="tag">Interaktiv</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-drehimpuls"></div>
+                </div>
+            </a>
+
             <a href="AB_Drehmoment.pdf" class="material-card" data-url="AB_Drehmoment.pdf">
                 <div class="card-header">
                     <div class="card-icon blue">&#x1f4dd;</div>
@@ -784,6 +805,7 @@
         // QR-Codes generieren wenn Seite geladen
         document.addEventListener('DOMContentLoaded', function() {
             generateQR('qr-drehmoment', 'drehmoment.html');
+            generateQR('qr-drehimpuls', 'drehimpuls.html');
             generateQR('qr-ab-drehmoment', 'AB_Drehmoment.pdf');
             generateQR('qr-loesungen-drehmoment', 'loesungen_drehmoment.html');
             generateQR('qr-lernliste-drehmoment', 'lernliste-drehmoment.html');

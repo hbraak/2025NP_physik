@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drehimpuls – warum sich Drehungen „merken"</title>
+<script>window.MathJax={tex:{inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],packages:{'[+]':['cancel']}},loader:{load:['[tex]/cancel']},options:{renderActions:{addMenu:[0]}}}</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js" async></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'IBM Plex Sans',sans-serif;background:#0f172a;color:#e2e8f0;
+       min-height:100vh;overflow-x:hidden;cursor:none}
+  body.show-cursor{cursor:default}
+
+  /* ── Slides ── */
+  .slide{display:none;flex-direction:column;justify-content:center;align-items:center;
+         min-height:100vh;padding:2rem clamp(1rem, 4vw, 4rem);position:absolute;top:0;left:0;width:100%;
+         overflow-y:auto}
+  .slide.active{display:flex}
+
+  /* ── Titel ── */
+  .slide-title h1{font-size:clamp(1.6rem, 5vw, 3.2rem);font-weight:700;color:#fff;text-align:center;margin-bottom:0.5rem}
+  .slide-title .sub{font-size:clamp(0.95rem, 2.5vw, 1.5rem);color:#8ecae6;text-align:center;font-weight:300}
+  .slide-title .date{font-size:clamp(0.8rem, 1.5vw, 1rem);color:#64748b;margin-top:1.5rem}
+
+  /* ── Slide-Überschrift ── */
+  .slide-head{font-size:clamp(1.1rem, 3vw, 1.8rem);font-weight:600;color:#8ecae6;margin-bottom:1rem;
+              text-align:center;width:100%}
+
+  /* ── Steps ── */
+  .step{opacity:0;transform:translateY(18px);transition:opacity 0.5s ease,transform 0.5s ease;
+        width:100%;max-width:1100px;margin:0.3rem 0;padding:0.6rem clamp(0.8rem, 2vw, 1.5rem);
+        border-radius:10px;font-size:clamp(0.9rem, 2vw, 1.25rem);line-height:1.6}
+  .step.visible{opacity:1;transform:translateY(0)}
+
+  .step-text{background:rgba(255,255,255,0.06)}
+  .step-eq{background:rgba(142,202,230,0.1);border-left:4px solid #8ecae6;
+           font-size:clamp(1rem, 2.5vw, 1.5rem);text-align:center;padding:0.7rem clamp(0.5rem, 2vw, 1.5rem);
+           overflow-x:auto}
+  .step-result{background:rgba(0,200,120,0.12);border-left:4px solid #00c878;
+               font-size:clamp(1rem, 2.5vw, 1.5rem);text-align:center;padding:0.7rem clamp(0.5rem, 2vw, 1.5rem);
+               overflow-x:auto}
+  .step-note{background:rgba(255,183,77,0.1);border-left:4px solid #ffb74d;
+             font-size:clamp(0.85rem, 1.8vw, 1.1rem);font-style:italic;color:#ffb74d}
+  .step-question{background:rgba(255,100,100,0.1);border-left:4px solid #ff6464;
+                 font-size:clamp(0.95rem, 2.2vw, 1.4rem);text-align:center;color:#ff8a8a}
+  .step-table{background:rgba(142,202,230,0.08);border-left:4px solid #8ecae6;
+              padding:0.7rem clamp(0.4rem, 1.5vw, 1.5rem);overflow-x:auto}
+  .step-table table{width:100%;border-collapse:collapse;font-size:clamp(0.75rem, 1.6vw, 1.15rem)}
+  .step-table th{background:rgba(142,202,230,0.15);padding:0.4rem clamp(0.3rem, 1vw, 1rem);text-align:center;border:1px solid rgba(255,255,255,0.15);white-space:nowrap}
+  .step-table td{padding:0.4rem clamp(0.3rem, 1vw, 1rem);text-align:center;border:1px solid rgba(255,255,255,0.1)}
+
+  /* ── Beispiel-Karten (Alltag / Technik) ── */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0.8rem;width:100%}
+  .ex-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;
+           padding:1rem;text-align:center}
+  .ex-card .emoji{font-size:2.2rem;line-height:1}
+  .ex-card .et{font-weight:600;color:#fff;margin:0.4rem 0 0.2rem}
+  .ex-card .ed{font-size:clamp(0.8rem,1.6vw,1rem);color:#cbd5e1}
+  .ex-card.tech{border-color:rgba(142,202,230,0.4)}
+  .ex-card.alltag{border-color:rgba(255,183,77,0.4)}
+
+  /* ── Diagram (SVG) ── */
+  .diagram{display:flex;justify-content:center;align-items:center;width:100%;max-width:520px;margin:0 auto}
+  .diagram svg{width:100%;height:auto}
+
+  /* ── Interaktiver Simulator ── */
+  .sim{background:rgba(142,202,230,0.07);border:1px solid rgba(142,202,230,0.3);border-radius:14px;
+       padding:1rem clamp(0.8rem,2vw,1.5rem);width:100%;max-width:640px;margin:0 auto;text-align:center}
+  .sim svg{width:170px;height:170px}
+  .sim input[type=range]{width:90%;max-width:420px;margin:0.6rem 0;accent-color:#8ecae6}
+  .sim .readout{display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;font-size:clamp(0.9rem,2vw,1.2rem);margin-top:0.3rem}
+  .sim .readout b{color:#8ecae6}
+  .sim .lbl{font-size:0.85rem;color:#94a3b8}
+
+  /* ── MathJax overflow ── */
+  mjx-container{overflow-x:auto;max-width:100%;display:inline-block}
+
+  /* ── Progress / Navigation ── */
+  .progress{position:fixed;top:0;left:0;height:4px;background:#8ecae6;transition:width 0.4s ease;z-index:100}
+  .nav-hint{position:fixed;bottom:12px;right:20px;font-size:0.8rem;color:#475569;z-index:100}
+  .slide-counter{position:fixed;bottom:12px;left:20px;font-size:0.8rem;color:#475569;z-index:100}
+
+  /* ── Footer Links ── */
+  .footer-links{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);
+                display:flex;gap:1.5rem;font-size:clamp(0.7rem,1.4vw,0.85rem);z-index:100}
+  .footer-links a{color:#64748b;text-decoration:none;transition:color 0.3s}
+  .footer-links a:hover{color:#8ecae6}
+
+  /* ── Mobile ── */
+  @media (max-width: 600px) {
+    .slide{padding:1.2rem 0.8rem;justify-content:flex-start;padding-top:2rem}
+    .step{margin:0.2rem 0;border-radius:8px}
+    .step-eq, .step-result{border-left-width:3px}
+    .step-table td, .step-table th{padding:0.3rem 0.4rem}
+    .footer-links{gap:0.8rem;bottom:28px}
+  }
+</style>
+</head>
+<body class="show-cursor">
+
+<!-- ══════════════ SLIDE 0: Titel ══════════════ -->
+<div class="slide slide-title active" data-steps="0">
+  <h1>Drehimpuls &mdash; warum sich Drehungen „merken"</h1>
+  <div class="sub">Von der Pirouette bis zum Satelliten</div>
+  <div class="date">11NP Physik &middot; Lore-Lorentz-Schule</div>
+</div>
+
+<!-- ══════════════ SLIDE 1: Einstieg Pirouette ══════════════ -->
+<div class="slide" data-steps="4">
+  <div class="slide-head">Das Pirouetten-R&auml;tsel</div>
+
+  <div class="step step-text" data-step="1">
+    Eine Eiskunstl&auml;uferin dreht sich mit ausgestreckten Armen langsam. Dann zieht sie die Arme eng an den K&ouml;rper &mdash; und dreht sich pl&ouml;tzlich <strong>viel schneller</strong>. Ganz ohne abzusto&szlig;en.
+  </div>
+
+  <div class="step step-question" data-step="2">
+    Woher kommt die zus&auml;tzliche Drehgeschwindigkeit, wenn niemand sie anschiebt?
+  </div>
+
+  <div class="step step-text" data-step="3">
+    Der Trick: Eine Drehung besitzt eine Art „Schwung", der <strong>erhalten</strong> bleibt. Verteilt man die Masse n&auml;her an die Drehachse, muss sich die Drehung beschleunigen.
+  </div>
+
+  <div class="step step-note" data-step="4">
+    Diese erhaltene Gr&ouml;&szlig;e hei&szlig;t <strong>Drehimpuls</strong> \(L\).
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 2: Definition L = J·ω ══════════════ -->
+<div class="slide" data-steps="5">
+  <div class="slide-head">Definition: Drehimpuls</div>
+
+  <div class="step step-text" data-step="1">
+    Der Drehimpuls ist das Drehpendant zum Impuls \(p = m\cdot v\) der geradlinigen Bewegung. Statt Masse steht das <strong>Tr&auml;gheitsmoment</strong> \(J\), statt Geschwindigkeit die <strong>Winkelgeschwindigkeit</strong> \(\omega\).
+  </div>
+
+  <div class="step step-eq" data-step="2">
+    \[\boxed{L = J \cdot \omega}\]
+  </div>
+
+  <div class="step step-text" data-step="3">
+    <strong>\(L\)</strong> = Drehimpuls (in kg&middot;m&sup2;/s)<br>
+    <strong>\(J\)</strong> = Tr&auml;gheitsmoment (in kg&middot;m&sup2;) &mdash; h&auml;ngt von Masse <em>und</em> ihrer Verteilung zur Achse ab<br>
+    <strong>\(\omega\)</strong> = Winkelgeschwindigkeit (in 1/s = rad/s)
+  </div>
+
+  <div class="step step-table" data-step="4">
+    <table>
+      <tr><th></th><th>geradlinig</th><th>Drehung</th></tr>
+      <tr><td>Tr&auml;gheit</td><td>Masse \(m\)</td><td>Tr&auml;gheitsmoment \(J\)</td></tr>
+      <tr><td>Geschwindigkeit</td><td>\(v\)</td><td>\(\omega\)</td></tr>
+      <tr><td>„Schwung"</td><td>Impuls \(p=m\,v\)</td><td>Drehimpuls \(L=J\,\omega\)</td></tr>
+    </table>
+  </div>
+
+  <div class="step step-note" data-step="5">
+    \(L\) ist ein <strong>Vektor</strong> &mdash; er zeigt entlang der Drehachse. Auch die <em>Richtung</em> der Achse bleibt erhalten (wichtig beim Kreisel!).
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 3: Drehimpulserhaltung ══════════════ -->
+<div class="slide" data-steps="5">
+  <div class="slide-head">Der Drehimpuls-Erhaltungssatz</div>
+
+  <div class="step step-text" data-step="1">
+    Wirkt von au&szlig;en <strong>kein Drehmoment</strong> (\(M=0\)), so bleibt der Drehimpuls eines Systems <strong>konstant</strong>.
+  </div>
+
+  <div class="step step-eq" data-step="2">
+    \[L = J \cdot \omega = \text{konstant}\]
+  </div>
+
+  <div class="step step-text" data-step="3">
+    Verkleinert man \(J\) (Masse n&auml;her zur Achse), muss \(\omega\) <strong>gr&ouml;&szlig;er</strong> werden &mdash; und umgekehrt:
+  </div>
+
+  <div class="step step-eq" data-step="4">
+    \[J_1 \cdot \omega_1 = J_2 \cdot \omega_2\]
+  </div>
+
+  <div class="step step-result" data-step="5">
+    Genau das passiert bei der Pirouette: Arme anlegen &rarr; \(J\) sinkt &rarr; \(\omega\) steigt.
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 4: Interaktiver Pirouetten-Simulator ══════════════ -->
+<div class="slide" data-steps="2">
+  <div class="slide-head">Selbst ausprobieren: Pirouetten-Simulator</div>
+
+  <div class="step step-text" data-step="1">
+    Der Drehimpuls \(L\) ist <strong>fest vorgegeben</strong> (kein &auml;u&szlig;eres Drehmoment). Ziehe den Regler, um die Arme anzulegen oder auszustrecken &mdash; beobachte \(J\) und \(\omega = L/J\).
+  </div>
+
+  <div class="step" data-step="2">
+    <div class="sim no-nav">
+      <svg viewBox="0 0 200 200" aria-label="Drehende Figur von oben">
+        <circle cx="100" cy="100" r="92" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="2"/>
+        <g id="simRotor">
+          <!-- Körper -->
+          <circle cx="100" cy="100" r="14" fill="#8ecae6"/>
+          <!-- Arme (Länge wird per JS gesetzt) -->
+          <line id="armL" x1="100" y1="100" x2="30"  y2="100" stroke="#ffb74d" stroke-width="6" stroke-linecap="round"/>
+          <line id="armR" x1="100" y1="100" x2="170" y2="100" stroke="#ffb74d" stroke-width="6" stroke-linecap="round"/>
+          <circle id="handL" cx="30"  cy="100" r="9" fill="#ff8a8a"/>
+          <circle id="handR" cx="170" cy="100" r="9" fill="#ff8a8a"/>
+        </g>
+      </svg>
+      <div class="lbl">Arme: <span id="simArmTxt">ausgestreckt</span></div>
+      <input type="range" id="simSlider" min="0" max="100" value="100">
+      <div class="readout">
+        <div>\(L\) = <b>6,0</b> kg&middot;m&sup2;/s</div>
+        <div>\(J\) = <b><span id="simJ">3,0</span></b> kg&middot;m&sup2;</div>
+        <div>\(\omega\) = <b><span id="simW">2,0</span></b> rad/s</div>
+        <div><span id="simF">0,32</span> Umdr./s</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 5: Alltagsbeispiele ══════════════ -->
+<div class="slide" data-steps="2">
+  <div class="slide-head">Drehimpuls im Alltag</div>
+
+  <div class="step" data-step="1">
+    <div class="cards">
+      <div class="ex-card alltag"><div class="emoji">&#x26F8;&#xFE0F;</div><div class="et">Pirouette</div><div class="ed">Arme anlegen &rarr; \(J\downarrow\), \(\omega\uparrow\). Schneller drehen ohne Absto&szlig;en.</div></div>
+      <div class="ex-card alltag"><div class="emoji">&#x1FA91;</div><div class="et">Drehstuhl &amp; Hanteln</div><div class="ed">Arme mit Gewichten ausstrecken/anlegen &mdash; das klassische Schulexperiment.</div></div>
+      <div class="ex-card alltag"><div class="emoji">&#x1F408;</div><div class="et">Fallende Katze</div><div class="ed">Gesamt-\(L=0\): Vorder- und Hinterk&ouml;rper gegenl&auml;ufig drehen &rarr; landet auf den Pfoten.</div></div>
+      <div class="ex-card alltag"><div class="emoji">&#x1F6B4;</div><div class="et">Fahrrad f&auml;hrt stabil</div><div class="ed">Die drehenden R&auml;der wirken wie Kreisel &mdash; ihre Drehachse „bleibt stehen".</div></div>
+      <div class="ex-card alltag"><div class="emoji">&#x1F94F;</div><div class="et">Frisbee &amp; Diskus</div><div class="ed">Spin stabilisiert die Flugachse &mdash; das Sportger&auml;t „kippt" nicht.</div></div>
+      <div class="ex-card alltag"><div class="emoji">&#x1F938;</div><div class="et">Salto &amp; Turmspringen</div><div class="ed">Eng machen (Hocke) &rarr; schnelle Rotation; strecken &rarr; abbremsen vor dem Eintauchen.</div></div>
+    </div>
+  </div>
+
+  <div class="step step-note" data-step="2">
+    Gemeinsames Prinzip: \(L\) bleibt erhalten &mdash; ge&auml;ndert wird nur die Massenverteilung (\(J\)).
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 6: Technikbeispiele ══════════════ -->
+<div class="slide" data-steps="2">
+  <div class="slide-head">Drehimpuls in der Technik</div>
+
+  <div class="step" data-step="1">
+    <div class="cards">
+      <div class="ex-card tech"><div class="emoji">&#x1F504;</div><div class="et">Schwungrad-Speicher</div><div class="ed">Gro&szlig;es \(J\), hohe \(\omega\): speichert Rotationsenergie (Notstrom, Bus-Antrieb, Netzstabilisierung).</div></div>
+      <div class="ex-card tech"><div class="emoji">&#x1F681;</div><div class="et">Hubschrauber-Heckrotor</div><div class="ed">Der Hauptrotor erzeugt ein Drehmoment auf den Rumpf &mdash; der Heckrotor h&auml;lt dagegen.</div></div>
+      <div class="ex-card tech"><div class="emoji">&#x1F6F0;&#xFE0F;</div><div class="et">Drallrad im Satellit</div><div class="ed">„Reaction wheel": Rad beschleunigen &rarr; Satellit dreht sich gegenl&auml;ufig &mdash; Lageregelung ohne Treibstoff.</div></div>
+      <div class="ex-card tech"><div class="emoji">&#x1F9ED;</div><div class="et">Kreiselkompass</div><div class="ed">Schnell rotierender Kreisel h&auml;lt seine Achsrichtung &mdash; zeigt stabil nach Norden, ohne Magnetismus.</div></div>
+      <div class="ex-card tech"><div class="emoji">&#x1FA9A;</div><div class="et">T&ouml;pferscheibe</div><div class="ed">Einmal in Schwung gebracht, l&auml;uft sie wegen ihres Drehimpulses lange gleichm&auml;&szlig;ig weiter.</div></div>
+      <div class="ex-card tech"><div class="emoji">&#x1F3CD;&#xFE0F;</div><div class="et">Motorrad &amp; Reifen</div><div class="ed">Kreiselwirkung der R&auml;der stabilisiert die Fahrt; Lenken erfolgt &uuml;ber gezieltes Verkippen.</div></div>
+    </div>
+  </div>
+
+  <div class="step step-note" data-step="2">
+    Technik nutzt beides: die <strong>Speicherung</strong> von Drehimpuls (Schwungrad) und seine <strong>Erhaltung der Richtung</strong> (Kreisel, Drallrad).
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 7: M = ΔL/Δt (Brücke zum Drehmoment) ══════════════ -->
+<div class="slide" data-steps="4">
+  <div class="slide-head">Wie &auml;ndert man einen Drehimpuls?</div>
+
+  <div class="step step-text" data-step="1">
+    Nur ein <strong>Drehmoment</strong> \(M\) kann den Drehimpuls &auml;ndern &mdash; analog dazu, dass nur eine Kraft den Impuls &auml;ndert (\(F=\frac{\Delta p}{\Delta t}\)).
+  </div>
+
+  <div class="step step-eq" data-step="2">
+    \[M = \frac{\Delta L}{\Delta t}\]
+  </div>
+
+  <div class="step step-text" data-step="3">
+    Ohne Drehmoment (\(M=0\)) folgt \(\Delta L = 0\) &mdash; das ist genau der Erhaltungssatz von vorhin.
+  </div>
+
+  <div class="step step-note" data-step="4">
+    Damit schlie&szlig;t sich der Kreis zum Thema <strong>Drehmoment</strong>: \(M = J\cdot\alpha\) und \(M = \dfrac{\Delta L}{\Delta t}\) sind zwei Seiten derselben Medaille.
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 8: Rechenbeispiel Pirouette ══════════════ -->
+<div class="slide" data-steps="6">
+  <div class="slide-head">Rechenbeispiel: Pirouette</div>
+
+  <div class="step step-text" data-step="1">
+    Eine Eiskunstl&auml;uferin dreht sich mit ausgestreckten Armen: \(J_1 = 4{,}0\ \text{kg&middot;m&sup2;}\), \(\omega_1 = 3{,}0\ \text{rad/s}\). Sie legt die Arme an: \(J_2 = 1{,}2\ \text{kg&middot;m&sup2;}\).
+  </div>
+
+  <div class="step step-question" data-step="2">
+    Welche Winkelgeschwindigkeit \(\omega_2\) erreicht sie?
+  </div>
+
+  <div class="step step-text" data-step="3">
+    Drehimpulserhaltung (kein &auml;u&szlig;eres Drehmoment):
+  </div>
+
+  <div class="step step-eq" data-step="4">
+    \[J_1\,\omega_1 = J_2\,\omega_2 \quad\Rightarrow\quad \omega_2 = \frac{J_1\,\omega_1}{J_2}\]
+  </div>
+
+  <div class="step step-eq" data-step="5">
+    \[\omega_2 = \frac{4{,}0 \cdot 3{,}0}{1{,}2}\ \text{rad/s}\]
+  </div>
+
+  <div class="step step-result" data-step="6">
+    \[\omega_2 = 10\ \text{rad/s} \quad(\text{mehr als 3-mal so schnell!})\]
+  </div>
+</div>
+
+<!-- ══════════════ SLIDE 9: Zusammenfassung ══════════════ -->
+<div class="slide" data-steps="5">
+  <div class="slide-head">Das Wichtigste auf einen Blick</div>
+
+  <div class="step step-eq" data-step="1">
+    \[L = J \cdot \omega \qquad M = \frac{\Delta L}{\Delta t}\]
+  </div>
+
+  <div class="step step-text" data-step="2">
+    &bull; Drehimpuls = „Drehschwung", Pendant zum Impuls \(p=m\,v\).
+  </div>
+
+  <div class="step step-text" data-step="3">
+    &bull; <strong>Erhaltung:</strong> ohne &auml;u&szlig;eres Drehmoment ist \(L\) konstant &rarr; \(J\downarrow \Rightarrow \omega\uparrow\).
+  </div>
+
+  <div class="step step-text" data-step="4">
+    &bull; <strong>Alltag:</strong> Pirouette, Drehstuhl, Katze, Fahrrad. &nbsp;<strong>Technik:</strong> Schwungrad, Heckrotor, Drallrad, Kreiselkompass.
+  </div>
+
+  <div class="step step-note" data-step="5">
+    \(L\) ist ein Vektor: auch die <strong>Richtung</strong> der Drehachse bleibt erhalten &mdash; das macht Kreisel so n&uuml;tzlich.
+  </div>
+</div>
+
+<!-- ── Progress bar (top) ── -->
+<div class="progress" id="progress"></div>
+<div class="slide-counter" id="slideCounter"></div>
+<div class="nav-hint" id="navHint">&larr; &rarr; oder Klick</div>
+
+<!-- ── Footer links ── -->
+<div class="footer-links">
+  <a href="drehmoment.html">Drehmoment</a>
+  <a href="lernliste-q4.html">Lernliste Q4</a>
+  <a href="index.html">&Uuml;bersicht</a>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+let currentSlide = 0;
+let currentStep = 0;
+let busy = false;
+let touchStartX = 0;
+
+function safeTypeset() {
+  try { if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise(); }
+  catch(e) {}
+}
+
+function updateProgress() {
+  const pct = (currentSlide / (slides.length - 1)) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+  document.getElementById('slideCounter').textContent = (currentSlide + 1) + ' / ' + slides.length;
+}
+
+function showSlide(idx) {
+  slides.forEach(s => s.classList.remove('active'));
+  slides[idx].classList.add('active');
+  slides[idx].querySelectorAll('.step').forEach(s => s.classList.remove('visible'));
+  currentStep = 0;
+  updateProgress();
+  safeTypeset();
+}
+
+function revealNextStep() {
+  const steps = slides[currentSlide].querySelectorAll('.step');
+  if (currentStep < steps.length) {
+    steps[currentStep].classList.add('visible');
+    currentStep++;
+    safeTypeset();
+    return true;
+  }
+  return false;
+}
+
+function next() {
+  if (busy) return;
+  busy = true;
+  setTimeout(() => { busy = false; }, 200);
+  if (!revealNextStep()) {
+    if (currentSlide < slides.length - 1) {
+      currentSlide++;
+      showSlide(currentSlide);
+    }
+  }
+}
+
+function prev() {
+  if (busy) return;
+  busy = true;
+  setTimeout(() => { busy = false; }, 200);
+  if (currentStep > 0) {
+    const steps = slides[currentSlide].querySelectorAll('.step');
+    currentStep--;
+    steps[currentStep].classList.remove('visible');
+  } else if (currentSlide > 0) {
+    currentSlide--;
+    showSlide(currentSlide);
+    const steps = slides[currentSlide].querySelectorAll('.step');
+    steps.forEach(s => s.classList.add('visible'));
+    currentStep = steps.length;
+  }
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') { e.preventDefault(); next(); }
+  if (e.key === 'ArrowLeft' || e.key === 'Backspace') { e.preventDefault(); prev(); }
+  if (e.key === 'f' || e.key === 'F') {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  }
+});
+
+document.addEventListener('touchstart', function(e) {
+  if (e.target.closest('.no-nav')) return;
+  touchStartX = e.changedTouches[0].clientX;
+}, {passive: true});
+
+document.addEventListener('touchend', function(e) {
+  if (e.target.closest('.no-nav')) return;
+  e.preventDefault();
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 50) { if (dx < 0) next(); else prev(); }
+  else { if (e.changedTouches[0].clientX > window.innerWidth * 0.3) next(); else prev(); }
+}, {passive: false});
+
+document.addEventListener('click', function(e) {
+  if (e.target.closest('.footer-links')) return;
+  if (e.target.closest('.no-nav')) return;
+  if (e.clientX > window.innerWidth * 0.3) next();
+  else prev();
+});
+
+showSlide(0);
+setTimeout(function() { document.getElementById('navHint').style.opacity = '0'; }, 4000);
+
+/* ── Pirouetten-Simulator ── */
+(function(){
+  const L = 6.0;                 // Drehimpuls (konstant)
+  const slider = document.getElementById('simSlider');
+  if (!slider) return;
+  const rotor = document.getElementById('simRotor');
+  const armL = document.getElementById('armL'), armR = document.getElementById('armR');
+  const handL = document.getElementById('handL'), handR = document.getElementById('handR');
+  const outJ = document.getElementById('simJ'), outW = document.getElementById('simW'), outF = document.getElementById('simF');
+  const armTxt = document.getElementById('simArmTxt');
+  let omega = 2.0;
+  const fmt = (x, n) => x.toFixed(n).replace('.', ',');
+
+  function update() {
+    const t = slider.value / 100;            // 0 = angelegt, 1 = ausgestreckt
+    const J = 0.8 + t * 2.2;                  // J zwischen 0,8 und 3,0 kg·m²
+    omega = L / J;
+    const len = 16 + t * 56;                  // Armlänge 16…72 px
+    armL.setAttribute('x2', 100 - len); handL.setAttribute('cx', 100 - len);
+    armR.setAttribute('x2', 100 + len); handR.setAttribute('cx', 100 + len);
+    outJ.textContent = fmt(J, 1);
+    outW.textContent = fmt(omega, 1);
+    outF.textContent = fmt(omega / (2 * Math.PI), 2);
+    armTxt.textContent = t > 0.66 ? 'ausgestreckt' : (t > 0.33 ? 'halb angelegt' : 'eng angelegt');
+  }
+  slider.addEventListener('input', update);
+
+  let angle = 0, last = null;
+  function loop(ts) {
+    if (last !== null) {
+      const dt = (ts - last) / 1000;
+      angle = (angle + omega * 25 * dt) % 360;  // sichtbare Drehung ∝ ω
+      rotor.setAttribute('transform', 'rotate(' + angle + ' 100 100)');
+    }
+    last = ts;
+    requestAnimationFrame(loop);
+  }
+  update();
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
