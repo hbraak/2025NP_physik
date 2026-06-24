@@ -125,6 +125,7 @@ main { max-width: 920px; margin: 0 auto; padding: 26px 24px 60px; }
 .s-erot     .section-icon { background: #fde8e8; }
 .s-speicher .section-icon { background: #d8f5dc; }
 .s-rollen   .section-icon { background: #e8f0e0; }
+.s-drehimpuls .section-icon { background: #dceefc; }
 .section-title { font-size: 0.98rem; font-weight: 700; }
 .section-count { font-size: 0.72rem; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; margin-left: auto; }
 
@@ -773,6 +774,56 @@ footer {
   </div>
 </div>
 
+<!-- ══════════════════════════════════════════════
+     9. DREHIMPULS & DREHIMPULSERHALTUNG
+══════════════════════════════════════════════ -->
+<div class="section s-drehimpuls">
+  <div class="section-header">
+    <div class="section-icon">🌀</div>
+    <div class="section-title">Drehimpuls &amp; Drehimpulserhaltung</div>
+    <div class="section-count" id="cnt-drehimpuls"></div>
+  </div>
+  <div class="card-list" id="sec-drehimpuls">
+
+    <div class="comp-card" data-id="di1" data-sec="drehimpuls">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann den Drehimpuls \(L = J \cdot \omega\) berechnen und die Analogie zum Impuls \(p = m \cdot v\) erläutern.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('di1')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="di2" data-sec="drehimpuls">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann den Drehimpulserhaltungssatz \(J_1 \omega_1 = J_2 \omega_2\) anwenden (Pirouette, Drehstuhl) und die Voraussetzung \(M = 0\) nennen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('di2')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="di3" data-sec="drehimpuls">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann begründen, warum \(\omega\) steigt, wenn \(J\) sinkt, und den Energiezuwachs (\(E = \tfrac{1}{2}J\omega^2\)) auf verrichtete Arbeit zurückführen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('di3')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="di4" data-sec="drehimpuls">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann technische Anwendungen des Drehimpulses erläutern und quantitativ nutzen (Drallrad im Satellit, Kreiselkompass, Schwungrad).</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('di4')">Üben</button>
+    </div>
+
+  </div>
+</div>
+
 </main>
 <footer>Lore-Lorentz-Schule &nbsp;&middot;&nbsp; Physik-LK 11NP &nbsp;&middot;&nbsp; Lernliste Klausur Q4</footer>
 
@@ -801,6 +852,87 @@ footer {
 // TASK DATA
 // ─────────────────────────────────────────────
 const T = {
+
+di1:{title:"Drehimpuls L = J·ω berechnen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Ein Schwungrad hat das Trägheitsmoment \\(J = 2{,}0\\,\\text{kg·m}^2\\) und dreht sich mit \\(\\omega = 12\\,\\text{rad/s}\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie den Drehimpuls \\(L\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Die Drehzahl wird verdoppelt (\\(\\omega = 24\\,\\text{rad/s}\\)). Wie groß ist \\(L\\) jetzt?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Nennen Sie die translatorische Analogie zum Drehimpuls.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( L = J \\cdot \\omega = 2{,}0 \\cdot 12 = 24\\,\\text{kg·m}^2/\\text{s} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( L = 2{,}0 \\cdot 24 = 48\\,\\text{kg·m}^2/\\text{s} \\) — doppelt so groß
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Impuls \\( p = m \\cdot v \\) (Masse ↔ \\(J\\), Geschwindigkeit ↔ \\(\\omega\\))
+</div></div>
+<div class="result">L ist proportional zu ω: doppelte Drehzahl → doppelter Drehimpuls</div>`,
+prompt:`Ich übe den Drehimpuls L = J·ω (Klasse 11). Erstelle 3 Aufgaben mit Technikbezug (Schwungrad, Turbine, Rad). Vollständige Lösungen mit SI-Einheiten.`},
+
+di2:{title:"Drehimpulserhaltung – Pirouette (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Eine Eiskunstläuferin dreht sich mit ausgestreckten Armen: \\(J_1 = 3{,}6\\,\\text{kg·m}^2\\), \\(\\omega_1 = 2{,}0\\,\\text{rad/s}\\). Sie legt die Arme an: \\(J_2 = 1{,}2\\,\\text{kg·m}^2\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die neue Winkelgeschwindigkeit \\(\\omega_2\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Um welchen Faktor dreht sie sich schneller?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Welche Bedingung sichert die Drehimpulserhaltung?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( \\omega_2 = \\dfrac{J_1 \\omega_1}{J_2} = \\dfrac{3{,}6 \\cdot 2{,}0}{1{,}2} = 6{,}0\\,\\text{rad/s} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Faktor \\( 6{,}0 / 2{,}0 = 3 \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Es wirkt kein äußeres Drehmoment (\\(M = 0\\)) → \\(L = J\\omega = \\text{const}\\).
+</div></div>
+<div class="result">Arme anlegen → J sinkt → ω steigt im gleichen Verhältnis</div>`,
+prompt:`Ich übe die Drehimpulserhaltung J₁ω₁ = J₂ω₂ (Klasse 11) an Alltagsbeispielen (Pirouette, Drehstuhl, Karussell). Erstelle 3 Aufgaben mit vollständigen Lösungen.`},
+
+di3:{title:"Drehimpulserhaltung & Energie (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Auf einem reibungsarmen Drehstuhl: \\(J_1 = 2{,}0\\,\\text{kg·m}^2\\), \\(\\omega_1 = 3{,}0\\,\\text{rad/s}\\). Nach dem Anlegen der Gewichte: \\(J_2 = 0{,}8\\,\\text{kg·m}^2\\).</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(\\omega_2\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie die Rotationsenergie vorher (\\(E_1\\)) und nachher (\\(E_2\\)).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Die Energie hat zugenommen — woher kommt sie?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( \\omega_2 = \\dfrac{2{,}0 \\cdot 3{,}0}{0{,}8} = 7{,}5\\,\\text{rad/s} \\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\( E_1 = \\tfrac{1}{2}\\cdot 2{,}0 \\cdot 3{,}0^2 = 9{,}0\\,\\text{J} \\) ;
+  \\( E_2 = \\tfrac{1}{2}\\cdot 0{,}8 \\cdot 7{,}5^2 = 22{,}5\\,\\text{J} \\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Aus der Muskelarbeit: Das Heranziehen der Gewichte gegen die nach außen gerichtete Trägheit verrichtet Arbeit. \\(L\\) bleibt erhalten, \\(E_{\\text{rot}}\\) nicht.
+</div></div>
+<div class="result">Drehimpuls erhalten, Rotationsenergie steigt durch verrichtete Arbeit</div>`,
+prompt:`Ich übe Drehimpulserhaltung kombiniert mit Rotationsenergie E = ½Jω² (Klasse 11). Erstelle 2 Aufgaben, bei denen die Energiebilanz erklärt werden muss. Vollständige Lösungen.`},
+
+di4:{title:"Drallrad im Satellit (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Ein Satellit (\\(J_S = 150\\,\\text{kg·m}^2\\)) schwebt antriebslos und ruht (\\(L_{\\text{ges}} = 0\\)). Zur Lageregelung wird ein inneres Drallrad (\\(J_R = 0{,}5\\,\\text{kg·m}^2\\)) auf \\(\\omega_R = 300\\,\\text{rad/s}\\) hochgefahren.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Mit welcher Winkelgeschwindigkeit \\(\\omega_S\\) dreht sich der Satellit (und in welche Richtung)?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Warum kommt diese Lageregelung ohne Treibstoff aus?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\( L_{\\text{ges}} = 0 \\Rightarrow |\\omega_S| = \\dfrac{J_R \\omega_R}{J_S} = \\dfrac{0{,}5 \\cdot 300}{150} = 1{,}0\\,\\text{rad/s} \\) — gegenläufig zum Rad.
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Der Drehimpuls wird nur intern umverteilt (Rad schnell ↔ Satellit langsam gegenläufig). Kein Masseausstoß nötig, da \\(L_{\\text{ges}} = 0\\) bleibt.
+</div></div>
+<div class="result">Drallrad/Reaction Wheel: Lageregelung allein durch Drehimpulserhaltung</div>`,
+prompt:`Ich übe Drehimpulserhaltung in der Technik (Klasse 11): Drallrad/Reaction Wheel im Satellit, Hubschrauber-Heckrotor, Kreiselkompass. Erstelle 2 Aufgaben mit vollständigen Lösungen.`},
 
 z1:{title:"Bahngeschwindigkeit berechnen (AFB I)",
 aufgabe:`<div class="task-box">
@@ -1618,7 +1750,7 @@ function initState(){
     if(state[c.dataset.id]) c.classList.add('done');
   });
   updateProgress();
-  ['kreis','zentri','uebergang','traeg','steiner','erot','speicher','rollen'].forEach(s=>updateCnt(s));
+  ['kreis','zentri','uebergang','traeg','steiner','erot','speicher','rollen','drehimpuls'].forEach(s=>updateCnt(s));
 }
 
 // ─────────────────────────────────────────────
