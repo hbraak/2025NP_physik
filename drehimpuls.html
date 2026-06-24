@@ -161,6 +161,59 @@
   </div>
 </div>
 
+<!-- ══════════════ SLIDE 2b: Drehimpuls als Kreuzprodukt ══════════════ -->
+<div class="slide" data-steps="6">
+  <div class="slide-head">Drehimpuls als Vektor: das Kreuzprodukt</div>
+
+  <div class="step step-text" data-step="1">
+    \(L = J\cdot\omega\) liefert nur den <strong>Betrag</strong>. Ganz allgemein ist der Drehimpuls eines Massenpunkts das <strong>Kreuzprodukt</strong> aus Ortsvektor \(\vec{r}\) (von der Drehachse zum Teilchen) und Impuls \(\vec{p} = m\vec{v}\):
+  </div>
+
+  <div class="step step-eq" data-step="2">
+    \[\boxed{\vec{L} = \vec{r} \times \vec{p}}\]
+  </div>
+
+  <div class="step step-text" data-step="3">
+    <div class="diagram">
+      <svg viewBox="0 0 360 230" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="aBlue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#8ecae6"/></marker>
+          <marker id="aOrange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#ffb74d"/></marker>
+        </defs>
+        <!-- Ursprung / Drehachse -->
+        <circle cx="80" cy="165" r="5" fill="#e2e8f0"/>
+        <text x="62" y="185" fill="#94a3b8" font-size="13" font-family="IBM Plex Sans">O</text>
+        <!-- r -->
+        <line x1="80" y1="165" x2="300" y2="165" stroke="#8ecae6" stroke-width="3" marker-end="url(#aBlue)"/>
+        <text x="195" y="158" fill="#8ecae6" font-size="17" font-weight="600" font-family="IBM Plex Sans">r</text>
+        <!-- p -->
+        <line x1="80" y1="165" x2="80" y2="45" stroke="#ffb74d" stroke-width="3" marker-end="url(#aOrange)"/>
+        <text x="92" y="60" fill="#ffb74d" font-size="17" font-weight="600" font-family="IBM Plex Sans">p = m·v</text>
+        <!-- Winkel -->
+        <path d="M110,165 A30,30 0 0,0 80,135" stroke="#cbd5e1" stroke-width="1.5" fill="none"/>
+        <text x="104" y="142" fill="#cbd5e1" font-size="13" font-family="IBM Plex Sans">φ</text>
+        <!-- L aus der Ebene (⊙) -->
+        <circle cx="240" cy="95" r="16" fill="none" stroke="#00c878" stroke-width="2.5"/>
+        <circle cx="240" cy="95" r="3.5" fill="#00c878"/>
+        <text x="262" y="92" fill="#00c878" font-size="16" font-weight="600" font-family="IBM Plex Sans">L</text>
+        <text x="200" y="128" fill="#64748b" font-size="11" font-family="IBM Plex Sans">(aus der Ebene heraus)</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="step step-text" data-step="4">
+    <strong>Betrag:</strong> \(|\vec{L}| = r\,p\,\sin\varphi = r\,m\,v\,\sin\varphi\) &mdash; mit \(\varphi\) = Winkel zwischen \(\vec{r}\) und \(\vec{p}\). Maximal bei \(\varphi = 90^\circ\), null wenn \(\vec{r}\parallel\vec{p}\).
+  </div>
+
+  <div class="step step-note" data-step="5">
+    <strong>Rechte-Hand-Regel:</strong> Finger zeigen von \(\vec{r}\) nach \(\vec{p}\), der Daumen gibt die Richtung von \(\vec{L}\) an &mdash; senkrecht auf beiden, also entlang der Drehachse.
+  </div>
+
+  <div class="step step-result" data-step="6">
+    Für die Kreisbewegung (\(\vec{r}\perp\vec{p}\)): \(L = r\,m\,v = m\,r^2\,\omega = J\,\omega\) &mdash; die bekannte Formel ist der Spezialfall. Analog gilt für das Drehmoment \(\vec{M} = \vec{r}\times\vec{F}\).
+  </div>
+</div>
+
 <!-- ══════════════ SLIDE 3: Drehimpulserhaltung ══════════════ -->
 <div class="slide" data-steps="5">
   <div class="slide-head">Der Drehimpuls-Erhaltungssatz</div>
