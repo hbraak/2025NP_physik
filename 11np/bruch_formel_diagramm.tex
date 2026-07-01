@@ -1,0 +1,184 @@
+\documentclass[11pt,a4paper]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{siunitx}
+\sisetup{locale=DE, per-mode=fraction}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{fontawesome5}
+\usepackage{tikz}
+\usepackage{scrlayer-scrpage}
+\usepackage{geometry}
+\geometry{left=2cm,right=2cm,top=2.2cm,bottom=2cm,headheight=1.3cm}
+
+% ---- Schalter: 0 = Schüler-Arbeitsblatt, 1 = Lösung ----
+\providecommand{\showloesung}{0}
+
+\clearpairofpagestyles
+\chead{\textbf{Physik/Mathe 11NP}}
+\ifnum\showloesung=1 \ohead{\textbf{-- LÖSUNGEN --}}\else\ohead{\textbf{Übungsblatt}}\fi
+\cfoot{\pagemark}
+\KOMAoptions{headsepline=0.4pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.4em}
+
+\newtcolorbox{block}[1]{colback=blue!4,colframe=blue!55!black,fonttitle=\bfseries\large,
+  coltitle=white,breakable,title={#1}}
+\newtcolorbox{loesungbox}[1]{colback=green!4,colframe=green!50!black,fonttitle=\bfseries,
+  coltitle=green!45!black,colbacktitle=white,breakable,title={#1}}
+\newtcolorbox{hinweis}{colback=orange!5,colframe=orange!70!black,fonttitle=\bfseries,
+  title={\faIcon{lightbulb}\ Hinweis},boxrule=0.5pt}
+
+\newcommand{\loesung}[1]{\ifnum\showloesung=1 \par\smallskip {\color{green!45!black}\faIcon{check}\ \textbf{Lösung:}\ #1}\fi}
+
+\begin{document}
+
+\begin{center}
+{\LARGE\textbf{Übungsblatt: Bruchrechnen, Formeln umstellen, Ausgleichsgerade}}\\[2pt]
+{\normalsize Physik/Mathe 11NP \quad$\cdot$\quad Alternative zum Film \quad$\cdot$\quad \today}
+\ifnum\showloesung=1 \\[4pt]{\large\color{green!45!black}\textbf{-- LÖSUNGSBLATT --}}\fi
+\end{center}
+
+\bigskip
+% ==================================================================
+\begin{block}{\faIcon{divide}\ Block A -- Bruchrechnen (Päckchen)}
+Berechne und kürze so weit wie möglich. Von oben nach unten wird es schwieriger.
+\end{block}
+
+\begin{enumerate}[label=A\arabic*),leftmargin=1.4cm]
+\item $\dfrac{2}{7}+\dfrac{3}{7}$
+  \loesung{$\dfrac{5}{7}$}
+\item $\dfrac{3}{4}-\dfrac{1}{6}$
+  \loesung{$\dfrac{9}{12}-\dfrac{2}{12}=\dfrac{7}{12}$}
+\item $\dfrac{2}{3}+\dfrac{4}{5}$
+  \loesung{$\dfrac{10}{15}+\dfrac{12}{15}=\dfrac{22}{15}=1\tfrac{7}{15}$}
+\item $\dfrac{3}{8}\cdot\dfrac{4}{9}$
+  \loesung{$\dfrac{12}{72}=\dfrac{1}{6}$}
+\item $\dfrac{5}{6}:\dfrac{10}{3}$
+  \loesung{$\dfrac{5}{6}\cdot\dfrac{3}{10}=\dfrac{15}{60}=\dfrac{1}{4}$}
+\item $\dfrac{2}{3}\cdot\dfrac{9}{4}-\dfrac{1}{2}$
+  \loesung{$\dfrac{18}{12}-\dfrac{1}{2}=\dfrac{3}{2}-\dfrac{1}{2}=1$}
+\item $\left(\dfrac{3}{4}-\dfrac{1}{2}\right):\dfrac{5}{8}$
+  \loesung{$\dfrac{1}{4}\cdot\dfrac{8}{5}=\dfrac{8}{20}=\dfrac{2}{5}$}
+\item $\dfrac{\;\frac{2}{3}\;}{\frac{4}{9}}$ \quad (Doppelbruch)
+  \loesung{$\dfrac{2}{3}\cdot\dfrac{9}{4}=\dfrac{18}{12}=\dfrac{3}{2}$}
+\item $\dfrac{\;\frac{5}{6}+\frac{1}{3}\;}{\;2-\frac{1}{2}\;}$
+  \loesung{Zähler $=\frac{5}{6}+\frac{2}{6}=\frac{7}{6}$; Nenner $=\frac{3}{2}$; also $\frac{7}{6}\cdot\frac{2}{3}=\frac{14}{18}=\frac{7}{9}$}
+\item $\dfrac{\;\frac{a}{b}\;}{\;\frac{c}{d}\;}$ allgemein umformen
+  \loesung{$\dfrac{a}{b}\cdot\dfrac{d}{c}=\dfrac{a\,d}{b\,c}$}
+\item $\dfrac{\;\frac{1}{x}+\frac{1}{y}\;}{\;\frac{1}{x\,y}\;}$ \quad (Bezug: Parallelschaltung)
+  \loesung{Zähler $=\dfrac{y+x}{xy}$; geteilt durch $\dfrac{1}{xy}$ gibt $\dfrac{x+y}{xy}\cdot xy=x+y$}
+\end{enumerate}
+
+\begin{hinweis}
+Doppelbruch: Durch einen Bruch teilen $=$ mit dem \emph{Kehrwert} multiplizieren.
+\end{hinweis}
+
+\bigskip
+% ==================================================================
+\begin{block}{\faIcon{exchange-alt}\ Block B -- Formeln umstellen}
+Stelle die Formel nach der \textbf{fett} gedruckten Größe um.
+\end{block}
+
+\begin{enumerate}[label=B\arabic*),leftmargin=1.4cm]
+\item $v=\dfrac{s}{t}$ \quad nach \textbf{t}
+  \loesung{$t=\dfrac{s}{v}$}
+\item $F=m\cdot a$ \quad nach \textbf{a}
+  \loesung{$a=\dfrac{F}{m}$}
+\item $\eta=\dfrac{P_\text{nutz}}{P_\text{zu}}$ \quad nach \textbf{$P_\text{zu}$}
+  \loesung{$P_\text{zu}=\dfrac{P_\text{nutz}}{\eta}$}
+\item $E=\dfrac{1}{2}m\,v^2$ \quad nach \textbf{v}
+  \loesung{$v^2=\dfrac{2E}{m}\Rightarrow v=\sqrt{\dfrac{2E}{m}}$}
+\item $a_z=\dfrac{v^2}{r}$ \quad nach \textbf{r} und nach \textbf{v}
+  \loesung{$r=\dfrac{v^2}{a_z}$ \quad und \quad $v=\sqrt{a_z\,r}$}
+\item $F_z=\dfrac{m\,v^2}{r}$ \quad nach \textbf{v}
+  \loesung{$v^2=\dfrac{F_z\,r}{m}\Rightarrow v=\sqrt{\dfrac{F_z\,r}{m}}$}
+\item $E_\text{rot}=\dfrac{1}{2}J\,\omega^2$ \quad nach \textbf{$\omega$}
+  \loesung{$\omega=\sqrt{\dfrac{2E_\text{rot}}{J}}$}
+\item $\dfrac{1}{R}=\dfrac{1}{R_1}+\dfrac{1}{R_2}$ \quad nach \textbf{R}
+  \loesung{$\dfrac{1}{R}=\dfrac{R_1+R_2}{R_1R_2}\Rightarrow R=\dfrac{R_1R_2}{R_1+R_2}$}
+\item $T=2\pi\sqrt{\dfrac{\ell}{g}}$ \quad nach \textbf{g}
+  \loesung{$\dfrac{T}{2\pi}=\sqrt{\dfrac{\ell}{g}}\Rightarrow \dfrac{T^2}{4\pi^2}=\dfrac{\ell}{g}\Rightarrow g=\dfrac{4\pi^2\ell}{T^2}$}
+\end{enumerate}
+
+\clearpage
+% ==================================================================
+\begin{block}{\faIcon{chart-line}\ Block C -- Messwerte, Diagramm und Ausgleichsgerade}
+Bei einem Federversuch wurde zur Kraft $F$ die Dehnung $s$ gemessen. Die Werte streuen (Messfehler!).
+\end{block}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+$F$ in \si{\newton} & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8\\\hline
+$s$ in \si{\centi\meter} & 2,1 & 3,6 & 6,5 & 7,2 & 11,0 & 11,8 & 15,5 & 16,2\\\hline
+\end{tabular}
+\end{center}
+
+\textbf{Aufgaben:}
+\begin{enumerate}[label=C\arabic*),leftmargin=1.4cm]
+\item Trage die Messpunkte in das Koordinatensystem ein.
+\item Zeichne eine \textbf{Ausgleichsgerade} (Trendlinie), die den Verlauf möglichst gut wiedergibt.
+\item Bestimme aus deiner Geraden die \textbf{Steigung} $m=\dfrac{\Delta s}{\Delta F}$ (mit Einheit).
+\item Lies den \textbf{$s$-Achsenabschnitt} ab. Was bedeutet er physikalisch?
+\end{enumerate}
+
+\begin{hinweis}
+Weil die Werte stark streuen, gibt es \textbf{nicht die eine} richtige Gerade -- verschiedene Geraden sind vertretbar. Wichtig: etwa gleich viele Punkte ober- und unterhalb der Linie, und nicht einfach benachbarte Punkte verbinden.
+\end{hinweis}
+
+\vspace{0.3cm}
+\begin{center}
+\begin{tikzpicture}[x=1.25cm,y=0.42cm]
+  % Gitter
+  \draw[step=1,gray!30,very thin] (0,0) grid (9,18);
+  \draw[step=1,gray!30,very thin,xstep=1,ystep=1] (0,0) grid (9,18);
+  % Achsen
+  \draw[->,thick] (0,0) -- (9.4,0) node[right] {$F$ in N};
+  \draw[->,thick] (0,0) -- (0,18.8) node[above] {$s$ in cm};
+  % x-Ticks
+  \foreach \x in {1,...,9} \draw (\x,0.15)--(\x,-0.15) node[below] {\small \x};
+  % y-Ticks (jede 2)
+  \foreach \y in {2,4,6,8,10,12,14,16,18} \draw (0.1,\y)--(-0.1,\y) node[left] {\small \y};
+  \ifnum\showloesung=1
+    % Messpunkte
+    \foreach \p in {(1,2.1),(2,3.6),(3,6.5),(4,7.2),(5,11.0),(6,11.8),(7,15.5),(8,16.2)}
+      \fill[blue] \p circle (0.09cm);
+    % Ausgleichsgerade (Regression): s = 2,12*F - 0,29
+    \draw[red,very thick] (0,-0.29) -- (9,18.79);
+    % Toleranzband (vertretbare Geraden)
+    \draw[red!40,thick,dashed] (0,1.0) -- (9,18.1);   % flacher/höher
+    \draw[red!40,thick,dashed] (0,-0.6) -- (9,17.6);  % steiler
+  \fi
+\end{tikzpicture}
+\end{center}
+
+\ifnum\showloesung=1
+\begin{loesungbox}{\faIcon{check-circle}\ Lösung Block C}
+\textbf{Ausgleichsgerade (Regression):} $s \approx 2{,}12\cdot F - 0{,}29$ (rote Linie).\\[2pt]
+\textbf{C3 -- Steigung:} $m=\dfrac{\Delta s}{\Delta F}\approx \SI{2{,}1}{\centi\meter\per\newton}$.
+Vertretbar ist alles zwischen etwa \SI{1{,}9}{} und \SI{2{,}3}{\centi\meter\per\newton} (gestrichelte Grenzgeraden).\\[2pt]
+\textbf{C4 -- Achsenabschnitt:} nahe $0$ (etwa $-0{,}3$ bis $+1$ cm). Physikalisch bedeutet er die Dehnung bei $F=\SI{0}{\newton}$ -- sie sollte $0$ sein; kleine Abweichungen entstehen durch Messfehler/Streuung.\\[2pt]
+\textbf{Merke:} Da die Punkte streuen, sind mehrere Geraden richtig, solange sie mittig durch die Punktwolke laufen. Man legt die Gerade \emph{nicht} durch zwei zufällige Punkte, sondern so, dass die Abweichungen insgesamt klein sind.
+\end{loesungbox}
+\fi
+
+\ifnum\showloesung=0
+\vfill
+\begin{center}
+\begin{tcolorbox}[colback=white,colframe=black!55,width=0.72\textwidth,halign=center,
+  fonttitle=\bfseries,title={\faIcon{qrcode}\ Selbstkontrolle}]
+Lösungen zum Vergleichen gibt es online -- QR-Code scannen:\\[4pt]
+\includegraphics[width=3cm]{qr_loesung.png}\\[2pt]
+{\footnotesize hbraak.github.io/2025NP\_physik/11np}
+\end{tcolorbox}
+\end{center}
+\fi
+
+\end{document}
