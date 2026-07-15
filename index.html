@@ -168,6 +168,26 @@
         </header>
         
         <div class="material-grid">
+            <a href="jahresrueckblick_quiz.html" class="material-card" data-url="jahresrueckblick_quiz.html">
+                <div class="card-header">
+                    <div class="card-icon blue">&#x1F393;</div>
+                    <div class="card-title">Physik-Jahresr&uuml;ckblick &mdash; Quiz</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            15 Fragen quer durch das ganze Schuljahr: Bewegung, Wurf &amp; Superposition, Kreisbewegung, Drehmoment &amp; Drehimpuls, Rotation &mdash; mit Sofort-Erkl&auml;rung nach jeder Antwort.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Quiz</span>
+                            <span class="tag">Jahresr&uuml;ckblick</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-jahresquiz"></div>
+                </div>
+            </a>
+
             <a href="drehmoment.html" class="material-card" data-url="drehmoment.html">
                 <div class="card-header">
                     <div class="card-icon blue">&#x1f527;</div>
@@ -846,6 +866,7 @@
         
         // QR-Codes generieren wenn Seite geladen
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-jahresquiz', 'jahresrueckblick_quiz.html');
             generateQR('qr-drehmoment', 'drehmoment.html');
             generateQR('qr-drehimpuls', 'drehimpuls.html');
             generateQR('qr-ab-drehimpuls', 'AB_Drehimpuls.pdf');

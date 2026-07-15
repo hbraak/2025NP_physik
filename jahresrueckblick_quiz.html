@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Physik-Jahresrückblick | 11NP</title>
+<style>
+  :root{ --bg:#f4f5f8; --card:#fff; --ink:#1b2330; --muted:#5a6675; --acc:#3949ab; --ok:#1a7a36; --no:#b23; --line:#dde2e8; }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+  header{background:#1b2330;color:#fff;padding:18px 16px}
+  header h1{margin:0;font-size:1.25rem}
+  header p{margin:4px 0 0;color:#b9c3d0;font-size:.9rem}
+  main{max-width:680px;margin:0 auto;padding:16px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin:14px 0;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .bar{height:8px;background:#e7eaef;border-radius:99px;overflow:hidden;margin-bottom:6px}
+  .bar > i{display:block;height:100%;background:var(--acc);width:0;transition:width .3s}
+  .meta{display:flex;justify-content:space-between;font-size:.85rem;color:var(--muted);margin-bottom:10px}
+  .q{font-size:1.15rem;font-weight:600;margin:6px 0 16px}
+  .q sup,.q sub{font-size:.7em}
+  .topic{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+         color:var(--acc);background:#e8eaf6;border-radius:6px;padding:3px 8px;margin-bottom:10px}
+  .opt{display:block;width:100%;text-align:left;border:2px solid var(--line);background:#fff;border-radius:10px;
+       padding:13px 15px;margin:9px 0;font-size:1rem;cursor:pointer;transition:.15s;color:var(--ink)}
+  .opt:hover{border-color:var(--acc)}
+  .opt:disabled{cursor:default}
+  .opt.ok{border-color:var(--ok);background:#eaf6ee}
+  .opt.no{border-color:var(--no);background:#fcecec}
+  .fb{margin-top:12px;padding:12px 14px;border-radius:10px;font-size:.95rem;display:none}
+  .fb.show{display:block}
+  .fb.ok{background:#eaf6ee;border:1px solid #bfe2c8}
+  .fb.no{background:#fcecec;border:1px solid #efc3c3}
+  .btn{display:inline-block;border:none;background:var(--acc);color:#fff;font-weight:600;font-size:1rem;
+       padding:12px 22px;border-radius:10px;cursor:pointer;margin-top:14px}
+  .btn:hover{filter:brightness(1.08)}
+  .center{text-align:center}
+  .score{font-size:2.4rem;font-weight:800;color:var(--acc)}
+  .hidden{display:none}
+  footer{max-width:680px;margin:0 auto;padding:8px 16px 40px;color:var(--muted);font-size:.82rem;text-align:center}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎓 Physik-Jahresrückblick 11NP</h1>
+  <p>Ein Streifzug durch unser Jahr: Bewegung · Wurf · Kreisbewegung · Drehmoment &amp; Drehimpuls · Rotation</p>
+</header>
+<main>
+
+  <div id="start" class="card center">
+    <p>Was ist alles hängengeblieben? 15 Fragen quer durch das Schuljahr – mit Sofort-Erklärung nach jeder Antwort. Viel Erfolg! 🚀</p>
+    <button class="btn" onclick="startGame()">Quiz starten</button>
+  </div>
+
+  <div id="game" class="card hidden">
+    <div class="bar"><i id="prog"></i></div>
+    <div class="meta"><span id="count"></span><span id="scoreLive"></span></div>
+    <div class="topic" id="topic"></div>
+    <div class="q" id="qtext"></div>
+    <div id="opts"></div>
+    <div class="fb" id="fb"></div>
+    <button class="btn hidden" id="next" onclick="nextQ()">Weiter →</button>
+  </div>
+
+  <div id="end" class="card center hidden">
+    <p>Geschafft!</p>
+    <div class="score" id="finalScore"></div>
+    <p id="endMsg"></p>
+    <button class="btn" onclick="startGame()">Nochmal spielen</button>
+  </div>
+
+</main>
+<footer>Physik-LK 11NP · Lore-Lorentz-Schule Düsseldorf · Jahresrückblick 2025/26</footer>
+
+<script>
+const QUESTIONS = [
+  { t:"Gleichförmige Bewegung",
+    q:"Ein Wagen fährt mit konstanter Geschwindigkeit. Welcher Graph ist im t-s-Diagramm eine Gerade?",
+    a:["die Geschwindigkeit v(t)","der Weg s(t)","die Beschleunigung a(t)"],
+    correct:1, e:"Bei konstanter Geschwindigkeit wächst der Weg gleichmäßig: s(t) = v·t ist eine Gerade durch den Ursprung." },
+
+  { t:"Beschleunigte Bewegung",
+    q:"Welche Formel beschreibt den Weg bei gleichmäßig beschleunigter Bewegung aus dem Stand?",
+    a:["s = v·t","s = ½·a·t²","s = a·t"],
+    correct:1, e:"Aus dem Stand gilt s = ½·a·t² – der Weg wächst quadratisch mit der Zeit." },
+
+  { t:"Freier Fall",
+    q:"Zwei verschieden schwere Kugeln fallen im Vakuum aus gleicher Höhe. Welche kommt zuerst an?",
+    a:["die schwerere","die leichtere","beide gleichzeitig"],
+    correct:2, e:"Im Vakuum fallen alle Körper mit g ≈ 9,81 m/s² – die Masse spielt keine Rolle. Beide kommen gleichzeitig an." },
+
+  { t:"Fadenpendel",
+    q:"Wovon hängt die Schwingungsdauer T = 2π·√(l/g) eines Fadenpendels ab?",
+    a:["von der Pendellänge l","von der Masse des Pendelkörpers","von der Amplitude (bei großen Winkeln)"],
+    correct:0, e:"Bei kleinen Auslenkungen hängt T nur von der Länge l und g ab – nicht von Masse oder Amplitude. Genau das haben wir zur g-Bestimmung genutzt." },
+
+  { t:"Waagerechter Wurf",
+    q:"Ein Ball wird waagerecht geworfen, ein zweiter zugleich fallen gelassen (gleiche Höhe). Was gilt für die Fallzeit?",
+    a:["Der geworfene Ball braucht länger","Beide treffen gleichzeitig auf","Der fallende Ball braucht länger"],
+    correct:1, e:"Superposition: Die waagerechte Bewegung ist unabhängig vom Fallen. Die Fallzeit hängt nur von der Höhe ab – beide landen gleichzeitig." },
+
+  { t:"Schräger Wurf",
+    q:"Unter welchem Abwurfwinkel erreicht man (ohne Luftwiderstand) die größte Wurfweite?",
+    a:["30°","45°","60°"],
+    correct:1, e:"Bei 45° ist die Wurfweite maximal – hier sind waagerechte und senkrechte Geschwindigkeitskomponente optimal ausbalanciert." },
+
+  { t:"Sicherheitsparabel",
+    q:"Was beschreibt die „Sicherheitsparabel“ (Einhüllende) bei festem v₀?",
+    a:["die Bahn bei genau 45° Abwurf","die Grenze aller erreichbaren Punkte","die Bahn mit maximaler Höhe"],
+    correct:1, e:"Die Sicherheitsparabel umhüllt alle möglichen Wurfbahnen: außerhalb liegt kein Punkt, der mit diesem v₀ getroffen werden kann." },
+
+  { t:"Kreisbewegung",
+    q:"In welche Richtung zeigt die Zentripetalkraft bei einer gleichförmigen Kreisbewegung?",
+    a:["nach außen, vom Mittelpunkt weg","tangential in Bewegungsrichtung","nach innen, zum Mittelpunkt"],
+    correct:2, e:"Die Zentripetalkraft F_Z = m·v²/r zeigt immer zum Mittelpunkt und hält den Körper auf der Kreisbahn." },
+
+  { t:"Kreisbewegung",
+    q:"Die „Zentrifugalkraft“, die man im Karussell nach außen spürt, ist …",
+    a:["eine echte Kraft von außen","eine Scheinkraft im rotierenden Bezugssystem","die Reaktion der Zentripetalkraft am selben Körper"],
+    correct:1, e:"Die Zentrifugalkraft ist eine Scheinkraft – sie tritt nur im mitrotierenden (beschleunigten) Bezugssystem auf. Real wirkt die nach innen gerichtete Zentripetalkraft." },
+
+  { t:"Kettenkarussell",
+    q:"Das Kettenkarussell dreht sich schneller. Was passiert mit den Gondeln?",
+    a:["Sie schwingen weiter nach außen (größerer Winkel)","Sie hängen steiler nach unten","Der Winkel bleibt gleich"],
+    correct:0, e:"Je schneller die Drehung, desto größer die nötige Zentripetalkraft – die Ketten stellen sich flacher, der Auslenkwinkel wird größer." },
+
+  { t:"Drehmoment",
+    q:"Wie berechnet man das Drehmoment einer Kraft, die senkrecht am Hebelarm angreift?",
+    a:["M = F / r","M = F · r","M = F · r²"],
+    correct:1, e:"Drehmoment M = F·r (Kraft mal Hebelarm). Deshalb wirkt eine Kraft am langen Hebel viel stärker drehend." },
+
+  { t:"Trägheitsmoment",
+    q:"Vollzylinder und Hohlzylinder (gleiche Masse & Radius) rollen eine Rampe hinab. Wer ist unten zuerst?",
+    a:["der Vollzylinder","der Hohlzylinder","beide gleichzeitig"],
+    correct:0, e:"Der Hohlzylinder hat das größere Trägheitsmoment (Masse weiter außen) – er ist „träger“ beim Drehen. Der Vollzylinder rollt schneller und gewinnt." },
+
+  { t:"Drehimpuls",
+    q:"Eine Eiskunstläuferin zieht während der Pirouette die Arme an. Was passiert?",
+    a:["Sie dreht sich langsamer","Sie dreht sich schneller","Die Drehzahl bleibt gleich"],
+    correct:1, e:"Drehimpulserhaltung: Das Trägheitsmoment wird kleiner, also muss die Winkelgeschwindigkeit steigen – sie dreht schneller (Pirouetteneffekt)." },
+
+  { t:"Rotationsenergie",
+    q:"Ein rollender Körper besitzt neben der Bewegungsenergie zusätzlich …",
+    a:["Rotationsenergie","nur potentielle Energie","keine weitere Energie"],
+    correct:0, e:"Ein rollender Körper hat Translations- UND Rotationsenergie. Deshalb rollt er langsamer die Rampe hinab als ein reibungsfrei gleitender Körper." },
+
+  { t:"Praktikum",
+    q:"Beim Praktikum haben wir g über die Pendelschwingung bestimmt. Welcher Wert kam (etwa) heraus?",
+    a:["≈ 1,6 m/s²","≈ 9,8 m/s²","≈ 24 m/s²"],
+    correct:1, e:"Die Erdbeschleunigung beträgt g ≈ 9,81 m/s². (1,6 m/s² wäre der Mond.) Aus T und l ließ sich g über T = 2π·√(l/g) berechnen." }
+];
+
+let order=[], idx=0, score=0, answered=false;
+
+function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } return arr; }
+
+function startGame(){
+  order = shuffle([...Array(QUESTIONS.length).keys()]);
+  idx=0; score=0;
+  document.getElementById('start').classList.add('hidden');
+  document.getElementById('end').classList.add('hidden');
+  document.getElementById('game').classList.remove('hidden');
+  render();
+}
+
+function render(){
+  answered=false;
+  const q = QUESTIONS[order[idx]];
+  document.getElementById('count').textContent = `Frage ${idx+1} / ${order.length}`;
+  document.getElementById('scoreLive').textContent = `Punkte: ${score}`;
+  document.getElementById('prog').style.width = `${(idx/order.length)*100}%`;
+  document.getElementById('topic').textContent = q.t;
+  document.getElementById('qtext').innerHTML = q.q;
+  const fb = document.getElementById('fb'); fb.className='fb'; fb.innerHTML='';
+  document.getElementById('next').classList.add('hidden');
+  const opts = document.getElementById('opts'); opts.innerHTML='';
+  const oi = shuffle([...Array(q.a.length).keys()]);
+  oi.forEach(originalIndex => {
+    const b=document.createElement('button');
+    b.className='opt'; b.innerHTML=q.a[originalIndex];
+    b.dataset.correct = (originalIndex===q.correct) ? '1' : '0';
+    b.onclick=()=>choose(b, originalIndex===q.correct, q);
+    opts.appendChild(b);
+  });
+}
+
+function choose(btn, isCorrect, q){
+  if(answered) return;
+  answered=true;
+  const buttons = document.querySelectorAll('.opt');
+  buttons.forEach(b=>b.disabled=true);
+  const fb = document.getElementById('fb');
+  if(isCorrect){
+    btn.classList.add('ok'); score++;
+    fb.className='fb show ok'; fb.innerHTML='✅ Richtig! '+q.e;
+  } else {
+    btn.classList.add('no');
+    buttons.forEach(b=>{ if(b.dataset.correct==='1') b.classList.add('ok'); });
+    fb.className='fb show no'; fb.innerHTML='❌ Nicht ganz. '+q.e;
+  }
+  document.getElementById('scoreLive').textContent = `Punkte: ${score}`;
+  document.getElementById('next').classList.remove('hidden');
+  document.getElementById('next').textContent = (idx+1<order.length) ? 'Weiter →' : 'Ergebnis ansehen';
+}
+
+function nextQ(){
+  idx++;
+  if(idx<order.length){ render(); }
+  else { showEnd(); }
+}
+
+function showEnd(){
+  document.getElementById('game').classList.add('hidden');
+  const end = document.getElementById('end'); end.classList.remove('hidden');
+  document.getElementById('finalScore').textContent = `${score} / ${order.length}`;
+  let msg;
+  const r = score/order.length;
+  if(r===1) msg='Perfekt! Ein Physik-Jahr wie aus dem Lehrbuch. 🏆';
+  else if(r>=0.7) msg='Stark! Das meiste sitzt richtig gut.';
+  else if(r>=0.4) msg='Solide – ein paar Klassiker lohnt sich zu wiederholen.';
+  else msg='Kein Problem – schau dir die Erklärungen an, dann klickt es. 💪';
+  document.getElementById('endMsg').textContent = msg;
+}
+</script>
+</body>
+</html>
