@@ -188,6 +188,26 @@
                 </div>
             </a>
 
+            <a href="arbeitsblatt_kepler3.pdf" class="material-card" data-url="arbeitsblatt_kepler3.pdf">
+                <div class="card-header">
+                    <div class="card-icon blue">&#x1FA90;</div>
+                    <div class="card-title">Wie Kepler das 3. Gesetz fand</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Forschend-entdeckend: aus echten Planetendaten (Umlaufzeit &amp; Sonnenabstand) per Linearisierung das 3. Kepler-Gesetz T&sup2; &sim; a&sup3; herausarbeiten. Br&uuml;cke zum Feldkonzept (12.1). PDF.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Kepler</span>
+                            <span class="tag">Gravitation</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-kepler3"></div>
+                </div>
+            </a>
+
             <a href="drehmoment.html" class="material-card" data-url="drehmoment.html">
                 <div class="card-header">
                     <div class="card-icon blue">&#x1f527;</div>
@@ -867,6 +887,7 @@
         // QR-Codes generieren wenn Seite geladen
         document.addEventListener('DOMContentLoaded', function() {
             generateQR('qr-jahresquiz', 'jahresrueckblick_quiz.html');
+            generateQR('qr-kepler3', 'arbeitsblatt_kepler3.pdf');
             generateQR('qr-drehmoment', 'drehmoment.html');
             generateQR('qr-drehimpuls', 'drehimpuls.html');
             generateQR('qr-ab-drehimpuls', 'AB_Drehimpuls.pdf');
