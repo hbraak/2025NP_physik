@@ -56,7 +56,7 @@
   <h1>Ladungstrennung und elektrisches Feld</h1>
   <p class="sub">Plattenkondensator &ndash; Schritt f&uuml;r Schritt durchklicken</p>
 
-  <canvas id="c" width="900" height="470"></canvas>
+  <canvas id="c" width="900" height="500"></canvas>
 
   <div class="stepbar">
     <button id="prev" class="ghost">&larr; Zur&uuml;ck</button>
@@ -215,7 +215,8 @@ function draw() {
   // Abstand haengt in den letzten Schritten vom Regler ab
   const gap = (s.ctrl && s.ctrl.includes("D")) ? 60 + dmm * 22 : 170;
   // Hoehe haengt von A ab (nur im letzten Schritt)
-  const ph = (s.ctrl && s.ctrl.includes("A")) ? 120 + Acm2 * 0.22 : plateH;
+  // Faktor so gewaehlt, dass auch A = 900 cm² unten nicht aus dem Canvas laeuft
+  const ph = (s.ctrl && s.ctrl.includes("A")) ? 120 + Acm2 * 0.18 : plateH;
   const cy = cyTop + plateH / 2;
   const xL = cx - gap / 2, xR = cx + gap / 2;
   const yTop = cy - ph / 2, yBot = cy + ph / 2;
@@ -293,16 +294,24 @@ function draw() {
   ctx.lineTo(xR + plateW / 2, yBot);
   ctx.stroke();
 
-  // Batteriesymbol
-  ctx.lineWidth = 2.6;
-  ctx.beginPath(); ctx.moveTo(cx - 14, yWire - 17); ctx.lineTo(cx - 14, yWire + 17); ctx.stroke();
+  // Batteriesymbol.
+  // Polung MUSS zur Ladungsverteilung passen: Platte 1 (links) ist negativ,
+  // haengt also am MINUSPOL (kurzer dicker Strich, links).
+  // Pluspol (langer duenner Strich) rechts an Platte 2.
   ctx.lineWidth = 5;
-  ctx.beginPath(); ctx.moveTo(cx + 8, yWire - 10); ctx.lineTo(cx + 8, yWire + 10); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx - 12, yWire - 10); ctx.lineTo(cx - 12, yWire + 10); ctx.stroke();
+  ctx.lineWidth = 2.6;
+  ctx.beginPath(); ctx.moveTo(cx + 8, yWire - 17); ctx.lineTo(cx + 8, yWire + 17); ctx.stroke();
   ctx.lineWidth = 2.4;
-  ctx.beginPath(); ctx.moveTo(cx - 46, yWire); ctx.lineTo(cx - 14, yWire); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx - 46, yWire); ctx.lineTo(cx - 12, yWire); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(cx + 8, yWire); ctx.lineTo(cx + 46, yWire); ctx.stroke();
+  // Polbeschriftung UNTER die Batterie - oberhalb sitzt das d-Mass
+  ctx.fillStyle = "#2563eb"; ctx.font = "bold 15px system-ui"; ctx.textAlign = "center";
+  ctx.fillText("−", cx - 24, yWire + 17);
+  ctx.fillStyle = "#dc2626";
+  ctx.fillText("+", cx + 20, yWire + 17);
   ctx.fillStyle = "#334155"; ctx.font = "13px system-ui";
-  ctx.fillText("U₀ = " + fmt(U, 1, "V"), cx, yWire + 34);
+  ctx.fillText("U₀ = " + fmt(U, 1, "V"), cx, yWire + 40);
 
   // --- wandernde Elektronen im Leiter (Schritte 1-4)
   if (step >= 1 && step <= 4) {
@@ -379,7 +388,7 @@ function draw() {
   if (s.feld && feldGrad > 0.3) {
     ctx.fillStyle = "#4f46e5"; ctx.font = "italic bold 15px system-ui";
     ctx.textAlign = "center";
-    ctx.fillText("E", cx + 14, yTop - 16);
+    ctx.fillText("E", cx + 14, yTop - 38);
   }
 
   ctx.textAlign = "left";
