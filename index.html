@@ -168,6 +168,26 @@
         </header>
         
         <div class="material-grid">
+            <a href="rc-herleitung.html" class="material-card" data-url="rc-herleitung.html">
+                <div class="card-header">
+                    <div class="card-icon blue">&#x1F4C9;</div>
+                    <div class="card-title">RC&#8209;Kreis &mdash; woher kommen die Gleichungen?</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Herleitung in 11 Schritten: Maschenregel, Bauteilgleichungen, einmal nach t ableiten &mdash; und es steht die Struktur da, deren Ableitung proportional zur Funktion selbst ist. Daraus i(t) und u<sub>C</sub>(t), Zeitkonstante &tau; = RC mit 63&nbsp;%/37&nbsp;%. Kurven mit Reglern, voreingestellt auf die Praktikumswerte von G1.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">RC-Glied</span>
+                            <span class="tag">Ladekurve</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-rc"></div>
+                </div>
+            </a>
+
             <a href="kondensator-efeld.html" class="material-card" data-url="kondensator-efeld.html">
                 <div class="card-header">
                     <div class="card-icon blue">&#x26A1;</div>
@@ -926,6 +946,7 @@
         
         // QR-Codes generieren wenn Seite geladen
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-rc', 'rc-herleitung.html');
             generateQR('qr-kondensator', 'kondensator-efeld.html');
             generateQR('qr-sicherheit', 'sicherheitsbelehrung.html');
             generateQR('qr-jahresquiz', 'jahresrueckblick_quiz.html');

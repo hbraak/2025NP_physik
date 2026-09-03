@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RC-Kreis – woher kommen die Gleichungen?</title>
+<style>
+  :root {
+    --ink:#1e293b; --muted:#64748b; --accent:#4f46e5;
+    --line:#e2e8f0; --ok:#059669; --uc:#2563eb; --ii:#dc2626;
+  }
+  * { box-sizing:border-box; }
+  body { font-family: system-ui, -apple-system, sans-serif; margin:0; padding:1rem;
+         color:var(--ink); background:#f8fafc; }
+  #wrap { max-width:52rem; margin:0 auto; }
+  h1 { font-size:1.2rem; margin:0 0 .2rem; }
+  .sub { color:var(--muted); font-size:.85rem; margin:0 0 .8rem; }
+  canvas { width:100%; background:#fff; border:1px solid var(--line);
+           border-radius:12px; display:block; }
+  .stepbar { display:flex; align-items:center; gap:.5rem; margin:.7rem 0 .5rem; }
+  .dots { display:flex; gap:.3rem; flex:1; flex-wrap:wrap; }
+  .dot { width:1.7rem; height:1.7rem; border-radius:50%; border:1px solid var(--line);
+         background:#fff; color:var(--muted); font-size:.8rem; cursor:pointer;
+         display:flex; align-items:center; justify-content:center; }
+  .dot.on { background:var(--accent); color:#fff; border-color:var(--accent); font-weight:600; }
+  .dot.done { border-color:var(--accent); color:var(--accent); }
+  button { padding:.5rem 1.1rem; border:0; border-radius:10px; background:var(--accent);
+           color:#fff; font-size:.95rem; cursor:pointer; }
+  button:disabled { background:#cbd5e1; cursor:default; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); }
+  .panel { background:#fff; border:1px solid var(--line); border-radius:12px;
+           padding:.9rem 1rem; margin-top:.6rem; }
+  .panel h2 { font-size:1rem; margin:0 0 .5rem; color:var(--accent); }
+  .panel p { margin:.4rem 0; font-size:.95rem; line-height:1.55; }
+  .frage { margin-top:.6rem; padding-top:.55rem; border-top:1px dashed var(--line);
+           font-size:.93rem; }
+  .frage b { color:var(--ok); }
+
+  /* Formelzeile */
+  .fx { text-align:center; font-size:1.18rem; margin:.85rem 0; line-height:1.5;
+        font-family: "Latin Modern Math", Cambria, Georgia, serif; }
+  .fx.klein { font-size:1rem; }
+  .fx .op { margin:0 .35rem; color:var(--muted); }
+  .hl { background:#fef9c3; padding:.1rem .25rem; border-radius:4px; }
+  .box-erg { background:#f0fdf4; border:1px solid #86efac; border-radius:10px;
+             padding:.5rem .8rem; margin:.7rem 0; }
+  .box-merk { background:#fffbeb; border:1px solid #fde68a; border-radius:10px;
+              padding:.6rem .85rem; margin:.6rem 0; font-size:.92rem; }
+  /* Bruch */
+  .frac { display:inline-flex; flex-direction:column; vertical-align:middle;
+          text-align:center; margin:0 .18rem; }
+  .frac .z { border-bottom:1.4px solid currentColor; padding:0 .3rem .06rem; }
+  .frac .n { padding:.06rem .3rem 0; }
+  sub, sup { font-size:.72em; }
+  .uc { color:var(--uc); } .ii { color:var(--ii); }
+
+  .row { display:flex; align-items:center; gap:.6rem; margin:.5rem 0; font-size:.92rem; }
+  .row label { flex:0 0 9rem; }
+  .row input[type=range] { flex:1; accent-color:var(--accent); }
+  .row output { flex:0 0 6rem; text-align:right; font-weight:600;
+                font-variant-numeric:tabular-nums; }
+  #controls { display:none; } #controls.show { display:block; }
+  .stats { display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.6rem; }
+  .stat { background:#fff; border:1px solid var(--line); border-radius:10px;
+          padding:.4rem .7rem; font-size:.88rem; }
+  .stat b { color:var(--accent); font-variant-numeric:tabular-nums; }
+  @media (max-width:640px){ .row label { flex:0 0 6.5rem; } .fx { font-size:1.02rem; } }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <h1>RC&#8209;Kreis &ndash; woher kommen die Gleichungen?</h1>
+  <p class="sub">Vom Schaltbild zur Lade&shy;kurve &middot; Physik&#8209;LK 12NP</p>
+
+  <canvas id="c" width="900" height="420"></canvas>
+
+  <div class="stepbar">
+    <button id="prev" class="ghost">&larr; Zur&uuml;ck</button>
+    <div class="dots" id="dots"></div>
+    <button id="next">Weiter &rarr;</button>
+  </div>
+
+  <div class="panel" id="panel"></div>
+  <div class="stats" id="stats"></div>
+
+  <div id="controls">
+    <div class="row"><label>Spannung U<sub>0</sub></label>
+      <input id="U" type="range" min="1" max="20" step="0.5" value="10"><output id="Uo">10,0 V</output></div>
+    <div class="row"><label>Widerstand R</label>
+      <input id="R" type="range" min="10" max="100" step="1" value="47"><output id="Ro">47 kΩ</output></div>
+    <div class="row"><label>Kapazit&auml;t C</label>
+      <input id="C" type="range" min="10" max="300" step="10" value="100"><output id="Co">100 µF</output></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+const cv = document.getElementById("c"), ctx = cv.getContext("2d");
+const el = id => document.getElementById(id);
+
+let step = 0;
+let U0 = 10, Rk = 47, Cu = 100;          // V, kOhm, µF
+
+function werte() {
+  const R = Rk * 1000, C = Cu * 1e-6;
+  return { R, C, tau: R * C, I0: U0 / R };
+}
+function fmt(x, d, unit) { return x.toFixed(d).replace(".", ",") + (unit ? " " + unit : ""); }
+const frac = (z, n) => `<span class="frac"><span class="z">${z}</span><span class="n">${n}</span></span>`;
+
+/* ---------- Schritte ---------- */
+const STEPS = [
+  {
+    titel: "Die Schaltung",
+    html: `<p>Eine Quelle mit der festen Spannung <b>U<sub>0</sub></b>, ein Widerstand <b>R</b> und
+           ein zun&auml;chst <b>ungeladener</b> Kondensator <b>C</b> in Reihe. Beim Schlie&szlig;en
+           des Schalters flie&szlig;t ein Strom &ndash; aber nicht dauerhaft.</p>
+           <p>Qualitativ wissen wir schon: Je mehr Ladung auf dem Kondensator sitzt, desto st&auml;rker
+           wirkt seine Gegenspannung, desto schw&auml;cher der Antrieb. Der Strom muss also
+           <b>abnehmen</b>. Genau das wollen wir jetzt in eine Gleichung bringen.</p>`,
+    frage: "Was wird am Anfang gr&ouml;&szlig;er sein &ndash; und was am Ende: Strom oder Kondensatorspannung?",
+    zeig: "kreis"
+  },
+  {
+    titel: "Schritt 1: Maschenregel",
+    html: `<p>In einer Masche ist die Summe der Teilspannungen gleich der Quellenspannung:</p>
+           <div class="fx">U<sub>0</sub> = u<sub>R</sub>(t) <span class="op">+</span> u<sub>C</sub>(t)</div>
+           <p>Beide Teilspannungen &auml;ndern sich mit der Zeit &ndash; deshalb <b>kleine</b> Buchstaben.
+           U<sub>0</sub> dagegen ist konstant. Das wird gleich entscheidend.</p>`,
+    frage: "Zu Beginn ist der Kondensator leer, also u<sub>C</sub> = 0. Wie gro&szlig; ist dann u<sub>R</sub>?",
+    zeig: "kreis"
+  },
+  {
+    titel: "Schritt 2: Bauteilgleichungen einsetzen",
+    html: `<p>F&uuml;r den Widerstand gilt das ohmsche Gesetz, f&uuml;r den Kondensator die Definition der Kapazit&auml;t:</p>
+           <div class="fx klein">u<sub>R</sub> = R &middot; i(t) <span class="op">und</span>
+             u<sub>C</sub> = ${frac("q(t)", "C")}</div>
+           <p>Eingesetzt in die Maschenregel:</p>
+           <div class="fx">U<sub>0</sub> = R &middot; i(t) <span class="op">+</span> ${frac("q(t)", "C")}</div>
+           <p>Jetzt steht da allerdings ein Problem: <b>zwei</b> unbekannte Funktionen, i(t) und q(t).
+           So kommen wir nicht weiter.</p>`,
+    frage: "Wie h&auml;ngen Ladung und Strom zusammen? &ndash; Der Strom <b>ist</b> die &Auml;nderungsrate der Ladung.",
+    zeig: "kreis"
+  },
+  {
+    titel: "Schritt 3: Ableiten &ndash; der entscheidende Kniff",
+    html: `<p>Wir leiten die ganze Gleichung nach der Zeit ab. Links steht die <b>konstante</b>
+           Quellenspannung &ndash; ihre Ableitung ist <b>null</b>:</p>
+           <div class="fx">0 = R &middot; ${frac("d i", "d t")} <span class="op">+</span>
+             ${frac("1", "C")} &middot; ${frac("d q", "d t")}</div>
+           <p>Und nun der Zusammenhang, der alles aufl&ouml;st: Der Strom ist die zeitliche
+           &Auml;nderung der Ladung, also
+           <span class="hl">${frac("d q", "d t")} = i(t)</span>.</p>
+           <div class="fx">0 = R &middot; ${frac("d i", "d t")} <span class="op">+</span> ${frac("i(t)", "C")}</div>
+           <p>Damit ist q verschwunden &ndash; &uuml;brig bleibt <b>eine</b> Gleichung f&uuml;r <b>eine</b> Funktion.</p>`,
+    frage: "Warum durften wir die linke Seite einfach zu null machen?",
+    zeig: "kreis"
+  },
+  {
+    titel: "Schritt 4: Die Struktur erkennen",
+    html: `<p>Nach ${frac("d i", "d t")} umgestellt:</p>
+           <div class="fx"><span class="hl">${frac("d i", "d t")} = &minus; ${frac("1", "R &middot; C")} &middot; i(t)</span></div>
+           <div class="box-merk">Lies die Gleichung als Satz: <b>Die Ableitung der Funktion ist
+           proportional zur Funktion selbst.</b> Gesucht ist also eine Funktion, die sich beim
+           Ableiten bis auf einen Faktor selbst reproduziert.</div>
+           <p>Genau eine Funktionenklasse leistet das: die <b>Exponentialfunktion</b>. Das Minuszeichen
+           sagt zus&auml;tzlich, dass der Faktor negativ ist &ndash; die Funktion <b>f&auml;llt</b>.
+           (Warum das die einzige M&ouml;glichkeit ist, seht ihr im Mathematikunterricht.)</p>`,
+    frage: "Was bedeutet das Minuszeichen anschaulich f&uuml;r den Ladestrom?",
+    zeig: "kreis"
+  },
+  {
+    titel: "Schritt 5: L&ouml;sungsansatz",
+    html: `<p>Wir setzen also an:</p>
+           <div class="fx">i(t) = I<sub>0</sub> &middot; e<sup>&minus;t/&tau;</sup>
+             <span class="op">mit</span> &tau; = R &middot; C</div>
+           <p>Probe durch Ableiten &ndash; die Kettenregel liefert den inneren Faktor:</p>
+           <div class="fx klein">${frac("d i", "d t")} = I<sub>0</sub> &middot;
+             &#8203;(&minus;${frac("1", "&tau;")}) &middot; e<sup>&minus;t/&tau;</sup>
+             = &minus;${frac("1", "&tau;")} &middot; i(t) &nbsp; &#10003;</div>
+           <p>Der Ansatz erf&uuml;llt die Gleichung. Offen ist nur noch die Konstante I<sub>0</sub>.</p>`,
+    frage: "Welchen Wert hat e<sup>0</sup>? Was bedeutet I<sub>0</sub> damit?",
+    zeig: "kreis"
+  },
+  {
+    titel: "Schritt 6: Anfangsbedingung",
+    html: `<p>Zum Zeitpunkt t = 0 ist der Kondensator <b>leer</b>, also u<sub>C</sub>(0) = 0.
+           Die Maschenregel liefert dann:</p>
+           <div class="fx klein">U<sub>0</sub> = R &middot; i(0) <span class="op">&rArr;</span>
+             i(0) = ${frac("U<sub>0</sub>", "R")} = I<sub>0</sub></div>
+           <div class="box-erg"><b>Der Strom:</b>
+             <div class="fx" style="margin:.4rem 0">
+               <span class="ii">i(t) = ${frac("U<sub>0</sub>", "R")} &middot; e<sup>&minus;t/&tau;</sup></span></div></div>
+           <p>Im ersten Moment begrenzt <b>nur der Widerstand</b> den Strom &ndash; der leere
+           Kondensator setzt ihm nichts entgegen.</p>`,
+    frage: "Mit R = 47 k&Omega; und U<sub>0</sub> = 10 V: Wie gro&szlig; ist I<sub>0</sub>?",
+    zeig: "kreis"
+  },
+  {
+    titel: "Schritt 7: Die Spannung folgt geschenkt",
+    html: `<p>Die Kondensatorspannung brauchen wir gar nicht neu herzuleiten &ndash; sie steckt
+           schon in der Maschenregel:</p>
+           <div class="fx klein">u<sub>C</sub> = U<sub>0</sub> &minus; u<sub>R</sub>
+             = U<sub>0</sub> &minus; R &middot; i(t)
+             = U<sub>0</sub> &minus; R &middot; ${frac("U<sub>0</sub>", "R")} &middot; e<sup>&minus;t/&tau;</sup></div>
+           <p>Das R k&uuml;rzt sich weg:</p>
+           <div class="box-erg"><b>Die Spannung:</b>
+             <div class="fx" style="margin:.4rem 0">
+               <span class="uc">u<sub>C</sub>(t) = U<sub>0</sub> &middot; (1 &minus; e<sup>&minus;t/&tau;</sup>)</span></div></div>
+           <p>Beide Gleichungen aus dem Praktikumsblatt stehen jetzt da &ndash; nicht als
+           Behauptung, sondern als Folge der Maschenregel.</p>`,
+    frage: "Setze t = 0 ein: Kommt u<sub>C</sub> = 0 heraus? Und f&uuml;r sehr gro&szlig;e t?",
+    zeig: "kreis"
+  },
+  {
+    titel: "Schritt 8: Was ist &tau;?",
+    html: `<p>Einheitenprobe &ndash; ist R &middot; C wirklich eine Zeit?</p>
+           <div class="fx klein">[R &middot; C] = &Omega; &middot; F
+             = ${frac("V", "A")} &middot; ${frac("A &middot; s", "V")} = s &nbsp; &#10003;</div>
+           <p>Nach der Zeit &tau; ist der Exponent gerade &minus;1:</p>
+           <div class="fx klein">u<sub>C</sub>(&tau;) = U<sub>0</sub>(1 &minus; e<sup>&minus;1</sup>)
+             &asymp; <b>0,63</b> &middot; U<sub>0</sub>
+             <span class="op">&middot;</span>
+             i(&tau;) = <b>0,37</b> &middot; I<sub>0</sub></div>
+           <div class="box-merk">Das ist die <b>37&nbsp;%&#8209;Methode</b> aus dem Praktikum: Dort, wo der
+           Strom auf 37&nbsp;% abgefallen ist, lest ihr &tau; direkt auf der Zeitachse ab.</div>`,
+    frage: "Mit R = 47 k&Omega; und C = 100 µF: Wie gro&szlig; ist &tau;? Passt das zu eurer Messung?",
+    zeig: "kreis"
+  },
+  {
+    titel: "Beide Kurven &ndash; selbst ausprobieren",
+    html: `<p>Voreingestellt sind die Werte aus dem Praktikum: U<sub>0</sub> = 10 V,
+           R = 47 k&Omega;, C = 100 µF.</p>
+           <p><span class="uc"><b>Blau</b></span>: Kondensatorspannung u<sub>C</sub>(t) &ndash;
+           <span class="ii"><b>rot</b></span>: Ladestrom i(t). Die gestrichelte Linie markiert &tau;.</p>
+           <p>Die <b>Anfangstangente</b> (grau) trifft den Endwert genau bei t = &tau; &ndash;
+           die zweite M&ouml;glichkeit, &tau; ohne Logarithmus abzulesen.</p>`,
+    frage: "Verdopple C. Was passiert mit &tau;, was mit dem <b>Anfangsstrom</b> I<sub>0</sub>? " +
+           "&ndash; &tau; verdoppelt sich, I<sub>0</sub> bleibt gleich: Der Anfangsstrom h&auml;ngt nur an R.",
+    zeig: "graph", ctrl: true
+  },
+  {
+    titel: "Und das Entladen?",
+    html: `<p>Beim Entladen wird die Quelle abgetrennt, die Masche enth&auml;lt nur noch R und C:</p>
+           <div class="fx klein">0 = R &middot; i(t) <span class="op">+</span> ${frac("q(t)", "C")}</div>
+           <p>Mit i = dq/dt steht sofort dieselbe Struktur da &ndash; diesmal sogar ohne Ableiten:</p>
+           <div class="fx">${frac("d q", "d t")} = &minus; ${frac("1", "R &middot; C")} &middot; q(t)</div>
+           <div class="box-erg">
+             <div class="fx klein" style="margin:.4rem 0">
+               <span class="uc">u<sub>C</sub>(t) = U<sub>0</sub> &middot; e<sup>&minus;t/&tau;</sup></span>
+               <span class="op">&middot;</span>
+               <span class="ii">i(t) = &minus;${frac("U<sub>0</sub>", "R")} &middot; e<sup>&minus;t/&tau;</sup></span></div></div>
+           <p>Dieselbe Zeitkonstante &tau; = RC, dasselbe Bauprinzip. Das Minuszeichen beim Strom
+           besagt nur: Er flie&szlig;t jetzt in die <b>andere</b> Richtung.</p>`,
+    frage: "Warum taucht hier dieselbe Zeitkonstante auf, obwohl der Vorgang umgekehrt l&auml;uft?",
+    zeig: "graph_ent", ctrl: true
+  }
+];
+
+/* Zeichnet "u" mit echtem tiefgestelltem Index statt "u_C".
+   align: "center" | "left" | "right" - bezieht sich auf die Gesamtbreite. */
+function txtIdx(basis, index, x, y, groesse, align) {
+  const fB = `italic ${groesse}px system-ui`, fI = `italic ${Math.round(groesse * 0.72)}px system-ui`;
+  ctx.font = fB; const wB = ctx.measureText(basis).width;
+  ctx.font = fI; const wI = ctx.measureText(index).width;
+  const ges = wB + wI + 1;
+  let x0 = x;
+  if (align === "center") x0 = x - ges / 2;
+  else if (align === "right") x0 = x - ges;
+  ctx.textAlign = "left";
+  ctx.font = fB; ctx.fillText(basis, x0, y);
+  ctx.font = fI; ctx.fillText(index, x0 + wB + 1, y + groesse * 0.22);
+  return ges;
+}
+
+/* ---------- Zeichnen: Schaltkreis ---------- */
+function zeichneKreis() {
+  const W = cv.width, H = cv.height;
+  const x0 = 250, x1 = 650, y0 = 110, y1 = 320;
+  ctx.strokeStyle = "#334155"; ctx.lineWidth = 2.4; ctx.lineJoin = "round";
+
+  // Rahmen mit Luecken fuer Quelle (links), R (oben), C (rechts)
+  ctx.beginPath();
+  ctx.moveTo(x0, y0 + 55); ctx.lineTo(x0, y0); ctx.lineTo(x0 + 130, y0);
+  ctx.moveTo(x0 + 210, y0); ctx.lineTo(x1, y0); ctx.lineTo(x1, y0 + 70);
+  ctx.moveTo(x1, y0 + 130); ctx.lineTo(x1, y1); ctx.lineTo(x0, y1);
+  ctx.lineTo(x0, y0 + 105);
+  ctx.stroke();
+
+  // Quelle links (Batterie)
+  const ym = y0 + 80;
+  ctx.lineWidth = 5;
+  ctx.beginPath(); ctx.moveTo(x0 - 11, ym + 12); ctx.lineTo(x0 + 11, ym + 12); ctx.stroke();
+  ctx.lineWidth = 2.6;
+  ctx.beginPath(); ctx.moveTo(x0 - 18, ym - 8); ctx.lineTo(x0 + 18, ym - 8); ctx.stroke();
+  ctx.fillStyle = "#334155"; ctx.font = "14px system-ui"; ctx.textAlign = "right";
+  ctx.textBaseline = "middle";
+  ctx.fillText("U₀ = " + fmt(U0, 1, "V"), x0 - 26, ym);
+
+  // Widerstand oben
+  ctx.lineWidth = 2.2; ctx.strokeStyle = "#334155";
+  ctx.strokeRect(x0 + 130, y0 - 15, 80, 30);
+  ctx.fillStyle = "#fff"; ctx.fillRect(x0 + 131, y0 - 14, 78, 28);
+  ctx.strokeRect(x0 + 130, y0 - 15, 80, 30);
+  ctx.fillStyle = "#334155"; ctx.textAlign = "center";
+  ctx.fillText("R", x0 + 170, y0 - 32);
+  ctx.font = "12px system-ui";
+  ctx.fillText(Rk + " kΩ", x0 + 170, y0);
+
+  // Kondensator rechts
+  ctx.lineWidth = 3.4;
+  ctx.beginPath(); ctx.moveTo(x1 - 22, y0 + 70); ctx.lineTo(x1 + 22, y0 + 70); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x1 - 22, y0 + 130); ctx.lineTo(x1 + 22, y0 + 130); ctx.stroke();
+  // Bauteilbeschriftung nach LINKS - rechts steht der Spannungspfeil
+  ctx.fillStyle = "#334155"; ctx.font = "14px system-ui"; ctx.textAlign = "right";
+  ctx.fillText("C", x1 - 34, y0 + 88);
+  ctx.font = "12px system-ui";
+  ctx.fillText(Cu + " µF", x1 - 34, y0 + 112);
+
+  // Schalter im unteren Zweig - der Text spricht vom Schliessen
+  const sx = (x0 + x1) / 2;
+  ctx.strokeStyle = "#334155"; ctx.lineWidth = 2.4;
+  ctx.beginPath(); ctx.moveTo(sx - 26, y1); ctx.lineTo(sx - 14, y1); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(sx + 14, y1); ctx.lineTo(sx + 26, y1); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(sx - 14, y1); ctx.lineTo(sx + 13, y1 - 15); ctx.stroke();
+  ctx.fillStyle = "#334155";
+  ctx.beginPath(); ctx.arc(sx - 14, y1, 3, 0, 7); ctx.fill();
+  ctx.beginPath(); ctx.arc(sx + 14, y1, 3, 0, 7); ctx.fill();
+  ctx.font = "12px system-ui"; ctx.textAlign = "center"; ctx.textBaseline = "top";
+  ctx.fillStyle = "#64748b"; ctx.fillText("S", sx, y1 + 12);
+
+  // Spannungspfeile
+  ctx.textBaseline = "middle";
+  ctx.strokeStyle = "#dc2626"; ctx.fillStyle = "#dc2626"; ctx.lineWidth = 1.8;
+  pfeil(x0 + 130, y0 - 48, x0 + 210, y0 - 48);
+  txtIdx("u", "R", x0 + 170, y0 - 62, 15, "center");
+
+  ctx.strokeStyle = "#2563eb"; ctx.fillStyle = "#2563eb";
+  pfeil(x1 + 62, y0 + 70, x1 + 62, y0 + 130);
+  txtIdx("u", "C", x1 + 72, y0 + 100, 15, "left");
+
+  // Stromrichtung
+  ctx.strokeStyle = "#64748b"; ctx.fillStyle = "#64748b"; ctx.lineWidth = 1.6;
+  pfeil(x0 + 40, y0 - 22, x0 + 100, y0 - 22);
+  ctx.font = "italic 13px system-ui"; ctx.textAlign = "center";
+  ctx.fillText("i(t)", x0 + 70, y0 - 36);
+
+  ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+}
+function pfeil(ax, ay, bx, by) {
+  ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
+  const a = Math.atan2(by - ay, bx - ax);
+  ctx.beginPath(); ctx.moveTo(bx, by);
+  ctx.lineTo(bx - 9 * Math.cos(a - 0.4), by - 9 * Math.sin(a - 0.4));
+  ctx.lineTo(bx - 9 * Math.cos(a + 0.4), by - 9 * Math.sin(a + 0.4));
+  ctx.closePath(); ctx.fill();
+}
+
+/* ---------- Zeichnen: Graph ---------- */
+function zeichneGraph(entladen) {
+  const v = werte();
+  const L = 92, Rr = 96, T = 46, B = 60;   // rechts Platz fuer die Stromachse
+  const W = cv.width, H = cv.height;
+  const gw = W - L - Rr, gh = H - T - B;
+  const tmax = 5 * v.tau;
+
+  const px = t => L + gw * (t / tmax);
+  const pyU = u => T + gh * (1 - u / U0);
+  const pyI = i => T + gh * (1 - Math.abs(i) / v.I0);
+
+  // Achsen
+  ctx.strokeStyle = "#94a3b8"; ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.moveTo(L, T); ctx.lineTo(L, T + gh); ctx.lineTo(L + gw, T + gh); ctx.stroke();
+  ctx.fillStyle = "#64748b"; ctx.font = "12px system-ui"; ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  for (let k = 0; k <= 5; k++) {
+    const t = k * v.tau, x = px(t);
+    ctx.strokeStyle = "#f1f5f9";
+    ctx.beginPath(); ctx.moveTo(x, T); ctx.lineTo(x, T + gh); ctx.stroke();
+    ctx.fillStyle = "#64748b";
+    ctx.fillText(k === 0 ? "0" : (k === 1 ? "τ" : k + "τ"), x, T + gh + 8);
+  }
+  ctx.fillText("t  (τ = " + fmt(v.tau, 2, "s") + ")", L + gw / 2, T + gh + 32);
+
+  // y-Achsen: links Spannung (blau), rechts Strom (rot)
+  ctx.font = "12px system-ui";
+  ctx.textAlign = "right"; ctx.textBaseline = "middle";
+  ctx.fillStyle = "#2563eb";
+  ctx.fillText(fmt(U0, 1, "V"), L - 10, pyU(U0));
+  ctx.fillText("0", L - 10, pyU(0));
+  ctx.save(); ctx.translate(24, T + gh / 2); ctx.rotate(-Math.PI / 2);
+  ctx.fillStyle = "#2563eb"; txtIdx("u", "C", 0, 0, 14, "center"); ctx.restore();
+
+  ctx.fillStyle = "#dc2626"; ctx.textAlign = "left"; ctx.font = "12px system-ui";
+  ctx.fillText(fmt(v.I0 * 1e6, 0, " µA"), L + gw + 10, pyI(v.I0));
+  ctx.fillText("0", L + gw + 10, pyI(0));
+  ctx.save(); ctx.translate(L + gw + 74, T + gh / 2); ctx.rotate(-Math.PI / 2);
+  ctx.font = "italic 14px system-ui"; ctx.textAlign = "center";
+  ctx.fillText("i(t)", 0, 0); ctx.restore();
+
+  // 63%/37%-Hilfslinien
+  ctx.setLineDash([4, 4]); ctx.lineWidth = 1;
+  ctx.strokeStyle = "#cbd5e1";
+  ctx.beginPath(); ctx.moveTo(px(v.tau), T); ctx.lineTo(px(v.tau), T + gh); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Anfangstangente (nur beim Aufladen)
+  if (!entladen) {
+    ctx.strokeStyle = "#cbd5e1"; ctx.lineWidth = 1.4; ctx.setLineDash([6, 4]);
+    ctx.beginPath(); ctx.moveTo(px(0), pyU(0)); ctx.lineTo(px(v.tau), pyU(U0)); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = "#94a3b8"; ctx.font = "11px system-ui"; ctx.textAlign = "left";
+    ctx.fillText("Anfangstangente", px(v.tau) + 8, pyU(U0) + 12);
+  }
+
+  // Kurven
+  const N = 260;
+  ctx.lineWidth = 2.6;
+  // u_C
+  ctx.strokeStyle = "#2563eb"; ctx.beginPath();
+  for (let k = 0; k <= N; k++) {
+    const t = tmax * k / N;
+    const u = entladen ? U0 * Math.exp(-t / v.tau) : U0 * (1 - Math.exp(-t / v.tau));
+    k ? ctx.lineTo(px(t), pyU(u)) : ctx.moveTo(px(t), pyU(u));
+  }
+  ctx.stroke();
+  // i
+  ctx.strokeStyle = "#dc2626"; ctx.beginPath();
+  for (let k = 0; k <= N; k++) {
+    const t = tmax * k / N;
+    const i = v.I0 * Math.exp(-t / v.tau);
+    k ? ctx.lineTo(px(t), pyI(i)) : ctx.moveTo(px(t), pyI(i));
+  }
+  ctx.stroke();
+
+  // Marker bei tau
+  const ut = entladen ? U0 * Math.exp(-1) : U0 * (1 - Math.exp(-1));
+  ctx.fillStyle = "#2563eb";
+  ctx.beginPath(); ctx.arc(px(v.tau), pyU(ut), 4.5, 0, 7); ctx.fill();
+  ctx.fillStyle = "#dc2626";
+  ctx.beginPath(); ctx.arc(px(v.tau), pyI(v.I0 * Math.exp(-1)), 4.5, 0, 7); ctx.fill();
+  ctx.font = "bold 11px system-ui"; ctx.textAlign = "left";
+  ctx.fillStyle = "#2563eb";
+  ctx.fillText(entladen ? "37 %" : "63 %", px(v.tau) + 12, pyU(ut) - 12);
+  ctx.fillStyle = "#dc2626";
+  ctx.fillText("37 %", px(v.tau) + 12, pyI(v.I0 * Math.exp(-1)) + 16);
+
+  // Legende mittig oben - links sitzt der Achsenwert, rechts die Kurve
+  ctx.font = "12px system-ui"; ctx.textBaseline = "middle"; ctx.textAlign = "left";
+  const lx = L + gw / 2 - 70;
+  ctx.fillStyle = "#2563eb"; ctx.fillRect(lx, T - 22, 16, 3);
+  txtIdx("u", "C", lx + 22, T - 20, 13, "left");
+  ctx.fillStyle = "#dc2626"; ctx.fillRect(lx + 80, T - 22, 16, 3);
+  ctx.font = "italic 13px system-ui"; ctx.fillText("i(t)", lx + 102, T - 20);
+  ctx.textBaseline = "alphabetic";
+}
+
+function draw() {
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  const z = STEPS[step].zeig;
+  if (z === "graph") zeichneGraph(false);
+  else if (z === "graph_ent") zeichneGraph(true);
+  else zeichneKreis();
+}
+
+/* ---------- UI ---------- */
+function renderDots() {
+  const d = el("dots"); d.innerHTML = "";
+  STEPS.forEach((s, i) => {
+    const b = document.createElement("div");
+    b.className = "dot" + (i === step ? " on" : (i < step ? " done" : ""));
+    b.textContent = String(i + 1);
+    b.onclick = () => { step = i; update(); };
+    d.appendChild(b);
+  });
+}
+function renderPanel() {
+  const s = STEPS[step];
+  let h = "<h2>" + s.titel + "</h2>" + s.html;
+  if (s.frage) h += "<div class='frage'>❓ " + s.frage + "</div>";
+  el("panel").innerHTML = h;
+}
+function renderStats() {
+  const v = werte();
+  if (step < 6) { el("stats").innerHTML = ""; return; }
+  const it = [
+    ["&tau; = R&middot;C", fmt(v.tau, 2, "s")],
+    ["I<sub>0</sub> = U<sub>0</sub>/R", fmt(v.I0 * 1e6, 0, "µA")],
+    ["Q<sub>&infin;</sub> = C&middot;U<sub>0</sub>", fmt(U0 * Cu, 0, "µC")]
+  ];
+  el("stats").innerHTML = it.map(i => `<span class='stat'>${i[0]}: <b>${i[1]}</b></span>`).join("");
+}
+function renderControls() {
+  el("controls").classList.toggle("show", !!STEPS[step].ctrl);
+}
+function update() {
+  el("prev").disabled = (step === 0);
+  el("next").disabled = (step === STEPS.length - 1);
+  renderDots(); renderPanel(); renderStats(); renderControls(); draw();
+}
+
+el("prev").onclick = () => { if (step > 0) { step--; update(); } };
+el("next").onclick = () => { if (step < STEPS.length - 1) { step++; update(); } };
+el("U").oninput = e => { U0 = +e.target.value; el("Uo").textContent = fmt(U0, 1, "V"); renderStats(); draw(); };
+el("R").oninput = e => { Rk = +e.target.value; el("Ro").textContent = Rk + " kΩ"; renderStats(); draw(); };
+el("C").oninput = e => { Cu = +e.target.value; el("Co").textContent = Cu + " µF"; renderStats(); draw(); };
+document.addEventListener("keydown", e => {
+  if ((e.key === "ArrowRight" || e.key === " ") && step < STEPS.length - 1) { step++; update(); }
+  if (e.key === "ArrowLeft" && step > 0) { step--; update(); }
+});
+update();
+</script>
+</body>
+</html>
