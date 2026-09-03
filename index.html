@@ -168,6 +168,26 @@
         </header>
         
         <div class="material-grid">
+            <a href="AB_Ablenkung_E-Feld.pdf" class="material-card" data-url="AB_Ablenkung_E-Feld.pdf">
+                <div class="card-header">
+                    <div class="card-icon blue">&#x1F3AF;</div>
+                    <div class="card-title">Ablenkung einer Ladung im E&#8209;Feld</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Die Elektronenablenkr&ouml;hre als waagerechter Wurf: Bewegungsgesetze, Bahnkurve, Bahngeschwindigkeit &mdash; und der &Uuml;berraschungseffekt, dass sich Ladung und Masse herausk&uuml;rzen. Mit Zahlenteil zur Braunschen R&ouml;hre. PDF.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">E-Feld</span>
+                            <span class="tag">Superposition</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-ablenkung"></div>
+                </div>
+            </a>
+
             <a href="rc-herleitung.html" class="material-card" data-url="rc-herleitung.html">
                 <div class="card-header">
                     <div class="card-icon blue">&#x1F4C9;</div>
@@ -946,6 +966,7 @@
         
         // QR-Codes generieren wenn Seite geladen
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-ablenkung', 'AB_Ablenkung_E-Feld.pdf');
             generateQR('qr-rc', 'rc-herleitung.html');
             generateQR('qr-kondensator', 'kondensator-efeld.html');
             generateQR('qr-sicherheit', 'sicherheitsbelehrung.html');
