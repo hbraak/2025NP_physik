@@ -275,75 +275,95 @@ function txtIdx(basis, index, x, y, groesse, align) {
 
 /* ---------- Zeichnen: Schaltkreis ---------- */
 function zeichneKreis() {
-  const W = cv.width, H = cv.height;
-  const x0 = 250, x1 = 650, y0 = 110, y1 = 320;
-  ctx.strokeStyle = "#334155"; ctx.lineWidth = 2.4; ctx.lineJoin = "round";
+  // Layout nach DIN EN 60617: einheitliche Strichstaerke, Bauteile mittig
+  // auf ihrem Zweig, Leitungsluecken exakt so gross wie das Symbol.
+  const xL = 250, xR = 650, yT = 120, yB = 320;
+  const xM = (xL + xR) / 2, yM = (yT + yB) / 2;
+  const LW = 2;
+  ctx.lineCap = "butt"; ctx.lineJoin = "miter";
 
-  // Rahmen mit Luecken fuer Quelle (links), R (oben), C (rechts)
+  // ---- Quelle (links, vertikaler Zweig -> Striche waagerecht)
+  const qO = yM - 7, qU = yM + 7;          // Plus oben, Minus unten
+  // ---- Widerstand (oben, waagerechter Zweig)
+  const rB = 66, rH = 26;
+  // ---- Kondensator (rechts): Platten dicht beieinander, sonst liest
+  //      man zwei Leitungen statt eines Bauteils
+  const cO = yM - 6, cU = yM + 6, cB = 46;
+  // ---- Schalter (unten)
+  const sB = 18;
+
+  // === Leitungen mit exakten Luecken
+  ctx.strokeStyle = "#334155"; ctx.lineWidth = LW;
   ctx.beginPath();
-  ctx.moveTo(x0, y0 + 55); ctx.lineTo(x0, y0); ctx.lineTo(x0 + 130, y0);
-  ctx.moveTo(x0 + 210, y0); ctx.lineTo(x1, y0); ctx.lineTo(x1, y0 + 70);
-  ctx.moveTo(x1, y0 + 130); ctx.lineTo(x1, y1); ctx.lineTo(x0, y1);
-  ctx.lineTo(x0, y0 + 105);
+  ctx.moveTo(xL, qO); ctx.lineTo(xL, yT); ctx.lineTo(xM - rB / 2, yT);          // links hoch, oben bis R
+  ctx.moveTo(xM + rB / 2, yT); ctx.lineTo(xR, yT); ctx.lineTo(xR, cO);          // R bis rechts, runter bis C
+  ctx.moveTo(xR, cU); ctx.lineTo(xR, yB); ctx.lineTo(xM + sB, yB);              // unter C bis Schalter
+  ctx.moveTo(xM - sB, yB); ctx.lineTo(xL, yB); ctx.lineTo(xL, qU);              // Schalter bis Quelle
   ctx.stroke();
 
-  // Quelle links (Batterie)
-  const ym = y0 + 80;
+  // === Quelle: langer duenner Strich = Plus, kurzer dicker = Minus
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(xL - 21, qO); ctx.lineTo(xL + 21, qO); ctx.stroke();
   ctx.lineWidth = 5;
-  ctx.beginPath(); ctx.moveTo(x0 - 11, ym + 12); ctx.lineTo(x0 + 11, ym + 12); ctx.stroke();
-  ctx.lineWidth = 2.6;
-  ctx.beginPath(); ctx.moveTo(x0 - 18, ym - 8); ctx.lineTo(x0 + 18, ym - 8); ctx.stroke();
-  ctx.fillStyle = "#334155"; ctx.font = "14px system-ui"; ctx.textAlign = "right";
-  ctx.textBaseline = "middle";
-  ctx.fillText("U₀ = " + fmt(U0, 1, "V"), x0 - 26, ym);
+  ctx.beginPath(); ctx.moveTo(xL - 10, qU); ctx.lineTo(xL + 10, qU); ctx.stroke();
+  // Polzeichen nach INNEN - links steht das Spannungslabel
+  ctx.fillStyle = "#334155"; ctx.font = "bold 14px system-ui";
+  ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  ctx.fillText("+", xL + 34, qO - 1); ctx.fillText("−", xL + 34, qU + 1);
+  ctx.textAlign = "right"; ctx.font = "13px system-ui";
+  ctx.fillText("U₀ = " + fmt(U0, 1, "V"), xL - 30, yM);
 
-  // Widerstand oben
-  ctx.lineWidth = 2.2; ctx.strokeStyle = "#334155";
-  ctx.strokeRect(x0 + 130, y0 - 15, 80, 30);
-  ctx.fillStyle = "#fff"; ctx.fillRect(x0 + 131, y0 - 14, 78, 28);
-  ctx.strokeRect(x0 + 130, y0 - 15, 80, 30);
-  ctx.fillStyle = "#334155"; ctx.textAlign = "center";
-  ctx.fillText("R", x0 + 170, y0 - 32);
-  ctx.font = "12px system-ui";
-  ctx.fillText(Rk + " kΩ", x0 + 170, y0);
+  // === Widerstand: Rechteck, Wert AUSSERHALB
+  ctx.lineWidth = LW; ctx.fillStyle = "#fff";
+  ctx.fillRect(xM - rB / 2, yT - rH / 2, rB, rH);
+  ctx.strokeRect(xM - rB / 2, yT - rH / 2, rB, rH);
+  ctx.fillStyle = "#334155"; ctx.textAlign = "center"; ctx.font = "13px system-ui";
+  ctx.fillText("R = " + Rk + " kΩ", xM, yT + rH / 2 + 16);
 
-  // Kondensator rechts
-  ctx.lineWidth = 3.4;
-  ctx.beginPath(); ctx.moveTo(x1 - 22, y0 + 70); ctx.lineTo(x1 + 22, y0 + 70); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(x1 - 22, y0 + 130); ctx.lineTo(x1 + 22, y0 + 130); ctx.stroke();
-  // Bauteilbeschriftung nach LINKS - rechts steht der Spannungspfeil
-  ctx.fillStyle = "#334155"; ctx.font = "14px system-ui"; ctx.textAlign = "right";
-  ctx.fillText("C", x1 - 34, y0 + 88);
-  ctx.font = "12px system-ui";
-  ctx.fillText(Cu + " µF", x1 - 34, y0 + 112);
+  // === Kondensator: zwei gleich lange Platten, geringer Abstand
+  ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(xR - cB / 2, cO); ctx.lineTo(xR + cB / 2, cO); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(xR - cB / 2, cU); ctx.lineTo(xR + cB / 2, cU); ctx.stroke();
+  ctx.fillStyle = "#334155"; ctx.textAlign = "right"; ctx.font = "13px system-ui";
+  ctx.fillText("C = " + Cu + " µF", xR - cB / 2 - 12, yM);
 
-  // Schalter im unteren Zweig - der Text spricht vom Schliessen
-  const sx = (x0 + x1) / 2;
-  ctx.strokeStyle = "#334155"; ctx.lineWidth = 2.4;
-  ctx.beginPath(); ctx.moveTo(sx - 26, y1); ctx.lineTo(sx - 14, y1); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(sx + 14, y1); ctx.lineTo(sx + 26, y1); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(sx - 14, y1); ctx.lineTo(sx + 13, y1 - 15); ctx.stroke();
+  // === Schalter
+  ctx.lineWidth = LW; ctx.strokeStyle = "#334155";
+  ctx.beginPath(); ctx.moveTo(xM - sB, yB); ctx.lineTo(xM + 15, yB - 17); ctx.stroke();
   ctx.fillStyle = "#334155";
-  ctx.beginPath(); ctx.arc(sx - 14, y1, 3, 0, 7); ctx.fill();
-  ctx.beginPath(); ctx.arc(sx + 14, y1, 3, 0, 7); ctx.fill();
-  ctx.font = "12px system-ui"; ctx.textAlign = "center"; ctx.textBaseline = "top";
-  ctx.fillStyle = "#64748b"; ctx.fillText("S", sx, y1 + 12);
+  ctx.beginPath(); ctx.arc(xM - sB, yB, 3, 0, 7); ctx.fill();
+  ctx.beginPath(); ctx.arc(xM + sB, yB, 3, 0, 7); ctx.fill();
+  ctx.textAlign = "center"; ctx.font = "13px system-ui";
+  ctx.fillText("S", xM, yB + 20);
 
-  // Spannungspfeile
-  ctx.textBaseline = "middle";
+  // === Spannungspfeil u_R (mit Bezugslinien zu den Anschluessen)
+  const yUR = yT - 46;
+  ctx.strokeStyle = "#fca5a5"; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(xM - rB / 2, yT - rH / 2 - 3); ctx.lineTo(xM - rB / 2, yUR);
+  ctx.moveTo(xM + rB / 2, yT - rH / 2 - 3); ctx.lineTo(xM + rB / 2, yUR);
+  ctx.stroke();
   ctx.strokeStyle = "#dc2626"; ctx.fillStyle = "#dc2626"; ctx.lineWidth = 1.8;
-  pfeil(x0 + 130, y0 - 48, x0 + 210, y0 - 48);
-  txtIdx("u", "R", x0 + 170, y0 - 62, 15, "center");
+  pfeil(xM - rB / 2, yUR, xM + rB / 2, yUR);
+  txtIdx("u", "R", xM, yUR - 14, 15, "center");
 
-  ctx.strokeStyle = "#2563eb"; ctx.fillStyle = "#2563eb";
-  pfeil(x1 + 62, y0 + 70, x1 + 62, y0 + 130);
-  txtIdx("u", "C", x1 + 72, y0 + 100, 15, "left");
+  // === Spannungspfeil u_C (Bezugspunkte auf der Leitung ober-/unterhalb)
+  const xUC = xR + 54, aO = yM - 34, aU = yM + 34;
+  ctx.strokeStyle = "#93c5fd"; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(xR + 3, aO); ctx.lineTo(xUC, aO);
+  ctx.moveTo(xR + 3, aU); ctx.lineTo(xUC, aU);
+  ctx.stroke();
+  ctx.strokeStyle = "#2563eb"; ctx.fillStyle = "#2563eb"; ctx.lineWidth = 1.8;
+  pfeil(xUC, aO, xUC, aU);
+  txtIdx("u", "C", xUC + 10, yM, 15, "left");
 
-  // Stromrichtung
+  // === Strompfeil auf der oberen Leitung
   ctx.strokeStyle = "#64748b"; ctx.fillStyle = "#64748b"; ctx.lineWidth = 1.6;
-  pfeil(x0 + 40, y0 - 22, x0 + 100, y0 - 22);
+  const xi = xL + 58;
+  pfeil(xi, yT - 16, xi + 46, yT - 16);
   ctx.font = "italic 13px system-ui"; ctx.textAlign = "center";
-  ctx.fillText("i(t)", x0 + 70, y0 - 36);
+  ctx.fillText("i(t)", xi + 23, yT - 28);
 
   ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
 }
