@@ -168,6 +168,26 @@
         </header>
         
         <div class="material-grid">
+            <a href="kondensator-efeld.html" class="material-card" data-url="kondensator-efeld.html">
+                <div class="card-header">
+                    <div class="card-icon blue">&#x26A1;</div>
+                    <div class="card-title">Ladungstrennung und elektrisches Feld</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Einstieg E-Feld: In 8 Schritten vom neutralen Plattenpaar &uuml;ber die Ladungspumpe zum homogenen Feld. Feldkonzept mit Probeladung (F = q&middot;E), wachsende Gegenspannung, Gleichgewicht U<sub>C</sub> = U&#8320; &mdash; und zum Schluss Q = C&middot;U und C = &epsilon;&#8320;A/d zum Selbstausprobieren.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">E-Feld</span>
+                            <span class="tag">Kondensator</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-kondensator"></div>
+                </div>
+            </a>
+
             <a href="sicherheitsbelehrung.html" class="material-card" data-url="sicherheitsbelehrung.html">
                 <div class="card-header">
                     <div class="card-icon blue">&#x26A0;&#xFE0F;</div>
@@ -906,6 +926,7 @@
         
         // QR-Codes generieren wenn Seite geladen
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-kondensator', 'kondensator-efeld.html');
             generateQR('qr-sicherheit', 'sicherheitsbelehrung.html');
             generateQR('qr-jahresquiz', 'jahresrueckblick_quiz.html');
             generateQR('qr-kepler3', 'arbeitsblatt_kepler3.pdf');

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ladungstrennung und elektrisches Feld – Plattenkondensator</title>
+<style>
+  :root {
+    --ink:#1e293b; --muted:#64748b; --accent:#4f46e5;
+    --neg:#2563eb; --pos:#dc2626; --line:#e2e8f0; --ok:#059669;
+  }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, -apple-system, sans-serif; margin:0; padding:1rem;
+         color:var(--ink); background:#f8fafc; }
+  #wrap { max-width: 52rem; margin: 0 auto; }
+  h1 { font-size:1.2rem; margin:0 0 .2rem; }
+  .sub { color:var(--muted); font-size:.85rem; margin:0 0 .8rem; }
+  canvas { width:100%; background:#fff; border:1px solid var(--line);
+           border-radius:12px; display:block; touch-action:none; }
+  .stepbar { display:flex; align-items:center; gap:.5rem; margin:.7rem 0 .5rem; }
+  .dots { display:flex; gap:.3rem; flex:1; flex-wrap:wrap; }
+  .dot { width:1.7rem; height:1.7rem; border-radius:50%; border:1px solid var(--line);
+         background:#fff; color:var(--muted); font-size:.8rem; cursor:pointer;
+         display:flex; align-items:center; justify-content:center; }
+  .dot.on { background:var(--accent); color:#fff; border-color:var(--accent); font-weight:600; }
+  .dot.done { border-color:var(--accent); color:var(--accent); }
+  button { padding:.5rem 1.1rem; border:0; border-radius:10px; background:var(--accent);
+           color:#fff; font-size:.95rem; cursor:pointer; }
+  button:disabled { background:#cbd5e1; cursor:default; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); }
+  .panel { background:#fff; border:1px solid var(--line); border-radius:12px;
+           padding:.9rem 1rem; margin-top:.6rem; }
+  .panel h2 { font-size:1rem; margin:0 0 .45rem; color:var(--accent); }
+  .panel p { margin:.35rem 0; font-size:.95rem; line-height:1.5; }
+  .panel .frage { margin-top:.6rem; padding-top:.55rem; border-top:1px dashed var(--line);
+                  font-size:.93rem; color:var(--ink); }
+  .panel .frage b { color:var(--ok); }
+  .stats { display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.6rem; }
+  .stat { background:#fff; border:1px solid var(--line); border-radius:10px;
+          padding:.4rem .7rem; font-size:.88rem; }
+  .stat b { color:var(--accent); font-variant-numeric:tabular-nums; }
+  .row { display:flex; align-items:center; gap:.6rem; margin:.5rem 0; font-size:.92rem; }
+  .row label { flex:0 0 10rem; }
+  .row input[type=range] { flex:1; accent-color:var(--accent); }
+  .row output { flex:0 0 5.5rem; text-align:right; font-variant-numeric:tabular-nums;
+                font-weight:600; }
+  #controls { display:none; }
+  #controls.show { display:block; }
+  .warn { background:#fffbeb; border:1px solid #fde68a; border-radius:10px;
+          padding:.6rem .8rem; font-size:.9rem; margin-top:.5rem; }
+  @media (max-width:640px){ .row label { flex:0 0 7rem; } }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <h1>Ladungstrennung und elektrisches Feld</h1>
+  <p class="sub">Plattenkondensator &ndash; Schritt f&uuml;r Schritt durchklicken</p>
+
+  <canvas id="c" width="900" height="470"></canvas>
+
+  <div class="stepbar">
+    <button id="prev" class="ghost">&larr; Zur&uuml;ck</button>
+    <div class="dots" id="dots"></div>
+    <button id="next">Weiter &rarr;</button>
+  </div>
+
+  <div class="panel" id="panel"></div>
+
+  <div class="stats" id="stats"></div>
+
+  <div id="controls">
+    <div class="row" id="rowU">
+      <label>Spannung U</label>
+      <input id="U" type="range" min="0" max="24" step="0.5" value="12">
+      <output id="Uo">12,0 V</output>
+    </div>
+    <div class="row" id="rowD">
+      <label>Plattenabstand d</label>
+      <input id="D" type="range" min="1" max="10" step="0.5" value="5">
+      <output id="Do">5,0 mm</output>
+    </div>
+    <div class="row" id="rowA">
+      <label>Plattenfl&auml;che A</label>
+      <input id="A" type="range" min="100" max="900" step="25" value="400">
+      <output id="Ao">400 cm&sup2;</output>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+const cv = document.getElementById("c"), ctx = cv.getContext("2d");
+const el = id => document.getElementById(id);
+const EPS0 = 8.854e-12;
+
+let step = 0, anim = 0, tAnim = 0;
+let U = 12, dmm = 5, Acm2 = 400;
+
+// abgeleitete Groessen
+function calc() {
+  const d = dmm / 1000, A = Acm2 / 10000;
+  const C = EPS0 * A / d;      // F
+  const Q = C * U;             // C
+  const E = U / d;             // V/m
+  return { d, A, C, Q, E };
+}
+
+function fmt(x, dec, unit) {
+  return x.toFixed(dec).replace(".", ",") + (unit ? " " + unit : "");
+}
+
+/* ---------- Schritt-Inhalte ---------- */
+const STEPS = [
+  {
+    titel: "Der Aufbau",
+    text: [
+      "Zwei Metallplatten stehen sich gegen&uuml;ber, verbunden &uuml;ber einen Leiter und eine Spannungsquelle.",
+      "Im Ausgangszustand ist jede Platte <b>elektrisch neutral</b>: Es sind genauso viele positive wie negative Ladungen vorhanden. Zwischen den Platten passiert nichts."
+    ],
+    frage: "Woraus besteht ein Metall eigentlich? Welche Ladungstr&auml;ger k&ouml;nnen sich darin frei bewegen?",
+    ladung: 0, feld: false, probe: false
+  },
+  {
+    titel: "Die Ladungspumpe l&auml;uft an",
+    text: [
+      "Die Spannungsquelle wirkt wie eine <b>Pumpe f&uuml;r Ladungen</b>: Sie holt Elektronen von der rechten Platte und schiebt sie auf die linke.",
+      "Links entsteht ein <b>&Uuml;berschuss</b> an Elektronen (negativ), rechts fehlen genau dieselben Elektronen (positiv). Die Gesamtladung bleibt dabei null &ndash; es wird nichts erzeugt, nur <b>getrennt</b>."
+    ],
+    frage: "Wird hier Ladung <i>erzeugt</i>? &ndash; <b>Nein.</b> Ladungserhaltung: Was links dazukommt, fehlt rechts.",
+    ladung: 0.18, feld: true, probe: false
+  },
+  {
+    titel: "Das elektrische Feld entsteht",
+    text: [
+      "Zwischen den getrennten Ladungen bildet sich ein <b>elektrisches Feld</b> aus. Wir zeichnen es mit <b>Feldlinien</b>: Sie starten bei Plus und enden bei Minus.",
+      "Im Plattenkondensator verlaufen sie parallel und in gleichem Abstand &ndash; das Feld ist <b>homogen</b>: an jeder Stelle gleich stark, gleiche Richtung."
+    ],
+    frage: "Was bedeutet es, wenn die Feldlinien <i>dichter</i> liegen?",
+    ladung: 0.45, feld: true, probe: false
+  },
+  {
+    titel: "Das Feldkonzept &ndash; die Probeladung",
+    text: [
+      "Woher <i>wei&szlig;</i> eine Ladung, dass die Platten geladen sind? Sie ber&uuml;hrt sie ja nicht.",
+      "Antwort: Der Raum selbst ist ver&auml;ndert. Bringen wir eine kleine positive <b>Probeladung q</b> hinein, wirkt auf sie sofort eine Kraft &ndash; l&auml;ngs der Feldlinien, zur negativen Platte.",
+      "Das Feld ist der <b>Vermittler</b>: <b>F = q &middot; E</b> (als Vektorgleichung). Weil das Feld homogen ist, ist die Kraft <b>&uuml;berall gleich gro&szlig;</b>."
+    ],
+    frage: "Verschiebe die Probeladung in Gedanken nach oben oder zur Mitte: &Auml;ndert sich die Kraft? &ndash; <b>Nein</b>, im homogenen Feld nicht.",
+    ladung: 0.45, feld: true, probe: true
+  },
+  {
+    titel: "Pumpen wird immer schwerer",
+    text: [
+      "Jetzt kommt der entscheidende Punkt. Jede weitere Ladung, die wir nach links schieben wollen, muss <b>gegen das bereits vorhandene Feld</b> anarbeiten.",
+      "Die linke Platte ist schon negativ &ndash; sie <b>sto&szlig;&nbsp;t</b> weitere Elektronen <b>ab</b>. Die Quelle muss also mit jedem Schritt <b>mehr Arbeit</b> verrichten.",
+      "Die Spannung am Kondensator w&auml;chst mit der Ladung mit: <b>U<sub>C</sub> = Q / C</b>."
+    ],
+    frage: "Der Balken rechts zeigt die Gegenspannung U<sub>C</sub>. Was passiert wohl, wenn sie die Quellenspannung erreicht?",
+    ladung: 0.78, feld: true, probe: false
+  },
+  {
+    titel: "Gleichgewicht &ndash; nicht &bdquo;voll&ldquo;",
+    text: [
+      "Der Ladestrom kommt zum Erliegen, sobald <b>U<sub>C</sub> = U<sub>0</sub></b> ist: Die Gegenspannung des Kondensators kompensiert die Quellenspannung genau. Es gibt keinen Antrieb mehr, der Strom wird null.",
+      "<b>Wichtig:</b> Der Kondensator ist damit <i>nicht</i> &bdquo;voll&ldquo; wie ein Eimer. Legen wir eine <b>h&ouml;here</b> Spannung an, flie&szlig;t sofort wieder Ladung nach.",
+      "Es gilt streng linear: <b>Q = C &middot; U</b>."
+    ],
+    frage: "Probier es im n&auml;chsten Schritt selbst: Doppelte Spannung &rarr; doppelte Ladung.",
+    ladung: 1, feld: true, probe: false
+  },
+  {
+    titel: "Q = C &middot; U &ndash; selbst ausprobieren",
+    text: [
+      "Verstelle die <b>Spannung U</b> und beobachte Ladung Q und Feldst&auml;rke E.",
+      "Q w&auml;chst proportional zu U &ndash; ohne Obergrenze, ohne S&auml;ttigung. Die einzige echte Grenze ist der <b>Spannungsdurchschlag</b> der Luft bei etwa 3&nbsp;kV je Millimeter."
+    ],
+    frage: "Verdopple U. Was macht Q? Was macht E? Und was macht <b>C</b>?",
+    ladung: -1, feld: true, probe: false, ctrl: ["U"]
+  },
+  {
+    titel: "Und was ist nun die Kapazit&auml;t?",
+    text: [
+      "Jetzt bleibt U fest &ndash; stattdessen ver&auml;nderst du die <b>Bauform</b>: Abstand d und Fl&auml;che A.",
+      "<b>C = &epsilon;<sub>0</sub> &middot; A / d</b> &ndash; die Kapazit&auml;t h&auml;ngt <b>nur von der Geometrie</b> ab, nicht von U und nicht von Q. Sie sagt: Wie viel Ladung fasst dieser Kondensator <i>pro Volt</i>?",
+      "Gr&ouml;&szlig;ere Fl&auml;che oder kleinerer Abstand &rarr; mehr Ladung bei gleicher Spannung."
+    ],
+    frage: "Halbiere den Abstand d. Was passiert mit C, was mit Q &ndash; und was mit der Feldst&auml;rke E?",
+    ladung: -1, feld: true, probe: false, ctrl: ["U", "D", "A"]
+  }
+];
+
+/* ---------- Zeichnen ---------- */
+function draw() {
+  const W = cv.width, H = cv.height;
+  ctx.clearRect(0, 0, W, H);
+  const s = STEPS[step];
+  const v = calc();
+
+  // Ladungsgrad (Anzahl Ladungssymbole) und Feldgrad (Feldliniendichte).
+  // In den Reglerschritten muessen beide getrennt aus Q bzw. E folgen -
+  // sonst zeigt die Zeichnung nicht, dass kleineres d mehr Ladung UND
+  // ein staerkeres Feld bedeutet.
+  const Q_REF = 1.7e-9;    // Q bei d=5mm, A=400cm², U=24V
+  const E_REF = 4800;      // E bei d=5mm, U=24V
+  let grad, feldGrad;
+  if (s.ladung < 0) {
+    grad     = Math.max(0, Math.min(1.25, v.Q / Q_REF));
+    feldGrad = Math.max(0, Math.min(1.25, v.E / E_REF));
+  } else {
+    grad = feldGrad = s.ladung;
+  }
+
+  // Geometrie der Platten
+  const cx = 400, cyTop = 90, plateH = 250, plateW = 16;
+  // Abstand haengt in den letzten Schritten vom Regler ab
+  const gap = (s.ctrl && s.ctrl.includes("D")) ? 60 + dmm * 22 : 170;
+  // Hoehe haengt von A ab (nur im letzten Schritt)
+  const ph = (s.ctrl && s.ctrl.includes("A")) ? 120 + Acm2 * 0.22 : plateH;
+  const cy = cyTop + plateH / 2;
+  const xL = cx - gap / 2, xR = cx + gap / 2;
+  const yTop = cy - ph / 2, yBot = cy + ph / 2;
+
+  // --- Feldlinien (zuerst, damit Platten darueber liegen)
+  if (s.feld && feldGrad > 0.02) {
+    // Linienzahl skaliert mit der Plattenhoehe, damit die DICHTE die
+    // Feldstaerke abbildet: gleiches E -> gleicher Linienabstand.
+    const n = Math.max(3, Math.min(20, Math.round((3 + feldGrad * 8) * ph / 250)));
+    const op = Math.min(1, 0.25 + 0.6 * feldGrad);
+    ctx.strokeStyle = "rgba(79,70,229," + op + ")";
+    ctx.lineWidth = 1.6;
+    for (let i = 0; i < n; i++) {
+      const y = yTop + (ph * (i + 0.5)) / n;
+      ctx.beginPath();
+      ctx.moveTo(xR - 2, y);
+      ctx.lineTo(xL + 2, y);
+      ctx.stroke();
+      // Pfeilspitze in der Mitte: von + (rechts) nach - (links)
+      const am = cx + 8;
+      ctx.beginPath();
+      ctx.moveTo(am, y);
+      ctx.lineTo(am + 11, y - 5.5);
+      ctx.lineTo(am + 11, y + 5.5);
+      ctx.closePath();
+      ctx.fillStyle = "rgba(79,70,229," + op + ")";
+      ctx.fill();
+    }
+  }
+
+  // --- Platten
+  ctx.fillStyle = "#94a3b8";
+  ctx.fillRect(xL - plateW, yTop, plateW, ph);
+  ctx.fillRect(xR, yTop, plateW, ph);
+
+  // --- Ladungen auf den Platten
+  const nQ = Math.min(12, Math.round(grad * 9));
+  ctx.font = "bold 17px system-ui";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  for (let i = 0; i < nQ; i++) {
+    const y = yTop + (ph * (i + 0.5)) / Math.max(nQ, 1);
+    ctx.fillStyle = "var(--neg)";
+    ctx.fillStyle = "#2563eb";
+    ctx.beginPath(); ctx.arc(xL - plateW / 2, y, 8, 0, 7); ctx.fill();
+    ctx.fillStyle = "#fff"; ctx.fillText("−", xL - plateW / 2, y);
+    ctx.fillStyle = "#dc2626";
+    ctx.beginPath(); ctx.arc(xR + plateW / 2, y, 8, 0, 7); ctx.fill();
+    ctx.fillStyle = "#fff"; ctx.fillText("+", xR + plateW / 2, y);
+  }
+
+  // --- Plattenbeschriftung
+  ctx.font = "13px system-ui";
+  ctx.fillStyle = "#475569";
+  ctx.fillText("Platte 1", xL - plateW / 2, yTop - 16);
+  ctx.fillText("Platte 2", xR + plateW / 2, yTop - 16);
+
+  // --- Abstandsmass d
+  ctx.strokeStyle = "#94a3b8"; ctx.lineWidth = 1;
+  ctx.setLineDash([4, 3]);
+  ctx.beginPath(); ctx.moveTo(xL, yBot + 18); ctx.lineTo(xR, yBot + 18); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = "#475569"; ctx.font = "12px system-ui";
+  ctx.fillText("d = " + fmt(dmm, 1, "mm"), cx, yBot + 32);
+
+  // --- Leiter + Quelle (unten herum)
+  const yWire = yBot + 62;
+  ctx.strokeStyle = "#334155"; ctx.lineWidth = 2.4;
+  ctx.beginPath();
+  ctx.moveTo(xL - plateW / 2, yBot);
+  ctx.lineTo(xL - plateW / 2, yWire);
+  ctx.lineTo(cx - 46, yWire);
+  ctx.moveTo(cx + 46, yWire);
+  ctx.lineTo(xR + plateW / 2, yWire);
+  ctx.lineTo(xR + plateW / 2, yBot);
+  ctx.stroke();
+
+  // Batteriesymbol
+  ctx.lineWidth = 2.6;
+  ctx.beginPath(); ctx.moveTo(cx - 14, yWire - 17); ctx.lineTo(cx - 14, yWire + 17); ctx.stroke();
+  ctx.lineWidth = 5;
+  ctx.beginPath(); ctx.moveTo(cx + 8, yWire - 10); ctx.lineTo(cx + 8, yWire + 10); ctx.stroke();
+  ctx.lineWidth = 2.4;
+  ctx.beginPath(); ctx.moveTo(cx - 46, yWire); ctx.lineTo(cx - 14, yWire); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx + 8, yWire); ctx.lineTo(cx + 46, yWire); ctx.stroke();
+  ctx.fillStyle = "#334155"; ctx.font = "13px system-ui";
+  ctx.fillText("U₀ = " + fmt(U, 1, "V"), cx, yWire + 34);
+
+  // --- wandernde Elektronen im Leiter (Schritte 1-4)
+  if (step >= 1 && step <= 4) {
+    const nE = 5;
+    for (let i = 0; i < nE; i++) {
+      let p = (tAnim / 150 + i / nE) % 1;   // 0..1 entlang des Wegs rechts -> links
+      // Weg: rechte Platte runter, nach links, linke Platte hoch
+      let x, y;
+      const segA = 0.22, segB = 0.78;
+      if (p < segA) {
+        x = xR + plateW / 2; y = yBot + (yWire - yBot) * (p / segA);
+      } else if (p < segB) {
+        const q = (p - segA) / (segB - segA);
+        x = (xR + plateW / 2) + ((xL - plateW / 2) - (xR + plateW / 2)) * q;
+        y = yWire;
+      } else {
+        const q = (p - segB) / (1 - segB);
+        x = xL - plateW / 2; y = yWire - (yWire - yBot) * q;
+      }
+      ctx.fillStyle = "#2563eb";
+      ctx.beginPath(); ctx.arc(x, y, 5.5, 0, 7); ctx.fill();
+    }
+    ctx.fillStyle = "#2563eb"; ctx.font = "12px system-ui";
+    ctx.textAlign = "left";
+    ctx.fillText("Elektronen wandern ←", 40, yWire - 12);
+    ctx.textAlign = "center";
+  }
+
+  // --- Probeladung (Schritt 3)
+  if (s.probe) {
+    const px = cx + 18, py = cy - 24;
+    ctx.fillStyle = "#dc2626";
+    ctx.beginPath(); ctx.arc(px, py, 13, 0, 7); ctx.fill();
+    ctx.fillStyle = "#fff"; ctx.font = "bold 15px system-ui";
+    ctx.fillText("+", px, py);
+    ctx.fillStyle = "#dc2626"; ctx.font = "italic 13px system-ui";
+    ctx.fillText("q", px, py - 24);
+    // Kraftpfeil nach links
+    ctx.strokeStyle = "#dc2626"; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(px - 16, py); ctx.lineTo(px - 62, py); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(px - 74, py); ctx.lineTo(px - 60, py - 7); ctx.lineTo(px - 60, py + 7);
+    ctx.closePath(); ctx.fillStyle = "#dc2626"; ctx.fill();
+    ctx.font = "bold 14px system-ui";
+    ctx.fillText("F = q·E", px - 45, py - 18);
+  }
+
+  // --- Gegenspannungs-Balken (nur Schritt 5 und 6: Aufladen -> Gleichgewicht).
+  // In den Reglerschritten waere er irrefuehrend, dort ist ohnehin U_C = U_0.
+  if (step === 4 || step === 5) {
+    const bx = 792, by = yTop, bh = 250, bw = 30;
+    ctx.strokeStyle = "#cbd5e1"; ctx.lineWidth = 1.5;
+    ctx.strokeRect(bx, by, bw, bh);
+    const fillH = bh * Math.min(1, grad);
+    const full = grad >= 0.995;
+    ctx.fillStyle = full ? "#059669" : "#818cf8";
+    ctx.fillRect(bx, by + bh - fillH, bw, fillH);
+    // Marke Quellenspannung
+    ctx.strokeStyle = "#dc2626"; ctx.lineWidth = 2;
+    ctx.setLineDash([5, 3]);
+    ctx.beginPath(); ctx.moveTo(bx - 8, by); ctx.lineTo(bx + bw + 8, by); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = "#dc2626"; ctx.font = "11px system-ui"; ctx.textAlign = "center";
+    ctx.fillText("U₀", bx + bw / 2, by - 10);
+    ctx.fillStyle = "#475569"; ctx.font = "12px system-ui";
+    ctx.fillText("U_C", bx + bw / 2, by + bh + 18);
+    if (full) {
+      ctx.fillStyle = "#059669"; ctx.font = "bold 12px system-ui";
+      ctx.fillText("I = 0", bx + bw / 2, by + bh + 34);
+    }
+  }
+
+  // --- E-Feld-Beschriftung
+  if (s.feld && feldGrad > 0.3) {
+    ctx.fillStyle = "#4f46e5"; ctx.font = "italic bold 15px system-ui";
+    ctx.textAlign = "center";
+    ctx.fillText("E", cx + 14, yTop - 16);
+  }
+
+  ctx.textAlign = "left";
+}
+
+/* ---------- UI ---------- */
+function renderDots() {
+  const d = el("dots");
+  d.innerHTML = "";
+  STEPS.forEach((s, i) => {
+    const b = document.createElement("div");
+    b.className = "dot" + (i === step ? " on" : (i < step ? " done" : ""));
+    b.textContent = String(i + 1);
+    b.title = s.titel.replace(/&[a-z]+;/g, "");
+    b.onclick = () => { step = i; update(); };
+    d.appendChild(b);
+  });
+}
+
+function renderPanel() {
+  const s = STEPS[step];
+  let html = "<h2>" + (step + 1) + ". " + s.titel + "</h2>";
+  s.text.forEach(t => html += "<p>" + t + "</p>");
+  if (s.frage) html += "<div class='frage'>❓ " + s.frage + "</div>";
+  if (step === 5) {
+    html += "<div class='warn'><b>Merksatz:</b> Der Ladevorgang endet im <b>Gleichgewicht</b> " +
+            "(U<sub>C</sub> = U<sub>0</sub>), nicht weil der Kondensator &bdquo;voll&ldquo; w&auml;re. " +
+            "Q = C&middot;U kennt keine S&auml;ttigung.</div>";
+  }
+  el("panel").innerHTML = html;
+}
+
+function renderStats() {
+  const v = calc();
+  const s = STEPS[step];
+  let items = [];
+  if (step >= 6) items.push(["Spannung U", fmt(U, 1, "V")]);
+  if (step >= 4) {
+    items.push(["Ladung Q", fmt(v.Q * 1e9, 2, "nC")]);
+    items.push(["Feldst&auml;rke E", fmt(v.E, 0, "V/m")]);
+  }
+  // C erst zeigen, wenn der Begriff auch eingefuehrt ist (Schritt 6)
+  if (step >= 5) items.push(["Kapazit&auml;t C", fmt(v.C * 1e12, 1, "pF")]);
+  el("stats").innerHTML = items.map(
+    i => "<span class='stat'>" + i[0] + ": <b>" + i[1] + "</b></span>"
+  ).join("");
+}
+
+function renderControls() {
+  const s = STEPS[step];
+  const c = el("controls");
+  if (!s.ctrl) { c.classList.remove("show"); return; }
+  c.classList.add("show");
+  el("rowU").style.display = s.ctrl.includes("U") ? "flex" : "none";
+  el("rowD").style.display = s.ctrl.includes("D") ? "flex" : "none";
+  el("rowA").style.display = s.ctrl.includes("A") ? "flex" : "none";
+}
+
+function update() {
+  el("prev").disabled = (step === 0);
+  el("next").disabled = (step === STEPS.length - 1);
+  renderDots(); renderPanel(); renderStats(); renderControls(); draw();
+}
+
+el("prev").onclick = () => { if (step > 0) { step--; update(); } };
+el("next").onclick = () => { if (step < STEPS.length - 1) { step++; update(); } };
+
+el("U").oninput = e => {
+  U = parseFloat(e.target.value);
+  el("Uo").textContent = fmt(U, 1, "V");
+  renderStats(); draw();
+};
+el("D").oninput = e => {
+  dmm = parseFloat(e.target.value);
+  el("Do").textContent = fmt(dmm, 1, "mm");
+  renderStats(); draw();
+};
+el("A").oninput = e => {
+  Acm2 = parseFloat(e.target.value);
+  el("Ao").textContent = Acm2 + " cm²";
+  renderStats(); draw();
+};
+
+document.addEventListener("keydown", e => {
+  if (e.key === "ArrowRight" || e.key === " ") { if (step < STEPS.length - 1) { step++; update(); } }
+  if (e.key === "ArrowLeft") { if (step > 0) { step--; update(); } }
+});
+
+function loop() { tAnim++; if (step >= 1 && step <= 4) draw(); requestAnimationFrame(loop); }
+update();
+loop();
+</script>
+</body>
+</html>
