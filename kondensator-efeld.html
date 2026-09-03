@@ -46,6 +46,13 @@
                 font-weight:600; }
   #controls { display:none; }
   #controls.show { display:block; }
+  #modus { display:none; gap:.4rem; margin-top:.6rem; align-items:center; flex-wrap:wrap; }
+  #modus.show { display:flex; }
+  #modus .lbl { font-size:.88rem; color:var(--muted); margin-right:.2rem; }
+  .toggle { padding:.35rem .8rem; border-radius:8px; border:1px solid var(--line);
+            background:#fff; color:var(--muted); font-size:.87rem; cursor:pointer; }
+  .toggle.on { border-color:var(--accent); background:var(--accent); color:#fff; font-weight:600; }
+  .toggle.on.tech { border-color:var(--pos); background:var(--pos); }
   .warn { background:#fffbeb; border:1px solid #fde68a; border-radius:10px;
           padding:.6rem .8rem; font-size:.9rem; margin-top:.5rem; }
   @media (max-width:640px){ .row label { flex:0 0 7rem; } }
@@ -65,6 +72,12 @@
   </div>
 
   <div class="panel" id="panel"></div>
+
+  <div id="modus">
+    <span class="lbl">Darstellung:</span>
+    <button class="toggle on" id="mE">Elektronenfluss</button>
+    <button class="toggle tech" id="mT">Technische Stromrichtung</button>
+  </div>
 
   <div class="stats" id="stats"></div>
 
@@ -95,6 +108,7 @@ const EPS0 = 8.854e-12;
 
 let step = 0, anim = 0, tAnim = 0;
 let U = 12, dmm = 5, Acm2 = 400;
+let modus = "e";   // "e" = Elektronenfluss, "tech" = technische Stromrichtung
 
 // abgeleitete Groessen
 function calc() {
@@ -126,7 +140,9 @@ const STEPS = [
       "Die Spannungsquelle wirkt wie eine <b>Pumpe f&uuml;r Ladungen</b>: Sie holt Elektronen von der rechten Platte und schiebt sie auf die linke.",
       "Links entsteht ein <b>&Uuml;berschuss</b> an Elektronen (negativ), rechts fehlen genau dieselben Elektronen (positiv). Die Gesamtladung bleibt dabei null &ndash; es wird nichts erzeugt, nur <b>getrennt</b>."
     ],
-    frage: "Wird hier Ladung <i>erzeugt</i>? &ndash; <b>Nein.</b> Ladungserhaltung: Was links dazukommt, fehlt rechts.",
+    frage: "Wird hier Ladung <i>erzeugt</i>? &ndash; <b>Nein.</b> Ladungserhaltung: Was links dazukommt, fehlt rechts. " +
+           "&mdash; Schalte unten einmal auf <b>technische Stromrichtung</b> um: Sie zeigt genau <b>entgegengesetzt</b> " +
+           "zur Elektronenbewegung. Historische Festlegung, lange bevor man das Elektron kannte.",
     ladung: 0.18, feld: true, probe: false
   },
   {
@@ -313,14 +329,17 @@ function draw() {
   ctx.fillStyle = "#334155"; ctx.font = "13px system-ui";
   ctx.fillText("U₀ = " + fmt(U, 1, "V"), cx, yWire + 40);
 
-  // --- wandernde Elektronen im Leiter (Schritte 1-4)
+  // --- Ladungstraeger im Leiter (Schritte 2-5)
+  // Elektronenfluss: rechts -> links (zur negativen Platte 1).
+  // Technische Stromrichtung: genau umgekehrt, vom Pluspol aus.
   if (step >= 1 && step <= 4) {
+    const tech = (modus === "tech");
     const nE = 5;
+    const segA = 0.22, segB = 0.78;
     for (let i = 0; i < nE; i++) {
-      let p = (tAnim / 150 + i / nE) % 1;   // 0..1 entlang des Wegs rechts -> links
-      // Weg: rechte Platte runter, nach links, linke Platte hoch
+      let p = (tAnim / 150 + i / nE) % 1;
+      if (tech) p = 1 - p;                 // Laufrichtung spiegeln
       let x, y;
-      const segA = 0.22, segB = 0.78;
       if (p < segA) {
         x = xR + plateW / 2; y = yBot + (yWire - yBot) * (p / segA);
       } else if (p < segB) {
@@ -331,12 +350,26 @@ function draw() {
         const q = (p - segB) / (1 - segB);
         x = xL - plateW / 2; y = yWire - (yWire - yBot) * q;
       }
-      ctx.fillStyle = "#2563eb";
-      ctx.beginPath(); ctx.arc(x, y, 5.5, 0, 7); ctx.fill();
+      ctx.fillStyle = tech ? "#dc2626" : "#2563eb";
+      ctx.beginPath(); ctx.arc(x, y, tech ? 6.5 : 5.5, 0, 7); ctx.fill();
+      if (tech) {
+        ctx.fillStyle = "#fff"; ctx.font = "bold 11px system-ui";
+        ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.fillText("+", x, y);
+      }
     }
-    ctx.fillStyle = "#2563eb"; ctx.font = "12px system-ui";
-    ctx.textAlign = "left";
-    ctx.fillText("Elektronen wandern ←", 40, yWire - 12);
+    ctx.font = "12px system-ui"; ctx.textAlign = "left"; ctx.textBaseline = "middle";
+    if (tech) {
+      ctx.fillStyle = "#dc2626";
+      ctx.fillText("technische Stromrichtung →", 40, yWire - 12);
+      ctx.fillStyle = "#94a3b8"; ctx.font = "11px system-ui";
+      ctx.fillText("(vereinbarte Richtung, vom Pluspol aus)", 40, yWire + 6);
+    } else {
+      ctx.fillStyle = "#2563eb";
+      ctx.fillText("← Elektronen wandern", 40, yWire - 12);
+      ctx.fillStyle = "#94a3b8"; ctx.font = "11px system-ui";
+      ctx.fillText("(was sich wirklich bewegt)", 40, yWire + 6);
+    }
     ctx.textAlign = "center";
   }
 
@@ -447,11 +480,22 @@ function renderControls() {
   el("rowA").style.display = s.ctrl.includes("A") ? "flex" : "none";
 }
 
+function renderModus() {
+  // Umschalter nur dort, wo tatsaechlich Ladungstraeger animiert werden
+  const m = el("modus");
+  if (step >= 1 && step <= 4) m.classList.add("show"); else m.classList.remove("show");
+  el("mE").classList.toggle("on", modus === "e");
+  el("mT").classList.toggle("on", modus === "tech");
+}
+
 function update() {
   el("prev").disabled = (step === 0);
   el("next").disabled = (step === STEPS.length - 1);
-  renderDots(); renderPanel(); renderStats(); renderControls(); draw();
+  renderDots(); renderPanel(); renderStats(); renderControls(); renderModus(); draw();
 }
+
+el("mE").onclick = () => { modus = "e"; renderModus(); draw(); };
+el("mT").onclick = () => { modus = "tech"; renderModus(); draw(); };
 
 el("prev").onclick = () => { if (step > 0) { step--; update(); } };
 el("next").onclick = () => { if (step < STEPS.length - 1) { step++; update(); } };
