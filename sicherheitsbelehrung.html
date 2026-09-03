@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sicherheitsbelehrung Physiklabor – Lore-Lorentz-Schule</title>
+<style>
+  :root{
+    --ink:#12202f; --muted:#5b6b7c; --line:#dfe6ee; --bg:#f4f7fa; --card:#fff;
+    --accent:#1d4e89; --warn:#b45309; --danger:#b91c1c; --ok:#15803d;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth; scroll-padding-top:4.2rem}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+       color:var(--ink);background:var(--bg);line-height:1.55;font-size:16px}
+  #wrap{max-width:52rem;margin:0 auto;padding:0 1rem 4rem}
+
+  /* ---------- Kopf ---------- */
+  header{background:var(--accent);color:#fff;padding:1.4rem 1rem 1.1rem;margin:0 -1rem 1rem}
+  header h1{margin:0 0 .2rem;font-size:1.45rem;line-height:1.25}
+  header .sub{opacity:.9;font-size:.92rem}
+  .meta{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.9rem}
+  .meta input{flex:1 1 8rem;min-width:7rem;padding:.45rem .6rem;border:0;border-radius:8px;
+              font-size:.92rem;font-family:inherit}
+
+  /* ---------- Fortschritt ---------- */
+  #progwrap{position:sticky;top:0;z-index:20;background:var(--bg);
+            padding:.5rem 0 .55rem;margin:0 0 .8rem;border-bottom:1px solid var(--line)}
+  #bar{height:9px;background:#dde5ed;border-radius:99px;overflow:hidden}
+  #fill{height:100%;width:0;background:var(--ok);transition:width .3s}
+  #ptext{font-size:.8rem;color:var(--muted);margin-top:.25rem;display:flex;
+         justify-content:space-between;gap:.5rem}
+
+  nav{background:var(--card);border:1px solid var(--line);border-radius:12px;
+      padding:.7rem .9rem;margin-bottom:1rem;font-size:.88rem}
+  nav b{display:block;margin-bottom:.35rem;font-size:.8rem;color:var(--muted);
+        text-transform:uppercase;letter-spacing:.04em}
+  nav ul{margin:0;padding:0;list-style:none;columns:2;column-gap:1.2rem}
+  nav li{break-inside:avoid;padding:.08rem 0}
+  @media(max-width:34rem){nav ul{columns:1}}
+  nav a{color:var(--accent);text-decoration:none}
+  nav a:hover{text-decoration:underline}
+
+  /* ---------- Karten ---------- */
+  section{background:var(--card);border:1px solid var(--line);border-radius:14px;
+          padding:1rem 1.1rem 1.1rem;margin-bottom:1rem}
+  section > h2{margin:0 0 .6rem;font-size:1.12rem;display:flex;gap:.55rem;align-items:baseline}
+  section > h2 .num{flex:0 0 auto;background:var(--accent);color:#fff;border-radius:7px;
+                    font-size:.78rem;padding:.12rem .45rem;font-weight:700}
+  h3{font-size:.98rem;margin:1rem 0 .35rem}
+  p{margin:.5rem 0}
+  ul{margin:.45rem 0;padding-left:1.25rem}
+  li{margin:.28rem 0}
+  .lead{color:var(--muted);font-size:.93rem;margin-top:0}
+
+  .box{border-left:4px solid var(--accent);background:#f7fafd;border-radius:0 10px 10px 0;
+       padding:.6rem .8rem;margin:.8rem 0;font-size:.93rem}
+  .box.warn{border-color:var(--warn);background:#fffaf2}
+  .box.danger{border-color:var(--danger);background:#fef6f6}
+  .box.ok{border-color:var(--ok);background:#f5fbf6}
+  .box .t{font-weight:700;display:block;margin-bottom:.15rem}
+
+  .tw{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table{width:100%;border-collapse:collapse;font-size:.88rem;margin:.7rem 0;table-layout:fixed}
+  th,td{border:1px solid var(--line);padding:.4rem .5rem;text-align:left;vertical-align:top;
+        overflow-wrap:anywhere;hyphens:auto}
+  th{background:#eef3f8;font-weight:600}
+  td.c,th.c{text-align:center}
+  /* Spaltenbreiten */
+  table.strom th:nth-child(1),table.strom td:nth-child(1){width:5.2rem}
+  table.strom th:nth-child(2),table.strom td:nth-child(2){width:8.5rem}
+  table.rollen th:nth-child(1),table.rollen td:nth-child(1){width:42%}
+  table.orte th:nth-child(1),table.orte td:nth-child(1){width:45%}
+  @media(max-width:34rem){
+    table{font-size:.82rem}
+    th,td{padding:.35rem .4rem}
+    table.strom th:nth-child(1),table.strom td:nth-child(1){width:3.4rem}
+    table.strom th:nth-child(2),table.strom td:nth-child(2){width:6.2rem}
+  }
+
+  .rules{list-style:none;padding:0;margin:.6rem 0;counter-reset:r}
+  .rules li{counter-increment:r;position:relative;padding:.4rem 0 .4rem 2.4rem;
+            border-bottom:1px dashed var(--line)}
+  .rules li:last-child{border-bottom:0}
+  .rules li::before{content:counter(r);position:absolute;left:0;top:.4rem;
+    width:1.7rem;height:1.7rem;border-radius:50%;background:var(--accent);color:#fff;
+    font-size:.82rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.7rem;margin:.7rem 0}
+  .tile{border:1px solid var(--line);border-radius:10px;padding:.6rem .7rem;font-size:.9rem;background:#fbfdff}
+  .tile b{display:block;margin-bottom:.15rem}
+
+  .check{margin-top:1rem;padding-top:.7rem;border-top:1px solid var(--line);
+         display:flex;align-items:center;gap:.55rem;font-size:.9rem;color:var(--muted)}
+  .check input{width:1.2rem;height:1.2rem;accent-color:var(--ok);flex:0 0 auto}
+  .check label{cursor:pointer}
+  section.done{border-color:#bfe3c8}
+  section.done > h2 .num{background:var(--ok)}
+
+  /* ---------- Quiz ---------- */
+  .q{border:1px solid var(--line);border-radius:10px;padding:.7rem .85rem;margin:.7rem 0;background:#fbfdff}
+  .q .frage{font-weight:600;margin-bottom:.45rem}
+  .q .opt{display:block;padding:.34rem .5rem;border-radius:7px;cursor:pointer;font-size:.93rem}
+  .q .opt:hover{background:#eef3f8}
+  .q .opt input{margin-right:.45rem;accent-color:var(--accent)}
+  .q .fb{font-size:.87rem;margin-top:.45rem;display:none;padding:.4rem .55rem;border-radius:7px}
+  .q.right .fb{display:block;background:#eaf6ec;color:#14532d}
+  .q.wrong .fb{display:block;background:#fdecec;color:#7f1d1d}
+  #qscore{font-weight:700;margin-top:.6rem}
+
+  button{font-family:inherit;font-size:.93rem;padding:.55rem 1rem;border:0;border-radius:9px;
+         background:var(--accent);color:#fff;cursor:pointer}
+  button.ghost{background:#fff;color:var(--accent);border:1px solid var(--accent)}
+  .btnrow{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.8rem}
+
+  /* ---------- Unterschriften ---------- */
+  .siglist td{height:2.1rem}
+  footer{color:var(--muted);font-size:.8rem;text-align:center;margin-top:1.5rem}
+
+  /* ---------- Druck ---------- */
+  @media print{
+    :root{--bg:#fff;--card:#fff}
+    body{font-size:10.5pt}
+    header{background:#fff;color:#000;border-bottom:2px solid #000;padding:0 0 .4rem;margin:0 0 .6rem}
+    #progwrap,nav,.check,.btnrow,#quizsection,.noprint,footer .noprint{display:none!important}
+    section{border:0;border-top:1.5pt solid #000;border-radius:0;break-inside:auto;
+            margin:0 0 .35rem;padding:.45rem 0 0}
+    section > h2{break-after:avoid}
+    h3{break-after:avoid}
+    table,.grid,.box,tr{break-inside:avoid}
+    header .meta input{border:0;border-bottom:.6pt solid #000;border-radius:0;
+                       padding:.1rem .2rem;background:#fff}
+    input[type=date]::-webkit-calendar-picker-indicator{display:none}
+    .tile{background:#fff!important;border:.6pt solid #999}
+    /* Bestätigungsseite kompakt: Text + 26 Zeilen + Lehrkraft-Unterschrift auf EINE Seite */
+    #sig{page-break-before:always;break-inside:avoid}
+    #sig p{margin:.3rem 0;font-size:9.5pt}
+    #sig table{margin:.4rem 0;font-size:9pt}
+    .siglist td{height:1.5rem;padding:.1rem .4rem}
+    .siglist th{padding:.25rem .4rem}
+    #sig p:last-of-type{margin-top:.7rem!important}
+    .box{background:#fff!important;border-left:3px solid #000}
+    th{background:#eee!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    section > h2 .num{background:#000!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    a{text-decoration:none;color:#000}
+    #sig{page-break-before:always}
+  }
+</style>
+</head>
+<body>
+<div id="wrap">
+
+<header>
+  <h1>Sicherheitsbelehrung – Physiklabore</h1>
+  <div class="sub">Lore-Lorentz-Schule Düsseldorf &middot; Bildungsgang Physik/Naturwissenschaften</div>
+  <div class="meta">
+    <input id="mKlasse" placeholder="Klasse / Kurs">
+    <input id="mDatum" type="date">
+    <input id="mLehrer" placeholder="Lehrkraft" value="H. Braak">
+  </div>
+</header>
+
+<div id="progwrap">
+  <div id="bar"><div id="fill"></div></div>
+  <div id="ptext"><span id="pcount">0 von 9 Abschnitten bestätigt</span><span id="preset" style="cursor:pointer;text-decoration:underline">zurücksetzen</span></div>
+</div>
+
+<nav>
+  <b>Inhalt</b>
+  <ul>
+    <li><a href="#s1">1. Warum diese Belehrung?</a></li>
+    <li><a href="#s2">2. Die 12 Laborregeln</a></li>
+    <li><a href="#s3">3. Ablauf eines Versuchs</a></li>
+    <li><a href="#s4">4. Elektrische Gefahren</a></li>
+    <li><a href="#s5">5. Mechanik, Druck &amp; Vakuum</a></li>
+    <li><a href="#s6">6. Hitze, Feuer &amp; Gefahrstoffe</a></li>
+    <li><a href="#s7">7. Optik, Laser &amp; Strahlung</a></li>
+    <li><a href="#s8">8. Notfall &amp; Erste Hilfe</a></li>
+    <li><a href="#s9">9. Ortskenntnis im Raum</a></li>
+    <li><a href="#quizsection">? Quiz zur Selbstkontrolle</a></li>
+    <li><a href="#sig">✓ Bestätigung</a></li>
+  </ul>
+</nav>
+
+<!-- ============ 1 ============ -->
+<section id="s1" data-k="1">
+  <h2><span class="num">1</span> Warum diese Belehrung?</h2>
+  <p class="lead">Physik lebt vom Experiment – und im Experiment steckt reale Energie:
+  Spannung, Hitze, Druck, rotierende Massen, Strahlung. Nichts davon ist gefährlich,
+  <em>solange man weiß, was man tut.</em> Genau darum geht es hier.</p>
+
+  <h3>Rechtlicher Rahmen</h3>
+  <ul>
+    <li><b>RiSU-BK-NRW</b> – Richtlinie zur Sicherheit im Unterricht an Berufskollegs</li>
+    <li>DGUV-/GUV-Regeln für Laboratorien, Betriebssicherheitsverordnung,
+        Gefahrstoffverordnung, Strahlenschutzverordnung</li>
+    <li>Diese Regeln gelten für Sie später genauso im Betrieb und im Labor –
+        nur heißt es dort Unterweisung statt Belehrung.</li>
+  </ul>
+
+  <div class="box warn">
+    <span class="t">Wichtig für Sie persönlich</span>
+    Wer die Regeln kennt und trotzdem bewusst dagegen verstößt, verliert im Schadensfall
+    den Schutz der gesetzlichen Schülerunfallversicherung ganz oder teilweise – und haftet
+    für Sachschäden unter Umständen selbst.
+  </div>
+
+  <div class="box">
+    <span class="t">Der Grundsatz über allem</span>
+    Fachräume und Labore dürfen Sie <b>nur in Anwesenheit der Lehrkraft betreten</b>.
+    Experimentiert wird <b>nur nach ausdrücklicher Aufforderung</b> und <b>nur so, wie es
+    besprochen wurde</b>. Eigenmächtige „Zusatzversuche" sind untersagt.
+  </div>
+
+  <div class="check"><input type="checkbox" id="c1"><label for="c1">Verstanden</label></div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section id="s2" data-k="2">
+  <h2><span class="num">2</span> Die 12 Laborregeln</h2>
+  <p class="lead">Diese zwölf Punkte gelten in <b>jedem</b> Physikraum und Labor der Schule – ohne Ausnahme.</p>
+  <ol class="rules">
+    <li><b>Kein Zutritt ohne Lehrkraft.</b> Auch nicht „nur kurz die Tasche holen".</li>
+    <li><b>Erst denken, dann einschalten.</b> Aufbau vor dem Einschalten von der Lehrkraft kontrollieren lassen – besonders bei Stromkreisen.</li>
+    <li><b>Nur besprochene Versuche.</b> Keine Eigenexperimente, keine „Was passiert, wenn …"-Aktionen.</li>
+    <li><b>Anweisungen sofort befolgen.</b> Im Zweifel gilt: Hände weg und fragen.</li>
+    <li><b>Ordnung am Platz.</b> Taschen und Jacken vom Arbeitstisch und aus den Laufwegen – Fluchtwege bleiben frei.</li>
+    <li><b>Kein Essen, kein Trinken</b> im Labor. Getränkeflaschen bleiben verschlossen in der Tasche.</li>
+    <li><b>Lange Haare zusammenbinden</b>, weite Kleidung, Schals und Kapuzenbänder sichern – besonders an rotierenden Geräten.</li>
+    <li><b>Schutzbrille tragen</b>, wenn es angesagt ist: Vakuum, Druck, Federn unter Spannung, Erhitzen, Zerspringen möglich.</li>
+    <li><b>Geräte sind teuer und empfindlich.</b> Nur benutzen, was zum Versuch gehört; nichts umbauen, nichts mitnehmen.</li>
+    <li><b>Defekte sofort melden</b> – gebrochene Kabelisolierung, wackelnder Stecker, Riss im Glas, klemmender Schalter.</li>
+    <li><b>Jeden Unfall melden</b>, auch den kleinen Schnitt. Nur gemeldete Unfälle sind versichert.</li>
+    <li><b>Sauber verlassen.</b> Geräte ausschalten, Netzteile auf Null, Arbeitsplatz aufräumen, Hände waschen.</li>
+  </ol>
+  <div class="check"><input type="checkbox" id="c2"><label for="c2">Verstanden</label></div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section id="s3" data-k="3">
+  <h2><span class="num">3</span> Ablauf eines Versuchs</h2>
+  <div class="grid">
+    <div class="tile"><b>Vorher</b>
+      Versuchsanleitung lesen · Gefahren klären · Material vollständig prüfen ·
+      Arbeitsplatz frei räumen · Schutzausrüstung bereitlegen</div>
+    <div class="tile"><b>Aufbau</b>
+      Standsicher aufbauen · Kabel nicht über Laufwege · Netzteil <b>aus</b> und auf
+      <b>Null</b> · Aufbau kontrollieren lassen</div>
+    <div class="tile"><b>Durchführung</b>
+      Spannung/Strom langsam hochregeln · Gerät nie unbeaufsichtigt laufen lassen ·
+      Messwerte sofort notieren · bei Auffälligkeiten (Geruch, Rauch, Geräusch) <b>sofort aus</b></div>
+    <div class="tile"><b>Danach</b>
+      Ausschalten · abkühlen lassen · Aufbau erst dann zerlegen · Geräte vollständig
+      zurück · Platz sauber · Hände waschen</div>
+  </div>
+  <div class="box ok">
+    <span class="t">Faustregel</span>
+    „Kontrolliert einschalten, kontrolliert ausschalten." Jeder Versuch beginnt und endet
+    mit einem bewussten Blick auf den Aufbau – nicht mit dem Griff zum Handy.
+  </div>
+  <div class="check"><input type="checkbox" id="c3"><label for="c3">Verstanden</label></div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section id="s4" data-k="4">
+  <h2><span class="num">4</span> Elektrische Gefahren</h2>
+  <p class="lead">Die häufigste ernste Gefahr im Physiklabor. Entscheidend ist nicht die
+  Spannung allein, sondern der <b>Strom durch den Körper</b> und seine <b>Einwirkdauer</b>.</p>
+
+  <h3>Wirkung von Wechselstrom (50 Hz) auf den Menschen</h3>
+  <table class="strom">
+    <tr><th class="c">Nr.</th><th>Strom</th><th>Wirkung</th></tr>
+    <tr><td class="c">1</td><td>unter ca. 0,5 mA</td><td>keine Wahrnehmung</td></tr>
+    <tr><td class="c">2</td><td>ca. 0,5 – 10 mA</td><td>Kribbeln, Muskelreizung; Loslassen noch möglich</td></tr>
+    <tr><td class="c">3</td><td>ca. 10 – 50 mA</td><td>Muskelverkrampfung – <b>Loslassen nicht mehr möglich</b>, Atemnot, Verbrennungen</td></tr>
+    <tr><td class="c">4</td><td>über ca. 50 mA</td><td><b>Herzkammerflimmern</b>, schwere Verbrennungen, Lebensgefahr</td></tr>
+  </table>
+
+  <div class="box danger">
+    <span class="t">Die Grenze, die Sie sich merken müssen</span>
+    Ab <b>50 V Wechselspannung</b> bzw. <b>120 V Gleichspannung</b> kann eine
+    Berührungsspannung einen <b>lebensgefährlichen</b> Körperstrom verursachen.
+    Alles darüber wird im Unterricht ausschließlich von der Lehrkraft aufgebaut und geschaltet.
+  </div>
+
+  <h3>Regeln beim Experimentieren mit Strom</h3>
+  <ul>
+    <li>Aufbau <b>immer im spannungsfreien Zustand</b>; Netzteil steht auf Null und ist aus.</li>
+    <li>Umbauen, umstecken, nachjustieren <b>nur nach dem Ausschalten</b>.</li>
+    <li>Nur unbeschädigte Kabel und Stecker verwenden – Isolierung und Knickstellen prüfen.</li>
+    <li>Keine blanken Leiter berühren; keine Metallteile (Ringe, Ketten, Uhren, Werkzeug) in die Schaltung halten.</li>
+    <li>Niemals gleichzeitig zwei Punkte einer Schaltung mit beiden Händen berühren (Strompfad übers Herz!).</li>
+    <li>Trockene Hände, trockener Tisch. Wasser und Strom gehören getrennt.</li>
+    <li><b>Kondensatoren</b> speichern Ladung auch nach dem Abschalten – erst entladen lassen, dann anfassen.</li>
+    <li><b>Spulen</b> erzeugen beim Abschalten hohe Induktionsspannungen – Stromkreis nie unter Last trennen.</li>
+    <li>Hochspannungsgeräte, Influenzmaschine, Elektronenröhren: <b>nur Lehrkraft</b>.</li>
+  </ul>
+
+  <h3>Die fünf Sicherheitsregeln (VDE) – Arbeiten an elektrischen Anlagen</h3>
+  <ol>
+    <li>Freischalten</li>
+    <li>Gegen Wiedereinschalten sichern</li>
+    <li>Spannungsfreiheit feststellen</li>
+    <li>Erden und kurzschließen</li>
+    <li>Benachbarte, unter Spannung stehende Teile abdecken oder abschranken</li>
+  </ol>
+
+  <h3>Wer darf was?</h3>
+  <table class="rollen">
+    <tr><th>Rolle</th><th>Darf …</th></tr>
+    <tr><td><b>Elektrofachkraft</b><br><span style="color:var(--muted)">Geselle, Meister, Techniker, B.Sc./M.Sc. im Elektrobereich</span></td>
+        <td>unbeaufsichtigt an Niederspannungsgeräten arbeiten</td></tr>
+    <tr><td><b>Elektrotechnisch unterwiesene Person</b><br><span style="color:var(--muted)">von einer Elektrofachkraft aufgeklärt</span></td>
+        <td>die unterwiesene Tätigkeit selbstständig unter Kontrolle einer Elektrofachkraft ausführen –
+            <b>nicht</b> an Spannungen über 50 V / 120 V</td></tr>
+    <tr><td><b>Laie</b></td>
+        <td>Glühlampen wechseln, fehlerfreie Geräte einstecken – mehr nicht</td></tr>
+  </table>
+  <p style="font-size:.9rem;color:var(--muted)">Im Unterricht sind Sie – je nach Bildungsgang und Stand
+  Ihrer Ausbildung – <em>unterwiesene Person</em> für die konkret besprochenen Versuche. Das ist
+  keine Blankovollmacht: Sie gilt nur für genau den Aufbau, der besprochen wurde.</p>
+
+  <div class="box danger">
+    <span class="t">Stromunfall – so handeln Sie</span>
+    <b>1.</b> Nicht anfassen! <b>2.</b> Strom abschalten (Not-Aus, Stecker, Sicherung).
+    <b>3.</b> Erst dann helfen. <b>4.</b> Notruf 112 – auch wenn die Person wieder wohlauf wirkt,
+    denn Herzrhythmusstörungen können Stunden später auftreten.<br>
+    Bei unbekannter oder Hochspannung: <b>Abstand halten</b> und sofort Notruf.
+  </div>
+  <div class="check"><input type="checkbox" id="c4"><label for="c4">Verstanden</label></div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section id="s5" data-k="5">
+  <h2><span class="num">5</span> Mechanik, Druck &amp; Vakuum</h2>
+  <h3>Rotierende und bewegte Teile</h3>
+  <ul>
+    <li>Schwungräder, Drehscheiben, Zentrifugen, Motoren: <b>nie in laufende Teile greifen</b>,
+        nicht abbremsen, Abdeckungen nicht entfernen.</li>
+    <li>Haare zusammenbinden, Schals/Bänder/Kapuzenkordeln sichern, keine weiten Ärmel.</li>
+    <li>Ausreichend Abstand halten – ein sich lösendes Teil fliegt tangential weg.</li>
+    <li>Gespannte Federn, Fallgeräte, Wurfmaschinen: Flugbahn freihalten, niemand steht im Zielbereich.</li>
+    <li>Schwere Massen (Gewichtssätze, Stativfüße) nicht über Tischkanten hinausragen lassen – Fußschutz!</li>
+  </ul>
+
+  <h3>Vakuum und Überdruck</h3>
+  <ul>
+    <li>Evakuierte Glasgefäße können <b>implodieren</b>: nur unbeschädigte Rezipienten,
+        Schutzscheibe/-korb nutzen, Schutzbrille tragen, Abstand halten.</li>
+    <li>Druckgasflaschen stehen <b>gesichert</b>; Ventile nur durch die Lehrkraft bedienen;
+        Flaschen nie werfen, rollen oder erwärmen.</li>
+    <li>Geschlossene Gefäße niemals erhitzen.</li>
+  </ul>
+
+  <div class="box warn">
+    <span class="t">Glasbruch</span>
+    Glas nicht mit bloßen Händen aufsammeln – Kehrblech und Besen benutzen, Splitter in den
+    dafür vorgesehenen Behälter, Bruch der Lehrkraft melden.
+  </div>
+  <div class="check"><input type="checkbox" id="c5"><label for="c5">Verstanden</label></div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section id="s6" data-k="6">
+  <h2><span class="num">6</span> Hitze, Feuer &amp; Gefahrstoffe</h2>
+  <h3>Erhitzen</h3>
+  <ul>
+    <li>Heiße Gegenstände sehen kalt aus. Vor dem Anfassen: <b>abkühlen lassen</b> oder Tiegelzange nutzen.</li>
+    <li>Brenner: Standfläche frei von Brennbarem, Flamme nie unbeaufsichtigt, Gashahn nach dem Versuch
+        <b>und</b> am Ende der Stunde schließen.</li>
+    <li>Reagenzgläser beim Erhitzen nie auf sich oder andere richten.</li>
+    <li>Gasgeruch: <b>keine Schalter, kein Licht, keine Handys betätigen</b> – Fenster auf,
+        Haupthahn zu, Raum verlassen, melden.</li>
+  </ul>
+
+  <h3>Gefahrstoffe</h3>
+  <ul>
+    <li>Im Physiklabor eher selten, aber vorhanden: Spiritus, Aceton, Quecksilber in Altgeräten,
+        Batterien/Akkus, Kältemischungen, Trockeneis, flüssiger Stickstoff.</li>
+    <li>Behälter <b>nur beschriftet</b> verwenden; nie aus unbeschrifteten Gefäßen arbeiten.</li>
+    <li><b>GHS-Piktogramme</b> auf dem Etikett beachten (Flamme, Totenkopf, Ätzwirkung,
+        Ausrufezeichen, Gesundheitsgefahr, Umwelt, Gasflasche, explodierende Bombe, Oxidation).</li>
+    <li>Vor dem Umgang gilt die <b>Betriebsanweisung</b> für den Stoff – die Lehrkraft weist konkret ein.</li>
+    <li>Nie in Ausguss oder Restmüll entsorgen; Entsorgung nur nach Anweisung.</li>
+    <li>Trockeneis / flüssiger Stickstoff: Kälteverbrennungen, nie in geschlossene Gefäße füllen,
+        Handschuhe und Schutzbrille, gut lüften (Erstickungsgefahr).</li>
+  </ul>
+
+  <div class="box danger">
+    <span class="t">Es brennt – was jetzt?</span>
+    <b>1.</b> Laut melden. <b>2.</b> Gas- und Stromzufuhr abschalten (Not-Aus).
+    <b>3.</b> Kleinbrand nur löschen, wenn es <b>gefahrlos</b> möglich ist – sonst Raum verlassen.
+    <b>4.</b> Brennende Kleidung: Person <b>zu Boden bringen und wälzen</b>, mit <b>viel Wasser</b>
+    (Notdusche) oder mit dem <b>Feuerlöscher</b> löschen.
+    <b>5.</b> Fluchtweg nutzen, Sammelplatz aufsuchen, <b>Aufzug nie benutzen</b>.<br>
+    Elektrische Anlagen niemals mit Wasser löschen.
+  </div>
+
+  <div class="box warn">
+    <span class="t">Keine Löschdecke bei Personenbränden</span>
+    Falls Sie es anders gelernt haben: Löschdecken sind dafür <b>nicht mehr zugelassen</b>
+    (die Norm DIN 14155 wurde bereits 2002 zurückgezogen). Beim Andrücken werden brennende
+    und glühende Teile in die Haut gepresst – das verschlimmert die Verbrennungen.
+    Richtig ist: <b>wälzen, Wasser, Feuerlöscher.</b><br>
+    <b>CO₂-Löscher</b> (steht oft neben elektrischen Anlagen) niemals aus kurzer Distanz auf
+    Gesicht oder Haut richten – das Gas ist eiskalt und verdrängt den Sauerstoff.
+  </div>
+  <div class="check"><input type="checkbox" id="c6"><label for="c6">Verstanden</label></div>
+</section>
+
+<!-- ============ 7 ============ -->
+<section id="s7" data-k="7">
+  <h2><span class="num">7</span> Optik, Laser &amp; Strahlung</h2>
+  <h3>Laser</h3>
+  <ul>
+    <li>In der Schule werden nur Laser der <b>Klasse 1 oder 2</b> eingesetzt (bis 1 mW im sichtbaren Bereich).</li>
+    <li><b>Nie in den Strahl blicken</b> und nie auf Personen richten – auch nicht „nur kurz".</li>
+    <li>Auf den Lidschlussreflex ist kein Verlass, wenn man bewusst hineinschaut.</li>
+    <li>Strahl <b>unterhalb der Augenhöhe</b> führen und am Ende abfangen (Schirm).</li>
+    <li>Reflektierende Gegenstände ablegen: Uhren, Ringe, Metalllineale, Spiegel unkontrolliert im Strahlengang.</li>
+  </ul>
+
+  <h3>UV-, Röntgen- und ionisierende Strahlung</h3>
+  <ul>
+    <li>UV-Lampen: nicht in die Lampe schauen, Schutzscheibe nicht entfernen (Bindehautentzündung, Hautschäden).</li>
+    <li>Röntgengeräte und Elektronenröhren: Betrieb <b>ausschließlich durch die Lehrkraft</b>,
+        Abdeckungen und Verriegelungen bleiben geschlossen.</li>
+    <li>Radioaktive Schulpräparate sind umschlossen und bauartzugelassen. Umgang <b>nur unter direkter Aufsicht</b>:
+        <b>nie</b> mit der Hand anfassen, Zange benutzen, nie in Richtung Personen halten,
+        Aufbewahrung ausschließlich im dafür vorgesehenen Schrank.</li>
+  </ul>
+
+  <div class="box">
+    <span class="t">Die drei A des Strahlenschutzes</span>
+    <b>Abstand</b> (Intensität sinkt quadratisch) – <b>Aufenthaltsdauer</b> möglichst kurz –
+    <b>Abschirmung</b> nutzen. Zusatzregel: jede unnötige Exposition vermeiden (Minimierungsgebot der StrlSchV).
+  </div>
+  <div class="check"><input type="checkbox" id="c7"><label for="c7">Verstanden</label></div>
+</section>
+
+<!-- ============ 8 ============ -->
+<section id="s8" data-k="8">
+  <h2><span class="num">8</span> Notfall &amp; Erste Hilfe</h2>
+  <div class="grid">
+    <div class="tile"><b>Notruf 112</b>
+      Wo? · Was? · Wie viele Verletzte? · Welche Verletzungen? · <b>Warten auf Rückfragen</b></div>
+    <div class="tile"><b>Immer zuerst</b>
+      Eigenschutz · Gefahrenquelle abschalten (Not-Aus) · Lehrkraft informieren</div>
+    <div class="tile"><b>Verbrennung</b>
+      Sofort 10–20 min mit handwarmem Wasser kühlen · nichts aufstechen · keine Salben</div>
+    <div class="tile"><b>Auge / Chemikalie</b>
+      Augendusche, mindestens 10 min spülen, vom gesunden zum betroffenen Auge · immer Arzt</div>
+    <div class="tile"><b>Schnittwunde</b>
+      Bluten lassen, keimfrei abdecken, Verbandbuch-Eintrag</div>
+    <div class="tile"><b>Stromunfall</b>
+      Nicht anfassen · abschalten · Notruf · auch bei Wohlbefinden ärztlich abklären</div>
+  </div>
+  <div class="box warn">
+    <span class="t">Meldepflicht</span>
+    <b>Jeder</b> Unfall wird der Lehrkraft gemeldet und ins Verbandbuch eingetragen – auch die
+    Kleinigkeit. Ohne Eintrag gibt es später keinen Nachweis gegenüber der Unfallkasse.
+  </div>
+  <div class="check"><input type="checkbox" id="c8"><label for="c8">Verstanden</label></div>
+</section>
+
+<!-- ============ 9 ============ -->
+<section id="s9" data-k="9">
+  <h2><span class="num">9</span> Ortskenntnis: Das zeigen wir jetzt im Raum</h2>
+  <p class="lead">Wir gehen diese Punkte gleich gemeinsam im Raum ab. Tragen Sie die
+  Standorte ein – dann haben Sie sie im Ernstfall im Kopf.</p>
+  <table class="orte">
+    <tr><th>Einrichtung</th><th>Standort in unserem Raum</th></tr>
+    <tr><td><b>Not-Aus-Schalter</b> (Strom)</td><td class="fill"></td></tr>
+    <tr><td><b>Gas-Haupthahn</b></td><td class="fill"></td></tr>
+    <tr><td><b>Feuerlöscher</b></td><td class="fill"></td></tr>
+    <tr><td><b>Handfeuermelder / Alarmknopf</b></td><td class="fill"></td></tr>
+    <tr><td><b>Verbandkasten / Verbandbuch</b></td><td class="fill"></td></tr>
+    <tr><td><b>Augendusche / Notdusche</b></td><td class="fill"></td></tr>
+    <tr><td><b>Fluchtweg &amp; Sammelplatz</b></td><td class="fill"></td></tr>
+    <tr><td><b>Abfall- / Sammelbehälter</b></td><td class="fill"></td></tr>
+  </table>
+  <div class="box ok">
+    <span class="t">Selbsttest</span>
+    Können Sie mit geschlossenen Augen sagen, wo der nächste Feuerlöscher hängt und
+    wo die Tür ist? Genau darauf kommt es im Ernstfall an.
+  </div>
+  <div class="check"><input type="checkbox" id="c9"><label for="c9">Verstanden</label></div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section id="quizsection">
+  <h2><span class="num">?</span> Quiz zur Selbstkontrolle</h2>
+  <p class="lead">Zehn Fragen. Antwort anklicken – die Rückmeldung kommt sofort.</p>
+  <div id="quiz"></div>
+  <div id="qscore"></div>
+  <div class="btnrow"><button class="ghost" id="qreset">Quiz neu starten</button></div>
+</section>
+
+<!-- ============ BESTÄTIGUNG ============ -->
+<section id="sig">
+  <h2><span class="num">✓</span> Bestätigung der Unterweisung</h2>
+  <p>Hiermit wird bestätigt, dass die oben genannten Personen am
+     <b><span id="sigDatum">__________</span></b> in der Klasse/im Kurs
+     <b><span id="sigKlasse">__________</span></b> über die Sicherheitsbestimmungen
+     für die Physiklabore der Lore-Lorentz-Schule unterwiesen wurden. Die Unterweisung
+     umfasste die allgemeinen Verhaltensregeln, die Laborordnung, die vorhandenen
+     Notfall- und sicherheitstechnischen Einrichtungen sowie die Grundzüge der Ersten Hilfe
+     (RiSU-BK-NRW I&nbsp;–&nbsp;1.3 / I&nbsp;–&nbsp;3.6).</p>
+  <p>Mit meiner Unterschrift bestätige ich, die Regeln verstanden zu haben und sie einzuhalten.</p>
+  <table class="siglist">
+    <tr><th class="c" style="width:2.5rem">Nr.</th><th style="width:45%">Name (Druckbuchstaben)</th><th>Unterschrift</th></tr>
+    <tr><td class="c">1</td><td></td><td></td></tr><tr><td class="c">2</td><td></td><td></td></tr>
+    <tr><td class="c">3</td><td></td><td></td></tr><tr><td class="c">4</td><td></td><td></td></tr>
+    <tr><td class="c">5</td><td></td><td></td></tr><tr><td class="c">6</td><td></td><td></td></tr>
+    <tr><td class="c">7</td><td></td><td></td></tr><tr><td class="c">8</td><td></td><td></td></tr>
+    <tr><td class="c">9</td><td></td><td></td></tr><tr><td class="c">10</td><td></td><td></td></tr>
+    <tr><td class="c">11</td><td></td><td></td></tr><tr><td class="c">12</td><td></td><td></td></tr>
+    <tr><td class="c">13</td><td></td><td></td></tr><tr><td class="c">14</td><td></td><td></td></tr>
+    <tr><td class="c">15</td><td></td><td></td></tr><tr><td class="c">16</td><td></td><td></td></tr>
+    <tr><td class="c">17</td><td></td><td></td></tr><tr><td class="c">18</td><td></td><td></td></tr>
+    <tr><td class="c">19</td><td></td><td></td></tr><tr><td class="c">20</td><td></td><td></td></tr>
+    <tr><td class="c">21</td><td></td><td></td></tr><tr><td class="c">22</td><td></td><td></td></tr>
+    <tr><td class="c">23</td><td></td><td></td></tr><tr><td class="c">24</td><td></td><td></td></tr>
+    <tr><td class="c">25</td><td></td><td></td></tr><tr><td class="c">26</td><td></td><td></td></tr>
+  </table>
+  <p style="margin-top:1.4rem">Datum, Unterschrift der Lehrkraft:
+     &nbsp;__________________________________________</p>
+  <div class="btnrow">
+    <button onclick="window.print()">Drucken / als PDF speichern</button>
+  </div>
+</section>
+
+<footer>
+  Sicherheitsbelehrung Physiklabore &middot; Lore-Lorentz-Schule Düsseldorf<br>
+  Grundlage: RiSU-BK-NRW, DGUV-Regeln für Laboratorien, VDE-Sicherheitsregeln
+</footer>
+
+</div>
+
+<script>
+"use strict";
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const KEY = "lls_sicherheit_physik_v1";
+
+/* ---------- Kopfdaten + Fortschritt speichern ---------- */
+function load(){ try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e){ return {}; } }
+function save(st){ try { localStorage.setItem(KEY, JSON.stringify(st)); } catch(e){} }
+let state = load();
+
+const meta = ["mKlasse","mDatum","mLehrer"];
+meta.forEach(id => {
+  const el = $("#"+id);
+  if (state[id]) el.value = state[id];
+  el.addEventListener("input", () => { state[id] = el.value; save(state); syncSig(); });
+});
+if (!$("#mDatum").value) {
+  const d = new Date();
+  $("#mDatum").value = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0")
+                     + "-" + String(d.getDate()).padStart(2,"0");
+  state.mDatum = $("#mDatum").value; save(state);
+}
+function syncSig(){
+  const k = $("#mKlasse").value.trim();
+  $("#sigKlasse").textContent = k || "__________";
+  const v = $("#mDatum").value;
+  $("#sigDatum").textContent = v ? v.split("-").reverse().join(".") : "__________";
+}
+syncSig();
+
+/* ---------- Abschnitts-Checkboxen ---------- */
+const boxes = $$(".check input[type=checkbox]");
+function refreshProgress(){
+  const n = boxes.filter(b => b.checked).length;
+  $("#fill").style.width = (100 * n / boxes.length) + "%";
+  $("#pcount").textContent = n + " von " + boxes.length + " Abschnitten bestätigt"
+    + (n === boxes.length ? " – vollständig ✓" : "");
+}
+boxes.forEach(b => {
+  if (state[b.id]) { b.checked = true; b.closest("section").classList.add("done"); }
+  b.addEventListener("change", () => {
+    b.closest("section").classList.toggle("done", b.checked);
+    state[b.id] = b.checked; save(state); refreshProgress();
+  });
+});
+refreshProgress();
+
+$("#preset").addEventListener("click", () => {
+  boxes.forEach(b => { b.checked = false; b.closest("section").classList.remove("done"); delete state[b.id]; });
+  save(state); refreshProgress();
+});
+
+/* ---------- Ausfüllbare Zellen in der Ortskenntnis-Tabelle ---------- */
+$$("#s9 td.fill").forEach((td, i) => {
+  td.contentEditable = "true";
+  td.style.minWidth = "8rem";
+  td.dataset.k = "fill" + i;
+  if (state[td.dataset.k]) td.textContent = state[td.dataset.k];
+  td.addEventListener("input", () => { state[td.dataset.k] = td.textContent; save(state); });
+});
+
+/* ---------- Quiz ---------- */
+const FRAGEN = [
+  { f: "Sie kommen fünf Minuten zu früh zum Physikraum, die Tür ist offen, die Lehrkraft noch nicht da. Was tun Sie?",
+    a: ["Hineingehen und schon mal den Platz herrichten",
+        "Draußen warten, bis die Lehrkraft da ist",
+        "Hineingehen, aber nichts anfassen"],
+    r: 1, e: "Fachräume dürfen Sie grundsätzlich nur in Anwesenheit der Lehrkraft betreten – auch wenn die Tür offen steht." },
+
+  { f: "Ab welcher Wechselspannung kann eine Berührung lebensgefährlich werden?",
+    a: ["ab 12 V", "ab 50 V", "ab 230 V"],
+    r: 1, e: "50 V Wechselspannung bzw. 120 V Gleichspannung gelten als Grenze für eine lebensgefährliche Berührungsspannung." },
+
+  { f: "Sie wollen in einem laufenden Stromkreis ein Kabel umstecken. Richtig ist:",
+    a: ["Zügig umstecken, dann ist die Unterbrechung kurz",
+        "Netzteil ausschalten und auf Null regeln, dann umstecken",
+        "Nur am isolierten Griff anfassen, dann geht es im Betrieb"],
+    r: 1, e: "Umbauen, Umstecken und Nachjustieren geschieht grundsätzlich im spannungsfreien Zustand." },
+
+  { f: "Welcher Körperstrom-Bereich bedeutet: Loslassen ist nicht mehr möglich?",
+    a: ["ca. 0,5 – 10 mA", "ca. 10 – 50 mA", "erst über 500 mA"],
+    r: 1, e: "Ab etwa 10 mA verkrampft die Muskulatur – die Hand kann den Leiter nicht mehr loslassen." },
+
+  { f: "Eine Mitschülerin hängt an einem stromführenden Teil und kann sich nicht lösen. Ihr erster Schritt?",
+    a: ["Sie sofort wegziehen", "Strom abschalten (Not-Aus / Stecker / Sicherung)", "Erst 112 anrufen"],
+    r: 1, e: "Eigenschutz zuerst: erst freischalten, dann helfen, dann Notruf 112. Wer anfasst, hängt selbst mit dran." },
+
+  { f: "Was gehört NICHT auf den Labortisch?",
+    a: ["Die Versuchsanleitung", "Die offene Getränkeflasche", "Das Messgerät"],
+    r: 1, e: "Essen und Trinken sind im Labor tabu; Getränke bleiben verschlossen in der Tasche." },
+
+  { f: "Sie evakuieren einen Glasrezipienten. Welche Gefahr besteht?",
+    a: ["Explosion durch Überdruck", "Implosion – Glassplitter", "Keine, Vakuum ist harmlos"],
+    r: 1, e: "Evakuierte Gefäße können implodieren. Deshalb: unbeschädigtes Glas, Schutzscheibe, Schutzbrille, Abstand." },
+
+  { f: "Beim Umgang mit einem Schul-Laser (Klasse 2) gilt:",
+    a: ["Kurzes Hineinschauen ist wegen des Lidschlussreflexes unbedenklich",
+        "Nie in den Strahl blicken, Strahl unter Augenhöhe führen und abfangen",
+        "Nur bei Lasern über 5 mW ist Vorsicht nötig"],
+    r: 1, e: "Auf den Lidschlussreflex ist kein Verlass. Strahl unterhalb der Augenhöhe führen, abfangen, reflektierende Gegenstände ablegen." },
+
+  { f: "Sie schneiden sich beim Aufräumen leicht an einer Glaskante. Was ist zu tun?",
+    a: ["Pflaster aus der eigenen Tasche, fertig",
+        "Der Lehrkraft melden und ins Verbandbuch eintragen lassen",
+        "Nur melden, wenn es stark blutet"],
+    r: 1, e: "Jeder Unfall wird gemeldet und dokumentiert – ohne Eintrag ins Verbandbuch fehlt später der Nachweis gegenüber der Unfallkasse." },
+
+  { f: "Es riecht im Raum deutlich nach Gas. Was tun Sie zuerst?",
+    a: ["Licht anschalten, um die Quelle zu finden",
+        "Keine Schalter betätigen, Fenster öffnen, Haupthahn schließen, melden",
+        "Die Abzugsanlage einschalten"],
+    r: 1, e: "Jeder Schaltvorgang kann einen Funken erzeugen. Also: nichts schalten, lüften, Gas abstellen, Raum verlassen, melden." }
+];
+
+function buildQuiz(){
+  const box = $("#quiz");
+  box.innerHTML = "";
+  FRAGEN.forEach((q, i) => {
+    const d = document.createElement("div");
+    d.className = "q";
+    let html = '<div class="frage">' + (i+1) + ". " + q.f + "</div>";
+    q.a.forEach((opt, j) => {
+      html += '<label class="opt"><input type="radio" name="q'+i+'" value="'+j+'">'+opt+"</label>";
+    });
+    html += '<div class="fb"></div>';
+    d.innerHTML = html;
+    box.appendChild(d);
+    d.addEventListener("change", ev => {
+      const gewaehlt = parseInt(ev.target.value, 10);
+      const richtig = gewaehlt === q.r;
+      d.classList.toggle("right", richtig);
+      d.classList.toggle("wrong", !richtig);
+      d.querySelector(".fb").innerHTML = (richtig ? "✓ Richtig. " : "✗ Nicht ganz. ") + q.e;
+      score();
+    });
+  });
+  $("#qscore").textContent = "";
+}
+function score(){
+  const beantwortet = $$("#quiz .q").filter(d => d.classList.contains("right") || d.classList.contains("wrong"));
+  const richtig = $$("#quiz .q.right").length;
+  $("#qscore").textContent = "Stand: " + richtig + " von " + beantwortet.length + " richtig"
+    + (beantwortet.length === FRAGEN.length
+        ? (richtig === FRAGEN.length ? " – alles korrekt ✓" : " – schauen Sie sich die markierten Punkte noch einmal an.")
+        : "");
+}
+buildQuiz();
+$("#qreset").addEventListener("click", buildQuiz);
+</script>
+</body>
+</html>

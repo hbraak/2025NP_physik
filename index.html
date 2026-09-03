@@ -168,6 +168,26 @@
         </header>
         
         <div class="material-grid">
+            <a href="sicherheitsbelehrung.html" class="material-card" data-url="sicherheitsbelehrung.html">
+                <div class="card-header">
+                    <div class="card-icon blue">&#x26A0;&#xFE0F;</div>
+                    <div class="card-title">Sicherheitsbelehrung Physiklabor</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Pflichtbelehrung zu Schuljahresbeginn: 9 Abschnitte zum Abhaken, Quiz mit 10 Fragen, Tabelle zur Ortskenntnis (Notausg&auml;nge, Feuerl&ouml;scher, Not-Aus) und Druckansicht mit Unterschriftenliste.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Sicherheit</span>
+                            <span class="tag">Labor</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-sicherheit"></div>
+                </div>
+            </a>
+
             <a href="jahresrueckblick_quiz.html" class="material-card" data-url="jahresrueckblick_quiz.html">
                 <div class="card-header">
                     <div class="card-icon blue">&#x1F393;</div>
@@ -886,6 +906,7 @@
         
         // QR-Codes generieren wenn Seite geladen
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-sicherheit', 'sicherheitsbelehrung.html');
             generateQR('qr-jahresquiz', 'jahresrueckblick_quiz.html');
             generateQR('qr-kepler3', 'arbeitsblatt_kepler3.pdf');
             generateQR('qr-drehmoment', 'drehmoment.html');
