@@ -106,9 +106,21 @@ const cv = document.getElementById("c"), ctx = cv.getContext("2d");
 const el = id => document.getElementById(id);
 const EPS0 = 8.854e-12;
 
-let step = 0, anim = 0, tAnim = 0;
+let step = 0, tAnim = 0;
 let U = 12, dmm = 5, Acm2 = 400;
 let modus = "e";   // "e" = Elektronenfluss, "tech" = technische Stromrichtung
+
+/* Ladungsbilanz.
+   Die Animation ist kein Zierrat: Jeder Traeger, der drueben ankommt,
+   erhoeht die Ladung auf den Platten um eins. Sind alle Ladungen des
+   Schritts transportiert, bleibt die Animation STEHEN - sonst wuerde
+   endlos Ladung fließen, ohne dass sich etwas ansammelt. */
+const NQ_MAX = 9;             // Ladungspaare bei vollem Aufladen
+let ladungIst = 0;            // bereits transportiert
+let ladungZiel = 0;           // Ziel des aktuellen Schritts
+let traeger = [];             // unterwegs: [{p}]
+const T_LAUF = 1100;          // ms pro Transportvorgang
+const MAX_GLEICHZEITIG = 3;
 
 // abgeleitete Groessen
 function calc() {
@@ -181,7 +193,8 @@ const STEPS = [
       "<b>Wichtig:</b> Der Kondensator ist damit <i>nicht</i> &bdquo;voll&ldquo; wie ein Eimer. Legen wir eine <b>h&ouml;here</b> Spannung an, flie&szlig;t sofort wieder Ladung nach.",
       "Es gilt streng linear: <b>Q = C &middot; U</b>."
     ],
-    frage: "Probier es im n&auml;chsten Schritt selbst: Doppelte Spannung &rarr; doppelte Ladung.",
+    frage: "Achte darauf: Die Ladungstr&auml;ger unten kommen von selbst zum Stehen, sobald alle Ladungen transportiert sind &ndash; " +
+           "genau das ist das Gleichgewicht. Und im n&auml;chsten Schritt gilt: doppelte Spannung &rarr; doppelte Ladung.",
     ladung: 1, feld: true, probe: false
   },
   {
@@ -223,7 +236,9 @@ function draw() {
     grad     = Math.max(0, Math.min(1.25, v.Q / Q_REF));
     feldGrad = Math.max(0, Math.min(1.25, v.E / E_REF));
   } else {
-    grad = feldGrad = s.ladung;
+    // aus der tatsaechlich transportierten Ladung, nicht aus einem festen
+    // Schrittwert - so wachsen Plattenladung und Feld mit der Animation mit
+    grad = feldGrad = ladungIst / NQ_MAX;
   }
 
   // Geometrie der Platten
@@ -269,7 +284,7 @@ function draw() {
   ctx.fillRect(xR, yTop, plateW, ph);
 
   // --- Ladungen auf den Platten
-  const nQ = Math.min(12, Math.round(grad * 9));
+  const nQ = (s.ladung < 0) ? Math.min(12, Math.round(grad * NQ_MAX)) : ladungIst;
   ctx.font = "bold 17px system-ui";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
@@ -332,12 +347,11 @@ function draw() {
   // --- Ladungstraeger im Leiter (Schritte 2-5)
   // Elektronenfluss: rechts -> links (zur negativen Platte 1).
   // Technische Stromrichtung: genau umgekehrt, vom Pluspol aus.
-  if (step >= 1 && step <= 4) {
+  if (traeger.length > 0) {
     const tech = (modus === "tech");
-    const nE = 5;
     const segA = 0.22, segB = 0.78;
-    for (let i = 0; i < nE; i++) {
-      let p = (tAnim / 150 + i / nE) % 1;
+    for (const tr of traeger) {
+      let p = tr.p;
       if (tech) p = 1 - p;                 // Laufrichtung spiegeln
       let x, y;
       if (p < segA) {
@@ -369,6 +383,16 @@ function draw() {
       ctx.fillText("← Elektronen wandern", 40, yWire - 12);
       ctx.fillStyle = "#94a3b8"; ctx.font = "11px system-ui";
       ctx.fillText("(was sich wirklich bewegt)", 40, yWire + 6);
+    }
+    ctx.textAlign = "center";
+  } else if (step >= 1 && step <= 5 && ladungIst > 0) {
+    // Stillstand sichtbar machen - sonst wirkt das Bild nur "eingefroren"
+    ctx.font = "12px system-ui"; ctx.textAlign = "left"; ctx.textBaseline = "middle";
+    ctx.fillStyle = "#94a3b8";
+    ctx.fillText(step === 5 ? "kein Ladungsfluss mehr: I = 0" : "Ladungsfluss ruht", 40, yWire - 12);
+    if (step < 5) {
+      ctx.font = "11px system-ui";
+      ctx.fillText("(weiter mit „Weiter“)", 40, yWire + 6);
     }
     ctx.textAlign = "center";
   }
@@ -483,14 +507,46 @@ function renderControls() {
 function renderModus() {
   // Umschalter nur dort, wo tatsaechlich Ladungstraeger animiert werden
   const m = el("modus");
-  if (step >= 1 && step <= 4) m.classList.add("show"); else m.classList.remove("show");
+  if (step >= 1 && step <= 5) m.classList.add("show"); else m.classList.remove("show");
   el("mE").classList.toggle("on", modus === "e");
   el("mT").classList.toggle("on", modus === "tech");
+}
+
+function setzeZiel() {
+  const s = STEPS[step];
+  if (s.ladung < 0) {            // Reglerschritte: Ladung folgt direkt aus Q
+    traeger = [];
+    ladungZiel = ladungIst = NQ_MAX;
+    return;
+  }
+  ladungZiel = Math.round(s.ladung * NQ_MAX);
+  if (ladungZiel <= ladungIst) { // rueckwaerts: sofort setzen, nicht "entladen"
+    ladungIst = ladungZiel;
+    traeger = [];
+  }
+}
+
+/* Bewegt die Traeger, zaehlt angekommene Ladungen und spawnt neue,
+   solange das Ziel des Schritts noch nicht erreicht ist. */
+function tick(dt) {
+  for (const tr of traeger) tr.p += dt / T_LAUF;
+  const fertig = traeger.filter(t => t.p >= 1).length;
+  if (fertig) {
+    ladungIst = Math.min(ladungZiel, ladungIst + fertig);
+    traeger = traeger.filter(t => t.p < 1);
+  }
+  const offen = ladungZiel - ladungIst - traeger.length;
+  if (offen > 0 && traeger.length < MAX_GLEICHZEITIG) {
+    const letzte = traeger.length ? Math.max(...traeger.map(t => t.p)) : 1;
+    if (letzte > 0.33) traeger.push({ p: 0 });   // gestaffelt starten
+  }
+  return traeger.length > 0;
 }
 
 function update() {
   el("prev").disabled = (step === 0);
   el("next").disabled = (step === STEPS.length - 1);
+  setzeZiel();
   renderDots(); renderPanel(); renderStats(); renderControls(); renderModus(); draw();
 }
 
@@ -521,9 +577,20 @@ document.addEventListener("keydown", e => {
   if (e.key === "ArrowLeft") { if (step > 0) { step--; update(); } }
 });
 
-function loop() { tAnim++; if (step >= 1 && step <= 4) draw(); requestAnimationFrame(loop); }
+let lastT = null;
+function loop(t) {
+  if (lastT === null) lastT = t;
+  const dt = Math.min(60, t - lastT);   // Sprünge nach Tab-Wechsel abfangen
+  lastT = t;
+  const laeuft = tick(dt);
+  // Neu zeichnen, solange etwas unterwegs ist - plus ein letzter Frame,
+  // damit der Endzustand (Ladung angekommen, Stillstand) sauber steht.
+  if (laeuft || tick.warLaeuft) draw();
+  tick.warLaeuft = laeuft;
+  requestAnimationFrame(loop);
+}
 update();
-loop();
+requestAnimationFrame(loop);
 </script>
 </body>
 </html>
