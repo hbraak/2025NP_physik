@@ -168,6 +168,26 @@
         </header>
         
         <div class="material-grid">
+            <a href="AB_RC_Uebungen.pdf" class="material-card" data-url="AB_RC_Uebungen.pdf">
+                <div class="card-header">
+                    <div class="card-icon blue">&#x1F9EE;</div>
+                    <div class="card-title">Kondensator &mdash; Rechnen und Umstellen</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            11 &Uuml;bungsaufgaben zur Festigung: Q = C&middot;U, Zeitkonstante &tau; = RC mit Einheitenprobe, Werte einsetzen &mdash; und dann nach der Zeit aufl&ouml;sen mit dem Logarithmus, Schritt f&uuml;r Schritt vorgerechnet. Zum Schluss die ln-Linearisierung einer Messreihe wie im Praktikum. PDF.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">RC-Glied</span>
+                            <span class="tag">&Uuml;bung</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-rcueb"></div>
+                </div>
+            </a>
+
             <a href="AB_Ablenkung_E-Feld.pdf" class="material-card" data-url="AB_Ablenkung_E-Feld.pdf">
                 <div class="card-header">
                     <div class="card-icon blue">&#x1F3AF;</div>
@@ -966,6 +986,7 @@
         
         // QR-Codes generieren wenn Seite geladen
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-rcueb', 'AB_RC_Uebungen.pdf');
             generateQR('qr-ablenkung', 'AB_Ablenkung_E-Feld.pdf');
             generateQR('qr-rc', 'rc-herleitung.html');
             generateQR('qr-kondensator', 'kondensator-efeld.html');
