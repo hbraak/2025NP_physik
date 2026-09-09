@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kapazität – woher kommt Q = C · U?</title>
+<style>
+  :root { --ink:#1e293b; --muted:#64748b; --accent:#4f46e5;
+          --line:#e2e8f0; --ok:#059669; --pos:#dc2626; --neg:#2563eb; }
+  * { box-sizing:border-box; }
+  body { font-family: system-ui, -apple-system, sans-serif; margin:0; padding:1rem;
+         color:var(--ink); background:#f8fafc; }
+  #wrap { max-width:52rem; margin:0 auto; }
+  h1 { font-size:1.2rem; margin:0 0 .2rem; }
+  .sub { color:var(--muted); font-size:.85rem; margin:0 0 .8rem; }
+  canvas { width:100%; background:#fff; border:1px solid var(--line);
+           border-radius:12px; display:block; }
+  .stepbar { display:flex; align-items:center; gap:.5rem; margin:.7rem 0 .5rem; }
+  .dots { display:flex; gap:.3rem; flex:1; flex-wrap:wrap; }
+  .dot { width:1.7rem; height:1.7rem; border-radius:50%; border:1px solid var(--line);
+         background:#fff; color:var(--muted); font-size:.8rem; cursor:pointer;
+         display:flex; align-items:center; justify-content:center; }
+  .dot.on { background:var(--accent); color:#fff; border-color:var(--accent); font-weight:600; }
+  .dot.done { border-color:var(--accent); color:var(--accent); }
+  button { padding:.5rem 1.1rem; border:0; border-radius:10px; background:var(--accent);
+           color:#fff; font-size:.95rem; cursor:pointer; }
+  button:disabled { background:#cbd5e1; cursor:default; }
+  button.ghost { background:#fff; color:var(--accent); border:1px solid var(--accent); }
+  .panel { background:#fff; border:1px solid var(--line); border-radius:12px;
+           padding:.9rem 1rem; margin-top:.6rem; }
+  .panel h2 { font-size:1rem; margin:0 0 .5rem; color:var(--accent); }
+  .panel p { margin:.4rem 0; font-size:.95rem; line-height:1.55; }
+  .frage { margin-top:.6rem; padding-top:.55rem; border-top:1px dashed var(--line);
+           font-size:.93rem; }
+  .frage b { color:var(--ok); }
+  .fx { text-align:center; font-size:1.18rem; margin:.85rem 0; line-height:1.5;
+        font-family: "Latin Modern Math", Cambria, Georgia, serif; }
+  .fx.klein { font-size:1rem; }
+  .fx .op { margin:0 .35rem; color:var(--muted); }
+  .hl { background:#fef9c3; padding:.1rem .25rem; border-radius:4px; }
+  .box-erg { background:#f0fdf4; border:1px solid #86efac; border-radius:10px;
+             padding:.5rem .8rem; margin:.7rem 0; }
+  .box-merk { background:#fffbeb; border:1px solid #fde68a; border-radius:10px;
+              padding:.6rem .85rem; margin:.6rem 0; font-size:.92rem; }
+  .frac { display:inline-flex; flex-direction:column; vertical-align:middle;
+          text-align:center; margin:0 .18rem; }
+  .frac .z { border-bottom:1.4px solid currentColor; padding:0 .3rem .06rem; }
+  .frac .n { padding:.06rem .3rem 0; }
+  sub, sup { font-size:.72em; }
+  table.mess { border-collapse:collapse; margin:.6rem auto; font-size:.92rem; }
+  table.mess td, table.mess th { border:1px solid var(--line); padding:.25rem .6rem;
+        text-align:center; font-variant-numeric:tabular-nums; }
+  table.mess th { background:#f1f5f9; font-weight:600; }
+  .row { display:flex; align-items:center; gap:.6rem; margin:.5rem 0; font-size:.92rem; }
+  .row label { flex:0 0 10rem; }
+  .row input[type=range] { flex:1; accent-color:var(--accent); }
+  .row output { flex:0 0 6.5rem; text-align:right; font-weight:600;
+                font-variant-numeric:tabular-nums; }
+  #controls { display:none; } #controls.show { display:block; }
+  .stats { display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.6rem; }
+  .stat { background:#fff; border:1px solid var(--line); border-radius:10px;
+          padding:.4rem .7rem; font-size:.88rem; }
+  .stat b { color:var(--accent); font-variant-numeric:tabular-nums; }
+  @media (max-width:640px){ .row label { flex:0 0 7rem; } .fx { font-size:1.02rem; } }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <h1>Kapazit&auml;t &ndash; woher kommt Q = C &middot; U?</h1>
+  <p class="sub">Vom Messwert zur Formel &middot; Physik&#8209;LK 12NP</p>
+
+  <canvas id="c" width="900" height="420"></canvas>
+
+  <div class="stepbar">
+    <button id="prev" class="ghost">&larr; Zur&uuml;ck</button>
+    <div class="dots" id="dots"></div>
+    <button id="next">Weiter &rarr;</button>
+  </div>
+
+  <div class="panel" id="panel"></div>
+  <div class="stats" id="stats"></div>
+
+  <div id="controls">
+    <div class="row"><label>Plattenfl&auml;che A</label>
+      <input id="A" type="range" min="50" max="800" step="10" value="400"><output id="Ao">400 cm²</output></div>
+    <div class="row"><label>Plattenabstand d</label>
+      <input id="d" type="range" min="0.5" max="10" step="0.5" value="1"><output id="do">1,0 mm</output></div>
+    <div class="row"><label>Dielektrikum &epsilon;<sub>r</sub></label>
+      <input id="er" type="range" min="1" max="10" step="0.5" value="1"><output id="ero">1,0 (Luft)</output></div>
+  </div>
+</div>
+
+<script>
+"use strict";
+const cv = document.getElementById("c"), ctx = cv.getContext("2d");
+const el = id => document.getElementById(id);
+const EPS0 = 8.854e-12;
+
+let step = 0;
+let Acm = 400, dmm = 1, epsr = 1;
+
+/* Messreihe aus dem Versuch: Folienkondensator, C etwa 1 µF, Q in µC */
+const MESS = [[2, 2.1], [4, 4.0], [6, 6.2], [8, 7.9], [10, 10.1]];
+
+function kap() {                       // Kapazitaet des Plattenkondensators in F
+  return EPS0 * epsr * (Acm * 1e-4) / (dmm * 1e-3);
+}
+function fmt(x, d, unit) { return x.toFixed(d).replace(".", ",") + (unit ? " " + unit : ""); }
+const frac = (z, n) => `<span class="frac"><span class="z">${z}</span><span class="n">${n}</span></span>`;
+
+/* ---------- Schritte ---------- */
+const STEPS = [
+  {
+    titel: "Die Frage",
+    html: `<p>Ein Kondensator wird an eine Spannungsquelle gelegt. Ladung wird getrennt:
+           auf der einen Platte sitzt <b>+Q</b>, auf der anderen <b>&minus;Q</b>.</p>
+           <p>Erh&ouml;ht man die Spannung, wird mehr Ladung getrennt. Aber <b>wie</b> genau?
+           Doppelte Spannung &ndash; doppelte Ladung? Oder viermal so viel? Das entscheidet
+           kein Nachdenken, sondern die <b>Messung</b>.</p>
+           <div class="box-merk">Achtung: Der Kondensator wird nicht &bdquo;voll&ldquo; wie ein Eimer.
+           Es gibt keine Obergrenze durch das Bauteil selbst &ndash; solange die Spannung steigt,
+           steigt die getrennte Ladung mit.</div>`,
+    frage: "Woher kommt die Ladung auf den Platten &ndash; entsteht sie neu?",
+    zeig: "kond"
+  },
+  {
+    titel: "Schritt 1: Die Messreihe",
+    html: `<p>Wir laden denselben Kondensator auf verschiedene Spannungen und messen jedes Mal
+           die getrennte Ladung (Entladung &uuml;ber einen Messverst&auml;rker / Coulombmeter):</p>
+           <table class="mess">
+             <tr><th>U in V</th><td>2</td><td>4</td><td>6</td><td>8</td><td>10</td></tr>
+             <tr><th>Q in µC</th><td>2,1</td><td>4,0</td><td>6,2</td><td>7,9</td><td>10,1</td></tr>
+           </table>
+           <p>Auffallend: Verdoppelt man U, verdoppelt sich auch Q. Die Quotienten
+           Q/U sind alle etwa gleich gro&szlig;.</p>`,
+    frage: "Rechne Q/U f&uuml;r zwei Wertepaare aus. Was f&auml;llt auf?",
+    zeig: "messpunkte"
+  },
+  {
+    titel: "Schritt 2: Ursprungsgerade",
+    html: `<p>Im Q&#8209;U&#8209;Diagramm liegen die Messpunkte auf einer <b>Ursprungsgeraden</b>.
+           Das ist das Kennzeichen der Proportionalit&auml;t:</p>
+           <div class="fx">Q <span class="op">&sim;</span> U</div>
+           <p>Bei Proportionalit&auml;t ist der Quotient konstant &ndash; und die <b>Steigung</b>
+           der Geraden ist genau dieser Quotient.</p>`,
+    frage: "Warum muss die Gerade durch den Ursprung gehen? &ndash; Ohne Spannung keine getrennte Ladung.",
+    zeig: "gerade"
+  },
+  {
+    titel: "Schritt 3: Der Proportionalit&auml;tsfaktor bekommt einen Namen",
+    html: `<p>Der konstante Quotient ist eine Eigenschaft <b>dieses Bauteils</b>. Wir nennen ihn
+           <b>Kapazit&auml;t C</b>:</p>
+           <div class="box-erg">
+             <div class="fx" style="margin:.4rem 0">
+               <span class="hl">C = ${frac("Q", "U")}</span>
+               <span class="op">bzw.</span> Q = C &middot; U</div></div>
+           <p>Aus dem Steigungsdreieck: C = &Delta;Q/&Delta;U &asymp; 10,1 µC / 10 V &asymp; 1 µF.</p>
+           <div class="box-merk"><b>Einheit:</b> [C] = ${frac("1 C", "1 V")} = 1 Farad = 1 F.
+           Ein Farad ist riesig &ndash; typisch sind µF (10<sup>&minus;6</sup> F),
+           nF und pF.</div>`,
+    frage: "Was bedeutet eine <b>gro&szlig;e</b> Kapazit&auml;t anschaulich?",
+    zeig: "gerade"
+  },
+  {
+    titel: "Schritt 4: Wovon h&auml;ngt C ab?",
+    html: `<p>C ist eine Konstante des Bauteils &ndash; aber wodurch wird sie festgelegt?
+           Dazu schauen wir in den Plattenkondensator hinein und verwenden zwei Dinge,
+           die wir schon haben.</p>
+           <p><b>(a)</b> Zwischen den Platten ist das Feld <b>homogen</b>, und f&uuml;r ein
+           homogenes Feld gilt der Zusammenhang zwischen Spannung und Feldst&auml;rke:</p>
+           <div class="fx">E = ${frac("U", "d")}
+             <span class="op">&hArr;</span> U = E &middot; d</div>`,
+    frage: "Warum steht hier d und nicht die Plattenl&auml;nge?",
+    zeig: "geo"
+  },
+  {
+    titel: "Schritt 5: Das Feld h&auml;ngt an der Ladungsdichte",
+    html: `<p><b>(b)</b> Von jeder Ladung geht eine feste Zahl von Feldlinien aus. Verteilt man
+           die Ladung Q auf die Fl&auml;che A, entscheidet die <b>Fl&auml;chenladungsdichte</b>
+           &sigma; = Q/A &uuml;ber die Dichte der Feldlinien &ndash; also &uuml;ber E:</p>
+           <div class="fx">E = ${frac("&sigma;", "&epsilon;<sub>0</sub>")}
+             = ${frac("Q", "&epsilon;<sub>0</sub> &middot; A")}</div>
+           <p>&epsilon;<sub>0</sub> = 8,854 &middot; 10<sup>&minus;12</sup> As/(Vm) ist die
+           <b>elektrische Feldkonstante</b> &ndash; die Naturkonstante, die Ladungsdichte und
+           Feldst&auml;rke verkn&uuml;pft.</p>
+           <div class="box-merk">Wichtig: E h&auml;ngt <b>nicht</b> von d ab! Zieht man die Platten
+           auseinander, bleibt bei fester Ladung die Feldst&auml;rke gleich &ndash; die Feldlinien
+           werden nur l&auml;nger.</div>`,
+    frage: "Ladung Q bleibt, Fl&auml;che A wird verdoppelt: Was passiert mit E?",
+    zeig: "geo"
+  },
+  {
+    titel: "Schritt 6: Beides zusammensetzen",
+    html: `<p>Wir setzen (b) in (a) ein und erhalten die Spannung, die zu einer Ladung Q geh&ouml;rt:</p>
+           <div class="fx klein">U = E &middot; d = ${frac("Q", "&epsilon;<sub>0</sub> &middot; A")} &middot; d</div>
+           <p>Und jetzt bilden wir genau den Quotienten, den wir gemessen haben:</p>
+           <div class="fx">C = ${frac("Q", "U")} =
+             ${frac("Q", "<span style='white-space:nowrap'>Q &middot; d / (&epsilon;<sub>0</sub> A)</span>")}</div>
+           <p>Das <span class="hl">Q k&uuml;rzt sich heraus</span> &ndash; und genau deshalb ist C
+           &uuml;berhaupt eine Konstante:</p>
+           <div class="box-erg">
+             <div class="fx" style="margin:.4rem 0">C = ${frac("&epsilon;<sub>0</sub> &middot; A", "d")}</div></div>`,
+    frage: "Warum ist es entscheidend, dass sich Q herausk&uuml;rzt?",
+    zeig: "geo"
+  },
+  {
+    titel: "Schritt 7: Mit Dielektrikum",
+    html: `<p>Schiebt man Kunststoff, Glas oder Papier zwischen die Platten, richten sich dort
+           Dipole aus und schw&auml;chen das Feld. Bei gleicher Ladung sinkt U &ndash; also
+           <b>steigt</b> C. Das beschreibt die Materialzahl &epsilon;<sub>r</sub> (&bdquo;relative
+           Permittivit&auml;t&ldquo;, dimensionslos, &ge; 1):</p>
+           <div class="box-erg">
+             <div class="fx" style="margin:.4rem 0">
+               <span class="hl">C = ${frac("&epsilon;<sub>0</sub> &middot; &epsilon;<sub>r</sub> &middot; A", "d")}</span></div></div>
+           <p>Luft: &epsilon;<sub>r</sub> &asymp; 1 &middot; Papier: &asymp; 2 &middot;
+           Kunststofffolie: 2&ndash;3 &middot; Keramik: bis &uuml;ber 1000.</p>`,
+    frage: "Warum baut man Kondensatoren mit hauchd&uuml;nner Folie und gro&szlig;er, aufgewickelter Fl&auml;che?",
+    zeig: "geo", ctrl: true
+  },
+  {
+    titel: "Selbst ausprobieren",
+    html: `<p>Verstelle A, d und &epsilon;<sub>r</sub> und beobachte C sowie die Steigung der
+           Q&#8209;U&#8209;Geraden.</p>
+           <p>Voreinstellung: zwei Platten mit 20 cm &times; 20 cm im Abstand 1 mm, Luft dazwischen.
+           Das ergibt nur wenige hundert <b>pF</b> &ndash; Plattenkondensatoren aus der Sammlung
+           sind winzig gegen einen 100&#8209;µF&#8209;Elko.</p>
+           <div class="box-merk"><b>Merksatz:</b> C h&auml;ngt <b>nur</b> von Geometrie (A, d) und
+           Material (&epsilon;<sub>r</sub>) ab &ndash; <b>nicht</b> von Q und <b>nicht</b> von U.
+           Q und U sind das, was man einstellt; C ist das, was das Bauteil daraus macht.</div>`,
+    frage: "Halbiere d. Was passiert mit C &ndash; und was mit Q bei gleicher Spannung?",
+    zeig: "gerade_geo", ctrl: true
+  },
+  {
+    titel: "Anschluss: das brauchen wir gleich wieder",
+    html: `<p>Die Definition C = Q/U ist der Baustein, mit dem im RC&#8209;Kreis die
+           Kondensatorspannung ausgedr&uuml;ckt wird:</p>
+           <div class="fx klein">u<sub>C</sub>(t) = ${frac("q(t)", "C")}</div>
+           <p>Genau diese Zeile steht in der Maschenregel, aus der die Lade&shy;kurve folgt.
+           Und die Zeitkonstante &tau; = R &middot; C enth&auml;lt dieselbe Gr&ouml;&szlig;e C,
+           die wir hier aus A, d und &epsilon;<sub>r</sub> berechnet haben.</p>
+           <div class="box-merk">Damit schlie&szlig;t sich der Kreis: Ein <b>geometrisches</b>
+           Ma&szlig; (A, d) bestimmt, wie <b>schnell</b> sich ein Stromkreis auflädt.</div>`,
+    frage: "Ein Kondensator im RC&#8209;Kreis wird durch einen mit doppelter Plattenfl&auml;che ersetzt. Was passiert mit &tau;?",
+    zeig: "gerade_geo", ctrl: true
+  }
+];
+
+/* ---------- Zeichnen ---------- */
+function plusMinus(x, y, plus) {
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = plus ? "#dc2626" : "#2563eb";
+  ctx.beginPath();
+  ctx.moveTo(x - 4, y); ctx.lineTo(x + 4, y);
+  if (plus) { ctx.moveTo(x, y - 4); ctx.lineTo(x, y + 4); }
+  ctx.stroke();
+}
+
+/* Plattenkondensator mit Quelle */
+function zeichneKond(mitFeld) {
+  const xL = 330, xR = 570, yT = 95, yB = 285;
+  const yM = (yT + yB) / 2;
+  ctx.lineCap = "butt";
+
+  // Platten
+  ctx.strokeStyle = "#334155"; ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.moveTo(xL, yT); ctx.lineTo(xL, yB); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(xR, yT); ctx.lineTo(xR, yB); ctx.stroke();
+
+  // Zuleitungen zur Quelle unten
+  const yLeit = 355;
+  ctx.lineWidth = 2; ctx.strokeStyle = "#334155";
+  ctx.beginPath();
+  ctx.moveTo(xL, yM); ctx.lineTo(210, yM); ctx.lineTo(210, yLeit);
+  ctx.lineTo(430, yLeit);
+  ctx.moveTo(470, yLeit); ctx.lineTo(690, yLeit);
+  ctx.lineTo(690, yM); ctx.lineTo(xR, yM);
+  ctx.stroke();
+  // Quellensymbol (lang = Plus, links)
+  ctx.lineWidth = 2.4;
+  ctx.beginPath(); ctx.moveTo(430, yLeit - 14); ctx.lineTo(430, yLeit + 14); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(470, yLeit - 7); ctx.lineTo(470, yLeit + 7); ctx.stroke();
+  ctx.fillStyle = "#334155"; ctx.font = "italic 14px system-ui"; ctx.textAlign = "center";
+  ctx.fillText("U", 450, yLeit + 34);
+
+  // Ladungen sitzen auf den INNENseiten der Platten
+  const n = 9;
+  for (let k = 0; k < n; k++) {
+    const y = yT + 10 + (yB - yT - 20) * k / (n - 1);
+    plusMinus(xL + 13, y, true);
+    plusMinus(xR - 13, y, false);
+  }
+  ctx.font = "bold 15px system-ui"; ctx.textBaseline = "middle";
+  ctx.fillStyle = "#dc2626"; ctx.textAlign = "right";
+  ctx.fillText("+Q", xL - 14, yM - 26);
+  ctx.fillStyle = "#2563eb"; ctx.textAlign = "left";
+  ctx.fillText("−Q", xR + 14, yM - 26);
+  ctx.textBaseline = "alphabetic";
+
+  // Feldlinien (zwischen den Ladungsreihen)
+  if (mitFeld) {
+    const x1 = xL + 30, x2 = xR - 30, xm = (xL + xR) / 2;
+    ctx.strokeStyle = "#94a3b8"; ctx.lineWidth = 1.4;
+    for (let k = 0; k < 6; k++) {
+      const y = yT + 16 + (yB - yT - 32) * k / 5;
+      ctx.beginPath(); ctx.moveTo(x1, y); ctx.lineTo(x2, y); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(xm + 7, y); ctx.lineTo(xm - 4, y - 4.5);
+      ctx.lineTo(xm - 4, y + 4.5); ctx.closePath(); ctx.fillStyle = "#94a3b8"; ctx.fill();
+    }
+    ctx.fillStyle = "#64748b"; ctx.font = "italic 15px system-ui"; ctx.textAlign = "center";
+    ctx.fillText("E", xm, yT - 10);
+  }
+  ctx.fillStyle = "#64748b"; ctx.font = "13px system-ui"; ctx.textAlign = "center";
+  ctx.fillText("Plattenkondensator", 450, 42);
+  return { xL, xR, yT, yB, yM };
+}
+
+/* Geometrie: A und d beschriftet */
+function zeichneGeo() {
+  const g = zeichneKond(true);
+  // Abstandsmass d unterhalb der Platten, oberhalb der Leitung
+  const yd = g.yB + 26;
+  ctx.strokeStyle = "#4f46e5"; ctx.lineWidth = 1.4;
+  ctx.beginPath(); ctx.moveTo(g.xL, yd); ctx.lineTo(g.xR, yd); ctx.stroke();
+  [[g.xL, 1], [g.xR, -1]].forEach(([x, s]) => {
+    ctx.beginPath(); ctx.moveTo(x, yd); ctx.lineTo(x + 9 * s, yd - 4.5);
+    ctx.lineTo(x + 9 * s, yd + 4.5); ctx.closePath(); ctx.fillStyle = "#4f46e5"; ctx.fill();
+  });
+  // Hilfslinien von den Plattenenden zum Massband
+  ctx.setLineDash([3, 3]); ctx.lineWidth = 1; ctx.strokeStyle = "#c7d2fe";
+  ctx.beginPath(); ctx.moveTo(g.xL, g.yB); ctx.lineTo(g.xL, yd);
+  ctx.moveTo(g.xR, g.yB); ctx.lineTo(g.xR, yd); ctx.stroke(); ctx.setLineDash([]);
+  ctx.fillStyle = "#4f46e5"; ctx.font = "italic 16px system-ui"; ctx.textAlign = "center";
+  ctx.fillText("d", 450, yd + 22);
+
+  // Flaeche A: Beschriftung links oben mit Zeiger auf die linke Platte
+  ctx.strokeStyle = "#4f46e5"; ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.moveTo(258, 96); ctx.lineTo(g.xL - 6, 118); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(g.xL - 6, 118); ctx.lineTo(g.xL - 17, 114);
+  ctx.lineTo(g.xL - 14, 124); ctx.closePath(); ctx.fillStyle = "#4f46e5"; ctx.fill();
+  ctx.fillStyle = "#4f46e5"; ctx.font = "italic 16px system-ui"; ctx.textAlign = "center";
+  ctx.fillText("A", 232, 100);
+  ctx.fillStyle = "#64748b"; ctx.font = "12px system-ui";
+  ctx.fillText("(Fläche einer Platte)", 232, 82);
+}
+
+/* Q-U-Diagramm */
+function zeichneQU(modus) {   // "punkte" | "gerade" | "geo"
+  const L = 100, R = 60, T = 40, B = 62;
+  const W = cv.width, H = cv.height;
+  const gw = W - L - R, gh = H - T - B;
+
+  let Umax = 12, Qmax, einheit, Cwert;
+  if (modus === "geo") {
+    Cwert = kap();                       // F
+    Qmax = Cwert * Umax * 1e9;           // nC
+    einheit = "nC";
+  } else {
+    Cwert = 1e-6;
+    Qmax = 12; einheit = "µC";
+  }
+  const px = u => L + gw * (u / Umax);
+  const py = q => T + gh * (1 - q / Qmax);
+
+  // Gitter
+  ctx.strokeStyle = "#f1f5f9"; ctx.lineWidth = 1;
+  for (let u = 0; u <= Umax; u += 2) {
+    ctx.beginPath(); ctx.moveTo(px(u), T); ctx.lineTo(px(u), T + gh); ctx.stroke();
+  }
+  for (let k = 0; k <= 6; k++) {
+    const y = T + gh * k / 6;
+    ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(L + gw, y); ctx.stroke();
+  }
+  // Achsen
+  ctx.strokeStyle = "#94a3b8"; ctx.lineWidth = 1.3;
+  ctx.beginPath(); ctx.moveTo(L, T); ctx.lineTo(L, T + gh); ctx.lineTo(L + gw, T + gh); ctx.stroke();
+  ctx.fillStyle = "#64748b"; ctx.font = "12px system-ui";
+  ctx.textAlign = "center"; ctx.textBaseline = "top";
+  for (let u = 0; u <= Umax; u += 2) ctx.fillText(String(u), px(u), T + gh + 8);
+  ctx.fillText("U in V", L + gw / 2, T + gh + 32);
+  ctx.textAlign = "right"; ctx.textBaseline = "middle";
+  for (let k = 0; k <= 6; k++) {
+    const q = Qmax * k / 6;
+    ctx.fillText(fmt(q, Qmax < 3 ? 2 : (Qmax < 30 ? 1 : 0)), L - 10, py(q));
+  }
+  ctx.save(); ctx.translate(30, T + gh / 2); ctx.rotate(-Math.PI / 2);
+  ctx.textAlign = "center"; ctx.fillStyle = "#64748b"; ctx.font = "13px system-ui";
+  ctx.fillText("Q in " + einheit, 0, 0); ctx.restore();
+
+  // Gerade
+  if (modus !== "punkte") {
+    const qEnd = Cwert * Umax * (modus === "geo" ? 1e9 : 1e6);
+    ctx.strokeStyle = "#4f46e5"; ctx.lineWidth = 2.6;
+    ctx.beginPath(); ctx.moveTo(px(0), py(0)); ctx.lineTo(px(Umax), py(qEnd)); ctx.stroke();
+    // Steigungsdreieck
+    const u1 = 4, u2 = 10;
+    const q1 = Cwert * u1 * (modus === "geo" ? 1e9 : 1e6);
+    const q2 = Cwert * u2 * (modus === "geo" ? 1e9 : 1e6);
+    ctx.strokeStyle = "#059669"; ctx.lineWidth = 1.8; ctx.setLineDash([5, 3]);
+    ctx.beginPath();
+    ctx.moveTo(px(u1), py(q1)); ctx.lineTo(px(u2), py(q1)); ctx.lineTo(px(u2), py(q2));
+    ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = "#059669"; ctx.font = "12px system-ui";
+    ctx.textAlign = "center"; ctx.textBaseline = "top";
+    ctx.fillText("ΔU = " + (u2 - u1) + " V", (px(u1) + px(u2)) / 2, py(q1) + 6);
+    ctx.textAlign = "left"; ctx.textBaseline = "middle";
+    ctx.fillText("ΔQ", px(u2) + 8, (py(q1) + py(q2)) / 2);
+  }
+  // Messpunkte (nur ohne Geometrie-Modus)
+  if (modus !== "geo") {
+    ctx.fillStyle = "#1e293b";
+    MESS.forEach(([u, q]) => {
+      ctx.beginPath(); ctx.moveTo(px(u) - 6, py(q) - 6); ctx.lineTo(px(u) + 6, py(q) + 6);
+      ctx.moveTo(px(u) + 6, py(q) - 6); ctx.lineTo(px(u) - 6, py(q) + 6);
+      ctx.strokeStyle = "#1e293b"; ctx.lineWidth = 2; ctx.stroke();
+    });
+  }
+  // Titel
+  ctx.fillStyle = "#64748b"; ctx.font = "13px system-ui";
+  ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
+  ctx.fillText(modus === "geo"
+      ? "Q-U-Gerade des eingestellten Plattenkondensators"
+      : "Messreihe: getrennte Ladung Q über der Spannung U", L + gw / 2, T - 16);
+}
+
+function draw() {
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  const z = STEPS[step].zeig;
+  if (z === "kond") zeichneKond(false);
+  else if (z === "geo") zeichneGeo();
+  else if (z === "messpunkte") zeichneQU("punkte");
+  else if (z === "gerade") zeichneQU("gerade");
+  else zeichneQU("geo");
+}
+
+/* ---------- UI ---------- */
+function renderDots() {
+  const d = el("dots"); d.innerHTML = "";
+  STEPS.forEach((s, i) => {
+    const b = document.createElement("div");
+    b.className = "dot" + (i === step ? " on" : (i < step ? " done" : ""));
+    b.textContent = String(i + 1);
+    b.onclick = () => { step = i; update(); };
+    d.appendChild(b);
+  });
+}
+function renderPanel() {
+  const s = STEPS[step];
+  let h = "<h2>" + s.titel + "</h2>" + s.html;
+  if (s.frage) h += "<div class='frage'>❓ " + s.frage + "</div>";
+  el("panel").innerHTML = h;
+}
+function renderStats() {
+  if (!STEPS[step].ctrl) { el("stats").innerHTML = ""; return; }
+  const C = kap();
+  const anz = C >= 1e-9 ? fmt(C * 1e9, 1, "nF") : fmt(C * 1e12, 0, "pF");
+  const it = [
+    ["C = ε<sub>0</sub>ε<sub>r</sub>A/d", anz],
+    ["Q bei U = 10 V", fmt(C * 10 * 1e9, 1, "nC")],
+    ["E bei U = 10 V", fmt(10 / (dmm * 1e-3) / 1000, 1, "kV/m")]
+  ];
+  el("stats").innerHTML = it.map(i => `<span class='stat'>${i[0]}: <b>${i[1]}</b></span>`).join("");
+}
+function renderControls() { el("controls").classList.toggle("show", !!STEPS[step].ctrl); }
+function update() {
+  el("prev").disabled = (step === 0);
+  el("next").disabled = (step === STEPS.length - 1);
+  renderDots(); renderPanel(); renderStats(); renderControls(); draw();
+}
+el("prev").onclick = () => { if (step > 0) { step--; update(); } };
+el("next").onclick = () => { if (step < STEPS.length - 1) { step++; update(); } };
+el("A").oninput = e => { Acm = +e.target.value; el("Ao").textContent = Acm + " cm²"; renderStats(); draw(); };
+el("d").oninput = e => { dmm = +e.target.value; el("do").textContent = fmt(dmm, 1, "mm"); renderStats(); draw(); };
+el("er").oninput = e => {
+  epsr = +e.target.value;
+  const name = epsr < 1.25 ? " (Luft)" : (epsr < 2.75 ? " (Papier/Folie)" : (epsr < 5 ? " (Glas)" : " (Keramik)"));
+  el("ero").textContent = fmt(epsr, 1) + name; renderStats(); draw();
+};
+document.addEventListener("keydown", e => {
+  if ((e.key === "ArrowRight" || e.key === " ") && step < STEPS.length - 1) { step++; update(); }
+  if (e.key === "ArrowLeft" && step > 0) { step--; update(); }
+});
+update();
+</script>
+</body>
+</html>

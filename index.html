@@ -168,6 +168,25 @@
         </header>
         
         <div class="material-grid">
+            <a href="kapazitaet-herleitung.html" class="material-card" data-url="kapazitaet-herleitung.html">
+                <div class="card-header">
+                    <div class="card-icon blue">&#x26A1;</div>
+                    <div class="card-title">Kapazit&auml;t &mdash; woher kommt Q = C &middot; U?</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Herleitung in 10 Schritten: Messreihe Q gegen U, Ursprungsgerade, Steigung = Kapazit&auml;t. Danach der Blick ins Innere &mdash; E = U/d und E = Q/(&epsilon;<sub>0</sub>A) zusammengesetzt, Q k&uuml;rzt sich heraus, &uuml;brig bleibt C = &epsilon;<sub>0</sub>&epsilon;<sub>r</sub>A/d. Mit Reglern f&uuml;r Fl&auml;che, Abstand und Dielektrikum.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Kondensator</span>
+                            <span class="tag">Kapazit&auml;t</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-kapazitaet"></div>
+                </div>
+            </a>
             <a href="AB_RC_Uebungen.pdf" class="material-card" data-url="AB_RC_Uebungen.pdf">
                 <div class="card-header">
                     <div class="card-icon blue">&#x1F9EE;</div>
@@ -986,6 +1005,7 @@
         
         // QR-Codes generieren wenn Seite geladen
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-kapazitaet', 'kapazitaet-herleitung.html');
             generateQR('qr-rcueb', 'AB_RC_Uebungen.pdf');
             generateQR('qr-ablenkung', 'AB_Ablenkung_E-Feld.pdf');
             generateQR('qr-rc', 'rc-herleitung.html');
