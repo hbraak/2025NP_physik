@@ -187,6 +187,26 @@
                     <div class="qr-code" id="qr-kapazitaet"></div>
                 </div>
             </a>
+            <a href="https://m920q.tail653c87.ts.net:10000/sim/vorsilben" class="material-card" data-url="https://m920q.tail653c87.ts.net:10000/sim/vorsilben">
+                <div class="card-header">
+                    <div class="card-icon green">&#x1F3AF;</div>
+                    <div class="card-title">Trainer &mdash; Vorsilben &amp; Einheiten</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Quiz f&uuml;rs Handy: Vorsilben (p, n, &micro;, m, k, M), Umrechnen in Basiseinheiten, Zehnerpotenzen, Einheitenprobe und &tau; = R &middot; C. Punkte, Serien und Bestwert. Die Aufgaben entstehen im Browser &mdash; l&auml;uft auch ohne Netz in der Bahn. Per Knopfdruck gibt es zus&auml;tzlich frische Aufgaben von der KI.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">&Uuml;ben</span>
+                            <span class="tag">Einheiten</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-vorsilben"></div>
+                </div>
+            </a>
+
             <a href="AB_RC_Uebungen.pdf" class="material-card" data-url="AB_RC_Uebungen.pdf">
                 <div class="card-header">
                     <div class="card-icon blue">&#x1F9EE;</div>
@@ -1018,13 +1038,14 @@
         // QR-Code Generator Funktion
         function generateQR(elementId, url) {
             const qr = qrcode(0, 'M');
-            qr.addData(baseUrl + url);
+            qr.addData(url.startsWith('http') ? url : baseUrl + url);
             qr.make();
             document.getElementById(elementId).innerHTML = qr.createImgTag(2, 4);
         }
         
         // QR-Codes generieren wenn Seite geladen
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-vorsilben', 'https://m920q.tail653c87.ts.net:10000/sim/vorsilben');
             generateQR('qr-kapazitaet', 'kapazitaet-herleitung.html');
             generateQR('qr-rcueb', 'AB_RC_Uebungen.pdf');
             generateQR('qr-rcueblsg', 'AB_RC_Uebungen_LSG.pdf');
