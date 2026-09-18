@@ -168,6 +168,25 @@
         </header>
         
         <div class="material-grid">
+            <a href="influenz-metallkugel.html" class="material-card" data-url="influenz-metallkugel.html">
+                <div class="card-header">
+                    <div class="card-icon blue">&#x1F7E0;</div>
+                    <div class="card-title">Influenz &mdash; Metallkugel im Plattenkondensator</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Schritt f&uuml;r Schritt illustriert: freie Elektronen im Metall, Ladungsverschiebung im Feld (Zeitlupe-Regler), Influenzladungen an der Oberfl&auml;che, feldfreies Inneres, berechnetes Feldlinienbild (mit/ohne Kugel), warum im homogenen Feld <em>keine</em> Kraft wirkt &ndash; und warum Papierschnipsel trotzdem fliegen.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Influenz</span>
+                            <span class="tag">E-Feld</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-influenz"></div>
+                </div>
+            </a>
             <a href="praesentation-spannung-arbeit.html" class="material-card" data-url="praesentation-spannung-arbeit.html">
                 <div class="card-header">
                     <div class="card-icon blue">&#x26A1;</div>
@@ -1084,6 +1103,7 @@
         // QR-Codes generieren wenn Seite geladen
         document.addEventListener('DOMContentLoaded', function() {
             generateQR('qr-vorsilben', 'https://m920q.tail653c87.ts.net:10000/sim/vorsilben');
+            generateQR('qr-influenz', 'influenz-metallkugel.html');
             generateQR('qr-spannungarbeit', 'praesentation-spannung-arbeit.html');
             generateQR('qr-efeldherleitung', 'praesentation-e-feld-herleitung.html');
             generateQR('qr-kapazitaet', 'kapazitaet-herleitung.html');
