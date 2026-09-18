@@ -168,6 +168,25 @@
         </header>
         
         <div class="material-grid">
+            <a href="praesentation-e-feld-herleitung.html" class="material-card" data-url="praesentation-e-feld-herleitung.html">
+                <div class="card-header">
+                    <div class="card-icon blue">&#x1F4D0;</div>
+                    <div class="card-title">Herleitung E = U/d &mdash; zum Durchklicken</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Der komplette Weg der Stunde: die Kugel am Faden als Kraftmesser (F<sub>el</sub> = m g tan &alpha;), zwei Messreihen mit &auml;nderbaren Werten, Ausgleichsgerade und Steigungsdreieck, der Sprung von d auf die Hilfsgr&ouml;&szlig;e 1/d, das Energieargument q&thinsp;U = F&thinsp;d und am Ende die Definition E := F/q = U/d.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">E-Feld</span>
+                            <span class="tag">Messreihen</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-efeldherleitung"></div>
+                </div>
+            </a>
             <a href="kapazitaet-herleitung.html" class="material-card" data-url="kapazitaet-herleitung.html">
                 <div class="card-header">
                     <div class="card-icon blue">&#x26A1;</div>
@@ -1046,6 +1065,7 @@
         // QR-Codes generieren wenn Seite geladen
         document.addEventListener('DOMContentLoaded', function() {
             generateQR('qr-vorsilben', 'https://m920q.tail653c87.ts.net:10000/sim/vorsilben');
+            generateQR('qr-efeldherleitung', 'praesentation-e-feld-herleitung.html');
             generateQR('qr-kapazitaet', 'kapazitaet-herleitung.html');
             generateQR('qr-rcueb', 'AB_RC_Uebungen.pdf');
             generateQR('qr-rcueblsg', 'AB_RC_Uebungen_LSG.pdf');

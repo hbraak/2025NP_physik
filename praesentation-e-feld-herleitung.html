@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Herleitung E = U/d &ndash; Begleitpr&auml;sentation | Physik-LK 12NP</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#0f172a;color:#f1f5f9;overflow:hidden}
+#stage{position:relative;height:100%;width:100%}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;align-items:center;
+  padding:3vh 3vw 7vh;text-align:center;overflow-y:auto}
+.slide.active{display:flex}
+h1{font-size:clamp(26px,4vw,58px);color:#93c5fd;margin-bottom:.35em;line-height:1.15}
+h2{font-size:clamp(20px,2.9vw,42px);color:#93c5fd;margin-bottom:.45em;line-height:1.2}
+.sub{font-size:clamp(14px,1.6vw,24px);color:#94a3b8;margin-bottom:.9em}
+.big{font-size:clamp(18px,2.4vw,36px);line-height:1.4}
+.mid{font-size:clamp(15px,1.8vw,28px);line-height:1.45}
+.small{font-size:clamp(12px,1.25vw,20px);color:#94a3b8}
+.hl{color:#fbbf24;font-weight:700}
+.gr{color:#4ade80;font-weight:700}
+.bl{color:#93c5fd;font-weight:700}
+.rd{color:#f87171;font-weight:700}
+.frag{opacity:0;transition:opacity .25s}
+.frag.show{opacity:1}
+.box{background:#1e293b;border:2px solid #475569;border-radius:14px;
+  padding:clamp(10px,1.6vw,22px) clamp(14px,2.2vw,30px);margin:.4em 0;max-width:1200px}
+.box.acc{border-color:#60a5fa}.box.ok{border-color:#4ade80}.box.warn{border-color:#f87171}
+.row{display:flex;gap:clamp(10px,2vw,30px);align-items:center;justify-content:center;flex-wrap:wrap}
+.row.top{align-items:flex-start}
+table{border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{padding:.2em .6em;font-size:clamp(12px,1.3vw,21px);border-bottom:1px solid #334155;text-align:center}
+th{color:#94a3b8;font-weight:600}
+td.lbl,th.lbl{text-align:left;color:#cbd5e1;white-space:nowrap}
+tr.calc td{color:#fbbf24}
+input.cell{width:4.2em;background:#0f172a;border:1px solid #475569;border-radius:6px;color:#f1f5f9;
+  text-align:center;font:inherit;font-size:clamp(12px,1.3vw,21px);padding:.1em .2em}
+input.cell:focus{outline:none;border-color:#60a5fa;background:#172033}
+.btn{background:#334155;color:#e2e8f0;border:1px solid #64748b;border-radius:9px;
+  padding:.4em .9em;font-size:clamp(12px,1.2vw,18px);cursor:pointer;font-family:inherit;margin:.15em}
+.btn:hover{background:#475569}
+.btn.prim{background:#2563eb;border-color:#60a5fa;color:#fff}
+.btn.prim:hover{background:#3b82f6}
+.btn.on{background:#2563eb;border-color:#93c5fd;color:#fff}
+svg{overflow:visible}
+.formel{font-size:clamp(17px,2.1vw,32px);line-height:1.6}
+sub{font-size:.68em}sup{font-size:.68em}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .22em;line-height:1.1}
+.frac .num{border-bottom:2px solid currentColor;padding:0 .25em}
+.frac .den{padding:0 .25em}
+#bar{position:fixed;left:0;right:0;bottom:0;height:32px;background:#0b1220;display:flex;align-items:center;
+  gap:14px;padding:0 14px;font-size:13px;color:#64748b;z-index:20}
+#prog{flex:1;height:5px;background:#1e293b;border-radius:3px;overflow:hidden}
+#progf{height:100%;width:0;background:#2563eb;transition:width .25s}
+#bar .nav{cursor:pointer;color:#94a3b8;user-select:none;font-size:18px;padding:0 6px}
+#bar .nav:hover{color:#e2e8f0}
+#help{position:fixed;inset:0;background:rgba(2,6,23,.95);display:none;z-index:30;flex-direction:column;
+  justify-content:center;align-items:center;gap:.7em;font-size:clamp(14px,1.6vw,24px)}
+#help.on{display:flex}
+kbd{background:#334155;border:1px solid #64748b;border-radius:6px;padding:.1em .5em;font-family:inherit}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- 1 Titel -->
+<section class="slide">
+  <h1>Herleitung von E = U/d</h1>
+  <div class="sub">Der induktive Weg &ndash; ohne die Formel vorauszusetzen &nbsp;|&nbsp; Physik-LK 12NP, Elektrik 12.1</div>
+  <div class="box acc big">
+    &bdquo;Zwischen zwei Platten liegt eine Spannung. Wie stark zieht das Feld an einer Ladung &ndash;<br>
+    und wovon h&auml;ngt das ab?&ldquo;
+  </div>
+  <div class="mid frag" style="margin-top:.6em">Bekannt ist bisher nur: <span class="hl">U</span> und <span class="hl">d</span> kann man einstellen.</div>
+  <div class="small" style="margin-top:1.6em"><kbd>&rarr;</kbd> weiter &nbsp; <kbd>&larr;</kbd> zur&uuml;ck &nbsp; <kbd>F</kbd> Vollbild &nbsp; <kbd>?</kbd> Hilfe</div>
+</section>
+
+<!-- 2 Kugel als Kraftmesser -->
+<section class="slide">
+  <h2>Schritt 1 &ndash; Die Kugel ist ein Kraftmesser</h2>
+  <div class="row top">
+    <svg id="svgKraft" width="460" height="400" viewBox="0 0 460 400" style="max-width:42vw;height:auto"></svg>
+    <div style="max-width:34vw">
+      <div class="box frag formel">
+        tan&nbsp;&alpha; =
+        <span class="frac"><span class="num">F<sub>el</sub></span><span class="den">F<sub>G</sub></span></span>
+        =
+        <span class="frac"><span class="num">F<sub>el</sub></span><span class="den">m&thinsp;g</span></span>
+      </div>
+      <div class="box ok frag formel"><span class="gr">F<sub>el</sub> = m&thinsp;g &middot; tan&nbsp;&alpha;</span></div>
+      <div class="mid frag" style="margin-top:.5em">
+        Hier steht <em>kein</em> E, <em>kein</em> q, <em>kein</em> U.<br>
+        Nur Mechanik aus der 11.
+      </div>
+      <div class="box acc mid frag"><span class="hl">Winkel messen hei&szlig;t Kraft messen.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 Aufbau -->
+<section class="slide">
+  <h2>Der Aufbau &ndash; zwei Stellschrauben</h2>
+  <svg id="svgAufbau" width="760" height="320" viewBox="0 0 760 320" style="max-width:74vw;height:auto"></svg>
+  <div class="row" style="margin-top:.5em">
+    <div class="box mid frag"><span class="hl">U</span> am Netzger&auml;t &ndash; Platten stehen fest</div>
+    <div class="box mid frag"><span class="hl">d</span> durch Verschieben &ndash; Spannung bleibt</div>
+  </div>
+  <div class="mid frag" style="margin-top:.4em">Zwei Messreihen: jeweils eine Gr&ouml;&szlig;e festhalten, die andere variieren.</div>
+  <div class="small frag">Pendelk&ouml;rper: leitf&auml;hig beschichtete Styroporkugel (m &asymp; 0,3&nbsp;g), extern auf einige nC aufgeladen.</div>
+</section>
+
+<!-- 4 Messreihe 1 -->
+<section class="slide">
+  <h2 style="margin-bottom:.15em">Messreihe 1 &ndash; d fest, U variieren</h2>
+  <div class="small" style="margin-bottom:.4em">d = 10&nbsp;cm fest &nbsp;&middot;&nbsp; Werte in der Tabelle sind &auml;nderbar &ndash; Punkte und Gerade folgen sofort</div>
+  <div class="row top">
+    <div class="box">
+      <table>
+        <tr><th class="lbl">U in kV</th><th class="lbl">&alpha; in &deg;</th><th class="lbl">tan&nbsp;&alpha;</th></tr>
+        <tbody id="tab1"></tbody>
+      </table>
+      <div class="small" style="margin-top:.5em">Die dritte Spalte rechnen die SuS selbst.</div>
+    </div>
+    <div>
+      <svg id="plot1" width="520" height="380" viewBox="0 0 520 380" style="max-width:48vw;height:auto"></svg>
+      <div class="row">
+        <button class="btn prim" id="b1fit" onclick="t1.toggle('fit')">Ausgleichsgerade</button>
+        <button class="btn prim" id="b1tri" onclick="t1.toggle('tri')">Steigungsdreieck</button>
+        <button class="btn" onclick="t1.reset()">Beispielwerte</button>
+        <button class="btn" onclick="t1.clear()">Leeren</button>
+      </div>
+    </div>
+  </div>
+  <div class="box ok mid frag" style="margin-top:.3em">
+    Gerade <span class="gr">durch den Ursprung</span> &rArr; tan&nbsp;&alpha; &sim; U, und wegen F<sub>el</sub> = m&thinsp;g&thinsp;tan&nbsp;&alpha;:
+    &nbsp;<span class="hl">F<sub>el</sub> &sim; U</span> bei festem d.
+  </div>
+</section>
+
+<!-- 5 Drei Fragen -->
+<section class="slide">
+  <h2>Drei Fragen zu dieser Messreihe</h2>
+  <div class="box big frag" style="text-align:left">1. Warum <em>muss</em> die Gerade durch den Ursprung gehen?
+    <div class="small">Ohne Spannung kein Feld, ohne Feld keine Kraft, keine Auslenkung. Ein Achsenabschnitt w&auml;re ein Messfehler.</div></div>
+  <div class="box big frag" style="text-align:left">2. Was bedeutet die Steigung physikalisch?
+    <div class="small">Noch nichts Benennbares. Sie h&auml;ngt von der Kugel ab (m, q) und vom Abstand d &ndash; genau daraus kommt am Ende die Ladung.</div></div>
+  <div class="box big frag" style="text-align:left">3. H&auml;tten wir auch eine andere Kugel nehmen k&ouml;nnen?
+    <div class="small">Ja &ndash; die Gerade w&auml;re nur steiler oder flacher. <span class="hl">Die Proportionalit&auml;t selbst ist Eigenschaft des Feldes, nicht der Kugel.</span></div></div>
+</section>
+
+<!-- 6 Messreihe 2 -->
+<section class="slide">
+  <h2 style="margin-bottom:.15em">Messreihe 2 &ndash; U fest, d variieren</h2>
+  <div class="small" style="margin-bottom:.4em">U = 10&nbsp;kV fest &nbsp;&middot;&nbsp; erst gegen d auftragen &ndash; dann die Hilfsgr&ouml;&szlig;e 1/d</div>
+  <div class="row top">
+    <div class="box">
+      <table>
+        <tr><th class="lbl">d in cm</th><th class="lbl">&alpha; in &deg;</th><th class="lbl">tan&nbsp;&alpha;</th><th class="lbl">1/d in m<sup>&minus;1</sup></th></tr>
+        <tbody id="tab2"></tbody>
+      </table>
+    </div>
+    <div>
+      <svg id="plot2" width="520" height="380" viewBox="0 0 520 380" style="max-width:48vw;height:auto"></svg>
+      <div class="row">
+        <button class="btn on" id="bX_d" onclick="setX2('d')">gegen d</button>
+        <button class="btn" id="bX_r" onclick="setX2('r')">gegen 1/d</button>
+        <button class="btn prim" id="b2fit" onclick="t2.toggle('fit')">Ausgleichsgerade</button>
+        <button class="btn" onclick="t2.reset()">Beispielwerte</button>
+        <button class="btn" onclick="t2.clear()">Leeren</button>
+      </div>
+    </div>
+  </div>
+  <div class="box ok mid frag" style="margin-top:.3em">
+    Erst mit der Hilfsgr&ouml;&szlig;e <span class="hl">1/d</span> wird es eine Ursprungsgerade &rArr;
+    <span class="gr">F<sub>el</sub> &sim; 1/d</span> bei fester Spannung.
+  </div>
+  <div class="small frag">Gleiche Denkfigur wie bei T&sup2; (Fadenpendel) und ln&thinsp;u<sub>C</sub> (Kondensator): Hilfsgr&ouml;&szlig;e ausrechnen, neue Zeile, normales Achsenkreuz.</div>
+</section>
+
+<!-- 7 Zwischenergebnis -->
+<section class="slide">
+  <h2>Zwischenergebnis der Messung</h2>
+  <div class="row">
+    <div class="box formel">F<sub>el</sub> &sim; U</div>
+    <div class="box formel">F<sub>el</sub> &sim; <span class="frac"><span class="num">1</span><span class="den">d</span></span></div>
+    <div class="big">&rArr;</div>
+    <div class="box ok formel"><span class="gr">F<sub>el</sub> = k &middot; <span class="frac"><span class="num">U</span><span class="den">d</span></span></span></div>
+  </div>
+  <div class="box mid frag" style="margin-top:.8em">
+    Die Ladung q der Kugel ist dabei <span class="hl">unbekannt geblieben</span> &ndash; sie steckt in der Konstanten k.
+  </div>
+  <div class="box mid frag">
+    Deshalb l&auml;sst sich die Messreihe auch ohne Ladungsmessung auswerten: Verh&auml;ltnisse bilden, q k&uuml;rzt sich weg.<br>
+    <span class="formel"><span class="frac"><span class="num">tan&nbsp;&alpha;<sub>1</sub></span><span class="den">tan&nbsp;&alpha;<sub>2</sub></span></span>
+    = <span class="frac"><span class="num">U<sub>1</sub></span><span class="den">U<sub>2</sub></span></span></span>
+  </div>
+  <div class="mid frag"><span class="rd">Offen bleibt:</span> Was <em>ist</em> dieses k?</div>
+</section>
+
+<!-- 8 Energie -->
+<section class="slide">
+  <h2>Schritt 4 &ndash; Woher der Faktor kommt: die Energie</h2>
+  <svg id="svgArbeit" width="700" height="210" viewBox="0 0 700 210" style="max-width:66vw;height:auto"></svg>
+  <div class="row" style="margin-top:.3em">
+    <div class="box frag mid">mechanisch: &nbsp;<span class="formel">W = F &middot; d</span></div>
+    <div class="box frag mid">elektrisch: &nbsp;<span class="formel">W = q &middot; U</span></div>
+  </div>
+  <div class="mid frag" style="margin-top:.5em">Spannung ist <em>definiert</em> als Arbeit pro Ladung: U = W/q. Im homogenen Feld ist die Kraft l&auml;ngs des ganzen Weges konstant.</div>
+  <div class="box ok frag formel" style="margin-top:.4em">
+    q &middot; U = F &middot; d &nbsp;&nbsp;| : d &nbsp;&nbsp;&rArr;&nbsp;&nbsp;
+    <span class="gr">F = q &middot; <span class="frac"><span class="num">U</span><span class="den">d</span></span></span>
+  </div>
+  <div class="box acc mid frag">Damit ist die Konstante aus Schritt 3 identifiziert: <span class="hl">k = q</span>.</div>
+</section>
+
+<!-- 9 Definition -->
+<section class="slide">
+  <h2>Schritt 5 &ndash; Die Feldst&auml;rke definieren</h2>
+  <div class="mid">Die Kraft h&auml;ngt von der Probeladung ab &ndash; das Feld selbst soll es nicht.</div>
+  <div class="box acc formel frag" style="margin-top:.4em">
+    E := <span class="frac"><span class="num">F</span><span class="den">q</span></span> &nbsp;&nbsp; mit &nbsp;&nbsp; [E] = <span class="frac"><span class="num">N</span><span class="den">C</span></span>
+  </div>
+  <div class="box ok formel frag" style="font-size:clamp(20px,2.8vw,42px)">
+    <span class="gr">E = <span class="frac"><span class="num">F</span><span class="den">q</span></span>
+    = <span class="frac"><span class="num">U</span><span class="den">d</span></span></span>
+  </div>
+  <div class="box frag formel" style="font-size:clamp(14px,1.7vw,26px)">
+    <span class="frac"><span class="num">V</span><span class="den">m</span></span> =
+    <span class="frac"><span class="num">J/C</span><span class="den">m</span></span> =
+    <span class="frac"><span class="num">N &middot; m</span><span class="den">C &middot; m</span></span> =
+    <span class="frac"><span class="num">N</span><span class="den">C</span></span>
+    <div class="small" style="margin-top:.3em">Beide Einheiten sind identisch &ndash; das beugt der Frage vor, warum eine <em>Kraft</em> pro Ladung in Volt pro Meter angegeben wird.</div>
+  </div>
+</section>
+
+<!-- 10 Zugabe + Zusammenfassung -->
+<section class="slide">
+  <h2>Zugabe &ndash; dieselbe Messung liefert die Ladung</h2>
+  <div class="box formel">
+    tan&nbsp;&alpha; = <span class="frac"><span class="num">q</span><span class="den">m&thinsp;g&thinsp;d</span></span> &middot; U
+    &nbsp;&nbsp;&rArr;&nbsp;&nbsp; q = Steigung &middot; m&thinsp;g&thinsp;d
+  </div>
+  <div class="box frag mid">
+    Steigung = 3,38 &middot; 10<sup>&minus;5</sup> 1/V &nbsp;&middot;&nbsp; m = 0,3&nbsp;g &nbsp;&middot;&nbsp; d = 0,10&nbsp;m<br>
+    q = 3,38 &middot; 10<sup>&minus;5</sup> 1/V &middot; 0,3 &middot; 10<sup>&minus;3</sup> kg &middot; 9,81 m/s&sup2; &middot; 0,10 m
+    = 9,9 &middot; 10<sup>&minus;9</sup> C &asymp; <span class="hl">10&nbsp;nC</span>
+  </div>
+  <div class="box acc mid frag">Ein Aufbau, zwei Stunden: erst E = U/d <em>begr&uuml;nden</em>, dann Ladungen im nC-Bereich <em>messen</em>.</div>
+  <div class="box ok frag" style="margin-top:.6em">
+    <div class="small" style="margin-bottom:.3em">Der Weg in einer Zeile</div>
+    <div class="mid">Winkel messen &rarr; F<sub>el</sub> = mg&thinsp;tan&nbsp;&alpha; &rarr; F &sim; U und F &sim; 1/d &rarr; F = k&thinsp;U/d
+      &rarr; Energie liefert k = q &rarr; Definition E := F/q &rarr; <span class="gr">E = U/d</span></div>
+  </div>
+</section>
+
+</div>
+
+<div id="bar">
+  <span class="nav" onclick="go(-1)">&#9664;</span><span id="pos">1 / 10</span><span class="nav" onclick="go(1)">&#9654;</span>
+  <div id="prog"><div id="progf"></div></div>
+  <span class="nav" onclick="fs()" title="Vollbild">&#9974;</span>
+  <span class="nav" onclick="document.getElementById('help').classList.toggle('on')">?</span>
+</div>
+
+<div id="help" onclick="this.classList.remove('on')">
+  <div><kbd>&rarr;</kbd> / <kbd>Leertaste</kbd> n&auml;chster Schritt &nbsp;&middot;&nbsp; <kbd>&larr;</kbd> zur&uuml;ck</div>
+  <div><kbd>F</kbd> Vollbild &nbsp;&middot;&nbsp; <kbd>Pos1</kbd> erste Folie</div>
+  <div>Messreihen-Folien: Werte in der Tabelle &uuml;berschreiben &rarr; Diagramm folgt sofort</div>
+  <div class="small" style="margin-top:1em">Klick zum Schlie&szlig;en</div>
+</div>
+
+<script>
+const NS='http://www.w3.org/2000/svg';
+function el(tag,at,parent){const e=document.createElementNS(NS,tag);
+  for(const k in at)e.setAttribute(k,at[k]); if(parent)parent.appendChild(e); return e;}
+function txt(p,x,y,s,at={}){const t=el('text',Object.assign({x,y,fill:'#cbd5e1','font-size':15,
+  'font-family':'Segoe UI, sans-serif','text-anchor':'middle'},at),p);
+  // "F_el x" -> F mit tiefgestelltem el
+  let shift=0;
+  String(s).split(/(_[A-Za-z0-9]+)/).filter(x=>x!=='').forEach(part=>{
+    const sub=part.startsWith('_');
+    const at=sub?{dy:4,'font-size':'70%'}:(shift?{dy:-4}:{});
+    shift=sub?1:0;
+    const ts=el('tspan',at,t);
+    ts.textContent=sub?part.slice(1):part;});
+  return t;}
+function arrow(p,x1,y1,x2,y2,col,w=2.5,dash=null){
+  const root=p.ownerSVGElement||p;
+  const id='ah'+col.replace(/[^a-z0-9]/gi,'');
+  if(!root.querySelector('#'+id)){
+    const defs=el('defs',{},root);
+    const m=el('marker',{id,markerWidth:7,markerHeight:7,refX:6,refY:3.5,orient:'auto'},defs);
+    el('path',{d:'M0,0 L7,3.5 L0,7 z',fill:col},m);
+  }
+  const a={x1,y1,x2,y2,stroke:col,'stroke-width':w,'marker-end':'url(#'+id+')'};
+  if(dash)a['stroke-dasharray']=dash;
+  return el('line',a,p);
+}
+
+/* ---------- Kräftebild ---------- */
+(function(){
+  const s=document.getElementById('svgKraft');
+  const L=50,R=430,TOP=30,BOT=340;
+  el('line',{x1:L,y1:TOP,x2:L,y2:BOT,stroke:'#f1f5f9','stroke-width':5},s);
+  el('line',{x1:R,y1:TOP,x2:R,y2:BOT,stroke:'#f1f5f9','stroke-width':5},s);
+  txt(s,L-16,TOP+4,'+',{'font-size':22,fill:'#f87171'});
+  txt(s,R+16,TOP+4,'−',{'font-size':22,fill:'#60a5fa'});
+  for(let y=TOP+30;y<BOT;y+=34)
+    el('line',{x1:L+6,y1:y,x2:R-6,y2:y,stroke:'#334155','stroke-width':1.5,'stroke-dasharray':'5 5'},s);
+  // Aufhängung
+  const AX=200,AY=40;
+  el('line',{x1:AX-32,y1:AY,x2:AX+32,y2:AY,stroke:'#94a3b8','stroke-width':4},s);
+  for(let i=-30;i<=26;i+=9)el('line',{x1:AX+i,y1:AY,x2:AX+i+8,y2:AY-9,stroke:'#94a3b8','stroke-width':1.5},s);
+  // Faden zur Kugel
+  const KX=268,KY=225;
+  el('line',{x1:AX,y1:AY,x2:KX,y2:KY,stroke:'#f1f5f9','stroke-width':2.5},s);
+  el('line',{x1:AX,y1:AY,x2:AX,y2:KY+40,stroke:'#64748b','stroke-width':1.5,'stroke-dasharray':'6 6'},s);
+  {const ph=Math.atan2(KX-AX,KY-AY), r=78;
+   el('path',{d:`M ${AX} ${AY+r} A ${r} ${r} 0 0 0 ${AX+Math.sin(ph)*r} ${AY+Math.cos(ph)*r}`,
+     fill:'none',stroke:'#cbd5e1','stroke-width':1.8},s);
+   txt(s,AX+Math.sin(ph/2)*(r+18),AY+Math.cos(ph/2)*(r+18)+6,'α',{'font-size':20,fill:'#f1f5f9','font-style':'italic'});}
+  el('circle',{cx:KX,cy:KY,r:11,fill:'#94a3b8',stroke:'#e2e8f0','stroke-width':2},s);
+  txt(s,KX,KY+5,'q',{'font-size':12,fill:'#0f172a'});
+  // Kräfte
+  arrow(s,KX,KY,KX,KY+95,'#f1f5f9');           // F_G
+  txt(s,KX-44,KY+62,'F_G = m g',{'text-anchor':'end',fill:'#f1f5f9'});
+  arrow(s,KX,KY,KX+82,KY,'#60a5fa');            // F_el
+  txt(s,KX+44,KY-12,'F_el',{fill:'#60a5fa'});
+  arrow(s,KX,KY,KX-(KX-AX)*0.62,KY-(KY-AY)*0.62,'#c084fc'); // F_S
+  txt(s,KX-56,KY-46,'F_S',{fill:'#c084fc'});
+  // Parallelogramm + Resultierende
+  el('line',{x1:KX+82,y1:KY,x2:KX+82,y2:KY+95,stroke:'#64748b','stroke-width':1.5,'stroke-dasharray':'5 5'},s);
+  el('line',{x1:KX,y1:KY+95,x2:KX+82,y2:KY+95,stroke:'#64748b','stroke-width':1.5,'stroke-dasharray':'5 5'},s);
+  arrow(s,KX,KY,KX+82,KY+95,'#fb923c');
+  txt(s,KX+88,KY+106,'F_res',{fill:'#fb923c','text-anchor':'start'});
+  // Plattenabstand
+  el('line',{x1:L,y1:BOT+18,x2:R,y2:BOT+18,stroke:'#64748b','stroke-width':1.5},s);
+  txt(s,(L+R)/2,BOT+12,'d',{fill:'#94a3b8','font-style':'italic'});
+})();
+
+/* ---------- Aufbau ---------- */
+(function(){
+  const s=document.getElementById('svgAufbau');
+  // Netzgerät
+  el('circle',{cx:90,cy:150,r:26,fill:'none',stroke:'#f1f5f9','stroke-width':2.5},s);
+  txt(s,90,156,'U',{'font-size':18,fill:'#f1f5f9','font-style':'italic'});
+  txt(s,200,150,'Hochspannung 0–25 kV',{'font-size':13,fill:'#94a3b8'});
+  // Leitungen + Schutzwiderstand
+  el('path',{d:'M90 124 L90 70 L250 70',fill:'none',stroke:'#f1f5f9','stroke-width':2.5},s);
+  el('rect',{x:250,y:56,width:56,height:28,fill:'#0f172a',stroke:'#f1f5f9','stroke-width':2.5},s);
+  txt(s,278,46,'R_S = 10 MΩ',{'font-size':13,fill:'#fbbf24'});
+  el('path',{d:'M306 70 L420 70 L420 96',fill:'none',stroke:'#f1f5f9','stroke-width':2.5},s);
+  el('path',{d:'M90 176 L90 250 L640 250 L640 96',fill:'none',stroke:'#f1f5f9','stroke-width':2.5},s);
+  // Platten
+  el('line',{x1:420,y1:96,x2:420,y2:232,stroke:'#f1f5f9','stroke-width':5},s);
+  el('line',{x1:640,y1:96,x2:640,y2:232,stroke:'#f1f5f9','stroke-width':5},s);
+  txt(s,410,90,'+',{'font-size':20,fill:'#f87171'});
+  txt(s,650,90,'−',{'font-size':20,fill:'#60a5fa'});
+  for(let y=120;y<232;y+=26)
+    el('line',{x1:426,y1:y,x2:634,y2:y,stroke:'#334155','stroke-width':1.5,'stroke-dasharray':'5 5'},s);
+  // Pendel
+  el('line',{x1:498,y1:100,x2:540,y2:100,stroke:'#94a3b8','stroke-width':4},s);
+  el('line',{x1:520,y1:100,x2:556,y2:172,stroke:'#f1f5f9','stroke-width':2},s);
+  el('circle',{cx:556,cy:172,r:9,fill:'#94a3b8',stroke:'#e2e8f0','stroke-width':2},s);
+  el('line',{x1:520,y1:100,x2:520,y2:180,stroke:'#64748b','stroke-width':1.3,'stroke-dasharray':'5 5'},s);
+  txt(s,536,146,'α',{'font-size':16,fill:'#f1f5f9','font-style':'italic'});
+  // d-Pfeil verschiebbar
+  arrow(s,420,284,640,284,'#fbbf24',2);
+  arrow(s,640,284,420,284,'#fbbf24',2);
+  txt(s,530,306,'d – Plattenabstand verschiebbar',{'font-size':14,fill:'#fbbf24'});
+})();
+
+/* ---------- Arbeit im Feld ---------- */
+(function(){
+  const s=document.getElementById('svgArbeit');
+  const L=150,R=520,T=25,B=160;
+  el('line',{x1:L,y1:T,x2:L,y2:B,stroke:'#f1f5f9','stroke-width':5},s);
+  el('line',{x1:R,y1:T,x2:R,y2:B,stroke:'#f1f5f9','stroke-width':5},s);
+  txt(s,L-14,T+6,'+',{'font-size':20,fill:'#f87171'});
+  txt(s,R+14,T+6,'−',{'font-size':20,fill:'#60a5fa'});
+  for(let y=T+22;y<B;y+=26)
+    el('line',{x1:L+6,y1:y,x2:R-6,y2:y,stroke:'#334155','stroke-width':1.5,'stroke-dasharray':'5 5'},s);
+  el('circle',{cx:L+22,cy:92,r:11,fill:'#94a3b8',stroke:'#e2e8f0','stroke-width':2},s);
+  txt(s,L+22,97,'q',{'font-size':12,fill:'#0f172a'});
+  arrow(s,L+40,92,R-28,92,'#60a5fa',3);
+  txt(s,(L+R)/2,80,'F = q E',{'font-size':17,fill:'#60a5fa','font-style':'italic'});
+  el('circle',{cx:R-20,cy:92,r:11,fill:'none',stroke:'#64748b','stroke-width':2,'stroke-dasharray':'4 3'},s);
+  arrow(s,L,180,R,180,'#fbbf24',2); arrow(s,R,180,L,180,'#fbbf24',2);
+  txt(s,(L+R)/2,200,'Weg d',{'font-size':15,fill:'#fbbf24'});
+})();
+
+/* ---------- Plot-Engine ---------- */
+function niceMax(v){const e=Math.pow(10,Math.floor(Math.log10(v)));const m=v/e;
+  const n=m<=1?1:m<=2?2:m<=2.5?2.5:m<=5?5:10;return n*e;}
+function plot(svg,pts,o){
+  svg.innerHTML='';
+  const W=520,H=380,ML=68,MR=18,MT=16,MB=52;
+  const xm=niceMax(Math.max(1e-9,...pts.map(p=>p.x))*1.12);
+  const ym=niceMax(Math.max(1e-9,...pts.map(p=>p.y))*1.15);
+  const X=v=>ML+v/xm*(W-ML-MR), Y=v=>H-MB-v/ym*(H-MT-MB);
+  const nx=5,ny=5;
+  for(let i=0;i<=nx;i++){const v=xm*i/nx;
+    el('line',{x1:X(v),y1:Y(0),x2:X(v),y2:MT,stroke:'#1e293b','stroke-width':1},svg);
+    txt(svg,X(v),Y(0)+20,fmt(v),{'font-size':14});}
+  for(let i=0;i<=ny;i++){const v=ym*i/ny;
+    el('line',{x1:ML,y1:Y(v),x2:W-MR,y2:Y(v),stroke:'#1e293b','stroke-width':1},svg);
+    txt(svg,ML-10,Y(v)+5,fmt(v),{'font-size':14,'text-anchor':'end'});}
+  arrow(svg,ML,Y(0),W-MR+6,Y(0),'#94a3b8',2);
+  arrow(svg,ML,Y(0),ML,MT-6,'#94a3b8',2);
+  txt(svg,(ML+W-MR)/2,H-12,o.xlabel,{'font-size':16});
+  txt(svg,18,MT+60,o.ylabel,{'font-size':16,transform:`rotate(-90 18 ${MT+60})`});
+  // Fit / Verbindung
+  if(o.fit&&pts.length>1){
+    if(o.throughOrigin){
+      const k=pts.reduce((a,p)=>a+p.x*p.y,0)/pts.reduce((a,p)=>a+p.x*p.x,0);
+      el('line',{x1:X(0),y1:Y(0),x2:X(xm),y2:Y(k*xm),stroke:'#60a5fa','stroke-width':3},svg);
+      if(o.tri){
+        const x1=xm*0.2,x2=xm*0.8;
+        el('path',{d:`M ${X(x1)} ${Y(k*x1)} L ${X(x2)} ${Y(k*x1)} L ${X(x2)} ${Y(k*x2)}`,
+          fill:'none',stroke:'#fb923c','stroke-width':2.5},svg);
+        txt(svg,(X(x1)+X(x2))/2,Y(k*x1)+20,'Δ'+o.dx+' = '+fmt(x2-x1),{'font-size':14,fill:'#fb923c'});
+        txt(svg,X(x2)+8,(Y(k*x1)+Y(k*x2))/2,'Δ'+o.dy+' = '+fmt(k*(x2-x1)),
+          {'font-size':14,fill:'#fb923c','text-anchor':'start'});
+      }
+      o.onfit&&o.onfit(k);
+    }else{
+      const sorted=[...pts].sort((a,b)=>a.x-b.x);
+      el('path',{d:'M '+sorted.map(p=>X(p.x)+' '+Y(p.y)).join(' L '),fill:'none',
+        stroke:'#94a3b8','stroke-width':2.5,'stroke-dasharray':'7 5'},svg);
+    }
+  }
+  pts.forEach(p=>el('circle',{cx:X(p.x),cy:Y(p.y),r:6,fill:'#f1f5f9',stroke:'#0f172a','stroke-width':2},svg));
+}
+function fmt(v){
+  if(Math.abs(v)>=100)return v.toFixed(0);
+  if(Math.abs(v)>=10)return (Math.round(v*10)/10).toString().replace('.',',');
+  return (Math.round(v*1000)/1000).toString().replace('.',',');
+}
+
+/* ---------- Messreihen-Tabellen ---------- */
+function Reihe(cfg){
+  const o={...cfg,fit:false,tri:false,rows:cfg.data.map(r=>[...r])};
+  o.render=function(){
+    const tb=document.getElementById(o.tbody);
+    if(tb.children.length!==o.rows.length){
+      tb.innerHTML=o.rows.map((r,i)=>
+        '<tr><td><input class="cell" data-i="'+i+'" data-j="0" value="'+f(r[0])+'"></td>'+
+        '<td><input class="cell" data-i="'+i+'" data-j="1" value="'+f(r[1])+'"></td>'+
+        '<td class="calc" data-t="'+i+'"></td>'+(o.extra?'<td class="calc" data-r="'+i+'"></td>':'')+'</tr>').join('');
+      tb.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',e=>{
+        const v=parseFloat(e.target.value.replace(',','.'));
+        o.rows[+e.target.dataset.i][+e.target.dataset.j]=isNaN(v)?null:v; o.draw();}));
+    }
+    o.draw();
+  };
+  o.draw=function(){
+    const tb=document.getElementById(o.tbody), pts=[];
+    o.rows.forEach((r,i)=>{
+      const ok=r[0]!=null&&r[1]!=null;
+      const tn=ok?Math.tan(r[1]*Math.PI/180):null;
+      tb.querySelector('[data-t="'+i+'"]').textContent=ok?tn.toFixed(3).replace('.',','):'';
+      if(o.extra) tb.querySelector('[data-r="'+i+'"]').textContent=ok?(100/r[0]).toFixed(1).replace('.',','):'';
+      if(ok)pts.push({x:o.xmode==='r'?100/r[0]:r[0],y:tn});
+    });
+    plot(document.getElementById(o.svg),pts,{
+      xlabel:o.xmode==='r'?'1/d in m⁻¹':o.xlabel, ylabel:'tan α',
+      fit:o.fit, throughOrigin:o.xmode!=='d', tri:o.tri, dx:o.dx, dy:'(tan α)'});
+  };
+  o.toggle=function(what){
+    o[what]=!o[what];
+    const b=document.getElementById(o.btn[what]); if(b)b.classList.toggle('on',o[what]);
+    if(what==='fit'&&!o.fit){o.tri=false;const t=document.getElementById(o.btn.tri);if(t)t.classList.remove('on');}
+    if(what==='tri'&&o.tri&&!o.fit){o.fit=true;const t=document.getElementById(o.btn.fit);if(t)t.classList.add('on');}
+    o.draw();
+  };
+  o.reset=function(){o.rows=cfg.data.map(r=>[...r]);
+    document.getElementById(o.tbody).innerHTML='';o.render();};
+  o.clear=function(){o.rows=cfg.data.map(()=>[null,null]);
+    document.getElementById(o.tbody).innerHTML='';o.render();};
+  function f(v){return v==null?'':String(v).replace('.',',');}
+  return o;
+}
+const t1=Reihe({tbody:'tab1',svg:'plot1',xlabel:'U in kV',dx:'U',extra:false,xmode:'U',
+  btn:{fit:'b1fit',tri:'b1tri'}, data:[[4,7.4],[8,15.6],[12,21.8],[16,28.8],[20,33.8]]});
+const t2=Reihe({tbody:'tab2',svg:'plot2',xlabel:'d in cm',dx:'(1/d)',extra:true,xmode:'d',
+  btn:{fit:'b2fit'}, data:[[6,30.1],[8,22.8],[10,18.8],[14,14.0],[20,9.4]]});
+function setX2(m){
+  t2.xmode=m;
+  document.getElementById('b2fit').textContent=(m==='d')?'Punkte verbinden':'Ausgleichsgerade';
+  document.getElementById('bX_d').classList.toggle('on',m==='d');
+  document.getElementById('bX_r').classList.toggle('on',m==='r');
+  t2.draw();
+}
+t1.render(); t2.render();
+
+/* ---------- Navigation ---------- */
+const slides=[...document.querySelectorAll('.slide')];
+let s=0,f=0;
+function frags(i){return [...slides[i].querySelectorAll('.frag')];}
+function render(){
+  slides.forEach((e,i)=>e.classList.toggle('active',i===s));
+  frags(s).forEach((e,i)=>e.classList.toggle('show',i<f));
+  document.getElementById('pos').textContent=(s+1)+' / '+slides.length;
+  document.getElementById('progf').style.width=((s+1)/slides.length*100)+'%';
+}
+function go(d){
+  if(d>0){ if(f<frags(s).length)f++; else if(s<slides.length-1){s++;f=0;} }
+  else { if(f>0)f--; else if(s>0){s--;f=frags(s).length;} }
+  render();
+}
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT')return;
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(1);}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(-1);}
+  else if(e.key==='Home'){s=0;f=0;render();}
+  else if(e.key==='f'||e.key==='F'){fs();}
+  else if(e.key==='?'){document.getElementById('help').classList.toggle('on');}
+});
+function fs(){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}
+render();
+</script>
+</body>
+</html>
