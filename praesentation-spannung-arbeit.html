@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Woher kommt W = q&middot;U? &ndash; Begleitpr&auml;sentation | Physik-LK 12NP</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#0f172a;color:#f1f5f9;overflow:hidden}
+#stage{position:relative;height:100%;width:100%}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;align-items:center;
+  padding:3vh 3vw 7vh;text-align:center;overflow-y:auto}
+.slide.active{display:flex}
+h1{font-size:clamp(26px,4vw,58px);color:#93c5fd;margin-bottom:.35em;line-height:1.15}
+h2{font-size:clamp(20px,2.9vw,42px);color:#93c5fd;margin-bottom:.45em;line-height:1.2}
+.sub{font-size:clamp(14px,1.6vw,24px);color:#94a3b8;margin-bottom:.9em}
+.big{font-size:clamp(18px,2.4vw,36px);line-height:1.4}
+.mid{font-size:clamp(15px,1.8vw,28px);line-height:1.45}
+.small{font-size:clamp(12px,1.25vw,20px);color:#94a3b8}
+.hl{color:#fbbf24;font-weight:700}
+.gr{color:#4ade80;font-weight:700}
+.bl{color:#93c5fd;font-weight:700}
+.rd{color:#f87171;font-weight:700}
+.vi{color:#c084fc;font-weight:700}
+.frag{opacity:0;transition:opacity .25s}
+.frag.show{opacity:1}
+.box{background:#1e293b;border:2px solid #475569;border-radius:14px;
+  padding:clamp(10px,1.6vw,22px) clamp(14px,2.2vw,30px);margin:.4em 0;max-width:1200px}
+.box.acc{border-color:#60a5fa}.box.ok{border-color:#4ade80}.box.warn{border-color:#f87171}
+.box.vio{border-color:#c084fc}
+.row{display:flex;gap:clamp(10px,2vw,30px);align-items:center;justify-content:center;flex-wrap:wrap}
+.row.top{align-items:flex-start}
+table{border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{padding:.2em .6em;font-size:clamp(12px,1.3vw,21px);border-bottom:1px solid #334155;text-align:center}
+th{color:#94a3b8;font-weight:600}
+td.lbl,th.lbl{text-align:left;color:#cbd5e1;white-space:nowrap}
+td.res{color:#fbbf24;font-weight:700}
+input.cell{width:4.6em;background:#0f172a;border:1px solid #475569;border-radius:6px;color:#f1f5f9;
+  text-align:center;font:inherit;font-size:clamp(12px,1.3vw,21px);padding:.1em .2em}
+input.cell:focus{outline:none;border-color:#60a5fa;background:#172033}
+.btn{background:#334155;color:#e2e8f0;border:1px solid #64748b;border-radius:9px;
+  padding:.4em .9em;font-size:clamp(12px,1.2vw,18px);cursor:pointer;font-family:inherit;margin:.15em}
+.btn:hover{background:#475569}
+.btn.prim{background:#2563eb;border-color:#60a5fa;color:#fff}
+.btn.prim:hover{background:#3b82f6}
+svg{overflow:visible}
+.formel{font-size:clamp(17px,2.1vw,32px);line-height:1.6}
+.formel.xl{font-size:clamp(20px,2.8vw,42px)}
+sub{font-size:.68em}sup{font-size:.68em}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;margin:0 .22em;line-height:1.1}
+.frac .num{border-bottom:2px solid currentColor;padding:0 .25em}
+.frac .den{padding:0 .25em}
+.kette{display:flex;align-items:center;justify-content:center;gap:.5em;flex-wrap:wrap}
+.kette .step{background:#1e293b;border:2px solid #475569;border-radius:12px;padding:.45em .8em;
+  font-size:clamp(14px,1.7vw,26px)}
+.kette .ar{color:#64748b;font-size:clamp(16px,2vw,30px)}
+#bar{position:fixed;left:0;right:0;bottom:0;height:32px;background:#0b1220;display:flex;align-items:center;
+  gap:14px;padding:0 14px;font-size:13px;color:#64748b;z-index:20}
+#prog{flex:1;height:5px;background:#1e293b;border-radius:3px;overflow:hidden}
+#progf{height:100%;width:0;background:#2563eb;transition:width .25s}
+#bar .nav{cursor:pointer;color:#94a3b8;user-select:none;font-size:18px;padding:0 6px}
+#bar .nav:hover{color:#e2e8f0}
+#help{position:fixed;inset:0;background:rgba(2,6,23,.95);display:none;z-index:30;flex-direction:column;
+  justify-content:center;align-items:center;gap:.7em;font-size:clamp(14px,1.6vw,24px)}
+#help.on{display:flex}
+kbd{background:#334155;border:1px solid #64748b;border-radius:6px;padding:.1em .5em;font-family:inherit}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- 1 Titel -->
+<section class="slide">
+  <h1>Woher kommt W = q&middot;U ?</h1>
+  <div class="sub">Der Weg &uuml;ber die elektrische Leistung &nbsp;|&nbsp; Physik-LK 12NP, Elektrik 12.1</div>
+  <div class="box acc big">
+    &bdquo;An einer Steckdose liegen 230&nbsp;Volt.&ldquo;<br>
+    Was genau ist damit eigentlich gemessen?
+  </div>
+  <div class="mid frag" style="margin-top:.6em">
+    Wir bauen die Antwort aus <span class="hl">zwei Formeln</span>, die ihr aus der Fachpraxis schon kennt.
+  </div>
+  <div class="small" style="margin-top:1.6em"><kbd>&rarr;</kbd> weiter &nbsp; <kbd>&larr;</kbd> zur&uuml;ck &nbsp; <kbd>F</kbd> Vollbild &nbsp; <kbd>?</kbd> Hilfe</div>
+</section>
+
+<!-- 2 Bekanntes aus der Fachpraxis -->
+<section class="slide">
+  <h2>Das Bekannte &ndash; aus der Fachpraxis</h2>
+  <svg id="svgKreis" width="720" height="290" viewBox="0 0 720 290" style="max-width:66vw;height:auto"></svg>
+  <div class="row" style="margin-top:.5em">
+    <div class="box acc formel frag"><span class="bl">P = U &middot; I</span></div>
+    <div class="box mid frag">Typenschild, Netzteil-Dimensionierung, Leitungsquerschnitt &ndash; ihr rechnet st&auml;ndig damit.</div>
+  </div>
+  <div class="mid frag" style="margin-top:.4em">
+    Einheiten: 1&nbsp;W = 1&nbsp;V &middot; 1&nbsp;A &nbsp;&mdash;&nbsp; gemessen wird das mit dem <span class="hl">Wattmeter</span>,
+    unabh&auml;ngig von allem, was wir gleich herleiten.
+  </div>
+</section>
+
+<!-- 3 Was ist Leistung -->
+<section class="slide">
+  <h2>Baustein 1 &ndash; Was hei&szlig;t Leistung?</h2>
+  <div class="box formel xl">
+    P =
+    <span class="frac"><span class="num">W</span><span class="den">t</span></span>
+    <span class="frag">&nbsp;&nbsp;&rArr;&nbsp;&nbsp; <span class="gr">W = P &middot; t</span></span>
+  </div>
+  <div class="mid frag" style="margin-top:.5em">
+    Energie ist Leistung mal Zeit &ndash; das steht so auf jeder Stromrechnung:<br>
+    <span class="hl">Kilowatt &middot; Stunde</span> = kWh.
+  </div>
+  <div class="box ok mid frag">
+    Ein 2000-W-Wasserkocher, 3&nbsp;min lang:&nbsp;
+    W = 2000&nbsp;W &middot; 180&nbsp;s = <span class="gr">360&nbsp;000&nbsp;J</span> = 0,1&nbsp;kWh
+  </div>
+  <div class="small frag">Das ist reine Mechanik-/Energie-Definition aus der 11 &ndash; noch nichts Elektrisches.</div>
+</section>
+
+<!-- 4 Was ist Strom -->
+<section class="slide">
+  <h2>Baustein 2 &ndash; Was hei&szlig;t Stromst&auml;rke?</h2>
+  <svg id="svgLeiter" width="720" height="205" viewBox="0 0 720 205" style="max-width:66vw;height:auto"></svg>
+  <div class="box formel xl frag">
+    I =
+    <span class="frac"><span class="num">q</span><span class="den">t</span></span>
+    &nbsp;&nbsp;&rArr;&nbsp;&nbsp; <span class="gr">q = I &middot; t</span>
+  </div>
+  <div class="mid frag" style="margin-top:.5em">
+    Ein Strom von <span class="hl">1&nbsp;A</span> transportiert in <span class="hl">1&nbsp;s</span> die Ladung <span class="hl">1&nbsp;C</span>.
+  </div>
+  <div class="small frag">1 C entspricht rund 6,24&nbsp;&middot;&nbsp;10<sup>18</sup> Elektronen.</div>
+</section>
+
+<!-- 5 Zusammensetzen -->
+<section class="slide">
+  <h2>Zusammensetzen &ndash; drei Zeilen</h2>
+  <div class="box formel xl frag" style="border-color:#60a5fa">
+    W = P &middot; t
+  </div>
+  <div class="box formel xl frag">
+    W = (<span class="bl">U &middot; I</span>) &middot; t
+  </div>
+  <div class="box formel xl frag">
+    W = U &middot; (<span class="vi">I &middot; t</span>)
+  </div>
+  <div class="box ok formel xl frag" style="margin-top:.3em">
+    <span class="gr">W = q &middot; U</span>
+  </div>
+  <div class="mid frag" style="margin-top:.4em">
+    Der ganze Trick ist das <span class="hl">Umklammern</span>: I&nbsp;&middot;&nbsp;t ist nichts anderes als die transportierte Ladung.
+  </div>
+</section>
+
+<!-- 6 Zahlenprobe -->
+<section class="slide">
+  <h2 style="margin-bottom:.15em">Zahlenprobe &ndash; beide Wege, ein Ergebnis</h2>
+  <div class="small" style="margin-bottom:.4em">Werte &auml;nderbar &ndash; die Rechnung folgt sofort</div>
+  <div class="row top">
+    <div class="box">
+      <table>
+        <tr><td class="lbl">Spannung U</td><td><input class="cell" id="iU" value="12"></td><td class="lbl">V</td></tr>
+        <tr><td class="lbl">Stromst&auml;rke I</td><td><input class="cell" id="iI" value="2"></td><td class="lbl">A</td></tr>
+        <tr><td class="lbl">Zeit t</td><td><input class="cell" id="iT" value="30"></td><td class="lbl">s</td></tr>
+      </table>
+      <div style="margin-top:.6em"><button class="btn" onclick="setBsp(12,2,30)">Netzteil</button>
+        <button class="btn" onclick="setBsp(230,0.26,120)">L&ouml;tkolben</button>
+        <button class="btn" onclick="setBsp(5,0.02,600)">LED am Arduino</button></div>
+    </div>
+    <div class="box acc" style="text-align:left">
+      <div class="mid">Weg A &ndash; &uuml;ber die Leistung</div>
+      <table style="margin-top:.3em">
+        <tr><td class="lbl">P = U &middot; I</td><td class="res" id="oP"></td><td class="lbl">W</td></tr>
+        <tr><td class="lbl">W = P &middot; t</td><td class="res" id="oW1"></td><td class="lbl">J</td></tr>
+      </table>
+    </div>
+    <div class="box vio" style="text-align:left">
+      <div class="mid">Weg B &ndash; &uuml;ber die Ladung</div>
+      <table style="margin-top:.3em">
+        <tr><td class="lbl">q = I &middot; t</td><td class="res" id="oQ"></td><td class="lbl">C</td></tr>
+        <tr><td class="lbl">W = q &middot; U</td><td class="res" id="oW2"></td><td class="lbl">J</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="box ok mid frag" style="margin-top:.5em">
+    Beide Wege liefern <span class="gr">denselben Wert</span> &ndash; und das f&uuml;r <em>jede</em> Eingabe.
+  </div>
+</section>
+
+<!-- 7 Einheitenprobe -->
+<section class="slide">
+  <h2>Einheitenprobe</h2>
+  <div class="box formel">
+    1&nbsp;J = 1&nbsp;W&thinsp;&middot;&thinsp;s
+    <span class="frag">&nbsp;=&nbsp; 1&nbsp;V&thinsp;&middot;&thinsp;A&thinsp;&middot;&thinsp;s</span>
+    <span class="frag">&nbsp;=&nbsp; 1&nbsp;V&thinsp;&middot;&thinsp;C</span>
+  </div>
+  <div class="box ok formel xl frag" style="margin-top:.3em">
+    <span class="gr">1&nbsp;V = 1
+    <span class="frac"><span class="num">J</span><span class="den">C</span></span></span>
+  </div>
+  <div class="box acc big frag" style="margin-top:.5em">
+    <span class="hl">Ein Volt ist ein Joule pro Coulomb.</span><br>
+    <span class="mid">Spannung sagt, wie viel Energie <em>pro Ladung</em> umgesetzt wird.</span>
+  </div>
+  <div class="mid frag" style="margin-top:.4em">
+    Damit ist auch klar, warum die Steckdose mit <span class="hl">230&nbsp;V</span> beschrieben wird und nicht mit einer Energie:
+    die Energie h&auml;ngt davon ab, <em>wie viel</em> Ladung man durchschickt.
+  </div>
+</section>
+
+<!-- 8 Umstellen: Definition der Spannung -->
+<section class="slide">
+  <h2>Die eigentliche Aussage</h2>
+  <div class="box acc formel xl">
+    U =
+    <span class="frac"><span class="num">W</span><span class="den">q</span></span>
+  </div>
+  <div class="mid frag" style="margin-top:.5em">
+    Schickt man die <span class="hl">doppelte</span> Ladung durch, wird die <span class="hl">doppelte</span> Energie umgesetzt &ndash;
+    der Quotient W/q bleibt gleich.
+  </div>
+  <div class="box ok big frag">
+    W/q h&auml;ngt <span class="gr">nicht von der Probeladung</span> ab.<br>
+    <span class="mid">Er beschreibt die <em>Quelle</em> bzw. die beiden Punkte &ndash; deshalb bekommt er einen eigenen Namen: <span class="hl">Spannung</span>.</span>
+  </div>
+  <div class="box vio mid frag">
+    Gleiches Muster wie gleich beim Feld: &nbsp;
+    E = <span class="frac"><span class="num">F</span><span class="den">q</span></span>
+    &nbsp;&mdash;&nbsp; durch q teilen, damit die Probeladung herausf&auml;llt.
+  </div>
+</section>
+
+<!-- 9 Ehrlichkeitsfolie -->
+<section class="slide">
+  <h2>Ist das eine echte Herleitung?</h2>
+  <div class="box warn big">
+    Nur dann, wenn <span class="rd">P = U &middot; I</span> unabh&auml;ngig gesichert ist.
+  </div>
+  <div class="mid frag" style="margin-top:.4em">
+    Ist es: Tauchsieder im Wasserbad, Energieumsatz &uuml;ber die Temperatur bestimmt &ndash;
+    oder schlicht ein <span class="hl">Wattmeter</span> in der Fachpraxis.
+  </div>
+  <div class="box acc mid frag">
+    W&uuml;rde man P = U&middot;I dagegen selbst erst aus W = q&middot;U begr&uuml;nden,
+    w&auml;re die Herleitung ein <span class="rd">Ringschluss</span>.
+  </div>
+  <div class="box ok mid frag">
+    Sauber ist: <span class="gr">eine</span> der Gleichungen kommt aus der <span class="gr">Messung</span>,
+    die andere folgt daraus. Bei uns: Messung ist P = U&middot;I.
+  </div>
+</section>
+
+<!-- 10 Brücke zum Feld -->
+<section class="slide">
+  <h2>Br&uuml;cke &ndash; wozu wir das brauchen</h2>
+  <svg id="svgFeld" width="700" height="260" viewBox="0 0 700 260" style="max-width:64vw;height:auto"></svg>
+  <div class="box formel frag" style="margin-top:.3em">
+    Ladung q von Platte zu Platte: &nbsp; W = <span class="bl">q &middot; U</span>
+    &nbsp;und zugleich&nbsp; W = <span class="vi">F &middot; d</span>
+  </div>
+  <div class="box ok formel xl frag">
+    q &middot; U = F &middot; d &nbsp;&rArr;&nbsp; <span class="gr">F =
+    <span class="frac"><span class="num">q &middot; U</span><span class="den">d</span></span></span>
+  </div>
+  <div class="mid frag" style="margin-top:.4em">
+    Genau diese Gleichung brauchen wir gleich, um aus der Messreihe am Pendel
+    <span class="hl">E = U/d</span> zu gewinnen.
+  </div>
+</section>
+
+<!-- 11 Zusammenfassung -->
+<section class="slide">
+  <h1>Der Weg in einer Zeile</h1>
+  <div class="kette" style="margin:.5em 0">
+    <div class="step frag">P = U&middot;I</div><div class="ar frag">&rarr;</div>
+    <div class="step frag">W = P&middot;t</div><div class="ar frag">&rarr;</div>
+    <div class="step frag">q = I&middot;t</div><div class="ar frag">&rarr;</div>
+    <div class="step frag" style="border-color:#4ade80;color:#4ade80">W = q&middot;U</div>
+  </div>
+  <div class="box acc big frag" style="margin-top:.5em">
+    1&nbsp;V = 1&nbsp;J/C &nbsp;&middot;&nbsp; U = W/q &nbsp;&middot;&nbsp; W = q&middot;U
+  </div>
+  <div class="mid frag" style="margin-top:.5em">
+    Merksatz f&uuml;rs Heft:<br>
+    <span class="hl">Die Spannung gibt an, wie viel Energie pro transportierter Ladung umgesetzt wird.</span>
+  </div>
+</section>
+
+</div>
+
+<div id="bar">
+  <span class="nav" onclick="go(-1)">&#9664;</span><span id="pos">1 / 11</span><span class="nav" onclick="go(1)">&#9654;</span>
+  <div id="prog"><div id="progf"></div></div>
+  <span class="nav" onclick="fs()" title="Vollbild">&#9974;</span>
+  <span class="nav" onclick="document.getElementById('help').classList.toggle('on')">?</span>
+</div>
+
+<div id="help" onclick="this.classList.remove('on')">
+  <div><kbd>&rarr;</kbd> / <kbd>Leertaste</kbd> n&auml;chster Schritt &nbsp;&middot;&nbsp; <kbd>&larr;</kbd> zur&uuml;ck</div>
+  <div><kbd>F</kbd> Vollbild &nbsp;&middot;&nbsp; <kbd>Pos1</kbd> erste Folie</div>
+  <div>Folie &bdquo;Zahlenprobe&ldquo;: U, I, t &uuml;berschreiben &rarr; beide Rechenwege folgen sofort</div>
+  <div class="small" style="margin-top:1em">Klick zum Schlie&szlig;en</div>
+</div>
+
+<script>
+const NS='http://www.w3.org/2000/svg';
+function el(tag,at,parent){const e=document.createElementNS(NS,tag);
+  for(const k in at)e.setAttribute(k,at[k]); if(parent)parent.appendChild(e); return e;}
+function txt(p,x,y,s,at={}){const t=el('text',Object.assign({x,y,fill:'#cbd5e1','font-size':16,
+  'font-family':'Segoe UI, sans-serif','text-anchor':'middle'},at),p);
+  let shift=0;
+  String(s).split(/(_[A-Za-z0-9]+)/).filter(x=>x!=='').forEach(part=>{
+    const sub=part.startsWith('_');
+    const a2=sub?{dy:4,'font-size':'70%'}:(shift?{dy:-4}:{});
+    shift=sub?1:0;
+    const ts=el('tspan',a2,t);
+    ts.textContent=sub?part.slice(1):part;});
+  return t;}
+function arrow(p,x1,y1,x2,y2,col,w=2.5,dash=null){
+  const root=p.ownerSVGElement||p;
+  const id='ah'+(root.id||'x')+col.replace(/[^a-z0-9]/gi,'');
+  if(!root.querySelector('#'+id)){
+    const defs=el('defs',{},root);
+    const m=el('marker',{id,markerWidth:7,markerHeight:7,refX:6,refY:3.5,orient:'auto'},defs);
+    el('path',{d:'M0,0 L7,3.5 L0,7 z',fill:col},m);
+  }
+  const a={x1,y1,x2,y2,stroke:col,'stroke-width':w,'marker-end':'url(#'+id+')'};
+  if(dash)a['stroke-dasharray']=dash;
+  return el('line',a,p);
+}
+
+/* ---------- Folie 2: Stromkreis (europaeische Normsymbole) ---------- */
+(function(){
+  const s=document.getElementById('svgKreis');
+  const L=110,R=610,T=60,B=230,W='#e2e8f0';
+  // Leitungen
+  const lw={stroke:W,'stroke-width':3};
+  el('line',Object.assign({x1:L,y1:T,x2:290,y2:T},lw),s);
+  el('line',Object.assign({x1:390,y1:T,x2:R,y2:T},lw),s);
+  el('line',Object.assign({x1:R,y1:T,x2:R,y2:B},lw),s);
+  el('line',Object.assign({x1:R,y1:B,x2:L,y2:B},lw),s);
+  el('line',Object.assign({x1:L,y1:B,x2:L,y2:T},lw),s);
+  // Quelle links: Batteriesymbol
+  el('line',{x1:L-20,y1:130,x2:L+20,y2:130,stroke:W,'stroke-width':4},s);
+  el('line',{x1:L-12,y1:148,x2:L+12,y2:148,stroke:W,'stroke-width':6},s);
+  el('line',Object.assign({x1:L,y1:T,x2:L,y2:130},lw),s);
+  el('line',Object.assign({x1:L,y1:148,x2:L,y2:B},lw),s);
+  txt(s,L+34,126,'+',{'font-size':20,fill:'#f87171'});
+  txt(s,L+34,158,'−',{'font-size':20,fill:'#60a5fa'});
+  arrow(s,L-56,172,L-56,108,'#fbbf24',2.5);
+  txt(s,L-74,146,'U',{'font-size':22,fill:'#fbbf24','font-style':'italic'});
+  // Verbraucher oben: Rechteck (DIN)
+  el('rect',{x:290,y:T-21,width:100,height:42,fill:'#1e293b',stroke:W,'stroke-width':3,rx:3},s);
+  txt(s,340,T+6,'R',{'font-size':20,fill:'#f1f5f9','font-style':'italic'});
+  txt(s,340,T-34,'Verbraucher',{'font-size':15,fill:'#94a3b8'});
+  // Strompfeil
+  arrow(s,180,T-16,250,T-16,'#c084fc',3);
+  txt(s,215,T-24,'I',{'font-size':20,fill:'#c084fc','font-style':'italic'});
+  // Leistungs-Label
+  txt(s,340,B-40,'P = U · I',{'font-size':24,fill:'#93c5fd'});
+  txt(s,340,B+26,'umgesetzte Leistung im Verbraucher',{'font-size':15,fill:'#64748b'});
+})();
+
+/* ---------- Folie 4: Ladungstransport im Leiter ---------- */
+(function(){
+  const s=document.getElementById('svgLeiter');
+  const L=90,R=630,T=48,B=108;
+  el('rect',{x:L,y:T,width:R-L,height:B-T,fill:'#1e293b',stroke:'#64748b','stroke-width':2,rx:8},s);
+  // Querschnittsflaeche
+  el('line',{x1:430,y1:T-14,x2:430,y2:B+14,stroke:'#fbbf24','stroke-width':2.5,'stroke-dasharray':'6 5'},s);
+  txt(s,470,B+24,'Querschnitt',{'font-size':14,fill:'#fbbf24','text-anchor':'start'});
+  // Ladungstraeger
+  for(let i=0;i<7;i++){
+    const x=L+40+i*62;
+    el('circle',{cx:x,cy:78,r:11,fill:'#f87171',stroke:'#fecaca','stroke-width':1.5},s);
+    txt(s,x,84,'+',{'font-size':16,fill:'#0f172a'});
+  }
+  arrow(s,250,162,470,162,'#c084fc',3);
+  txt(s,(L+R)/2,186,'Stromrichtung I  (in Metallen wandern tatsächlich Elektronen entgegengesetzt)',{'font-size':14,fill:'#94a3b8'});
+  txt(s,(L+R)/2,22,'In der Zeit t wandert die Ladung q durch den Querschnitt',{'font-size':16,fill:'#cbd5e1'});
+})();
+
+/* ---------- Folie 10: Ladung im Plattenfeld ---------- */
+(function(){
+  const s=document.getElementById('svgFeld');
+  const L=150,R=550,T=30,B=210;
+  el('line',{x1:L,y1:T,x2:L,y2:B,stroke:'#f1f5f9','stroke-width':5},s);
+  el('line',{x1:R,y1:T,x2:R,y2:B,stroke:'#f1f5f9','stroke-width':5},s);
+  txt(s,L-18,T+4,'+',{'font-size':22,fill:'#f87171'});
+  txt(s,R+18,T+4,'−',{'font-size':22,fill:'#60a5fa'});
+  for(let y=T+22;y<B;y+=26)
+    el('line',{x1:L+6,y1:y,x2:R-6,y2:y,stroke:'#334155','stroke-width':1.5,'stroke-dasharray':'5 5'},s);
+  // Ladung wandert
+  el('circle',{cx:L+55,cy:120,r:13,fill:'#94a3b8',stroke:'#e2e8f0','stroke-width':2},s);
+  txt(s,L+55,125,'q',{'font-size':14,fill:'#0f172a'});
+  arrow(s,L+55,120,R-40,120,'#fb923c',3);
+  txt(s,(L+R)/2+10,104,'F',{'font-size':20,fill:'#fb923c','font-style':'italic'});
+  // Weg d
+  el('line',{x1:L,y1:B+26,x2:R,y2:B+26,stroke:'#64748b','stroke-width':1.5},s);
+  el('line',{x1:L,y1:B+18,x2:L,y2:B+34,stroke:'#64748b','stroke-width':1.5},s);
+  el('line',{x1:R,y1:B+18,x2:R,y2:B+34,stroke:'#64748b','stroke-width':1.5},s);
+  txt(s,(L+R)/2,B+48,'d',{'font-size':20,fill:'#94a3b8','font-style':'italic'});
+  txt(s,(L+R)/2,T-12,'Spannung U zwischen den Platten',{'font-size':16,fill:'#fbbf24'});
+})();
+
+/* ---------- Zahlenprobe ---------- */
+function num(id){const v=document.getElementById(id).value.replace(',','.').trim();
+  const x=parseFloat(v); return isFinite(x)?x:null;}
+function fmt(x,dig){
+  if(x==null)return '—';
+  let a=Math.abs(x),d=dig;
+  if(d==null){
+    if(Math.abs(x-Math.round(x))<1e-9) d=0;
+    else d=(a>=1000)?0:(a>=10?1:(a>=1?2:3));
+  }
+  return x.toFixed(d).replace('.',',').replace(/\B(?=(\d{3})+(?!\d))/g,' ');
+}
+function calc(){
+  const U=num('iU'),I=num('iI'),t=num('iT');
+  const P=(U!=null&&I!=null)?U*I:null;
+  const q=(I!=null&&t!=null)?I*t:null;
+  const W1=(P!=null&&t!=null)?P*t:null;
+  const W2=(q!=null&&U!=null)?q*U:null;
+  document.getElementById('oP').textContent=fmt(P);
+  document.getElementById('oQ').textContent=fmt(q);
+  document.getElementById('oW1').textContent=fmt(W1);
+  document.getElementById('oW2').textContent=fmt(W2);
+}
+function setBsp(u,i,t){
+  document.getElementById('iU').value=String(u).replace('.',',');
+  document.getElementById('iI').value=String(i).replace('.',',');
+  document.getElementById('iT').value=String(t).replace('.',',');
+  calc();
+}
+['iU','iI','iT'].forEach(id=>document.getElementById(id).addEventListener('input',calc));
+calc();
+
+/* ---------- Navigation ---------- */
+const slides=[...document.querySelectorAll('.slide')];
+let s=0,f=0;
+function frags(i){return [...slides[i].querySelectorAll('.frag')];}
+function render(){
+  slides.forEach((e,i)=>e.classList.toggle('active',i===s));
+  frags(s).forEach((e,i)=>e.classList.toggle('show',i<f));
+  document.getElementById('pos').textContent=(s+1)+' / '+slides.length;
+  document.getElementById('progf').style.width=((s+1)/slides.length*100)+'%';
+}
+function go(d){
+  if(d>0){ if(f<frags(s).length)f++; else if(s<slides.length-1){s++;f=0;} }
+  else { if(f>0)f--; else if(s>0){s--;f=frags(s).length;} }
+  render();
+}
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT')return;
+  if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(1);}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(-1);}
+  else if(e.key==='Home'){s=0;f=0;render();}
+  else if(e.key==='f'||e.key==='F'){fs();}
+  else if(e.key==='?'){document.getElementById('help').classList.toggle('on');}
+});
+function fs(){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}
+render();
+</script>
+</body>
+</html>

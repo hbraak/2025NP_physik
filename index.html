@@ -168,6 +168,25 @@
         </header>
         
         <div class="material-grid">
+            <a href="praesentation-spannung-arbeit.html" class="material-card" data-url="praesentation-spannung-arbeit.html">
+                <div class="card-header">
+                    <div class="card-icon blue">&#x26A1;</div>
+                    <div class="card-title">Woher kommt W = q&middot;U? &mdash; zum Durchklicken</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Der Weg &uuml;ber die elektrische Leistung: aus P = U&thinsp;I (bekannt aus der Fachpraxis), W = P&thinsp;t und q = I&thinsp;t folgt in drei Zeilen W = q&thinsp;U. Mit Zahlenprobe zum Selbsteintragen (beide Rechenwege parallel), Einheitenprobe 1&nbsp;V = 1&nbsp;J/C und der Br&uuml;cke zu q&thinsp;U = F&thinsp;d.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Spannung</span>
+                            <span class="tag">Energie</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-spannungarbeit"></div>
+                </div>
+            </a>
             <a href="praesentation-e-feld-herleitung.html" class="material-card" data-url="praesentation-e-feld-herleitung.html">
                 <div class="card-header">
                     <div class="card-icon blue">&#x1F4D0;</div>
@@ -1065,6 +1084,7 @@
         // QR-Codes generieren wenn Seite geladen
         document.addEventListener('DOMContentLoaded', function() {
             generateQR('qr-vorsilben', 'https://m920q.tail653c87.ts.net:10000/sim/vorsilben');
+            generateQR('qr-spannungarbeit', 'praesentation-spannung-arbeit.html');
             generateQR('qr-efeldherleitung', 'praesentation-e-feld-herleitung.html');
             generateQR('qr-kapazitaet', 'kapazitaet-herleitung.html');
             generateQR('qr-rcueb', 'AB_RC_Uebungen.pdf');
