@@ -168,6 +168,44 @@
         </header>
         
         <div class="material-grid">
+            <a href="elektrometer.html" class="material-card" data-url="elektrometer.html">
+                <div class="card-header">
+                    <div class="card-icon blue">&#x1F9ED;</div>
+                    <div class="card-title">Elektrometer &mdash; Simulation zum Ausprobieren</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Geladene Kugel n&auml;hern, ber&uuml;hren, erden: Der Zeiger reagiert sofort. Ladungen und Erkl&auml;rtexte lassen sich ein- und ausblenden &ndash; erst selbst vorhersagen, dann pr&uuml;fen. Enth&auml;lt Influenz (Q = 0), Ladungs&uuml;bertragung durch Kontakt, Vorzeichentest und die Aufladung durch Influenz mit Erdung.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Influenz</span>
+                            <span class="tag">Elektrometer</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-elektrometer"></div>
+                </div>
+            </a>
+            <a href="AB_Elektrometer.pdf" class="material-card" data-url="AB_Elektrometer.pdf">
+                <div class="card-header">
+                    <div class="card-icon orange">&#x1F4DD;</div>
+                    <div class="card-title">Arbeitsblatt: Influenz, Ber&uuml;hrung und Erdung</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Zwei Seiten mit leeren Schemabildern des Elektrometers: Ladungen (+/&minus;) und Zeigerstellung selbst eintragen. Aufgaben zu Ann&auml;hern, Ber&uuml;hren, Vorzeichentest und Aufladung durch Influenz, zum Schluss eine Zusammenfassungstabelle.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Arbeitsblatt</span>
+                            <span class="tag">Elektrometer</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-ab-elektrometer"></div>
+                </div>
+            </a>
             <a href="influenz-metallkugel.html" class="material-card" data-url="influenz-metallkugel.html">
                 <div class="card-header">
                     <div class="card-icon blue">&#x1F7E0;</div>
@@ -181,7 +219,6 @@
                         <div class="card-tags">
                             <span class="tag">Influenz</span>
                             <span class="tag">E-Feld</span>
-                            <span class="tag">NEU</span>
                         </div>
                     </div>
                     <div class="qr-code" id="qr-influenz"></div>
@@ -1103,6 +1140,8 @@
         // QR-Codes generieren wenn Seite geladen
         document.addEventListener('DOMContentLoaded', function() {
             generateQR('qr-vorsilben', 'https://m920q.tail653c87.ts.net:10000/sim/vorsilben');
+            generateQR('qr-elektrometer', 'elektrometer.html');
+            generateQR('qr-ab-elektrometer', 'AB_Elektrometer.pdf');
             generateQR('qr-influenz', 'influenz-metallkugel.html');
             generateQR('qr-spannungarbeit', 'praesentation-spannung-arbeit.html');
             generateQR('qr-efeldherleitung', 'praesentation-e-feld-herleitung.html');

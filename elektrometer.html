@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elektrometer – Influenz, Berührung, Erdung</title>
+<style>
+  :root{--ink:#1e293b;--muted:#64748b;--accent:#4f46e5;--neg:#2563eb;--pos:#dc2626;
+        --line:#e2e8f0;--ok:#059669;--warn:#b45309;}
+  *{box-sizing:border-box}
+  body{font-family:system-ui,-apple-system,sans-serif;margin:0;padding:1rem;color:var(--ink);background:#f8fafc}
+  #wrap{max-width:56rem;margin:0 auto}
+  h1{font-size:1.2rem;margin:0 0 .2rem}
+  .sub{color:var(--muted);font-size:.85rem;margin:0 0 .8rem}
+  svg{width:100%;background:#fff;border:1px solid var(--line);border-radius:12px;display:block}
+  .ctrl{background:#fff;border:1px solid var(--line);border-radius:12px;padding:.8rem 1rem;margin-top:.6rem}
+  .grp{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;margin:.35rem 0}
+  .lbl{font-size:.85rem;color:var(--muted);min-width:7.5rem}
+  button{padding:.45rem 1rem;border:0;border-radius:10px;background:var(--accent);color:#fff;
+         font-size:.92rem;cursor:pointer}
+  button.ghost{background:#fff;color:var(--accent);border:1px solid var(--accent)}
+  button.ghost.on{background:var(--accent);color:#fff}
+  button.pos{background:#fff;color:var(--pos);border:1px solid var(--pos)}
+  button.pos.on{background:var(--pos);color:#fff}
+  button.neg{background:#fff;color:var(--neg);border:1px solid var(--neg)}
+  button.neg.on{background:var(--neg);color:#fff}
+  button:disabled{background:#f1f5f9;color:#94a3b8;border-color:#e2e8f0;cursor:default}
+  input[type=range]{flex:1;min-width:12rem;accent-color:var(--accent);height:26px}
+  .panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:.9rem 1rem;margin-top:.6rem}
+  .panel h2{font-size:1rem;margin:0 0 .45rem;color:var(--accent)}
+  .panel p{margin:.35rem 0;font-size:.95rem;line-height:1.5}
+  .stats{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.6rem}
+  .stat{background:#fff;border:1px solid var(--line);border-radius:10px;padding:.4rem .7rem;font-size:.88rem}
+  ol{margin:.3rem 0 .3rem 1.1rem;padding:0;font-size:.93rem;line-height:1.55}
+  ol li{margin:.3rem 0}
+  .hint{font-size:.85rem;color:var(--muted);margin-top:.4rem}
+  b.p{color:var(--pos)} b.n{color:var(--neg)}
+</style>
+</head>
+<body>
+<div id="wrap">
+<h1>Elektrometer – was zeigt der Zeiger an?</h1>
+<p class="sub">Physik-LK 12NP · Beschreibe jeden Versuch zuerst selbst, bevor du die Ladungen einblendest.</p>
+
+<svg id="sz" viewBox="0 0 820 470" role="img" aria-label="Schematisches Elektrometer mit geladener Kugel"></svg>
+
+<div class="ctrl">
+  <div class="grp"><span class="lbl">Kugel laden</span>
+    <button class="neg" id="bNeg" onclick="setQK(-1)">negativ &minus;</button>
+    <button class="ghost" id="bNeu" onclick="setQK(0)">neutral</button>
+    <button class="pos" id="bPos" onclick="setQK(1)">positiv +</button>
+  </div>
+  <div class="grp"><span class="lbl">Kugel bewegen</span>
+    <input type="range" id="sD" min="0" max="100" value="100">
+    <span class="stat" id="dTxt">weit weg</span>
+  </div>
+  <div class="grp"><span class="lbl">Aktionen</span>
+    <button id="bTouch" onclick="beruehren()">Teller ber&uuml;hren</button>
+    <button class="ghost" id="bErde" onclick="toggleErde()">Erdung (Finger)</button>
+    <button class="ghost" onclick="reset()">Zur&uuml;cksetzen</button>
+  </div>
+  <div class="grp"><span class="lbl">Anzeige</span>
+    <button class="ghost" id="bLad" onclick="toggleLad()">Ladungen zeigen</button>
+    <button class="ghost" id="bErkl" onclick="toggleErkl()">Erkl&auml;rung zeigen</button>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat">Ladung Kugel: <b id="stK">0</b></div>
+  <div class="stat">Ladung Elektrometer: <b id="stE">0</b></div>
+  <div class="stat">Ladung am Zeiger: <b id="stZ">0</b></div>
+  <div class="stat">Ausschlag: <b id="stA">0&deg;</b></div>
+</div>
+
+<div class="panel" id="pErkl" style="display:none">
+  <h2>Was gerade passiert</h2>
+  <p id="erklText">&nbsp;</p>
+</div>
+
+<div class="panel">
+  <h2>Aufgaben – beschreibe mit + und &minus;</h2>
+  <ol>
+    <li><b>Ann&auml;hern ohne Ber&uuml;hrung:</b> Lade die Kugel negativ und f&uuml;hre sie langsam heran.
+        Wann schl&auml;gt der Zeiger aus? Wo sitzen im Elektrometer die positiven, wo die negativen Ladungen?
+        Wie gro&szlig; ist die <em>Gesamtladung</em> des Elektrometers? Was passiert beim Wegnehmen der Kugel?</li>
+    <li><b>Ber&uuml;hren:</b> Kugel heranf&uuml;hren, <em>Teller ber&uuml;hren</em>, dann Kugel weit weg.
+        Worin unterscheidet sich der Zeiger jetzt von Versuch 1? Begr&uuml;nde &uuml;ber die Gesamtladung.</li>
+    <li><b>Vorzeichen bestimmen:</b> Das Elektrometer ist jetzt geladen. N&auml;here eine <em>gleichnamig</em>
+        und eine <em>ungleichnamig</em> geladene Kugel. Was macht der Ausschlag jeweils?
+        Formuliere daraus eine Regel, mit der man ein unbekanntes Vorzeichen bestimmt.</li>
+    <li><b>Influenzaufladung:</b> Kugel heranf&uuml;hren &rarr; <em>Erdung</em> ein &rarr; Erdung aus
+        &rarr; Kugel entfernen. Welches Vorzeichen hat das Elektrometer am Ende &ndash; und warum das
+        <em>entgegengesetzte</em> zur Kugel, obwohl nichts ber&uuml;hrt wurde?</li>
+  </ol>
+  <p class="hint">Tipp: Die Kugel gibt bei Ber&uuml;hrung nur einen Teil ihrer Ladung ab &ndash; beide teilen sich.</p>
+</div>
+</div>
+
+<script>
+const NS='http://www.w3.org/2000/svg', svg=document.getElementById('sz');
+function el(t,a,p=svg){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e;}
+function tx(x,y,s,a={},p=svg){const t=el('text',Object.assign({x,y,'text-anchor':'middle','font-family':'system-ui,sans-serif','font-size':15,fill:'#475569'},a),p);t.textContent=s;return t;}
+
+/* ---------- Geometrie ---------- */
+const TX=580, TY=100, TW=170;          // Teller
+const AX=TX, AY=232;                   // Drehachse Zeiger
+const GX0=424,GX1=738,GY0=205,GY1=430; // Gehaeuse
+const KY=118, KR=36;                   // Kugel
+const KXfern=120, KXnah=TX-TW/2-KR-6;  // Kugelpositionen
+
+/* ---------- Statische Zeichnung ---------- */
+const gStat=el('g',{}), gLad=el('g',{}), gDyn=el('g',{});
+(function(){
+  // Skalenbogen
+  for(let i=0;i<=8;i++){
+    const w=(i*10)*Math.PI/180, r1=134,r2=i%2?142:150;
+    const dx=Math.sin(w),dy=Math.cos(w);
+    el('line',{x1:AX+dx*r1,y1:AY+dy*r1,x2:AX+dx*r2,y2:AY+dy*r2,stroke:'#cbd5e1','stroke-width':i%2?1:2},gStat);
+  }
+  // Gehaeuse (Glaskasten)
+  el('rect',{x:GX0,y:GY0,width:GX1-GX0,height:GY1-GY0,rx:8,fill:'#f8fafc',stroke:'#94a3b8','stroke-width':2.5},gStat);
+  tx(GX1-10,GY1-12,'Gehäuse (geerdet)',{'font-size':12,fill:'#94a3b8','text-anchor':'end'},gStat);
+  // Isolierender Durchgang
+  el('rect',{x:TX-26,y:GY0-9,width:52,height:20,rx:5,fill:'#fde68a',stroke:'#f59e0b','stroke-width':2},gStat);
+  tx(TX-86,GY0-4,'Isolator',{'font-size':12,fill:'#b45309'},gStat);
+  // Teller + Stiel + fester Stab
+  el('line',{x1:TX-TW/2,y1:TY,x2:TX+TW/2,y2:TY,stroke:'#334155','stroke-width':9,'stroke-linecap':'round'},gStat);
+  el('line',{x1:TX,y1:TY,x2:TX,y2:AY,stroke:'#334155','stroke-width':7},gStat);
+  el('line',{x1:TX,y1:AY,x2:TX,y2:AY+150,stroke:'#334155','stroke-width':6},gStat);
+  tx(TX+58,TY+26,'Teller',{'font-size':13},gStat);
+  tx(TX-74,AY+170,'fester Stab',{'font-size':12,fill:'#94a3b8'},gStat);
+  el('circle',{cx:AX,cy:AY,r:5,fill:'#334155'},gStat);
+})();
+svg.appendChild(gDyn); svg.appendChild(gLad);
+
+/* ---------- Zustand ---------- */
+let QK=0, QE=0, d=1, erde=false, zeigLad=false, zeigErkl=false, kontakt=false;
+const fmt=q=>(Math.abs(q)<0.02?'0':(q>0?'+':'−')+Math.abs(q).toFixed(2).replace('.',','));
+function naehe(){return Math.pow(Math.max(0,1-d),1.6);}           // 0 fern … 1 Kontakt
+function influenz(){ return (kontakt&&d<0.02)?0:0.5*QK*naehe(); } // getrennte Ladung im Elektrometer
+function qZeiger(){ return QE/2 + influenz(); }
+function qTeller(){ return QE/2 - influenz(); }
+
+/* ---------- Zeichnen ---------- */
+function ladungen(q,pts,g){
+  const n=Math.min(6,Math.round(Math.abs(q)*8));
+  if(n===0)return;
+  const sign=q>0?'+':'−', col=q>0?'#dc2626':'#2563eb';
+  for(let i=0;i<n;i++){
+    const p=pts(i,n);
+    el('circle',{cx:p[0],cy:p[1],r:9,fill:'#fff',stroke:col,'stroke-width':1.6},g);
+    tx(p[0],p[1]+5,sign,{'font-size':14,fill:col,'font-weight':700},g);
+  }
+}
+function render(){
+  gDyn.innerHTML=''; gLad.innerHTML='';
+  const kx=KXfern+(KXnah-KXfern)*(1-d);
+  // Isoliergriff + Kugel
+  el('line',{x1:kx-KR-6,y1:KY+34,x2:kx-KR-70,y2:KY+78,stroke:'#a16207','stroke-width':7,'stroke-linecap':'round'},gDyn);
+  el('circle',{cx:kx,cy:KY,r:KR,fill:'#fff',stroke:'#334155','stroke-width':3},gDyn);
+  tx(kx,KY-KR-12,'geladene Kugel',{'font-size':13},gDyn);
+  // Erdung (Finger am Teller, Leitung nach aussen)
+  const EX=758, col=erde?'#059669':'#cbd5e1', dsh=erde?null:'6 5', bw=erde?4:2;
+  el('path',{d:'M '+(TX+TW/2)+' '+TY+' H '+EX+' V '+(TY+58),fill:'none',stroke:col,'stroke-width':bw,
+             'stroke-dasharray':dsh},gDyn);
+  [0,1,2].forEach(i=>el('line',{x1:EX-14+i*5,y1:TY+62+i*7,x2:EX+14-i*5,y2:TY+62+i*7,
+             stroke:col,'stroke-width':3},gDyn));
+  tx(EX,TY+100,erde?'geerdet':'Erdung offen',{'font-size':11,fill:erde?'#059669':'#94a3b8',
+             'font-weight':erde?700:400},gDyn);
+  // Zeiger
+  const w=Math.min(78,78*Math.min(1,Math.abs(qZeiger())/0.55));
+  const rad=w*Math.PI/180, L=128;
+  el('line',{x1:AX,y1:AY,x2:AX+Math.sin(rad)*L,y2:AY+Math.cos(rad)*L,stroke:'#dc2626','stroke-width':4,
+             'stroke-linecap':'round'},gDyn);
+  // Ladungen
+  if(zeigLad){
+    ladungen(QK,(i,n)=>{const a=2*Math.PI*i/n-Math.PI/2;
+      return [kx+Math.cos(a)*(KR-12),KY+Math.sin(a)*(KR-12)];},gLad);
+    ladungen(qTeller(),(i,n)=>[TX-TW/2+18+(TW-36)*(i+.5)/n, TY-24],gLad);
+    ladungen(qZeiger(),(i,n)=>{const k=Math.floor(i/2), r=58+k*34, a=w*Math.PI/180;
+      return i%2 ? [AX+Math.sin(a)*r, AY+Math.cos(a)*r] : [AX, AY+r+6];},gLad);
+  }
+  // Anzeigen
+  document.getElementById('stK').textContent=fmt(QK);
+  document.getElementById('stE').textContent=fmt(QE);
+  document.getElementById('stZ').textContent=fmt(qZeiger());
+  document.getElementById('stA').textContent=Math.round(w)+'°';
+  document.getElementById('dTxt').textContent=d>0.75?'weit weg':(d>0.35?'in der Nähe':(d>0.12?'ganz dicht':'Kontaktabstand'));
+  document.getElementById('bTouch').disabled=(d>0.12);
+  document.getElementById('erklText').innerHTML=erklaerung(w);
+}
+
+/* ---------- Erklaerung ---------- */
+function erklaerung(w){
+  const nah=naehe()>0.1, gl=fmt(QE), kug=QK>0?'positiv':(QK<0?'negativ':'ungeladen');
+  if(erde&&nah)
+    return 'Erdung <b>geschlossen</b>: Die von der Kugel abgestoßene, gleichnamige Ladung fließt über den Finger ab. '+
+           'Am Elektrometer bleibt nur die <em>gebundene</em> Gegenladung am Teller – der Zeiger fällt auf null, '+
+           'obwohl das Elektrometer jetzt eine Gesamtladung '+gl+' trägt.';
+  if(erde) return 'Erdung geschlossen, keine Kugel in der Nähe: Alle überschüssige Ladung fließt ab, Q = 0.';
+  if(QK===0&&Math.abs(QE)<0.02) return 'Alles ungeladen – nichts passiert. Lade zuerst die Kugel.';
+  if(nah&&!kontakt&&Math.abs(QE)<0.02)
+    return 'Reine <b>Influenz</b>: Die '+kug+' geladene Kugel verschiebt im Elektrometer die freien Elektronen. '+
+           'Teller '+fmt(qTeller())+', Zeiger '+fmt(qZeiger())+' – die <b>Gesamtladung bleibt 0</b>. '+
+           'Zeiger und fester Stab tragen gleichnamige Ladung und stoßen sich ab. Nimmst du die Kugel weg, fällt der Zeiger zurück.';
+  if(nah&&Math.abs(QE)>0.02){
+    const gleich = QE*QK>0;
+    return 'Das Elektrometer ist bereits geladen ('+gl+'). Die genäherte Kugel ist '+
+           (gleich?'<b>gleichnamig</b> geladen → zusätzliche Ladung wird zum Zeiger gedrängt, der Ausschlag <b>wächst</b>.'
+                  :'<b>ungleichnamig</b> geladen → Ladung wird zum Teller gezogen, der Ausschlag <b>sinkt</b>. '+
+                   'Ganz dicht kann er sogar durch null gehen und mit umgekehrtem Vorzeichen wieder wachsen.')+
+           ' Genau das ist der Test, mit dem man ein unbekanntes Vorzeichen bestimmt.';
+  }
+  if(Math.abs(QE)>0.02)
+    return 'Das Elektrometer trägt eine <b>echte Ladung</b> '+gl+' (durch Berührung oder Influenzaufladung). '+
+           'Sie verteilt sich auf Teller und Zeiger, der Ausschlag bleibt auch ohne Kugel bestehen: '+Math.round(w)+'°.';
+  return 'Die Kugel ist zu weit entfernt – ihr Feld erreicht das Elektrometer praktisch nicht.';
+}
+
+/* ---------- Bedienung ---------- */
+function setQK(q){QK=q;kontakt=false;
+  ['bNeg','bNeu','bPos'].forEach((id,i)=>document.getElementById(id).classList.toggle('on',[-1,0,1][i]===q));
+  render();}
+document.getElementById('sD').addEventListener('input',e=>{
+  d=+e.target.value/100; if(d>0.04)kontakt=false;
+  if(erde) QE=-2*influenz();      // solange geerdet: Zeigerladung bleibt null
+  render();});
+function beruehren(){
+  const s=(QE+QK)/2; QE=s; QK=s; kontakt=true; erde=false;
+  document.getElementById('bErde').classList.remove('on'); render();}
+function toggleErde(){
+  erde=!erde;
+  if(erde) QE=-2*influenz();
+  document.getElementById('bErde').classList.toggle('on',erde); render();}
+function toggleLad(){zeigLad=!zeigLad;document.getElementById('bLad').classList.toggle('on',zeigLad);render();}
+function toggleErkl(){zeigErkl=!zeigErkl;
+  document.getElementById('bErkl').classList.toggle('on',zeigErkl);
+  document.getElementById('pErkl').style.display=zeigErkl?'block':'none';render();}
+function reset(){QK=0;QE=0;d=1;erde=false;kontakt=false;
+  document.getElementById('sD').value=100;
+  document.getElementById('bErde').classList.remove('on');
+  ['bNeg','bNeu','bPos'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  render();}
+render();
+</script>
+</body>
+</html>
