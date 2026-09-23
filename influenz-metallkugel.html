@@ -217,7 +217,59 @@ kbd{background:#334155;border:1px solid #64748b;border-radius:6px;padding:.1em .
   <div class="mid frag">Jede Hin- und R&uuml;ckfahrt transportiert 2q &ndash; die Kugel ist eine kleine <span class="bl">Ladungspumpe</span>: I = 2&thinsp;q&thinsp;f.</div>
 </section>
 
-<!-- 10 Influenz vs Polarisation -->
+<!-- 10 Polarisation Isolatorkugel -->
+<section class="slide">
+  <h2 style="margin-bottom:.1em">Schritt 7 &ndash; Und wenn die Kugel <em>kein</em> Metall ist?</h2>
+  <div class="small" style="margin-bottom:.3em">Gleicher Versuch, gleiche Kugelgr&ouml;&szlig;e &ndash; aber Kunststoff statt Metall. Regler bewegen.</div>
+  <svg id="svgPol" width="760" height="330" viewBox="0 0 760 330" style="max-width:62vw;height:auto"></svg>
+  <div class="row" style="margin-top:.3em">
+    <div>
+      <input type="range" id="sPol" min="0" max="100" value="0">
+      <div class="small">Regler: Ausrichtung der Molek&uuml;le</div>
+      <div><button class="btn" onclick="setPol(0)">Anfang</button>
+           <button class="btn" onclick="animPol()">Ablauf zeigen</button>
+           <button class="btn" onclick="setPol(100)">Endzustand</button></div>
+    </div>
+    <div class="bars">
+      <div class="barrow"><div class="barlbl">E<sub>au&szlig;en</sub></div>
+        <div class="bartrack"><div class="barfill" id="pA" style="background:#fbbf24"></div></div><div class="barval">100&nbsp;%</div></div>
+      <div class="barrow"><div class="barlbl">E<sub>Polarisation</sub></div>
+        <div class="bartrack"><div class="barfill" id="pP" style="background:#c084fc"></div></div><div class="barval" id="vP">0&nbsp;%</div></div>
+      <div class="barrow"><div class="barlbl">E im Inneren</div>
+        <div class="bartrack"><div class="barfill" id="pR" style="background:#f87171"></div></div><div class="barval" id="vR2">100&nbsp;%</div></div>
+    </div>
+  </div>
+  <div class="box acc mid" id="polText" style="margin-top:.3em">Im Isolator ist <b>kein</b> Elektron frei. Trotzdem passiert etwas &ndash; Regler bewegen.</div>
+</section>
+
+<!-- 11 Zwei Arten von Molekuelen -->
+<section class="slide">
+  <h2>Zwei Wege, wie ein Isolator polarisiert wird</h2>
+  <div class="row top">
+    <div class="box vio" style="max-width:420px">
+      <div class="bl mid" style="margin-bottom:.2em">Verschiebungspolarisation</div>
+      <svg id="svgVerschieb" width="360" height="150" viewBox="0 0 360 150" style="width:100%;height:auto"></svg>
+      <div class="small" style="margin-top:.3em">Molek&uuml;l ist <b>von sich aus neutral und symmetrisch</b> (z.&thinsp;B. Polystyrol, Luft).
+        Das Feld zieht die Elektronenh&uuml;lle ein St&uuml;ck gegen den Kern &ndash; der Dipol <b>entsteht erst</b>.</div>
+    </div>
+    <div class="box vio" style="max-width:420px">
+      <div class="bl mid" style="margin-bottom:.2em">Orientierungspolarisation</div>
+      <svg id="svgOrient" width="360" height="150" viewBox="0 0 360 150" style="width:100%;height:auto"></svg>
+      <div class="small" style="margin-top:.3em">Molek&uuml;l ist <b>schon ein Dipol</b> (z.&thinsp;B. Wasser), liegt aber wirr durcheinander.
+        Das Feld <b>dreht</b> es, die W&auml;rmebewegung st&ouml;rt dagegen.</div>
+    </div>
+  </div>
+  <div class="box ok mid frag" style="margin-top:.3em">
+    Beides erzeugt dasselbe Ergebnis: <span class="gr">gebundene Ladung an der Oberfl&auml;che</span>, Gegenfeld im Inneren.
+    Verschoben wird aber nur um Bruchteile eines Atomdurchmessers &ndash; deshalb reicht es <span class="hl">nie</span> f&uuml;r E&thinsp;=&thinsp;0.
+  </div>
+  <div class="box warn mid frag">
+    <span class="rd">Darum titscht ein blanker Tischtennisball nicht:</span> Bei Ber&uuml;hrung kann keine Ladung auf ihn &uuml;bergehen
+    &ndash; ohne echte Aufladung keine Absto&szlig;ung, kein Pendel. Abhilfe: Oberfl&auml;che <span class="hl">graphitieren</span>, dann ist sie leitend.
+  </div>
+</section>
+
+<!-- 12 Influenz vs Polarisation -->
 <section class="slide">
   <h2>Abgrenzung &ndash; Influenz oder Polarisation?</h2>
   <div class="row top">
@@ -234,7 +286,7 @@ kbd{background:#334155;border:1px solid #64748b;border-radius:6px;padding:.1em .
   </div>
 </section>
 
-<!-- 11 Zusammenfassung -->
+<!-- 13 Zusammenfassung -->
 <section class="slide">
   <h1>Zusammenfassung</h1>
   <div class="box acc" style="max-width:1100px">
@@ -247,6 +299,8 @@ kbd{background:#334155;border:1px solid #64748b;border-radius:6px;padding:.1em .
       <li class="frag">Im <span class="hl">homogenen</span> Feld: <span class="rd">keine</span> resultierende Kraft.</li>
       <li class="frag">Im <span class="hl">inhomogenen</span> Feld: <span class="gr">Anziehung</span> &ndash; darum der Papierschnipsel.</li>
       <li class="frag">Erst <span class="hl">Ber&uuml;hrung</span> macht aus Influenz eine echte Aufladung &rarr; Absto&szlig;ung, Pendel.</li>
+      <li class="frag">Im <span class="hl">Isolator</span> sitzen die Ladungen fest: <span class="vi">Polarisation</span> statt Influenz &ndash;
+        E<sub>innen</sub> = E<sub>0</sub>/&epsilon;<sub>r</sub>, nur abgeschw&auml;cht, <span class="rd">nie null</span>.</li>
     </ul>
   </div>
 </section>
@@ -360,12 +414,20 @@ const INF=(function(){
     txt(s,x,y+5,'+',{'font-size':13,fill:'#fecaca'});
     ions.push([x,y]);
   }
-  // Elektronen: starten auf den Ionen, wandern nach links
+  // Elektronen: starten auf den Ionen und ruecken um EINE Gitterposition nach links.
+  // Wo links kein Ion mehr sitzt, landet das Elektron an der Kugeloberflaeche.
+  const A=33;                       // Gitterabstand
+  const hatIon=(x,y)=>ions.some(q=>Math.abs(q[0]-x)<1&&Math.abs(q[1]-y)<1);
   const els=ions.map(p=>{
     const g=el('g',{},s);
     el('circle',{cx:0,cy:0,r:7.5,fill:'#2563eb',stroke:'#bfdbfe','stroke-width':1.3},g);
     txt(g,0,4,'−',{'font-size':12,fill:'#e0f2fe'});
-    return {g,x:p[0],y:p[1]};
+    const [x0,y]=p, OFF=10.5;      // Elektron sitzt sichtbar neben seinem Ion
+    const x=x0+OFF;
+    let zx;
+    if(hatIon(x0-A,y)) zx=x0-A+OFF;                             // rueckt auf den Nachbarplatz
+    else zx=cx-Math.sqrt(Math.max(R0*R0-(y-cy)*(y-cy),0))+9.5;  // kommt an der Oberflaeche an
+    return {g,x,y,zx};
   });
   // Innenfeld-Pfeile
   const inner=[];
@@ -382,8 +444,8 @@ const INF=(function(){
   function upd(v){
     const u=v/100;
     els.forEach(o=>{
-      const dx=-u*16*(1+0.35*Math.cos((o.x-cx)/R0));
-      o.g.setAttribute('transform','translate('+(o.x+dx)+','+o.y+')');
+      const x=o.x+u*(o.zx-o.x);
+      o.g.setAttribute('transform','translate('+x.toFixed(1)+','+o.y+')');
     });
     inner.forEach(a=>{
       const len=46*(1-u);
@@ -396,8 +458,8 @@ const INF=(function(){
       const rr=R0+13;
       o.e.setAttribute('x',cx+Math.cos(o.t)*rr);
       o.e.setAttribute('y',cy+Math.sin(o.t)*rr+6);
-      o.e.setAttribute('opacity',(u*c).toFixed(3));
-      o.e.setAttribute('font-size',(12+8*c).toFixed(1));
+      o.e.setAttribute('opacity',(u*c*0.6).toFixed(3));
+      o.e.setAttribute('font-size',(11+6*c).toFixed(1));
     });
     document.getElementById('bA').style.width='100%';
     document.getElementById('bI').style.width=(u*100)+'%';
@@ -407,9 +469,9 @@ const INF=(function(){
     const t=document.getElementById('infText');
     if(u<0.05){t.textContent='Feld eingeschaltet: Die freien Elektronen spüren die Kraft F = q·E und setzen sich in Bewegung.';
       t.className='box acc mid';}
-    else if(u<0.95){t.textContent='Die Elektronen sammeln sich links. Ihr eigenes Feld zeigt nach rechts und schwächt das Feld im Inneren ab.';
+    else if(u<0.95){t.innerHTML='Jedes Elektron rückt nur <b>einen Gitterplatz</b> weiter – wie eine Eimerkette. Ganz links kommt trotzdem eines an der <b>Oberfläche</b> an, ganz rechts bleibt ein Ion ohne Partner.';
       t.className='box vio mid';}
-    else{t.innerHTML='Gleichgewicht: Das Influenzfeld hebt das äußere Feld im Inneren <b>vollständig</b> auf &ndash; E<sub>innen</sub> = 0. Keine Kraft mehr, keine Bewegung mehr.';
+    else{t.innerHTML='Gleichgewicht: E<sub>innen</sub> = 0. Im Inneren hat <b>jedes Ion wieder ein Elektron</b> – dort ist alles neutral. Die Ladung sitzt <b>nur an der Oberfläche</b>.';
       t.className='box ok mid';}
   }
   return {upd};
@@ -588,7 +650,114 @@ setKugel(true);
   });
 })();
 
-/* ---------- Folie 10: Leiter vs. Isolator ---------- */
+
+/* ---------- Folie 10: Polarisation der Isolatorkugel ---------- */
+const EPSR=3;                 // Kunststoff, E_innen = E0/eps_r
+const POL=(function(){
+  const s=document.getElementById('svgPol');
+  const L=60,R=700,T=20,B=300,cx=380,cy=160,R0=100;
+  platten(s,L,R,T,B);
+  for(let y=T+26;y<B;y+=32) arrow(s,L+10,y,R-14,y,'#334155',1.7);
+  el('circle',{cx,cy,r:R0,fill:'#1e293b',stroke:'#e2e8f0','stroke-width':3,'stroke-dasharray':'7 5'},s);
+  const dips=[];
+  for(let i=-2;i<=2;i++)for(let j=-2;j<=2;j++){
+    const x=cx+i*42,y=cy+j*40;
+    if(Math.hypot(x-cx,y-cy)>R0-24)continue;
+    const a0=((dips.length*137.5)%360)-180;          // deterministisch "wirr"
+    const g=el('g',{},s);
+    el('ellipse',{cx:0,cy:0,rx:16,ry:9,fill:'none',stroke:'#475569','stroke-width':1.2},g);
+    const m=txt(g,-8,5,'−',{'font-size':14,fill:'#60a5fa'});
+    const q=txt(g, 8,5,'+',{'font-size':14,fill:'#f87171'});
+    dips.push({x,y,a0,g,m,q});
+  }
+  // Restfeld im Inneren
+  const inner=[];
+  [-64,64].forEach(dy=> inner.push(arrow(s,cx-60,cy+dy,cx+60,cy+dy,'#fbbf24',2.2)));
+  // gebundene Oberflaechenladung
+  const surf=[];
+  for(let k=0;k<9;k++){
+    const a=-Math.PI/2+(k+0.5)/9*Math.PI;
+    surf.push({a,e:txt(s,0,0,'−',{'font-size':16,fill:'#60a5fa'}),sgn:-1});
+    surf.push({a,e:txt(s,0,0,'+',{'font-size':16,fill:'#f87171'}),sgn:1});
+  }
+  function upd(v){
+    const u=v/100;
+    dips.forEach(d=>{
+      const a=d.a0*(1-u);                       // dreht sich in Feldrichtung
+      d.g.setAttribute('transform','translate('+d.x+','+d.y+') rotate('+a.toFixed(1)+')');
+      d.m.setAttribute('x',(-7-4*u).toFixed(1));  // Ladungen ruecken auseinander
+      d.q.setAttribute('x',( 7+4*u).toFixed(1));
+    });
+    const rest=1-(1-1/EPSR)*u;                  // 100 % -> 33 %
+    inner.forEach(a=>{
+      const len=60*rest;
+      a.setAttribute('x1',cx-len); a.setAttribute('x2',cx+len);
+    });
+    surf.forEach(o=>{
+      const c=Math.abs(Math.cos(o.a)),rr=R0+13;
+      o.e.setAttribute('x',cx+o.sgn*Math.cos(o.a)*rr);
+      o.e.setAttribute('y',cy+Math.sin(o.a)*rr+6);
+      o.e.setAttribute('opacity',(u*c*0.95).toFixed(3));
+      o.e.setAttribute('font-size',(11+5*c).toFixed(1));
+    });
+    document.getElementById('pA').style.width='100%';
+    document.getElementById('pP').style.width=((1-rest)*100)+'%';
+    document.getElementById('pR').style.width=(rest*100)+'%';
+    document.getElementById('vP').textContent=Math.round((1-rest)*100)+' %';
+    document.getElementById('vR2').textContent=Math.round(rest*100)+' %';
+    const t=document.getElementById('polText');
+    if(u<0.05){t.innerHTML='Im Isolator ist <b>kein</b> Elektron frei – alle Ladungen sitzen in ihren Molekülen fest. Die Moleküle liegen wirr durcheinander.';
+      t.className='box acc mid';}
+    else if(u<0.95){t.innerHTML='Die Moleküle richten sich aus und ihre Ladungen rücken ein Stück auseinander. Nur an der Oberfläche bleibt Ladung übrig – <b>gebunden</b>, sie kann nicht abfließen.';
+      t.className='box vio mid';}
+    else{t.innerHTML='Schluss: E<sub>innen</sub> = E<sub>0</sub>/ε<sub>r</sub> ≈ 33 % – das Feld ist nur <b>abgeschwächt</b>, nicht null. Kein Faradayscher Käfig aus Kunststoff.';
+      t.className='box warn mid';}
+  }
+  return {upd};
+})();
+function setPol(v){document.getElementById('sPol').value=v;POL.upd(v);}
+document.getElementById('sPol').addEventListener('input',e=>POL.upd(+e.target.value));
+let polTimer=null;
+function animPol(){
+  if(polTimer)clearInterval(polTimer);
+  let v=0; setPol(0);
+  polTimer=setInterval(()=>{v+=2; if(v>=100){v=100;clearInterval(polTimer);polTimer=null;} setPol(v);},28);
+}
+POL.upd(0);
+
+/* ---------- Folie 11: Molekueltypen ---------- */
+(function(){
+  const s=document.getElementById('svgVerschieb');
+  function atom(x,y,feld){
+    const d=feld?10:0;
+    el('circle',{cx:x,cy:y,r:26,fill:'none',stroke:'#60a5fa','stroke-width':1.6,
+      'stroke-dasharray':feld?null:null},s);
+    el('circle',{cx:x-d,cy:y,r:24,fill:'#1e3a8a',opacity:.45,stroke:'none'},s);
+    el('circle',{cx:x+d,cy:y,r:6,fill:'#f87171'},s);
+    txt(s,x+d,y+5,'+',{'font-size':13,fill:'#fff'});
+    if(feld){txt(s,x-26,y+42,'−',{'font-size':16,fill:'#60a5fa'});
+             txt(s,x+26,y+42,'+',{'font-size':16,fill:'#f87171'});}
+  }
+  atom(85,62,false); txt(s,85,128,'ohne Feld: symmetrisch',{'font-size':14,fill:'#94a3b8'});
+  arrow(s,150,62,205,62,'#fbbf24',2.4); txt(s,178,46,'E',{'font-size':15,fill:'#fbbf24'});
+  atom(275,62,true); txt(s,275,128,'mit Feld: Dipol entsteht',{'font-size':14,fill:'#94a3b8'});
+})();
+(function(){
+  const s=document.getElementById('svgOrient');
+  function dip(x,y,a){
+    const g=el('g',{transform:'translate('+x+','+y+') rotate('+a+')'},s);
+    el('ellipse',{cx:0,cy:0,rx:17,ry:9,fill:'none',stroke:'#475569','stroke-width':1.3},g);
+    txt(g,-8,5,'−',{'font-size':14,fill:'#60a5fa'});
+    txt(g, 8,5,'+',{'font-size':14,fill:'#f87171'});
+  }
+  [[50,35,-38],[100,68,155],[52,100,72],[105,20,110],[108,115,-15]].forEach(d=>dip(d[0],d[1],d[2]));
+  txt(s,80,140,'ohne Feld: wirr',{'font-size':14,fill:'#94a3b8'});
+  arrow(s,150,68,205,68,'#fbbf24',2.4); txt(s,178,52,'E',{'font-size':15,fill:'#fbbf24'});
+  [[250,35,0],[300,68,0],[252,100,0],[305,20,0],[308,115,0]].forEach(d=>dip(d[0],d[1],d[2]));
+  txt(s,280,140,'mit Feld: ausgerichtet',{'font-size':14,fill:'#94a3b8'});
+})();
+
+/* ---------- Folie 12: Leiter vs. Isolator ---------- */
 (function(){
   const s=document.getElementById('svgVgl');
   function kugel(cx,cy,R0,leiter){
