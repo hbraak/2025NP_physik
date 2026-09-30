@@ -169,6 +169,26 @@
         
         <div class="material-grid">
 
+            <a href="entladestrom-flaeche.html" class="material-card" data-url="entladestrom-flaeche.html">
+                <div class="card-header">
+                    <div class="card-icon blue">&#x1F4C9;</div>
+                    <div class="card-title">Entladestrom &mdash; die Fl&auml;che ist die Ladung</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Interaktiv: der Entladestrom i(t), die Messpunkte des CASSY und die Streifen darunter. Schiebt man den Messtakt &Delta;t zusammen, l&auml;uft die Summe &Sigma;&nbsp;i&middot;&Delta;t gegen die Fl&auml;che unter der Kurve &mdash; und die stimmt mit C&middot;U&#8320; &uuml;berein. Kapazit&auml;t und Ladespannung sind w&auml;hlbar.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Kondensator</span>
+                            <span class="tag">Simulation</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-entladeflaeche"></div>
+                </div>
+            </a>
+
             <a href="hinweise-kondensator.html" class="material-card" data-url="hinweise-kondensator.html">
                 <div class="card-header">
                     <div class="card-icon blue">&#x1F4A1;</div>
@@ -197,7 +217,7 @@
                 <div class="card-content">
                     <div class="card-text">
                         <div class="card-description">
-                            Arbeitsblatt zur Auswertung des Versuchs G2: Kapazit&auml;t als Steigung der Q-U-Geraden, die Fl&auml;che darunter als gespeicherte Energie, W = &frac12;CU&sup2;. Vier Messreihen zur Auswahl, dazu Defibrillator-Anwendung und eine Zusatzaufgabe zum Ladewirkungsgrad. PDF.
+                            Arbeitsblatt zur Auswertung des Versuchs G2: Kapazit&auml;t als Steigung der Q(U)-Geraden, die Fl&auml;che darunter als gespeicherte Energie, W = &frac12;CU&sup2;. Vier Messreihen zur Auswahl, dazu Defibrillator-Anwendung und eine Zusatzaufgabe zum Ladewirkungsgrad. PDF.
                         </div>
                         <div class="card-tags">
                             <span class="tag">Kondensator</span>
@@ -1199,6 +1219,7 @@
         
         // QR-Codes generieren wenn Seite geladen
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-entladeflaeche', 'entladestrom-flaeche.html');
             generateQR('qr-hinweise-kond', 'hinweise-kondensator.html');
             generateQR('qr-abkond', 'AB_Kapazitaet_Energie.pdf');
             generateQR('qr-abkondlsg', 'AB_Kapazitaet_Energie_LSG.pdf');

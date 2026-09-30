@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entladestrom – die Fläche ist die Ladung</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+     background:#f8fafc;color:#0f172a;line-height:1.5}
+header{background:#1d4ed8;color:#fff;padding:14px 16px}
+header h1{margin:0;font-size:1.15rem;font-weight:700}
+header p{margin:3px 0 0;font-size:.82rem;opacity:.9}
+main{max-width:860px;margin:0 auto;padding:12px}
+.karte{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:12px;margin-bottom:12px}
+canvas{width:100%;height:auto;display:block;touch-action:manipulation}
+.regler{display:flex;align-items:center;gap:10px;margin:10px 0}
+.regler label{flex:0 0 108px;font-size:.88rem;font-weight:600}
+.regler input[type=range]{flex:1;height:38px}
+.regler .wert{flex:0 0 86px;text-align:right;font-variant-numeric:tabular-nums;
+              font-weight:700;color:#1d4ed8;font-size:.95rem}
+.knopfreihe{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0 2px}
+.knopfreihe button{flex:1 1 auto;min-height:44px;min-width:66px;border:1px solid #cbd5e1;
+   background:#fff;border-radius:8px;font-size:.9rem;font-weight:600;color:#0f172a;cursor:pointer}
+.knopfreihe button.an{background:#1d4ed8;border-color:#1d4ed8;color:#fff}
+.zahlen{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.zahl{background:#f1f5f9;border-radius:8px;padding:8px 10px}
+.zahl .k{font-size:.75rem;color:#475569}
+.zahl .v{font-size:1.05rem;font-weight:700;font-variant-numeric:tabular-nums}
+.zahl.gruen .v{color:#15803d}.zahl.blau .v{color:#1d4ed8}
+.hinweis{background:#fffbeb;border-left:4px solid #f59e0b;border-radius:0 8px 8px 0;
+         padding:10px 12px;font-size:.88rem}
+.hinweis b{color:#92400e}
+.legende{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:#475569;margin-top:8px}
+.legende span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:2px;
+                      margin-right:5px;vertical-align:-2px}
+.l1::before{background:#1d4ed8}.l2::before{background:#93c5fd}.l3::before{background:#dc2626}
+footer{text-align:center;padding:14px;font-size:.78rem;color:#64748b}
+@media(max-width:480px){.regler label{flex-basis:92px;font-size:.82rem}
+  .regler .wert{flex-basis:74px;font-size:.88rem}.zahlen{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Entladestrom – die Fläche ist die Ladung</h1>
+  <p>Versuch G2 · Physik-LK 12NP</p>
+</header>
+
+<main>
+<div class="karte">
+  <canvas id="c" width="820" height="470"></canvas>
+  <div class="legende">
+    <span class="l1">Messpunkte des CASSY</span>
+    <span class="l2">Fläche = Σ i·Δt</span>
+    <span class="l3">wahrer Verlauf i(t)</span>
+  </div>
+</div>
+
+<div class="karte">
+  <div class="regler">
+    <label for="dt">Messtakt Δt</label>
+    <input type="range" id="dt" min="0" max="7" step="1" value="4">
+    <span class="wert" id="dtw">25 ms</span>
+  </div>
+  <div class="regler">
+    <label for="u0">Spannung U₀</label>
+    <input type="range" id="u0" min="4" max="10" step="1" value="10">
+    <span class="wert" id="u0w">10 V</span>
+  </div>
+  <div class="knopfreihe" id="caps"></div>
+  <div class="zahlen">
+    <div class="zahl blau"><div class="k">Summe der Streifen &nbsp;Σ i·Δt</div><div class="v" id="qsum">–</div></div>
+    <div class="zahl gruen"><div class="k">Ladung aus C·U₀</div><div class="v" id="qex">–</div></div>
+    <div class="zahl"><div class="k">Zeitkonstante τ = R·C</div><div class="v" id="tau">–</div></div>
+    <div class="zahl"><div class="k">Abweichung der Summe</div><div class="v" id="abw">–</div></div>
+  </div>
+</div>
+
+<div class="karte">
+  <div class="hinweis" id="text"></div>
+</div>
+</main>
+
+<footer>Entladewiderstand R = 1 kΩ · Messfenster 0 … 5 τ</footer>
+
+<script>
+(function(){
+  var R = 1000;                       // Ohm
+  var caps = [47, 100, 150, 220];     // µF
+  var C = 100;                        // aktive Kapazität in µF
+  var U0 = 10;                        // V
+  var dtWerte = [2, 5, 10, 15, 25, 40, 60, 100];  // ms
+  var dt = 25;
+
+  var cv = document.getElementById('c'), ctx = cv.getContext('2d');
+
+  // --- Kapazitäts-Knöpfe
+  var box = document.getElementById('caps');
+  caps.forEach(function(v){
+    var b = document.createElement('button');
+    b.textContent = v + ' µF';
+    b.dataset.v = v;
+    b.onclick = function(){ C = v; zeichne(); };
+    box.appendChild(b);
+  });
+
+  function fmt(x, n){ return x.toFixed(n).replace('.', ','); }
+
+  function zeichne(){
+    // --- Knöpfe markieren
+    Array.prototype.forEach.call(box.children, function(b){
+      b.className = (+b.dataset.v === C) ? 'an' : '';
+    });
+
+    var tau  = R * C * 1e-6;          // s
+    var I0   = U0 / R;                // A
+    var Tend = 5 * tau;               // s
+    var Qex  = C * 1e-6 * U0;         // C
+
+    // --- Riemann-Summe (linke Randpunkte = so misst der CASSY)
+    var h = dt * 1e-3, Qs = 0, punkte = [];
+    for (var t = 0; t < Tend - 1e-12; t += h){
+      var i = I0 * Math.exp(-t / tau);
+      Qs += i * h;
+      punkte.push([t, i]);
+    }
+
+    // --- Koordinatensystem
+    var W = cv.width, H = cv.height;
+    var L = 74, Rd = 22, T = 18, B = 52;
+    var pw = W - L - Rd, ph = H - T - B;
+    var imax = I0 * 1.12;
+    function px(t){ return L + t / Tend * pw; }
+    function py(i){ return T + ph - i / imax * ph; }
+
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = '#fff'; ctx.fillRect(0,0,W,H);
+
+    // Gitter
+    ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 1;
+    ctx.font = '13px sans-serif'; ctx.fillStyle = '#64748b';
+    for (var k = 0; k <= 5; k++){
+      var x = L + k/5*pw;
+      ctx.beginPath(); ctx.moveTo(x, T); ctx.lineTo(x, T+ph); ctx.stroke();
+      ctx.textAlign = 'center';
+      ctx.fillText(Math.round(k/5*Tend*1000) + '', x, T+ph+20);
+    }
+    var iSchritt = imax > 0.008 ? 0.002 : 0.001;
+    for (var v = 0; v <= imax; v += iSchritt){
+      var y = py(v);
+      ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(L+pw, y); ctx.stroke();
+      ctx.textAlign = 'right';
+      ctx.fillText(fmt(v*1000, 0), L-8, y+4);
+    }
+
+    // Streifen
+    ctx.fillStyle = 'rgba(147,197,253,0.62)';
+    ctx.strokeStyle = '#60a5fa'; ctx.lineWidth = 1;
+    punkte.forEach(function(p){
+      var x0 = px(p[0]), x1 = px(Math.min(p[0]+h, Tend)), y = py(p[1]);
+      ctx.fillRect(x0, y, x1-x0, py(0)-y);
+      ctx.strokeRect(x0, y, x1-x0, py(0)-y);
+    });
+
+    // wahre Kurve
+    ctx.strokeStyle = '#dc2626'; ctx.lineWidth = 2.4;
+    ctx.beginPath();
+    for (var s = 0; s <= 300; s++){
+      var tt = s/300*Tend, ii = I0*Math.exp(-tt/tau);
+      s ? ctx.lineTo(px(tt), py(ii)) : ctx.moveTo(px(tt), py(ii));
+    }
+    ctx.stroke();
+
+    // Messpunkte
+    ctx.fillStyle = '#1d4ed8';
+    punkte.forEach(function(p){
+      ctx.beginPath(); ctx.arc(px(p[0]), py(p[1]), 3.4, 0, 6.29); ctx.fill();
+    });
+
+    // Achsen
+    ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 1.8;
+    ctx.beginPath(); ctx.moveTo(L, T); ctx.lineTo(L, T+ph); ctx.lineTo(L+pw, T+ph); ctx.stroke();
+    ctx.fillStyle = '#0f172a'; ctx.font = 'bold 14px sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('t in ms', L+pw/2, H-14);
+    ctx.save(); ctx.translate(18, T+ph/2); ctx.rotate(-Math.PI/2);
+    ctx.fillText('i in mA', 0, 0); ctx.restore();
+
+    // --- Zahlen
+    document.getElementById('qsum').textContent = fmt(Qs*1e6, 0) + ' µC';
+    document.getElementById('qex').textContent  = fmt(Qex*1e6, 0) + ' µC';
+    document.getElementById('tau').textContent  = fmt(tau*1000, 0) + ' ms';
+    var d = (Qs - Qex) / Qex * 100;
+    document.getElementById('abw').textContent = (d >= 0 ? '+' : '−') + fmt(Math.abs(d),1) + ' %';
+
+    // --- Deutung
+    var txt;
+    if (d > 8){
+      txt = '<b>Zu grob abgetastet.</b> Jeder Streifen hält den Strom über ganze ' + dt +
+            ' ms auf dem Anfangswert fest, obwohl er in dieser Zeit schon deutlich abgefallen ist. ' +
+            'Die Summe liegt darum klar über der wahren Ladung.';
+    } else if (d > 2){
+      txt = 'Die Streifen liegen noch sichtbar über der Kurve – die Summe überschätzt ' +
+            'die Ladung um einige Prozent. Machen Sie Δt kleiner und beobachten Sie, wohin der Wert läuft.';
+    } else {
+      txt = '<b>Jetzt greift der Grenzübergang.</b> Die Treppe schmiegt sich an die Kurve an, ' +
+            'die Summe Σ i·Δt geht in das Integral ∫ i dt über – ' +
+            'und das ist genau die Fläche unter der Kurve. Sie stimmt mit C·U₀ überein.';
+    }
+    if (d <= 2){
+      txt += ' Dass ein Rest von rund −0,7 % bleibt, liegt am abgeschnittenen Schwanz jenseits ' +
+             'von 5 τ – dort fließt noch ein kleiner Strom, den das Messfenster nicht mehr erfasst.';
+    }
+    document.getElementById('text').innerHTML = txt;
+  }
+
+  document.getElementById('dt').oninput = function(){
+    dt = dtWerte[+this.value];
+    document.getElementById('dtw').textContent = dt + ' ms';
+    zeichne();
+  };
+  document.getElementById('u0').oninput = function(){
+    U0 = +this.value;
+    document.getElementById('u0w').textContent = U0 + ' V';
+    zeichne();
+  };
+
+  zeichne();
+})();
+</script>
+</body>
+</html>
