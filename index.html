@@ -168,6 +168,66 @@
         </header>
         
         <div class="material-grid">
+
+            <a href="hinweise-kondensator.html" class="material-card" data-url="hinweise-kondensator.html">
+                <div class="card-header">
+                    <div class="card-icon blue">&#x1F4A1;</div>
+                    <div class="card-title">Gestufte Hilfen &mdash; Von der Ladung zur Energie</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Zu jeder Aufgabe des Arbeitsblatts drei Stufen: Stufe&nbsp;1 gibt einen Denkansto&szlig;, Stufe&nbsp;2 den entscheidenden Gedanken, Stufe&nbsp;3 den vollst&auml;ndigen Weg. &Ouml;ffnen Sie immer nur die n&auml;chste &mdash; und erst dann, wenn Sie selbst nicht weiterkommen. Dieselbe Seite steckt hinter den QR-Codes auf dem Blatt.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Kondensator</span>
+                            <span class="tag">Hilfe</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-hinweise-kond"></div>
+                </div>
+            </a>
+
+            <a href="AB_Kapazitaet_Energie.pdf" class="material-card" data-url="AB_Kapazitaet_Energie.pdf">
+                <div class="card-header">
+                    <div class="card-icon blue">&#x26A1;</div>
+                    <div class="card-title">Von der Ladung zur Energie &mdash; Auswertung G2</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Arbeitsblatt zur Auswertung des Versuchs G2: Kapazit&auml;t als Steigung der Q-U-Geraden, die Fl&auml;che darunter als gespeicherte Energie, W = &frac12;CU&sup2;. Vier Messreihen zur Auswahl, dazu Defibrillator-Anwendung und eine Zusatzaufgabe zum Ladewirkungsgrad. PDF.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Kondensator</span>
+                            <span class="tag">Energie</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-abkond"></div>
+                </div>
+            </a>
+
+            <a href="AB_Kapazitaet_Energie_LSG.pdf" class="material-card" data-url="AB_Kapazitaet_Energie_LSG.pdf">
+                <div class="card-header">
+                    <div class="card-icon purple">&#x2705;</div>
+                    <div class="card-title">L&ouml;sungen &mdash; Von der Ladung zur Energie</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Vollst&auml;ndige L&ouml;sungen zu allen Aufgaben des Arbeitsblatts, inklusive der Zahlenwerte aller vier Messreihen und der Herleitung im Sternchen-Teil. Zum Vergleichen nach dem eigenen Rechnen. PDF.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Kondensator</span>
+                            <span class="tag">L&ouml;sung</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-abkondlsg"></div>
+                </div>
+            </a>
             <a href="elektrometer.html" class="material-card" data-url="elektrometer.html">
                 <div class="card-header">
                     <div class="card-icon blue">&#x1F9ED;</div>
@@ -1139,6 +1199,9 @@
         
         // QR-Codes generieren wenn Seite geladen
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-hinweise-kond', 'hinweise-kondensator.html');
+            generateQR('qr-abkond', 'AB_Kapazitaet_Energie.pdf');
+            generateQR('qr-abkondlsg', 'AB_Kapazitaet_Energie_LSG.pdf');
             generateQR('qr-vorsilben', 'https://m920q.tail653c87.ts.net:10000/sim/vorsilben');
             generateQR('qr-elektrometer', 'elektrometer.html');
             generateQR('qr-ab-elektrometer', 'AB_Elektrometer.pdf');

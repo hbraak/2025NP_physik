@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hilfen: Von der Ladung zur Energie | Physik-LK 12NP</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f5f7fa;color:#1e293b;
+       line-height:1.6;padding:16px 14px 60px;-webkit-text-size-adjust:100%}
+  .wrap{max-width:680px;margin:0 auto}
+  header{background:#fff;border-radius:15px;padding:22px 20px;margin-bottom:18px;
+         box-shadow:0 2px 10px rgba(0,0,0,.08);text-align:center}
+  header h1{font-size:1.3em;color:#1d4ed8;margin-bottom:6px;line-height:1.3}
+  header .sub{color:#64748b;font-size:.95em}
+  .intro{background:#fffbeb;border-left:4px solid #f59e0b;border-radius:8px;
+         padding:14px 16px;margin-bottom:22px;font-size:.94em;color:#78350f}
+  .nav{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+  .nav a{flex:1 1 30%;text-align:center;background:#fff;border:2px solid #e2e8f0;border-radius:10px;
+         padding:12px 6px;text-decoration:none;color:#475569;font-weight:600;font-size:.88em;
+         min-height:48px;display:flex;align-items:center;justify-content:center}
+  .nav a:hover{border-color:#1d4ed8;color:#1d4ed8}
+  section{background:#fff;border-radius:15px;padding:20px;margin-bottom:20px;
+          box-shadow:0 2px 10px rgba(0,0,0,.08);scroll-margin-top:16px;
+          border:2px solid transparent;transition:border-color .3s,box-shadow .3s}
+  section:target{border-color:#1d4ed8;box-shadow:0 4px 18px rgba(29,78,216,.22)}
+  section h2{font-size:1.1em;color:#1d4ed8;margin-bottom:4px;line-height:1.35}
+  section .frage{color:#64748b;font-size:.92em;margin-bottom:14px;font-style:italic}
+  details{border:1px solid #e2e8f0;border-radius:10px;margin-bottom:10px;overflow:hidden}
+  details[open]{border-color:#93c5fd}
+  summary{cursor:pointer;padding:13px 14px;font-weight:600;font-size:.95em;background:#f8fafc;
+          list-style:none;display:flex;align-items:center;gap:10px;min-height:48px}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"\25B8";color:#1d4ed8;font-size:1.1em;transition:transform .2s;flex:0 0 auto}
+  details[open] summary::before{transform:rotate(90deg)}
+  .stufe{display:inline-block;background:#dbeafe;color:#1e40af;border-radius:20px;
+         padding:2px 10px;font-size:.78em;font-weight:700;flex:0 0 auto}
+  .stufe.s2{background:#e0f2fe;color:#0369a1}
+  .stufe.s3{background:#dcfce7;color:#15803d}
+  .txt{flex:1 1 auto;min-width:0}
+  .inhalt{padding:4px 16px 16px;font-size:.95em;border-top:1px solid #f1f5f9}
+  .inhalt p{margin-top:10px}
+  .inhalt ul{margin:10px 0 0 20px}
+  .inhalt li{margin-bottom:6px}
+  .formel{background:#f8fafc;border-radius:8px;padding:11px 12px;margin:10px 0;
+          overflow-x:auto;line-height:1.9;font-size:.98em;text-align:center}
+  .merk{background:#eff6ff;border-left:4px solid #1d4ed8;border-radius:8px;
+        padding:10px 12px;margin:12px 0;font-size:.93em}
+  .warn{background:#fef2f2;border-left:4px solid #dc2626;border-radius:8px;
+        padding:10px 12px;margin:12px 0;font-size:.93em;color:#7f1d1d}
+  .scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:10px 0}
+  table{border-collapse:collapse;width:100%;font-size:.86em}
+  th,td{border:1px solid #e2e8f0;padding:6px 6px;text-align:center}
+  th{background:#f8fafc;font-weight:600}
+  td.lbl,th.lbl{text-align:left;background:#f8fafc;font-weight:600}
+  .foot{text-align:center;margin-top:26px}
+  .foot a.zurueck{display:inline-block;background:#1d4ed8;color:#fff;text-decoration:none;
+          border-radius:10px;padding:14px 24px;font-weight:600;font-size:.95em;min-height:48px}
+  .foot .hint{display:block;margin-top:14px;color:#64748b;font-size:.88em}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Von der Ladung zur Energie</h1>
+  <div class="sub">Gestufte Hilfen &middot; Auswertung des Versuchs G2 &middot; Physik-LK 12NP &middot; 30.09.2026</div>
+</header>
+
+<div class="intro">
+  <strong>So nutzen Sie diese Seite:</strong> Zu jeder Aufgabe gibt es drei Stufen.
+  Öffnen Sie immer nur die <em>nächste</em> — und erst dann, wenn Sie selbst nicht
+  weiterkommen. <strong>Stufe&nbsp;1</strong> gibt einen Anstoß, <strong>Stufe&nbsp;2</strong>
+  den entscheidenden Gedanken, <strong>Stufe&nbsp;3</strong> den vollständigen Weg.
+  Auch wenn Sie Stufe&nbsp;3 lesen: Schreiben Sie den Weg anschließend selbst auf —
+  daran erkennen Sie, ob Sie ihn wirklich verstanden haben.
+</div>
+
+<div class="nav">
+  <a href="#a1">Aufgabe 1</a>
+  <a href="#a2">Aufgabe 2</a>
+  <a href="#a3">Aufgabe 3</a>
+  <a href="#a4">Aufgabe 4</a>
+  <a href="#a5">Aufgabe 5</a>
+  <a href="#a6">Aufgabe 6</a>
+  <a href="#a7">Zusatz</a>
+</div>
+
+<!-- ================= AUFGABE 1 ================= -->
+<section id="a1">
+  <h2>Aufgabe 1 — Kapazität als Steigung</h2>
+  <div class="frage">Q-U-Diagramm zeichnen, Steigung per Steigungsdreieck, und begründen: warum die Steigung und nicht ein einzelner Quotient Q/U?</div>
+
+  <details>
+    <summary><span class="stufe">Stufe 1</span><span class="txt">Anstoß</span></summary>
+    <div class="inhalt">
+      <p>Zuerst das Handwerkliche, das die meisten Punkte kostet:</p>
+      <ul>
+        <li><strong>U waagerecht</strong> (0 bis 10 V), <strong>Q senkrecht</strong>. Achsen beschriften
+            <em>mit Einheit</em>, sonst ist die Steigung später einheitenlos.</li>
+        <li>Skalierung so wählen, dass die Punkte mindestens zwei Drittel des Blattes füllen.
+            Ein Diagramm, das in der linken unteren Ecke klebt, macht die Steigung ungenau.</li>
+        <li>Der Ursprung gehört mit aufs Blatt — Sie wollen ja gerade sehen, ob die Gerade ihn trifft.</li>
+      </ul>
+      <p>Für das Steigungsdreieck: nehmen Sie ein <em>großes</em> Dreieck, dessen Ecken auf der
+      <strong>Ausgleichsgeraden</strong> liegen — nicht auf zwei Messpunkten.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s2">Stufe 2</span><span class="txt">Der entscheidende Gedanke</span></summary>
+    <div class="inhalt">
+      <p>Stellen Sie die Definition der Kapazität um:</p>
+      <div class="formel">C = Q / U &nbsp;&nbsp;&rarr;&nbsp;&nbsp; Q = C · U</div>
+      <p>Das ist die Gleichung einer <strong>Ursprungsgeraden</strong> der Form y = m·x mit der
+      Steigung m = C. Die Steigung Ihrer Geraden hat also die Einheit C/V = F, und das ist die
+      Kapazität.</p>
+      <p>Zur Begründungsfrage: Überlegen Sie, <em>wie viele</em> Ihrer vier Messpunkte in eine
+      Steigung eingehen — und wie viele in einen einzelnen Quotienten Q/U.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s3">Stufe 3</span><span class="txt">Vollständiger Weg</span></summary>
+    <div class="inhalt">
+      <p><strong>Steigungsdreieck</strong> (Beispiel Reihe A, Ecken auf der Geraden bei U = 2,0 V und
+      U = 10,0 V):</p>
+      <div class="formel">
+        C = ΔQ / ΔU = (1018 µC − 214 µC) / (10,0 V − 2,0 V)<br>
+        C = 804 µC / 8,0 V ≈ 100 µC/V = 100 µF
+      </div>
+      <p>Erwartungswerte für die vier Reihen:</p>
+      <div class="scroll">
+      <table>
+        <tr><th class="lbl">Reihe</th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+        <tr><td class="lbl">Steigung C</td><td>≈ 102 µF</td><td>≈ 47,8 µF</td><td>≈ 215 µF</td><td>≈ 160 µF</td></tr>
+      </table>
+      </div>
+      <p><strong>Begründung, warum die Steigung besser ist als ein einzelnes Q/U:</strong></p>
+      <ul>
+        <li>Die Ausgleichsgerade nutzt <em>alle</em> Messpunkte. Zufällige Fehler einzelner Punkte
+            mitteln sich dabei heraus.</li>
+        <li>Ein einzelnes Q/U verwendet nur <em>einen</em> Punkt und schleppt dessen vollen Fehler
+            ungemildert ins Ergebnis.</li>
+        <li>Die Gerade zeigt zusätzlich einen <strong>systematischen</strong> Fehler an: Trifft sie die
+            Achse nicht im Ursprung, steckt ein konstanter Zusatzbeitrag in allen Messwerten. Ein
+            Einzelquotient verdeckt das vollständig — er verrechnet den Offset einfach mit.</li>
+      </ul>
+      <div class="merk">
+        <strong>Formal:</strong> Q/U ist die Steigung der Verbindungsgeraden vom <em>Ursprung</em> zum
+        Messpunkt. Das setzt voraus, dass die Gerade den Ursprung trifft. Genau das prüfen Sie in
+        Aufgabe 2 erst noch — vorher darf man es nicht annehmen.
+      </div>
+    </div>
+  </details>
+</section>
+
+<!-- ================= AUFGABE 2 ================= -->
+<section id="a2">
+  <h2>Aufgabe 2 — Vergleich mit dem Aufdruck</h2>
+  <div class="frage">Prozentuale Abweichung; Ursache für den Achsenabschnitt; verfälscht er die Kapazität?</div>
+
+  <details>
+    <summary><span class="stufe">Stufe 1</span><span class="txt">Anstoß</span></summary>
+    <div class="inhalt">
+      <p>Die prozentuale Abweichung wird <em>immer</em> auf den Vergleichswert bezogen, hier also
+      auf den Aufdruck:</p>
+      <div class="formel">Abweichung = (C<sub>gemessen</sub> − C<sub>Aufdruck</sub>) / C<sub>Aufdruck</sub> · 100 %</div>
+      <p>Für den Achsenabschnitt: Er sagt aus, dass Ihr Verfahren schon bei U = 0 eine Ladung
+      &bdquo;findet&ldquo;. Bei U = 0 ist der Kondensator aber ungeladen. Die Ladung kann also nicht
+      aus dem Kondensator kommen — sie muss aus der <em>Messung</em> kommen. Wie haben Sie Q in G2
+      bestimmt?</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s2">Stufe 2</span><span class="txt">Der entscheidende Gedanke</span></summary>
+    <div class="inhalt">
+      <p>Q war die <strong>Fläche unter der i-t-Kurve</strong>, also Q = ∫ i dt. Wenn der Stromeingang
+      des CASSY einen kleinen Nullpunktfehler hat (zeigt z.&nbsp;B. 0,2 mA an, obwohl 0 fließt), wird
+      dieser Offset über das <em>ganze</em> Integrationsfenster mitintegriert:</p>
+      <div class="formel">Q<sub>schein</sub> = i<sub>offset</sub> · t<sub>Fenster</sub></div>
+      <p>Das ist bei jeder Ladespannung derselbe Betrag — er hängt ja nicht von U ab. Und genau so
+      verhält sich ein Achsenabschnitt.</p>
+      <p>Zur Bewertungsfrage: Schreiben Sie Ihre Geradengleichung einmal mit Achsenabschnitt hin,
+      Q(U) = C·U + Q<sub>0</sub>, und fragen Sie sich, was Q<sub>0</sub> mit der <em>Steigung</em>
+      macht.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s3">Stufe 3</span><span class="txt">Vollständiger Weg</span></summary>
+    <div class="inhalt">
+      <p><strong>Abweichungen:</strong></p>
+      <div class="scroll">
+      <table>
+        <tr><th class="lbl">Reihe</th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+        <tr><td class="lbl">Aufdruck</td><td>100 µF</td><td>47 µF</td><td>220 µF</td><td>150 µF</td></tr>
+        <tr><td class="lbl">gemessen</td><td>102 µF</td><td>47,8 µF</td><td>215 µF</td><td>160 µF</td></tr>
+        <tr><td class="lbl">Abweichung</td><td>+2 %</td><td>+2 %</td><td>−2 %</td><td>+6,5 %</td></tr>
+      </table>
+      </div>
+      <p>Alle vier liegen innerhalb der üblichen <strong>Elko-Toleranz</strong> von −20 % bis +50 %.
+      Der Aufdruck ist ein <em>Nennwert</em>, kein Messwert — eine Abweichung von wenigen Prozent ist
+      kein Messfehler, sondern erwartetes Bauteilverhalten.</p>
+      <p><strong>Ursache des Achsenabschnitts</strong> (eine genügt):</p>
+      <ul>
+        <li>Stromoffset des CASSY-Eingangs, über das Integrationsfenster mitintegriert;</li>
+        <li>Leckstrom des Elkos, der dauerhaft mitläuft;</li>
+        <li>ein zu breit markiertes Integrationsfenster (Rauschen vor und nach der Entladung
+            wird mitgezählt).</li>
+      </ul>
+      <p><strong>Bewertung:</strong> Mit Q(U) = C·U + Q<sub>0</sub> ist Q<sub>0</sub> eine rein
+      <em>additive</em> Konstante. Sie verschiebt die Gerade parallel nach oben, verändert aber ihre
+      Steigung nicht. Da C die Steigung ist, bleibt die Kapazität unberührt. Der Achsenabschnitt ist
+      hier zudem kleiner als seine eigene Unsicherheit, also nicht einmal signifikant.</p>
+      <div class="warn">
+        <strong>Der Umkehrschluss ist die eigentliche Pointe:</strong> Hätte man C aus einem einzelnen
+        Q/U bei <em>kleiner</em> Spannung bestimmt, wäre der Offset voll ins Ergebnis eingegangen und
+        hätte C zu groß gemacht — und niemand hätte es gemerkt. Das ist der Grund, warum man
+        Ausgleichsgeraden zeichnet.
+      </div>
+    </div>
+  </details>
+</section>
+
+<!-- ================= AUFGABE 3 ================= -->
+<section id="a3">
+  <h2>Aufgabe 3 — Wie viel Energie steckt im geladenen Kondensator?</h2>
+  <div class="frage">a) Warum W = Q·U scheitert &nbsp;·&nbsp; b) Was ist die Fläche unter der Q-U-Geraden? &nbsp;·&nbsp; c) Fläche berechnen, Formel herleiten</div>
+
+  <details>
+    <summary><span class="stufe">Stufe 1</span><span class="txt">Anstoß</span></summary>
+    <div class="inhalt">
+      <p><strong>Zu a)</strong> Lesen Sie die Formel W = q·U ganz genau. Welches U ist da gemeint —
+      eines, das sich ändern darf, oder eines, das feststeht? Und nun: Wie groß ist die Spannung am
+      Kondensator, <em>bevor</em> das Laden beginnt?</p>
+      <p><strong>Zu b)</strong> In G2 war die Fläche unter der i-t-Kurve die Ladung. Die Einheiten
+      haben das damals bestätigt: A · s = C. Machen Sie hier dieselbe Einheitenprobe — was ergibt
+      die Einheit der Hochachse mal die Einheit der Rechtsachse?</p>
+      <p><strong>Zu c)</strong> Die Fläche unter einer Ursprungsgeraden bis zu einer Stelle U ist
+      eine geometrische Figur, für die Sie die Formel seit der Mittelstufe kennen.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s2">Stufe 2</span><span class="txt">Der entscheidende Gedanke</span></summary>
+    <div class="inhalt">
+      <p><strong>a)</strong> W = q·U gilt nur für <em>konstante</em> Spannung. Am Kondensator gilt aber
+      U = Q/C — die Spannung hängt selbst davon ab, wie viel Ladung schon geflossen ist. Sie wächst
+      während des Ladens von 0 auf U<sub>end</sub>.</p>
+      <p><strong>b)</strong> Einheitenprobe:</p>
+      <div class="formel">C · V = A·s · V = W·s = J</div>
+      <p>Das ist eine <strong>Energie</strong>. Der Grund dahinter ist derselbe wie in G2: Zerlegen Sie
+      die Fläche in schmale senkrechte Streifen. Ein Streifen hat die Breite ΔQ und die Höhe U. Über
+      einen so schmalen Streifen ist U <em>praktisch konstant</em> — und für konstantes U durften Sie
+      W = q·U ja verwenden.</p>
+      <p><strong>c)</strong> Die Figur ist ein rechtwinkliges Dreieck mit den Katheten U<sub>end</sub>
+      (waagerecht) und Q (senkrecht). Fläche eines Dreiecks: ½ · Kathete · Kathete.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s3">Stufe 3</span><span class="txt">Vollständiger Weg</span></summary>
+    <div class="inhalt">
+      <p><strong>a)</strong> W = q·U setzt konstante Spannung voraus. Beim Laden ist U = Q/C selbst
+      von der bereits geflossenen Ladung abhängig: Das erste Elektron wird bei U = 0 transportiert
+      und kostet <em>keine</em> Arbeit, das letzte bei der vollen Endspannung U<sub>end</sub>.
+      W = Q·U<sub>end</sub> behandelt jede Ladungsportion so, als hätte sie die volle Endspannung
+      überwinden müssen — das ist eine <strong>Obergrenze</strong>, nicht das Ergebnis.</p>
+
+      <p><strong>b)</strong> Die Fläche unter der Q-U-Geraden ist die im Kondensator gespeicherte
+      <strong>Energie</strong>. Begründung in drei Schritten:</p>
+      <ul>
+        <li>Ein schmaler Streifen der Breite ΔQ liegt bei praktisch konstanter Spannung U.
+            Für ihn gilt ΔW = U · ΔQ — und das ist genau die Streifenfläche.</li>
+        <li>Die Gesamtarbeit ist die Summe aller Streifen.</li>
+        <li>Für immer schmalere Streifen wird diese Summe zur Fläche unter der Geraden,
+            also W = ∫ U dQ.</li>
+      </ul>
+      <p>Einheitenprobe als Kontrolle: C · V = A·s·V = W·s = J. ✓</p>
+
+      <p><strong>c)</strong> Dreieck mit den Katheten U<sub>end</sub> und Q:</p>
+      <div class="formel">
+        W = ½ · Q · U &nbsp;&nbsp;&nbsp;|&nbsp; mit Q = C·U<br>
+        W = ½ · C · U² = Q² / (2C)
+      </div>
+      <p>Zahlenwerte bei U = 10 V (Q von der Ausgleichsgeraden abgelesen, nicht der Rohmesswert):</p>
+      <div class="scroll">
+      <table>
+        <tr><th class="lbl">Reihe</th><th>A</th><th>B</th><th>C</th><th>D</th></tr>
+        <tr><td class="lbl">Q bei 10 V</td><td>1018 µC</td><td>478 µC</td><td>2152 µC</td><td>1597 µC</td></tr>
+        <tr><td class="lbl">W = ½QU</td><td>5,1 mJ</td><td>2,4 mJ</td><td>10,8 mJ</td><td>8,0 mJ</td></tr>
+      </table>
+      </div>
+      <div class="merk">
+        <strong>Kontrolle:</strong> Ihr Ergebnis muss kleiner sein als die Obergrenze Q·U aus a) —
+        und zwar genau halb so groß. Reihe A: Q·U = 10,2 mJ, W = 5,1 mJ. ✓
+      </div>
+    </div>
+  </details>
+</section>
+
+<!-- ================= AUFGABE 4 ================= -->
+<section id="a4">
+  <h2>Aufgabe 4 — Der Faktor ½</h2>
+  <div class="frage">Was bedeutet der Faktor ½ physikalisch? Welche Spannung müsste in W = Q·U stehen?</div>
+
+  <details>
+    <summary><span class="stufe">Stufe 1</span><span class="txt">Anstoß</span></summary>
+    <div class="inhalt">
+      <p>Vergleichen Sie die beiden Ausdrücke direkt untereinander:</p>
+      <div class="formel">W = Q · U<sub>end</sub> &nbsp;&nbsp;&nbsp;gegen&nbsp;&nbsp;&nbsp; W = ½ · Q · U<sub>end</sub></div>
+      <p>Wo Sie die ½ hinschreiben, ist Ihnen freigestellt. Ziehen Sie sie einmal <em>zur Spannung</em>
+      statt vor das Produkt. Welche Spannung steht dann da — und welche Bedeutung hat sie, wenn die
+      Spannung linear von 0 auf U<sub>end</sub> gewachsen ist?</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s2">Stufe 2</span><span class="txt">Der entscheidende Gedanke</span></summary>
+    <div class="inhalt">
+      <div class="formel">W = ½ · Q · U<sub>end</sub> = Q · (½ U<sub>end</sub>) = Q · Ū</div>
+      <p>½ U<sub>end</sub> ist der <strong>Mittelwert</strong> der Spannung während des Ladevorgangs.
+      Die Ladung wird also im Mittel nur gegen die <em>halbe</em> Endspannung transportiert — nicht
+      gegen die volle.</p>
+      <p>Dass hier das schlichte arithmetische Mittel aus Anfangs- und Endwert genügt, ist kein
+      Zufall. Woran liegt das? Schauen Sie sich die Form Ihrer Q-U-Kurve an.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s3">Stufe 3</span><span class="txt">Vollständiger Weg</span></summary>
+    <div class="inhalt">
+      <p><strong>Antwortsatz:</strong> Der Faktor ½ kommt daher, dass die Spannung während des Ladens
+      linear von 0 auf U<sub>end</sub> ansteigt; die Ladung wird deshalb im Mittel nur gegen die
+      halbe Endspannung transportiert.</p>
+      <p><strong>Einzusetzende Spannung:</strong> In W = Q·U müsste die <em>mittlere</em> Spannung
+      Ū = ½ U<sub>end</sub> stehen, nicht die Endspannung.</p>
+      <div class="merk">
+        <strong>Warum das arithmetische Mittel hier reicht:</strong> weil Q(U) <em>linear</em> ist.
+        Nur bei einer Geraden liegt der Mittelwert genau in der Mitte zwischen Anfangs- und Endwert.
+        Wäre die Kennlinie gekrümmt — etwa bei einem Kondensator mit spannungsabhängigem ε<sub>r</sub>
+        — käme ein anderer Faktor heraus, und man müsste wirklich integrieren.
+      </div>
+    </div>
+  </details>
+</section>
+
+<!-- ================= AUFGABE 5 ================= -->
+<section id="a5">
+  <h2>Aufgabe 5 — Alle vier Reihen im Vergleich</h2>
+  <div class="frage">a) Wie hängt W bei gleicher Spannung von C ab? &nbsp;·&nbsp; b) Um welchen Faktor müsste U steigen, um W zu vervierfachen?</div>
+
+  <details>
+    <summary><span class="stufe">Stufe 1</span><span class="txt">Anstoß</span></summary>
+    <div class="inhalt">
+      <p><strong>a)</strong> Schauen Sie sich W = ½CU² an und halten Sie U fest. In welcher Potenz
+      steht dann noch C? Suchen Sie sich anschließend aus der Tafelsammlung <em>zwei</em> Reihen aus,
+      bei denen das Verhältnis der Kapazitäten schön ablesbar ist, und vergleichen Sie es mit dem
+      Verhältnis der Energien.</p>
+      <p><strong>b)</strong> Jetzt umgekehrt: C festhalten, U verändern. In welcher Potenz steht U?
+      Achtung — die Antwort ist <em>nicht</em> „Faktor 4“.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s2">Stufe 2</span><span class="txt">Der entscheidende Gedanke</span></summary>
+    <div class="inhalt">
+      <p><strong>a)</strong> Bei festem U ist W ∝ C, also <strong>direkt proportional</strong>: doppelte
+      Kapazität, doppelte Energie. Das Verhältnis der Energien muss also gleich dem Verhältnis der
+      Kapazitäten sein.</p>
+      <p><strong>b)</strong> Bei festem C ist W ∝ U². Setzen Sie einen Faktor k für die
+      Spannungserhöhung an und verlangen Sie, dass die Energie viermal so groß wird:</p>
+      <div class="formel">(k·U)² = 4 · U²</div>
+      <p>Lösen Sie nach k auf.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s3">Stufe 3</span><span class="txt">Vollständiger Weg</span></summary>
+    <div class="inhalt">
+      <p><strong>a)</strong> W ∝ C, direkt proportional. Beleg mit Reihe C gegen Reihe B:</p>
+      <div class="formel">
+        C<sub>Reihe&nbsp;C</sub> / C<sub>Reihe&nbsp;B</sub> = 215 µF / 47,8 µF ≈ 4,5<br>
+        W<sub>Reihe&nbsp;C</sub> / W<sub>Reihe&nbsp;B</sub> = 10,8 mJ / 2,4 mJ ≈ 4,5 &nbsp;✓
+      </div>
+      <p>Die beiden Verhältnisse stimmen überein — genau das ist die Aussage der Proportionalität.</p>
+      <p><strong>b)</strong> Aus (k·U)² = 4U² folgt k² = 4, also <strong>k = 2</strong>: Eine
+      <strong>Verdopplung</strong> der Spannung genügt, um die Energie zu vervierfachen.</p>
+      <div class="merk">
+        <strong>Die technische Konsequenz:</strong> Die Spannung ist die deutlich wirksamere Schraube
+        als die Kapazität — sie geht quadratisch ein, die Kapazität nur linear. Deshalb arbeiten
+        Energiespeicher-Kondensatoren (Blitzgerät, Defibrillator, Zwischenkreis im Umrichter) mit
+        möglichst <em>hoher Spannung</em> statt mit möglichst großer Kapazität. Die Grenze setzt die
+        Durchbruchfeldstärke des Dielektrikums: Ist sie überschritten, wird der Isolator leitend und
+        der Kondensator ist zerstört.
+      </div>
+    </div>
+  </details>
+</section>
+
+<!-- ================= AUFGABE 6 ================= -->
+<section id="a6">
+  <h2>Aufgabe 6 — Defibrillator</h2>
+  <div class="frage">W = 256 J, C = 32 µF. a) Ladespannung und Ladung &nbsp;·&nbsp; b) mittlere Leistung bei 10 ms, Vergleich Wasserkocher</div>
+
+  <details>
+    <summary><span class="stufe">Stufe 1</span><span class="txt">Anstoß</span></summary>
+    <div class="inhalt">
+      <p><strong>a)</strong> Sie kennen W und C, gesucht ist U. Von Ihren drei Formen der
+      Energieformel — ½QU, ½CU², Q²/(2C) — enthält genau <em>eine</em> nur W, C und U. Nehmen Sie die
+      und stellen Sie nach U um. Die Ladung folgt danach aus der Definition der Kapazität.</p>
+      <p><strong>b)</strong> Leistung ist Energie pro Zeit. Rechnen Sie die 10 ms konsequent in
+      Sekunden um, <em>bevor</em> Sie dividieren.</p>
+      <div class="warn">
+        <strong>Einheitenfalle:</strong> 32 µF = 32 · 10⁻⁶ F. Wer die Mikro-Vorsilbe vergisst,
+        landet bei Millivolt statt Kilovolt.
+      </div>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s2">Stufe 2</span><span class="txt">Der entscheidende Gedanke</span></summary>
+    <div class="inhalt">
+      <p><strong>a)</strong> Umstellen von W = ½CU²:</p>
+      <div class="formel">U² = 2W / C &nbsp;&nbsp;&rarr;&nbsp;&nbsp; U = √(2W / C)</div>
+      <p>Danach Q = C · U.</p>
+      <p><strong>b)</strong> P = W / t mit t = 10 ms = 0,010 s. Für den Vergleich bilden Sie den
+      Quotienten aus Ihrer Leistung und den 2 kW des Wasserkochers.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s3">Stufe 3</span><span class="txt">Vollständiger Weg</span></summary>
+    <div class="inhalt">
+      <p><strong>a)</strong></p>
+      <div class="formel">
+        U = √(2W / C) = √(2 · 256 J / 32·10⁻⁶ F) = √(1,6·10⁷ V²) = <strong>4000 V</strong><br>
+        Q = C · U = 32·10⁻⁶ F · 4000 V = 0,128 C = <strong>128 mC</strong>
+      </div>
+      <p><strong>b)</strong></p>
+      <div class="formel">
+        P = W / t = 256 J / 0,010 s = <strong>25,6 kW</strong><br>
+        25,6 kW / 2 kW = 12,8 &nbsp;&rarr;&nbsp; etwa das 13-fache eines Wasserkochers
+      </div>
+      <div class="merk">
+        <strong>Das ist die eigentliche Stärke des Kondensators:</strong> Er speichert wenig Energie —
+        eine AA-Batterie hat rund 10 kJ, also etwa 40-mal mehr als die 256 J hier. Aber er gibt sie
+        <em>extrem schnell</em> ab. Eine Batterie schafft keine 25 kW; ihr Innenwiderstand und die
+        chemische Umsetzung begrenzen den Strom. Kondensator = kleine Energie, gigantische Leistung.
+      </div>
+      <p>Ein Plausibilitätscheck zum Schluss: 4000 V klingt viel, passt aber — Defibrillatoren
+      arbeiten tatsächlich im Kilovoltbereich. Genau deshalb sind die Geräte gekapselt und dürfen
+      nicht geöffnet werden.</p>
+    </div>
+  </details>
+</section>
+
+<!-- ================= ZUSATZ ================= -->
+<section id="a7">
+  <h2>Zusatzaufgabe — Wo bleibt die andere Hälfte?</h2>
+  <div class="frage">Die Quelle gibt Q·U₀ ab, im Kondensator landet nur ½QU₀. Wo bleibt der Rest — und warum unabhängig von R?</div>
+
+  <details>
+    <summary><span class="stufe">Stufe 1</span><span class="txt">Anstoß</span></summary>
+    <div class="inhalt">
+      <p>Trennen Sie die Buchführung sauber in drei Posten: Was gibt die <strong>Quelle</strong> ab,
+      was liegt am Ende im <strong>Kondensator</strong>, und was bleibt für den
+      <strong>Widerstand</strong>?</p>
+      <p>Für die Quelle gilt eine entscheidende Besonderheit: Ihre Spannung ist U₀ — die ganze Zeit,
+      von der ersten bis zur letzten Ladungsportion. Für sie ist W = q·U also <em>erlaubt</em>.
+      Am Kondensator war sie es nicht. Genau da liegt der Unterschied.</p>
+      <p>Zur R-Frage: Überlegen Sie qualitativ, was ein kleines R und was ein großes R jeweils mit der
+      Stromstärke und mit der <em>Dauer</em> des Ladevorgangs macht.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s2">Stufe 2</span><span class="txt">Der entscheidende Gedanke</span></summary>
+    <div class="inhalt">
+      <p>Dieselbe Ladung Q = CU₀ fließt durch beide Bauteile — aber gegen verschiedene Spannungen:</p>
+      <ul>
+        <li>Die Quelle transportiert sie gegen ihre <em>konstante</em> Spannung U₀:
+            W<sub>Quelle</sub> = Q·U₀.</li>
+        <li>Der Kondensator baut dabei eine <em>mitwachsende</em> Gegenspannung auf, die im Mittel nur
+            ½U₀ beträgt: W<sub>C</sub> = ½QU₀.</li>
+      </ul>
+      <p>Die Differenz muss im dritten Bauteil geblieben sein. Energieerhaltung erzwingt das —
+      Sie müssen dafür nichts integrieren.</p>
+      <p>Zur Unabhängigkeit von R: Kleines R bedeutet großer Strom, aber kurze Zeit (τ = RC).
+      Großes R bedeutet kleiner Strom, aber lange Zeit. In der Verlustleistung P = R·i² steht R einmal
+      im Zähler und — über i = U₀/R — zweimal im Nenner. Zusammen mit τ = RC kürzt sich R heraus.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary><span class="stufe s3">Stufe 3</span><span class="txt">Vollständiger Weg</span></summary>
+    <div class="inhalt">
+      <p><strong>Energie der Quelle:</strong> Sie transportiert die Ladung Q = CU₀ vollständig gegen
+      ihre konstante Spannung U₀:</p>
+      <div class="formel">W<sub>Quelle</sub> = Q · U₀ = C·U₀²</div>
+      <p><strong>Energie im Kondensator:</strong></p>
+      <div class="formel">W<sub>C</sub> = ½ C U₀²</div>
+      <p><strong>Differenz:</strong> ½CU₀² — diese Hälfte wird im Widerstand in <strong>Wärme</strong>
+      umgesetzt.</p>
+      <p><strong>Nachrechnen der Verluste</strong> mit dem Ladestrom i(t) = (U₀/R)·e<sup>−t/(RC)</sup>:</p>
+      <div class="formel">
+        W<sub>R</sub> = ∫<sub>0</sub><sup>∞</sup> R·i² dt
+        = (U₀²/R) · ∫<sub>0</sub><sup>∞</sup> e<sup>−2t/(RC)</sup> dt<br>
+        = (U₀²/R) · (RC/2) = <strong>½ C U₀²</strong>
+      </div>
+      <p>Das R kürzt sich vollständig heraus — es steht am Ende nicht mehr im Ergebnis. Anschaulich:
+      Ein kleines R lässt große Ströme fließen, aber nur kurz; ein großes R lässt kleine Ströme lange
+      fließen. Der quadratische Vorteil des kleinen Stroms wird durch die längere Zeit genau
+      aufgewogen.</p>
+      <div class="merk">
+        <strong>Der Wirkungsgrad beim Laden über einen Widerstand ist also immer genau 50 %</strong> —
+        völlig unabhängig davon, wie man R wählt. Man kann ihn nicht durch einen „besseren“
+        Widerstand verbessern.
+      </div>
+      <p>Besser wird es nur, wenn man die <em>Spannung langsam mitwachsen</em> lässt, statt sie von
+      Anfang an voll anzulegen: Dann ist die Differenz zwischen Quellen- und Kondensatorspannung
+      stets klein, und es fällt kaum Verlustleistung an. Genau das macht ein Schaltnetzteil bzw. ein
+      getakteter Laderegler — und deshalb sitzt in jedem Ladegerät ein Schaltwandler und kein
+      Vorwiderstand.</p>
+    </div>
+  </details>
+</section>
+
+<div class="foot">
+  <a class="zurueck" href="index.html">&larr; Zur Materialübersicht</a>
+  <span class="hint">Physik-LK 12NP &middot; Lore-Lorentz-Schule Düsseldorf</span>
+</div>
+
+</div>
+</body>
+</html>
