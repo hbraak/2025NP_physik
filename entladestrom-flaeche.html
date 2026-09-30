@@ -51,7 +51,7 @@ footer{text-align:center;padding:14px;font-size:.78rem;color:#64748b}
   <canvas id="c" width="820" height="470"></canvas>
   <div class="legende">
     <span class="l1">Messpunkte des CASSY</span>
-    <span class="l2">Fläche = Σ i·Δt</span>
+    <span class="l2">Fläche = Σ i·Δt (unter der Nulllinie)</span>
     <span class="l3">wahrer Verlauf i(t)</span>
   </div>
 </div>
@@ -72,7 +72,7 @@ footer{text-align:center;padding:14px;font-size:.78rem;color:#64748b}
     <div class="zahl blau"><div class="k">Summe der Streifen &nbsp;Σ i·Δt</div><div class="v" id="qsum">–</div></div>
     <div class="zahl gruen"><div class="k">Ladung aus C·U₀</div><div class="v" id="qex">–</div></div>
     <div class="zahl"><div class="k">Zeitkonstante τ = R·C</div><div class="v" id="tau">–</div></div>
-    <div class="zahl"><div class="k">Abweichung der Summe</div><div class="v" id="abw">–</div></div>
+    <div class="zahl"><div class="k">Abweichung von |Σ i·Δt|</div><div class="v" id="abw">–</div></div>
   </div>
 </div>
 
@@ -81,7 +81,7 @@ footer{text-align:center;padding:14px;font-size:.78rem;color:#64748b}
 </div>
 </main>
 
-<footer>Entladewiderstand R = 1 kΩ · Messfenster 0 … 5 τ</footer>
+<footer>Entladewiderstand R = 1 kΩ · Messfenster 0 … 5 τ · Zählrichtung wie beim Laden → Entladestrom negativ</footer>
 
 <script>
 (function(){
@@ -120,7 +120,7 @@ footer{text-align:center;padding:14px;font-size:.78rem;color:#64748b}
     // --- Riemann-Summe (linke Randpunkte = so misst der CASSY)
     var h = dt * 1e-3, Qs = 0, punkte = [];
     for (var t = 0; t < Tend - 1e-12; t += h){
-      var i = I0 * Math.exp(-t / tau);
+      var i = -I0 * Math.exp(-t / tau);   // Entladung: entgegen der Laderichtung
       Qs += i * h;
       punkte.push([t, i]);
     }
@@ -129,9 +129,9 @@ footer{text-align:center;padding:14px;font-size:.78rem;color:#64748b}
     var W = cv.width, H = cv.height;
     var L = 74, Rd = 22, T = 18, B = 52;
     var pw = W - L - Rd, ph = H - T - B;
-    var imax = I0 * 1.12;
+    var iOben = I0 * 0.16, iUnten = -I0 * 1.10;
     function px(t){ return L + t / Tend * pw; }
-    function py(i){ return T + ph - i / imax * ph; }
+    function py(i){ return T + (iOben - i) / (iOben - iUnten) * ph; }
 
     ctx.clearRect(0,0,W,H);
     ctx.fillStyle = '#fff'; ctx.fillRect(0,0,W,H);
@@ -143,14 +143,14 @@ footer{text-align:center;padding:14px;font-size:.78rem;color:#64748b}
       var x = L + k/5*pw;
       ctx.beginPath(); ctx.moveTo(x, T); ctx.lineTo(x, T+ph); ctx.stroke();
       ctx.textAlign = 'center';
-      ctx.fillText(Math.round(k/5*Tend*1000) + '', x, T+ph+20);
+      if (k > 0) ctx.fillText(Math.round(k/5*Tend*1000) + '', x, py(0) - 7);
     }
-    var iSchritt = imax > 0.008 ? 0.002 : 0.001;
-    for (var v = 0; v <= imax; v += iSchritt){
-      var y = py(v);
+    var iSchritt = I0 > 0.008 ? 0.002 : 0.001;
+    for (var v = 0; v <= I0 * 1.05; v += iSchritt){
+      var y = py(-v);
       ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(L+pw, y); ctx.stroke();
       ctx.textAlign = 'right';
-      ctx.fillText(fmt(v*1000, 0), L-8, y+4);
+      ctx.fillText((v > 0 ? '\u2212' : '') + fmt(v*1000, 0), L-8, y+4);
     }
 
     // Streifen
@@ -158,15 +158,15 @@ footer{text-align:center;padding:14px;font-size:.78rem;color:#64748b}
     ctx.strokeStyle = '#60a5fa'; ctx.lineWidth = 1;
     punkte.forEach(function(p){
       var x0 = px(p[0]), x1 = px(Math.min(p[0]+h, Tend)), y = py(p[1]);
-      ctx.fillRect(x0, y, x1-x0, py(0)-y);
-      ctx.strokeRect(x0, y, x1-x0, py(0)-y);
+      ctx.fillRect(x0, py(0), x1-x0, y-py(0));
+      ctx.strokeRect(x0, py(0), x1-x0, y-py(0));
     });
 
     // wahre Kurve
     ctx.strokeStyle = '#dc2626'; ctx.lineWidth = 2.4;
     ctx.beginPath();
     for (var s = 0; s <= 300; s++){
-      var tt = s/300*Tend, ii = I0*Math.exp(-tt/tau);
+      var tt = s/300*Tend, ii = -I0*Math.exp(-tt/tau);
       s ? ctx.lineTo(px(tt), py(ii)) : ctx.moveTo(px(tt), py(ii));
     }
     ctx.stroke();
@@ -179,17 +179,18 @@ footer{text-align:center;padding:14px;font-size:.78rem;color:#64748b}
 
     // Achsen
     ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 1.8;
-    ctx.beginPath(); ctx.moveTo(L, T); ctx.lineTo(L, T+ph); ctx.lineTo(L+pw, T+ph); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(L, T); ctx.lineTo(L, T+ph); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(L, py(0)); ctx.lineTo(L+pw, py(0)); ctx.stroke();
     ctx.fillStyle = '#0f172a'; ctx.font = 'bold 14px sans-serif';
     ctx.textAlign = 'center'; ctx.fillText('t in ms', L+pw/2, H-14);
     ctx.save(); ctx.translate(18, T+ph/2); ctx.rotate(-Math.PI/2);
     ctx.fillText('i in mA', 0, 0); ctx.restore();
 
     // --- Zahlen
-    document.getElementById('qsum').textContent = fmt(Qs*1e6, 0) + ' µC';
+    document.getElementById('qsum').textContent = '\u2212' + fmt(Math.abs(Qs)*1e6, 0) + ' µC';
     document.getElementById('qex').textContent  = fmt(Qex*1e6, 0) + ' µC';
     document.getElementById('tau').textContent  = fmt(tau*1000, 0) + ' ms';
-    var d = (Qs - Qex) / Qex * 100;
+    var d = (Math.abs(Qs) - Qex) / Qex * 100;
     document.getElementById('abw').textContent = (d >= 0 ? '+' : '−') + fmt(Math.abs(d),1) + ' %';
 
     // --- Deutung
@@ -197,19 +198,20 @@ footer{text-align:center;padding:14px;font-size:.78rem;color:#64748b}
     if (d > 8){
       txt = '<b>Zu grob abgetastet.</b> Jeder Streifen hält den Strom über ganze ' + dt +
             ' ms auf dem Anfangswert fest, obwohl er in dieser Zeit schon deutlich abgefallen ist. ' +
-            'Die Summe liegt darum klar über der wahren Ladung.';
+            'Der Betrag der Summe liegt darum klar über der wahren Ladung.';
     } else if (d > 2){
-      txt = 'Die Streifen liegen noch sichtbar über der Kurve – die Summe überschätzt ' +
+      txt = 'Die Streifen reichen noch sichtbar über die Kurve hinaus – die Summe überschätzt ' +
             'die Ladung um einige Prozent. Machen Sie Δt kleiner und beobachten Sie, wohin der Wert läuft.';
     } else {
       txt = '<b>Jetzt greift der Grenzübergang.</b> Die Treppe schmiegt sich an die Kurve an, ' +
             'die Summe Σ i·Δt geht in das Integral ∫ i dt über – ' +
-            'und das ist genau die Fläche unter der Kurve. Sie stimmt mit C·U₀ überein.';
+            'und das ist genau die Fläche zwischen Kurve und Zeitachse. Ihr Betrag stimmt mit C·U₀ überein.';
     }
     if (d <= 2){
       txt += ' Dass ein Rest von rund −0,7 % bleibt, liegt am abgeschnittenen Schwanz jenseits ' +
              'von 5 τ – dort fließt noch ein kleiner Strom, den das Messfenster nicht mehr erfasst.';
     }
+    txt += ' <b>Zum Vorzeichen:</b> Beim Entladen fließt der Strom entgegen der Richtung, in der der Kondensator geladen wurde – das CASSY zählt ihn deshalb negativ, die Fläche liegt unter der Nulllinie. Die transportierte Ladung ist ihr Betrag: Q = |∫ i dt| = C·U₀.';
     document.getElementById('text').innerHTML = txt;
   }
 
