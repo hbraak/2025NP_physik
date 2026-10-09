@@ -169,6 +169,28 @@
         
         <div class="material-grid">
 
+            <a href="lernliste-elektrik-kondensator.html" class="material-card" data-url="lernliste-elektrik-kondensator.html">
+                <div class="card-header">
+                    <div class="card-icon purple">&#x1F4CB;</div>
+                    <div class="card-title">Lernliste Klausur: Elektrisches Feld &amp; Kondensator</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Interaktive Checkliste zur Klausurvorbereitung: Ladung und Feldst&auml;rke, Spannung und Arbeit im Feld, Influenz, Kapazit&auml;t, Energie im Kondensator, Laden und Entladen im RC-Kreis sowie die Auswertung der Praktikumsmessungen. 30 Kompetenzen in 7 einklappbaren Bl&ouml;cken, jeweils mit &Uuml;bungsaufgabe, L&ouml;sung und KI-Prompt f&uuml;r weitere Aufgaben.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Elektrisches Feld</span>
+                            <span class="tag">Kondensator</span>
+                            <span class="tag">RC-Kreis</span>
+                            <span class="tag">Klausurvorbereitung</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-lernliste-elektrik"></div>
+                </div>
+            </a>
+
             <a href="AB_Energie_Kondensator_Anwendungen.pdf" class="material-card" data-url="AB_Energie_Kondensator_Anwendungen.pdf">
                 <div class="card-header">
                     <div class="card-icon blue">&#x1F50B;</div>
@@ -182,7 +204,6 @@
                         <div class="card-tags">
                             <span class="tag">Kondensator</span>
                             <span class="tag">Energie</span>
-                            <span class="tag">NEU</span>
                         </div>
                     </div>
                     <div class="qr-code" id="qr-abkondanw"></div>
@@ -1239,6 +1260,7 @@
         
         // QR-Codes generieren wenn Seite geladen
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-lernliste-elektrik', 'lernliste-elektrik-kondensator.html');
             generateQR('qr-abkondanw', 'AB_Energie_Kondensator_Anwendungen.pdf');
             generateQR('qr-entladeflaeche', 'entladestrom-flaeche.html');
             generateQR('qr-hinweise-kond', 'hinweise-kondensator.html');

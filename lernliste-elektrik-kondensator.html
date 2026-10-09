@@ -1,0 +1,1874 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lernliste Klausur Elektrik – Physik-LK 12NP</title>
+
+<!-- MathJax -->
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['\\(','\\)'], ['$','$']], displayMath: [['\\[','\\]'], ['$$','$$']] },
+    options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] },
+    startup: { typeset: false }
+  };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js" crossorigin="anonymous"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Serif:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #f5f2eb;
+  --surface: #ffffff;
+  --surface2: #f0ece2;
+  --border: #d4cfc4;
+  --text: #1a1915;
+  --text-muted: #6b6760;
+  --accent: #2b4c8c;
+  --accent-light: #dce6f5;
+  --green: #1a6b3a;
+  --green-light: #d4edde;
+  --yellow-light: #fdf5d0;
+  --formula-bg: #0f1923;
+  --afb1: #1a5c8c;  --afb1-bg: #dceef8;
+  --afb2: #7a5200;  --afb2-bg: #fef0cc;
+  --afb3: #7a1a1a;  --afb3-bg: #fde8e8;
+  --star: #b06000;  --star-bg: #fff0d0;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* ── Header ── */
+header {
+  background: var(--accent);
+  color: white;
+  position: sticky; top: 0; z-index: 200;
+  box-shadow: 0 2px 14px rgba(0,0,0,0.22);
+}
+.header-inner {
+  max-width: 920px; margin: 0 auto;
+  padding: 16px 24px 8px;
+}
+.header-school { font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.7; }
+.header-title  { font-size: 1.3rem; font-weight: 700; margin: 3px 0 4px; }
+.header-sub    { font-size: 0.8rem; opacity: 0.78; font-family: 'IBM Plex Serif', serif; font-style: italic; }
+.progress-wrap { max-width: 920px; margin: 0 auto; padding: 6px 24px 14px; }
+.progress-label { font-size: 0.73rem; color: rgba(255,255,255,0.7); display: flex; justify-content: space-between; margin-bottom: 4px; }
+.progress-track { height: 7px; background: rgba(255,255,255,0.2); border-radius: 4px; overflow: hidden; }
+.progress-fill  { height: 100%; background: #7ecba0; border-radius: 4px; transition: width .5s; width: 0; }
+
+/* ── AFB legend ── */
+.afb-legend {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 0;
+}
+.afb-legend-inner {
+  max-width: 920px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+}
+.afb-legend-label { font-size: 0.72rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+.afb-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  border-radius: 4px; padding: 3px 9px; font-size: 0.73rem; font-weight: 700; letter-spacing: 0.04em;
+  border: 1.5px solid transparent;
+}
+.afb1 { background: var(--afb1-bg); color: var(--afb1); border-color: #9ac4de; }
+.afb2 { background: var(--afb2-bg); color: var(--afb2); border-color: #e8c96a; }
+.afb3 { background: var(--afb3-bg); color: var(--afb3); border-color: #e8a0a0; }
+.star-pill { background: var(--star-bg); color: var(--star); border-color: #e8c070; }
+
+/* ── Formula strip ── */
+.formula-strip {
+  background: var(--formula-bg);
+  color: #c8e8ff;
+  padding: 10px 0;
+  overflow-x: auto;
+}
+.formula-strip-inner {
+  max-width: 920px; margin: 0 auto; padding: 0 24px;
+  display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+}
+.formula-strip-label { font-size: 0.68rem; color: rgba(255,255,255,0.4); letter-spacing: 0.1em; text-transform: uppercase; flex-shrink: 0; }
+.fchip {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 4px; padding: 3px 10px;
+  font-size: 0.82rem; white-space: nowrap;
+  color: #ddf0ff;
+}
+.fchip .mjx-container { display: inline !important; }
+
+/* ── Main ── */
+main { max-width: 920px; margin: 0 auto; padding: 26px 24px 60px; }
+
+/* ── Section ── */
+.section { margin-bottom: 26px; }
+.section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.section-icon {
+  width: 32px; height: 32px; border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.05rem; flex-shrink: 0;
+}
+.s-feld      .section-icon { background: #e0f0ff; }
+.s-spannung  .section-icon { background: #fdecd8; }
+.s-bewegung  .section-icon { background: #f5f0d8; }
+.s-influenz  .section-icon { background: #ece0f5; }
+.s-kapazitaet .section-icon { background: #dce6f5; }
+.s-energie   .section-icon { background: #d8f5dc; }
+.s-rc        .section-icon { background: #fde8e8; }
+.s-praktikum .section-icon { background: #e8f0e0; }
+.section-title { font-size: 0.98rem; font-weight: 700; }
+.section-count { font-size: 0.72rem; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; margin-left: auto; }
+
+/* ── Cards ── */
+.card-list { display: flex; flex-direction: column; gap: 5px; }
+
+.comp-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  display: flex; align-items: stretch;
+  transition: border-color .18s, box-shadow .18s;
+  overflow: hidden;
+}
+.comp-card:hover { border-color: #a8bed8; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+.comp-card.done { background: var(--green-light); border-color: #a0d4b8; }
+.comp-card.done .comp-text { text-decoration: line-through; color: #3a7a54; opacity: 0.72; }
+.comp-card.star-card { border-color: #e0c060; background: var(--yellow-light); }
+.comp-card.star-card.done { background: var(--green-light); border-color: #a0d4b8; }
+
+/* Checkbox */
+.comp-check {
+  width: 46px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.comp-check:hover { background: rgba(0,0,0,0.03); }
+.checkbox {
+  width: 19px; height: 19px;
+  border: 2px solid var(--border); border-radius: 4px;
+  background: white; display: flex; align-items: center; justify-content: center;
+  pointer-events: none; transition: all .15s;
+}
+.comp-card.done .checkbox { background: var(--green); border-color: var(--green); }
+.checkbox::after {
+  content: ''; display: none;
+  width: 4px; height: 8px;
+  border: 2px solid white; border-top: none; border-left: none;
+  transform: rotate(45deg) translateY(-1px);
+}
+.comp-card.done .checkbox::after { display: block; }
+
+/* Body */
+.comp-body { flex: 1; padding: 9px 10px; min-width: 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.comp-text { font-size: 0.875rem; line-height: 1.45; flex: 1; min-width: 160px; }
+.comp-text .mjx-container { display: inline !important; }
+
+/* AFB badge on card */
+.card-afb { flex-shrink: 0; }
+
+/* Üben button */
+.comp-btn {
+  padding: 0 14px; background: none; border: none;
+  border-left: 1.5px solid var(--border);
+  color: var(--accent); font-size: 0.76rem; font-weight: 700;
+  font-family: 'IBM Plex Sans', sans-serif;
+  cursor: pointer; white-space: nowrap; letter-spacing: 0.03em;
+  transition: background .14s;
+}
+.comp-btn:hover { background: var(--accent-light); }
+
+/* ── Modal ── */
+.overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(10,10,14,0.54); z-index: 500;
+  justify-content: center; align-items: flex-start;
+  padding: 36px 14px 20px; overflow-y: auto;
+}
+.overlay.open { display: flex; }
+.modal {
+  background: var(--surface); border-radius: 12px;
+  width: 100%; max-width: 640px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.25);
+  animation: slideUp .2s ease; overflow: hidden;
+}
+@keyframes slideUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+
+.modal-head {
+  background: var(--accent); color: white;
+  padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;
+}
+.modal-head h3 { font-size: 0.93rem; font-weight: 600; }
+.modal-close {
+  background: rgba(255,255,255,0.15); border: none; color: white;
+  width: 26px; height: 26px; border-radius: 5px; cursor: pointer; font-size: 0.9rem;
+  display: flex; align-items: center; justify-content: center;
+}
+.modal-close:hover { background: rgba(255,255,255,0.28); }
+
+.modal-tabs { display: flex; border-bottom: 2px solid var(--border); background: var(--surface2); }
+.mtab {
+  flex: 1; padding: 9px 8px; border: none; background: none;
+  font-family: 'IBM Plex Sans', sans-serif; font-size: 0.8rem; font-weight: 600;
+  color: var(--text-muted); cursor: pointer;
+  border-bottom: 2.5px solid transparent; margin-bottom: -2px;
+  transition: color .14s;
+}
+.mtab.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--surface); }
+
+.modal-body { padding: 18px 20px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Task / solution content */
+.task-box {
+  background: var(--surface2); border: 1.5px solid var(--border);
+  border-radius: 8px; padding: 13px 15px; font-size: 0.875rem; line-height: 1.65;
+  margin-bottom: 12px;
+}
+.task-box p { margin-bottom: 5px; }
+.task-box p:last-child { margin-bottom: 0; }
+.given {
+  display: block; font-family: 'IBM Plex Mono', monospace; font-size: 0.8em;
+  background: rgba(0,0,0,0.06); padding: 7px 10px; border-radius: 5px; margin: 7px 0;
+  line-height: 1.7;
+}
+/* Structured subtasks replacing .given */
+.subtasks {
+  margin: 8px 0 4px; display: flex; flex-direction: column; gap: 5px;
+}
+.subtask {
+  display: flex; align-items: baseline; gap: 8px;
+  font-size: 0.875rem; line-height: 1.55;
+}
+.subtask-label {
+  flex-shrink: 0; width: 20px;
+  font-weight: 700; color: var(--accent);
+}
+.subtask-body { flex: 1; }
+.given-box {
+  background: var(--surface2); border: 1px solid var(--border); border-radius: 6px;
+  padding: 7px 11px; margin: 9px 0 4px; font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.80rem; line-height: 1.6; color: var(--text);
+}
+.given-box::before {
+  content: 'Gegeben'; display: block; font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.66rem; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--text-muted); margin-bottom: 3px;
+}
+.hint-box {
+  background: rgba(43,76,140,0.07); border-left: 3px solid var(--accent);
+  border-radius: 0 5px 5px 0; padding: 5px 10px;
+  font-size: 0.82rem; color: var(--text-muted); margin-top: 6px;
+  font-style: italic;
+}
+.sol-toggle {
+  width: 100%; background: none; border: 1.5px solid var(--border); border-radius: 6px;
+  padding: 8px 14px; font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.8rem; font-weight: 600; color: var(--text-muted); cursor: pointer;
+  margin-bottom: 10px; transition: all .14s; text-align: left;
+}
+.sol-toggle:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.sol-box {
+  display: none; background: var(--green-light); border: 1.5px solid #a0d4b8;
+  border-radius: 8px; padding: 13px 15px; font-size: 0.855rem; line-height: 1.65;
+}
+.sol-box.open { display: block; animation: fadeIn .18s ease; }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+.sol-step { display: flex; gap: 8px; margin-bottom: 9px; }
+.sol-step:last-child { margin-bottom: 0; }
+.snum {
+  width: 19px; height: 19px; flex-shrink: 0; margin-top: 2px;
+  background: var(--green); color: white; border-radius: 50%;
+  font-size: 0.67rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.sol-step .mjx-container { display: inline !important; }
+.fbox {
+  display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 0.82em;
+  background: rgba(255,255,255,0.72); padding: 3px 8px; border-radius: 4px; margin: 2px 0;
+}
+.result {
+  display: inline-block; background: var(--green); color: white;
+  border-radius: 5px; padding: 5px 12px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.83em; font-weight: 600; margin-top: 8px;
+}
+/* for display math in modal */
+.dmath { text-align: center; margin: 8px 0; overflow-x: auto; }
+
+/* Prompt tab */
+.prompt-box {
+  background: var(--formula-bg); color: #c8e8ff;
+  border-radius: 8px; padding: 13px 15px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.77rem; line-height: 1.65;
+  white-space: pre-wrap; max-height: 230px; overflow-y: auto; margin-bottom: 12px;
+}
+.ai-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.ai-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 13px; border: 1.5px solid var(--border); border-radius: 6px;
+  font-family: 'IBM Plex Sans', sans-serif; font-size: 0.78rem; font-weight: 600;
+  cursor: pointer; text-decoration: none; background: white; color: var(--text);
+  transition: all .14s;
+}
+.ai-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.ai-btn.copy { background: var(--accent); color: white; border-color: var(--accent); }
+.ai-btn.copy:hover { background: #1e3d74; }
+
+/* Footer */
+footer {
+  text-align: center; color: var(--text-muted); font-size: 0.73rem;
+  padding: 18px; border-top: 1px solid var(--border);
+  font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.05em;
+}
+
+@media(max-width:500px) {
+  main { padding: 18px 14px 40px; }
+  .comp-btn { padding: 0 9px; font-size: 0.7rem; }
+}
+
+/* ── Einklappbare Sektionen (Akkordeon) ── */
+.section { margin-bottom: 10px; }
+.section-header {
+  cursor: pointer; user-select: none;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  padding: 9px 13px;
+  margin-bottom: 0;
+  transition: border-color .15s, background .15s, box-shadow .15s;
+}
+.section-header:hover { border-color: #a8bed8; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.section.open .section-header { border-color: #a8bed8; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.sec-chevron {
+  flex-shrink: 0; width: 18px; text-align: center;
+  color: var(--text-muted); font-size: 0.8rem;
+  transition: transform .18s;
+}
+.section.open .sec-chevron { transform: rotate(90deg); }
+.sec-meta { display: flex; align-items: center; gap: 9px; margin-left: auto; flex-shrink: 0; }
+.sec-mini { width: 54px; height: 5px; background: var(--surface2); border-radius: 3px; overflow: hidden; border: 1px solid var(--border); }
+.sec-mini-fill { height: 100%; width: 0; background: #4fa877; transition: width .4s; }
+.section:not(.open) .card-list { display: none; }
+.section.open .card-list {
+  border: 1.5px solid #a8bed8; border-top: none;
+  border-radius: 0 0 9px 9px;
+  padding: 9px 10px; gap: 6px;
+  background: rgba(255,255,255,0.45);
+}
+.section-sub { font-size: 0.74rem; color: var(--text-muted); font-family: 'IBM Plex Serif', serif; font-style: italic; }
+.section-title-wrap { min-width: 0; }
+
+/* ── Werkzeugleiste ── */
+.toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 16px; }
+.tool-btn {
+  padding: 6px 13px; border: 1.5px solid var(--border); border-radius: 6px;
+  background: white; color: var(--text); cursor: pointer;
+  font-family: 'IBM Plex Sans', sans-serif; font-size: 0.77rem; font-weight: 600;
+  transition: all .14s;
+}
+.tool-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+.toolbar-hint { font-size: 0.74rem; color: var(--text-muted); margin-left: auto; font-family: 'IBM Plex Mono', monospace; }
+
+/* ── Hinweiskasten oben ── */
+.intro-box {
+  background: var(--surface); border: 1.5px solid var(--border); border-left: 4px solid var(--accent);
+  border-radius: 8px; padding: 12px 15px; margin-bottom: 18px;
+  font-size: 0.85rem; line-height: 1.6;
+}
+.intro-box strong { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header>
+  <div class="header-inner">
+    <div class="header-school">Lore-Lorentz-Schule &nbsp;·&nbsp; Physik-LK 12NP</div>
+    <div class="header-title">Lernliste Klausur &mdash; Elektrisches Feld &amp; Kondensator</div>
+    <div class="header-sub">Feldst&auml;rke &middot; Spannung und Arbeit &middot; Kapazit&auml;t &middot; Energie &middot; Laden und Entladen &nbsp;&middot;&nbsp; AFB I&ndash;III</div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span>Ihr Fortschritt</span>
+      <span id="prog-text">0 von 0 Kompetenzen</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+  </div>
+</header>
+
+<!-- ══ AFB LEGENDE ══ -->
+<div class="afb-legend">
+  <div class="afb-legend-inner">
+    <span class="afb-legend-label">Anforderungsbereiche:</span>
+    <span class="afb-pill afb1">AFB I &nbsp;Reproduktion</span>
+    <span class="afb-pill afb2">AFB II &nbsp;Transfer</span>
+    <span class="afb-pill afb3">AFB III &nbsp;Reflexion</span>
+    <span class="afb-pill star-pill">★ Knobelaufgabe</span>
+  </div>
+</div>
+
+<!-- ══ FORMELLEISTE ══ -->
+<div class="formula-strip">
+  <div class="formula-strip-inner">
+    <span class="formula-strip-label">Formeln</span>
+    <span class="fchip">\(E = \frac{F}{q}\)</span>
+    <span class="fchip">\(E = \frac{U}{d}\)</span>
+    <span class="fchip">\(W = q \cdot U\)</span>
+    <span class="fchip">\(C = \frac{Q}{U}\)</span>
+    <span class="fchip">\(C = \varepsilon_0 \varepsilon_r \frac{A}{d}\)</span>
+    <span class="fchip">\(W = \tfrac{1}{2} C U^2\)</span>
+    <span class="fchip">\(\tau = R \cdot C\)</span>
+    <span class="fchip">\(u_C = U_0 \, e^{-t/\tau}\)</span>
+    <span class="fchip">\(i = \frac{U_0}{R} e^{-t/\tau}\)</span>
+    <span class="fchip">\(\varepsilon_0 = 8{,}854 \cdot 10^{-12}\,\frac{\text{As}}{\text{Vm}}\)</span>
+  </div>
+</div>
+
+<main>
+
+<div class="intro-box">
+  <strong>So arbeiten Sie mit dieser Liste:</strong> Jeder Themenblock l&auml;sst sich auf- und zuklappen &ndash;
+  arbeiten Sie einen Block nach dem anderen durch, statt alles auf einmal anzusehen.
+  Hinter jedem &bdquo;&Uuml;ben&ldquo; steckt eine Aufgabe mit vollst&auml;ndiger L&ouml;sung und ein KI&#8209;Prompt,
+  mit dem Sie sich beliebig viele weitere Aufgaben zu genau dieser Kompetenz erzeugen k&ouml;nnen.
+  Das H&auml;kchen setzen Sie erst, wenn Sie die Aufgabe <em>ohne</em> L&ouml;sung geschafft haben.
+</div>
+
+<div class="toolbar">
+  <button class="tool-btn" onclick="openAll()">⊞ Alle ausklappen</button>
+  <button class="tool-btn" onclick="closeAll()">⊟ Alle einklappen</button>
+  <button class="tool-btn" onclick="resetAll()">↺ H&auml;kchen zur&uuml;cksetzen</button>
+  <span class="toolbar-hint" id="toolbar-hint"></span>
+</div>
+
+<!-- ============================================================
+     LADUNG, FELD UND FELDSTÄRKE
+============================================================ -->
+<div class="section s-feld" id="s-feld">
+  <div class="section-header" onclick="toggleSec('feld')">
+    <div class="sec-chevron">▶</div>
+    <div class="section-icon">🧲</div>
+    <div class="section-title-wrap">
+      <div class="section-title">Ladung, Feld und Feldstärke</div>
+      <div class="section-sub">Was ein Feld ist, wie es entsteht und wie man es ausrechnet</div>
+    </div>
+    <div class="sec-meta">
+      <div class="sec-mini"><div class="sec-mini-fill" id="mini-feld"></div></div>
+      <div class="section-count" id="cnt-feld"></div>
+    </div>
+  </div>
+  <div class="card-list" id="sec-feld">
+
+    <div class="comp-card" data-id="f1" data-sec="feld">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die elektrische Feldstärke \(E = \frac{F}{q}\) definieren, ihre Einheit angeben und sie aus einer gemessenen Kraft berechnen.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('f1')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="f3" data-sec="feld">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann \(E = \frac{U}{d}\) auf den Plattenkondensator anwenden und die Gleichung nach \(U\) oder \(d\) umstellen.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('f3')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="f4" data-sec="feld">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann aus Messreihen begründen, dass \(E \sim U\) und \(E \sim \frac{1}{d}\) gilt, und daraus \(E = \frac{U}{d}\) herleiten.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('f4')">Üben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================
+     SPANNUNG, ARBEIT UND ENERGIE IM FELD
+============================================================ -->
+<div class="section s-spannung" id="s-spannung">
+  <div class="section-header" onclick="toggleSec('spannung')">
+    <div class="sec-chevron">▶</div>
+    <div class="section-icon">⚡</div>
+    <div class="section-title-wrap">
+      <div class="section-title">Spannung, Arbeit und Energie im Feld</div>
+      <div class="section-sub">Warum W = q·U gilt — und warum der Weg keine Rolle spielt</div>
+    </div>
+    <div class="sec-meta">
+      <div class="sec-mini"><div class="sec-mini-fill" id="mini-spannung"></div></div>
+      <div class="section-count" id="cnt-spannung"></div>
+    </div>
+  </div>
+  <div class="card-list" id="sec-spannung">
+
+    <div class="comp-card" data-id="s1" data-sec="spannung">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Arbeit \(W = q \cdot U\) im elektrischen Feld berechnen und die Gleichung nach jeder Größe umstellen.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('s1')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="s2" data-sec="spannung">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann \(W = q \cdot U\) auf zwei Wegen herleiten: mechanisch über \(W = F \cdot d\) und elektrisch über \(P = U \cdot I\).</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('s2')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="s3" data-sec="spannung">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann begründen, dass die Arbeit im elektrischen Feld nur von der durchlaufenen Spannung und nicht vom Weg abhängt.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('s3')">Üben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================
+     INFLUENZ, BERÜHRUNG UND ERDUNG
+============================================================ -->
+<div class="section s-influenz" id="s-influenz">
+  <div class="section-header" onclick="toggleSec('influenz')">
+    <div class="sec-chevron">▶</div>
+    <div class="section-icon">🪞</div>
+    <div class="section-title-wrap">
+      <div class="section-title">Influenz, Berührung und Erdung</div>
+      <div class="section-sub">Was im Metall passiert und was am Elektrometer hängen bleibt</div>
+    </div>
+    <div class="sec-meta">
+      <div class="sec-mini"><div class="sec-mini-fill" id="mini-influenz"></div></div>
+      <div class="section-count" id="cnt-influenz"></div>
+    </div>
+  </div>
+  <div class="card-list" id="sec-influenz">
+
+    <div class="comp-card" data-id="i1" data-sec="influenz">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Influenz beschreiben: Ladungsverschiebung im Metall, feldfreier Innenraum, Oberflächenladungen.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('i1')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="i2" data-sec="influenz">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann Elektrometer-Versuche deuten und vorhersagen, welche Ladung nach Annäherung, Berührung oder Erdung zurückbleibt.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('i2')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="i3" data-sec="influenz">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann Influenz im Leiter und Polarisation im Isolator unterscheiden und begründen, warum beide zu Anziehung führen.</span>
+        <span class="afb-pill afb3 card-afb">AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('i3')">Üben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================
+     KAPAZITÄT DES KONDENSATORS
+============================================================ -->
+<div class="section s-kapazitaet" id="s-kapazitaet">
+  <div class="section-header" onclick="toggleSec('kapazitaet')">
+    <div class="sec-chevron">▶</div>
+    <div class="section-icon">🔋</div>
+    <div class="section-title-wrap">
+      <div class="section-title">Kapazität des Kondensators</div>
+      <div class="section-sub">Q = C·U, der Bauform-Zusammenhang und sicheres Rechnen mit Vorsilben</div>
+    </div>
+    <div class="sec-meta">
+      <div class="sec-mini"><div class="sec-mini-fill" id="mini-kapazitaet"></div></div>
+      <div class="section-count" id="cnt-kapazitaet"></div>
+    </div>
+  </div>
+  <div class="card-list" id="sec-kapazitaet">
+
+    <div class="comp-card" data-id="k1" data-sec="kapazitaet">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Kapazität \(C = \frac{Q}{U}\) berechnen, die Einheit Farad erläutern und die Gleichung umstellen.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('k1')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="k2" data-sec="kapazitaet">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann aus einer Messreihe ein \(Q(U)\)-Diagramm erstellen, die Proportionalität nachweisen und \(C\) als Steigung bestimmen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('k2')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="k3" data-sec="kapazitaet">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann \(C = \varepsilon_0 \varepsilon_r \frac{A}{d}\) anwenden und den Einfluss von Fläche, Abstand und Dielektrikum diskutieren.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('k3')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="k4" data-sec="kapazitaet">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann mit Vorsilben und Einheiten sicher rechnen (pF, nF, µF, mC, 1 C = 1 As, 1 F = 1 As/V).</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('k4')">Üben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================
+     ENERGIE IM KONDENSATOR
+============================================================ -->
+<div class="section s-energie" id="s-energie">
+  <div class="section-header" onclick="toggleSec('energie')">
+    <div class="sec-chevron">▶</div>
+    <div class="section-icon">📐</div>
+    <div class="section-title-wrap">
+      <div class="section-title">Energie im Kondensator</div>
+      <div class="section-sub">Warum W = Q·U falsch ist — und was die Fläche unter Q(U) bedeutet</div>
+    </div>
+    <div class="sec-meta">
+      <div class="sec-mini"><div class="sec-mini-fill" id="mini-energie"></div></div>
+      <div class="section-count" id="cnt-energie"></div>
+    </div>
+  </div>
+  <div class="card-list" id="sec-energie">
+
+    <div class="comp-card" data-id="e1" data-sec="energie">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Energie eines geladenen Kondensators mit \(W = \tfrac{1}{2}QU = \tfrac{1}{2}CU^2 = \frac{Q^2}{2C}\) berechnen.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e1')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="e2" data-sec="energie">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann begründen, warum \(W = Q \cdot U\) falsch ist, und die Energie als Fläche unter der \(Q(U)\)-Geraden deuten.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e2')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="e3" data-sec="energie">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann einen gemessenen Kapazitätswert gegen den Bauteilaufdruck bewerten und die Folgen für die Energie berechnen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e3')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="e4" data-sec="energie">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann Energie und Leistung eines Kondensators in einer technischen Anwendung vergleichen (Kamerablitz).</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e4')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="e5" data-sec="energie">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann eine Teilentladung mit \(\Delta W = \tfrac{1}{2}C(U_1^2 - U_2^2)\) auswerten und den nutzbaren Anteil beurteilen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e5')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="e6" data-sec="energie">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Energiedichte eines Kondensators mit der eines Akkus vergleichen und daraus technische Grenzen ableiten.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e6')">Üben</button>
+    </div>
+
+    <div class="comp-card star-card" data-id="e7" data-sec="energie">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">★ Ich kann die Reihenschaltung von Kondensatoren (\(\frac{1}{C} = \sum \frac{1}{C_i}\)) berechnen und die Energiebilanz begründen.</span>
+        <span class="afb-pill star-pill card-afb">★ AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('e7')">Üben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================
+     LADEN UND ENTLADEN — DER RC-KREIS
+============================================================ -->
+<div class="section s-rc" id="s-rc">
+  <div class="section-header" onclick="toggleSec('rc')">
+    <div class="sec-chevron">▶</div>
+    <div class="section-icon">🌀</div>
+    <div class="section-title-wrap">
+      <div class="section-title">Laden und Entladen — der RC-Kreis</div>
+      <div class="section-sub">τ = R·C, die Exponentialfunktion, Linearisieren und der Wirkungsgrad</div>
+    </div>
+    <div class="sec-meta">
+      <div class="sec-mini"><div class="sec-mini-fill" id="mini-rc"></div></div>
+      <div class="section-count" id="cnt-rc"></div>
+    </div>
+  </div>
+  <div class="card-list" id="sec-rc">
+
+    <div class="comp-card" data-id="r1" data-sec="rc">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Zeitkonstante \(\tau = R \cdot C\) berechnen, die 63-%/37-%-Regel anwenden und \(T_H = \tau \ln 2\) nutzen.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('r1')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="r2" data-sec="rc">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann \(u_C(t) = U_0 e^{-t/\tau}\) und \(u_C(t) = U_0(1 - e^{-t/\tau})\) auswerten und nach \(t\) umstellen.</span>
+        <span class="afb-pill afb1 card-afb">AFB I</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('r2')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="r3" data-sec="rc">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann nachvollziehen, warum beim Laden und Entladen eine Exponentialfunktion auftritt, und \(\tau = R \cdot C\) darin wiedererkennen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('r3')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="r4" data-sec="rc">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann aus einer Entladekurve \(\tau\) durch Linearisierung mit \(\ln u_C\) bestimmen und daraus \(C\) berechnen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('r4')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="r5" data-sec="rc">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann die Ladung als Fläche unter der \(i(t)\)-Kurve deuten und begründen, warum sie von \(R\) unabhängig ist.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('r5')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="r6" data-sec="rc">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann den Einfluss des Messgeräts (1 MΩ Innenwiderstand) als Spannungsteiler bzw. Ersatzschaltbild quantifizieren.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('r6')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="r7" data-sec="rc">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann den Wirkungsgrad beim Laden eines Kondensators über \(p = u \cdot i\) und \(W = \int p\,\mathrm{d}t\) bestimmen.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('r7')">Üben</button>
+    </div>
+
+    <div class="comp-card star-card" data-id="r8" data-sec="rc">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">★ Ich kann \(\frac{1}{\eta} = 1 + 2\tau \cdot \frac{1}{T}\) linearisieren und daraus \(\tau\) und \(C\) bestimmen.</span>
+        <span class="afb-pill star-pill card-afb">★ AFB III</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('r8')">Üben</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================
+     MESSWERTE AUSWERTEN UND BEWERTEN
+============================================================ -->
+<div class="section s-praktikum" id="s-praktikum">
+  <div class="section-header" onclick="toggleSec('praktikum')">
+    <div class="sec-chevron">▶</div>
+    <div class="section-icon">📊</div>
+    <div class="section-title-wrap">
+      <div class="section-title">Messwerte auswerten und bewerten</div>
+      <div class="section-sub">Was aus G1, G2 und G3 klausurrelevant ist: Ergebnisse vergleichen und linearisieren</div>
+    </div>
+    <div class="sec-meta">
+      <div class="sec-mini"><div class="sec-mini-fill" id="mini-praktikum"></div></div>
+      <div class="section-count" id="cnt-praktikum"></div>
+    </div>
+  </div>
+  <div class="card-list" id="sec-praktikum">
+
+    <div class="comp-card" data-id="p3" data-sec="praktikum">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann mehrere unabhängige Messergebnisse für dieselbe Größe vergleichen und begründet einen Wert angeben.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('p3')">Üben</button>
+    </div>
+
+    <div class="comp-card" data-id="p4" data-sec="praktikum">
+      <div class="comp-check" onclick="toggle(this)"><div class="checkbox"></div></div>
+      <div class="comp-body">
+        <span class="comp-text">Ich kann Linearisieren als allgemeines Werkzeug anwenden: Hilfsgröße bilden, Ausgleichsgerade, Steigung und Achsenabschnitt deuten.</span>
+        <span class="afb-pill afb2 card-afb">AFB II</span>
+      </div>
+      <button class="comp-btn" onclick="openModal('p4')">Üben</button>
+    </div>
+
+  </div>
+</div>
+
+</main>
+<footer>Lore-Lorentz-Schule &nbsp;&middot;&nbsp; Physik-LK 12NP &nbsp;&middot;&nbsp; Lernliste Klausur &bdquo;Elektrisches Feld &amp; Kondensator&ldquo;</footer>
+
+<!-- ══ MODAL ══ -->
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="m-title">Übungsaufgabe</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-tabs">
+      <button class="mtab active" onclick="switchTab(0)">📝 Aufgabe</button>
+      <button class="mtab" onclick="switchTab(1)">✅ Lösung</button>
+      <button class="mtab" onclick="switchTab(2)">🤖 KI-Prompt</button>
+    </div>
+    <div class="modal-body">
+      <div class="tab-panel active" id="tp0"></div>
+      <div class="tab-panel" id="tp1"></div>
+      <div class="tab-panel" id="tp2"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// TASK DATA
+// ─────────────────────────────────────────────
+const T = {
+
+f1:{title:"Feldstärke aus der Kraft auf eine Probeladung (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>An einer bestimmten Stelle eines elektrischen Feldes hängt eine kleine Probeladung an einem Kraftmesser.</p>
+  <div class="given-box">q = 4,0 nC<br>F = 1,2 &middot; 10&#8315;&#8309; N</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die elektrische Feldstärke \\(E\\) an dieser Stelle in N/C und in V/m.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Welche Kraft wirkt an derselben Stelle auf eine Ladung \\(q' = 15\\,\\text{nC}\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Erläutern Sie, warum \\(E\\) eine Eigenschaft des <em>Feldes</em> ist und nicht der Probeladung.</span></div>
+  </div>
+  <div class="hint-box"><strong>Tipp:</strong> Denken Sie daran: 1 N/C = 1 V/m — beide Einheiten beschreiben dasselbe.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(E = \\dfrac{F}{q} = \\dfrac{1{,}2 \\cdot 10^{-5}\\,\\text{N}}{4{,}0 \\cdot 10^{-9}\\,\\text{C}} = 3{,}0 \\cdot 10^{3}\\,\\dfrac{\\text{N}}{\\text{C}} = 3{,}0\\,\\dfrac{\\text{kV}}{\\text{m}}\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(F' = q' \\cdot E = 15 \\cdot 10^{-9}\\,\\text{C} \\cdot 3{,}0 \\cdot 10^{3}\\,\\tfrac{\\text{N}}{\\text{C}} = 4{,}5 \\cdot 10^{-5}\\,\\text{N}\\) — knapp viermal so groß, weil die Ladung knapp viermal so groß ist.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Verdoppelt man die Probeladung, verdoppelt sich auch die Kraft. Der <em>Quotient</em> \\(F/q\\) bleibt deshalb gleich — die Probeladung kürzt sich heraus. \\(E\\) sagt also etwas über den Ort im Feld aus, nicht über den Probekörper.
+</div></div>
+<div class="result">E = 3,0 kV/m  |  F' = 45 µN</div>`,
+prompt:`Ich übe die Definition der elektrischen Feldstärke E = F/q (Physik-LK Klasse 12, AFB I). Erstelle 3 Aufgaben: aus Kraft und Probeladung die Feldstärke berechnen, umgekehrt aus Feldstärke die Kraft, und einmal die Einheitenumrechnung N/C <-> V/m. Nutze realistische Werte (nC bis µC, kV/m). Vollständige Lösungen mit Zwischenschritten und SI-Einheiten, Dezimalkomma.`},
+
+f3:{title:"E = U/d anwenden und umstellen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Ein Plattenkondensator liegt an einer Hochspannungsquelle.</p>
+  <div class="given-box">d = 8,0 mm<br>U = 2,4 kV<br>e = 1,602 &middot; 10&#8315;&#185;&#8313; C</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die Feldstärke zwischen den Platten.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Welche Kraft wirkt auf ein Elektron in diesem Feld?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Der Plattenabstand wird auf 2,0 cm vergrößert. Welche Spannung ist nötig, damit dieselbe Feldstärke herrscht?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(E = \\dfrac{U}{d} = \\dfrac{2400\\,\\text{V}}{0{,}0080\\,\\text{m}} = 3{,}0 \\cdot 10^{5}\\,\\tfrac{\\text{V}}{\\text{m}}\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(F = e \\cdot E = 1{,}602 \\cdot 10^{-19}\\,\\text{C} \\cdot 3{,}0 \\cdot 10^{5}\\,\\tfrac{\\text{V}}{\\text{m}} = 4{,}8 \\cdot 10^{-14}\\,\\text{N}\\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\(U = E \\cdot d = 3{,}0 \\cdot 10^{5}\\,\\tfrac{\\text{V}}{\\text{m}} \\cdot 0{,}020\\,\\text{m} = 6{,}0\\,\\text{kV}\\) — der 2,5-fache Abstand braucht die 2,5-fache Spannung.
+</div></div>
+<div class="result">E = 300 kV/m  |  F = 48 fN  |  U = 6,0 kV</div>`,
+prompt:`Ich übe E = U/d am Plattenkondensator (Physik-LK Klasse 12, AFB I). Erstelle 4 Aufgaben, in denen jeweils eine andere Größe gesucht ist (E, U, d), einmal mit Kraft auf ein Elektron bzw. ein Proton. Realistische Werte (mm bis cm, V bis kV). Vollständige Lösungen mit Umstellschritt, SI-Einheiten, Dezimalkomma.`},
+
+f4:{title:"Messreihen auswerten: woher E = U/d kommt (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Auf eine Probeladung \\(q = 4{,}0\\,\\text{nC}\\) im Plattenkondensator wirkt eine messbare Kraft. Zwei Messreihen:</p>
+  <div class="given-box">Reihe 1 (d = 10 mm fest):<br>U / kV&nbsp; = 1,0&nbsp;&nbsp; 2,0&nbsp;&nbsp; 3,0&nbsp;&nbsp; 4,0<br>F / mN = 0,40&nbsp; 0,80&nbsp; 1,20&nbsp; 1,60<br><br>Reihe 2 (U = 2,0 kV fest):<br>d / mm&nbsp; = 5,0&nbsp;&nbsp; 10&nbsp;&nbsp;&nbsp; 20&nbsp;&nbsp;&nbsp; 40<br>F / mN = 1,60&nbsp; 0,80&nbsp; 0,40&nbsp; 0,20</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie für beide Reihen die Feldstärke \\(E\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Welcher Zusammenhang zeigt sich in Reihe 1? Begründen Sie mit einem Diagramm \\(E(U)\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Reihe 2 ergibt keine Gerade. Berechnen Sie die Hilfsgröße \\(1/d\\) und tragen Sie \\(E\\) gegen \\(1/d\\) auf.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Fassen Sie beide Ergebnisse zu einer Gleichung zusammen.</span></div>
+  </div>
+  <div class="hint-box"><strong>Tipp:</strong> Linearisieren heißt: Hilfsgröße ausrechnen, in ein <em>normales</em> Achsenkreuz eintragen, Steigung per Steigungsdreieck.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(E = F/q\\). Reihe 1: 100 / 200 / 300 / 400 kV/m. Reihe 2: 400 / 200 / 100 / 50 kV/m.
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(E(U)\\) ist eine Ursprungsgerade, also \\(E \\sim U\\). Steigung: \\(400\\,\\tfrac{\\text{kV}}{\\text{m}} : 4{,}0\\,\\text{kV} = 100\\,\\tfrac{1}{\\text{m}}\\) — das ist genau \\(1/d\\) mit \\(d = 10\\,\\text{mm}\\).
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\(1/d\\) = 200 / 100 / 50 / 25 m&#8315;&#185;. Die Auftragung \\(E\\) gegen \\(1/d\\) ergibt eine Ursprungsgerade mit der Steigung \\(2{,}0\\,\\text{kV}\\) — das ist genau \\(U\\).
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Beides zusammen: \\(E = \\dfrac{U}{d}\\). Die Steigung der einen Reihe ist jeweils die festgehaltene Größe der anderen — das ist die Bestätigung der Formel.
+</div></div>
+<div class="result">E = U/d — beide Steigungen bestätigen die Formel</div>`,
+prompt:`Ich übe das Auswerten von Messreihen zum homogenen Feld (Physik-LK Klasse 12, AFB II). Erstelle 2 Aufgaben mit erfundenen, aber konsistenten Messtabellen: eine mit E proportional zu U, eine mit E proportional zu 1/d, die linearisiert werden muss (Hilfsspalte 1/d, normales lineares Achsenkreuz, Steigungsdreieck — KEINE logarithmischen Achsen). Gib die Lösung mit Hilfsspalte, Steigung samt Einheit und physikalischer Deutung an.`},
+
+s1:{title:"Arbeit im elektrischen Feld (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Eine Ladung durchläuft im Feld eine Spannung (Potentialdifferenz).</p>
+  <div class="given-box">q = 2,5 &micro;C<br>U = 400 V</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Welche Arbeit verrichtet das Feld an der Ladung \\(q\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Welche Spannung müsste durchlaufen werden, damit an einer Ladung von 40 nC die Arbeit 0,20 mJ verrichtet wird?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Ein Akku liefert bei 230 V die Energie 1,15 J. Welche Ladungsmenge wurde dabei transportiert?</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Deuten Sie die umgestellte Gleichung \\(U = W/q\\) in Worten.</span></div>
+  </div>
+  <div class="hint-box"><strong>Tipp:</strong> Erst umstellen, dann einsetzen — und alle Vorsilben vorher in Zehnerpotenzen umschreiben.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(W = q \\cdot U = 2{,}5 \\cdot 10^{-6}\\,\\text{C} \\cdot 400\\,\\text{V} = 1{,}0 \\cdot 10^{-3}\\,\\text{J} = \\textbf{1,0 mJ}\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(U = \\dfrac{W}{q} = \\dfrac{2{,}0 \\cdot 10^{-4}\\,\\text{J}}{4{,}0 \\cdot 10^{-8}\\,\\text{C}} = 5{,}0 \\cdot 10^{3}\\,\\text{V} = \\textbf{5,0 kV}\\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\(q = \\dfrac{W}{U} = \\dfrac{1{,}15\\,\\text{J}}{230\\,\\text{V}} = 5{,}0 \\cdot 10^{-3}\\,\\text{C} = \\textbf{5,0 mC}\\)
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Die Spannung ist die <strong>Energie pro Ladung</strong>: Sie gibt an, wie viel Arbeit das Feld je transportiertem Coulomb verrichtet. 1 V = 1 J/C. Deshalb ist die Spannung eine Eigenschaft des <em>Feldes</em> und sagt noch nichts darüber, wie viel Ladung tatsächlich fließt.
+</div></div>
+<div class="result">W = 1,0 mJ  |  U = 5,0 kV  |  q = 5,0 mC  |  U = W/q = Energie pro Ladung</div>`,
+prompt:`Ich übe W = q·U (Physik-LK Klasse 12, AFB I). Erstelle 4 Aufgaben, in denen abwechselnd W, q und U gesucht sind, mit Vorsilben (nC, µC, mC, kV) und sauberer Umrechnung in Zehnerpotenzen, plus eine Deutungsaufgabe zu U = W/q als Energie pro Ladung. Verwende NICHT die Einheit Elektronenvolt und keine bewegten Ladungen oder Beschleunigungsspannungen. Vollständige Lösungen mit Umstellschritt und Einheitenkontrolle.`},
+
+s2:{title:"Zwei Herleitungen für dieselbe Gleichung (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>In der Stunde haben wir \\(W = q \\cdot U\\) zweimal begründet. Rekonstruieren Sie beide Wege.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Leiten Sie \\(W = q \\cdot U\\) mechanisch her: Starten Sie bei \\(W = F \\cdot d\\) und setzen Sie \\(F = qE\\) sowie \\(E = U/d\\) ein.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Leiten Sie \\(W = Q \\cdot U\\) elektrotechnisch her: Starten Sie bei \\(P = U \\cdot I\\), nutzen Sie \\(W = P \\cdot t\\) und \\(Q = I \\cdot t\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Erläutern Sie, warum beide Wege zwangsläufig dasselbe Ergebnis liefern müssen.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(W = F \\cdot d = qE \\cdot d = q \\cdot \\dfrac{U}{d} \\cdot d = q \\cdot U\\). Der Plattenabstand \\(d\\) kürzt sich heraus — deshalb hängt die Arbeit <em>nicht</em> vom Abstand ab, sondern nur von der Spannung.
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(W = P \\cdot t = U \\cdot I \\cdot t = U \\cdot (I \\cdot t) = U \\cdot Q\\).
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Es ist dieselbe physikalische Größe, nur anders zerlegt. Der mechanische Weg beschreibt die Kraft auf eine einzelne Ladung, der elektrotechnische die Energie, die eine Quelle beim Transport der Ladungsmenge \\(Q\\) liefert. In beiden Fällen gilt: die Spannung ist <strong>Energie pro Ladung</strong>, \\(U = W/q\\).
+</div></div>
+<div class="result">U = W/q — Spannung ist Energie pro Ladung</div>`,
+prompt:`Ich übe die Herleitung von W = q·U (Physik-LK Klasse 12, AFB II). Erstelle 3 Aufgaben, in denen ich Herleitungen selbst führen muss: (1) W = q·U aus W = F·d, (2) W = Q·U aus P = U·I, (3) Deutung der Spannung als Energie pro Ladung mit einem Zahlenbeispiel. Gib Musterherleitungen mit jedem Zwischenschritt an und benenne, welche Gleichung jeweils eingesetzt wird.`},
+
+s3:{title:"Wegunabhängigkeit der Arbeit (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Eine positive Ladung wird im homogenen Feld von der negativen zur positiven Platte gebracht — einmal auf direktem Weg, einmal auf einem Zickzackweg doppelter Länge.</p>
+  <div class="given-box">q = 5,0 nC<br>U = 1,0 kV<br>d = 5,0 cm</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die Arbeit für den direkten Weg.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Begründen Sie, wie groß die Arbeit auf dem Zickzackweg ist.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Wie groß ist die Arbeit, wenn die Ladung <em>parallel</em> zu den Platten verschoben wird? Begründen Sie.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Die Ladung wird auf einem schrägen Weg um 3,0 cm in Feldrichtung und gleichzeitig 4,0 cm quer dazu verschoben. Berechnen Sie die Arbeit.</span></div>
+  </div>
+  <div class="hint-box"><strong>Tipp:</strong> Nur die Wegstrecke <em>in</em> Feldrichtung zählt. Für Teil d) zuerst \\(E = U/d\\) ausrechnen.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(W = qU = 5{,}0 \\cdot 10^{-9}\\,\\text{C} \\cdot 1000\\,\\text{V} = 5{,}0 \\cdot 10^{-6}\\,\\text{J} = \\textbf{5,0 }\\mu\\text{J}\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Genauso groß: 5,0 &micro;J. Die Kraft \\(F = qE\\) zeigt überall in Feldrichtung; nur die Wegkomponente <em>in</em> dieser Richtung liefert einen Beitrag, die Querbewegungen heben sich gegenseitig auf. Entscheidend ist allein, zwischen welchen beiden Platten die Ladung am Ende sitzt.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  <strong>Null.</strong> Die Kraft steht senkrecht auf dem Weg, es gibt keine Wegkomponente in Feldrichtung. Die Ladung bleibt dabei &bdquo;auf gleicher Höhe&ldquo; im Feld.
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Feldstärke: \\(E = \\dfrac{U}{d} = \\dfrac{1000\\,\\text{V}}{0{,}050\\,\\text{m}} = 2{,}0 \\cdot 10^{4}\\,\\tfrac{\\text{V}}{\\text{m}}\\). Nur die 3,0 cm in Feldrichtung zählen: \\(W = qE \\cdot s_\\parallel = 5{,}0\\cdot10^{-9} \\cdot 2{,}0\\cdot10^{4} \\cdot 0{,}030 = 3{,}0 \\cdot 10^{-6}\\,\\text{J} = \\textbf{3,0 }\\mu\\text{J}\\). Die 4,0 cm quer gehen nicht ein.
+</div></div>
+<div class="result">W = 5,0 µJ auf jedem Weg · 0 J quer zum Feld · 3,0 µJ auf dem schrägen Weg</div>`,
+prompt:`Ich übe die Wegunabhängigkeit der Arbeit im homogenen elektrischen Feld (Physik-LK Klasse 12, AFB II). Erstelle 3 Aufgaben mit verschiedenen Wegen zwischen den Platten (direkt, Zickzack, schräg mit Zerlegung in eine Komponente längs und eine quer zum Feld) sowie eine Begründungsaufgabe, warum eine Verschiebung quer zum Feld keine Arbeit kostet. Verwende NICHT die Begriffe Äquipotentiallinie oder Potential und ziehe KEINEN Vergleich zum Gravitationsfeld. Lösungen mit Rechnung und ausformulierter Begründung.`},
+
+i1:{title:"Influenz im Metall beschreiben (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Eine ungeladene Metallkugel wird in das Feld eines Plattenkondensators gebracht.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Beschreiben Sie, was mit den freien Elektronen in der Kugel passiert.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Skizzieren Sie die Ladungsverteilung auf der Kugeloberfläche.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Geben Sie die Feldstärke <em>im Inneren</em> der Kugel an und begründen Sie.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Erläutern Sie, warum die Kugel insgesamt trotzdem ungeladen bleibt.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  Die freien Elektronen werden entgegen der Feldrichtung verschoben, also zur <em>positiven</em> Platte hin. Sie wandern nur so lange, bis das von ihnen erzeugte Gegenfeld das äußere Feld im Metall aufhebt — das dauert Nanosekunden.
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Auf der zur positiven Platte zeigenden Seite sitzt ein Elektronenüberschuss (negativ), auf der gegenüberliegenden Seite ein Elektronenmangel (positiv). Die Ladungen sitzen ausschließlich auf der <strong>Oberfläche</strong>.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\(E_\\text{innen} = 0\\). Wäre das Feld innen nicht null, würden die freien Elektronen weiterwandern — es wäre also kein Gleichgewicht. Genau das ist das Prinzip des Faraday-Käfigs.
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Es wurde keine Ladung zugeführt oder abgeführt, sondern nur <em>verschoben</em>. Die Summe aller Ladungen bleibt null.
+</div></div>
+<div class="result">E = 0 im Inneren, Ladung nur an der Oberfläche, Gesamtladung null</div>`,
+prompt:`Ich übe Influenz im Leiter (Physik-LK Klasse 12, AFB I/II). Erstelle 3 Aufgaben: Ladungsverteilung bei einer Metallkugel im Plattenfeld beschreiben, Feldfreiheit im Inneren begründen, und Faraday-Käfig im Alltag (Auto, Flugzeug, Mikrowelle). Musterantworten in Fachsprache mit Begründungsketten.`},
+
+i2:{title:"Annähern, Berühren, Erden — welche Ladung bleibt? (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Eine isoliert aufgestellte Metallkugel (am Elektrometer) und ein <strong>negativ</strong> geladener Stab. Drei Versuche:</p>
+  <div class="given-box">Versuch 1: Stab annähern, Zeiger beobachten, Stab wieder entfernen.<br>Versuch 2: Stab die Kugel berühren lassen, dann entfernen.<br>Versuch 3: Stab annähern, Kugel bei angenähertem Stab kurz erden, Erdung lösen, dann Stab entfernen.</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Beschreiben Sie für jeden Versuch, was der Elektrometerzeiger <em>während</em> des Versuchs anzeigt.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Geben Sie für jeden Versuch die Ladung der Kugel am Ende an (Vorzeichen!).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Erläutern Sie, warum Versuch 3 das überraschende Ergebnis liefert.</span></div>
+  </div>
+  <div class="hint-box"><strong>Tipp:</strong> Entscheidend ist immer: Kann Ladung <em>abfließen</em> oder wird sie nur verschoben?</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  V1: Zeiger schlägt beim Annähern aus (Influenz trennt die Ladungen im Elektrometer) und fällt beim Entfernen zurück auf null. V2: Zeiger schlägt aus und bleibt ausgeschlagen. V3: Zeiger schlägt beim Annähern aus, beim Erden fällt er auf (nahezu) <em>null</em>, weil die Kugel auf Erdpotential liegt; erst nach Lösen der Erdung und Entfernen des Stabes schlägt er wieder aus.
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  V1: <strong>ungeladen</strong> (nur Verschiebung, kein Ladungsübertritt). V2: <strong>negativ</strong> (Ladung wurde durch Berührung übertragen). V3: <strong>positiv</strong>.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Beim angenäherten negativen Stab sitzt die negative Influenzladung auf der <em>abgewandten</em> Seite. Die Erdung führt genau diese Elektronen ab. Nach Lösen der Erdung und Entfernen des Stabes bleibt der Elektronen<em>mangel</em> übrig und verteilt sich — die Kugel ist positiv, also <strong>entgegengesetzt</strong> zum Stab geladen, obwohl sie ihn nie berührt hat.
+</div></div>
+<div class="result">V1 ungeladen · V2 negativ (wie der Stab) · V3 positiv (entgegengesetzt)</div>`,
+prompt:`Ich übe Elektrometer-Versuche zu Influenz, Berührung und Erdung (Physik-LK Klasse 12, AFB II). Erstelle 4 Versuchsvorhersagen, bei denen ich jeweils Zeigerverhalten und Endladung bestimmen muss, einmal mit positivem und einmal mit negativem Stab, einmal mit Erdung in falscher Reihenfolge (erst Stab weg, dann erden). Lösungen mit Schritt-für-Schritt-Begründung über die Ladungsverschiebung.`},
+
+i3:{title:"Influenz oder Polarisation? (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Ein geladener Luftballon zieht sowohl ein Stück Alufolie als auch einen Wasserstrahl an.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Erläutern Sie den Mechanismus für die Alufolie (Leiter).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Erläutern Sie den Mechanismus für den Wasserstrahl (Isolator mit polaren Molekülen).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Begründen Sie, warum die Anziehung in <em>beiden</em> Fällen unabhängig vom Vorzeichen der Ballonladung auftritt.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Nennen Sie ein Experiment, mit dem man Leiter und Isolator unterscheiden könnte.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  <strong>Influenz</strong>: Freie Elektronen verschieben sich über makroskopische Strecken, die der Ladung zugewandte Seite wird entgegengesetzt geladen. Sehr schnell und vollständig (Innenfeld null).
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  <strong>Polarisation</strong>: Es gibt keine freien Elektronen. Die Wassermoleküle sind Dipole und <em>richten sich aus</em>; zusätzlich verschieben sich die Ladungsschwerpunkte in jedem Molekül geringfügig. Der Effekt ist deutlich schwächer und das Innenfeld wird nur abgeschwächt, nicht aufgehoben.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  In beiden Fällen entsteht die der Ladung <em>zugewandte</em> Fläche immer mit dem <em>entgegengesetzten</em> Vorzeichen — die Reaktion folgt dem Vorzeichen der Störung. Da die zugewandte Seite zudem näher liegt und das Feld dort stärker ist, überwiegt immer die Anziehung.
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Berühren und prüfen: Nach der Berührung trägt der Leiter Ladung dauerhaft (Elektrometer schlägt aus und bleibt), der Isolator kaum. Alternativ: Erdung — nur beim Leiter lässt sich die Influenzladung abführen (Versuch 3 oben).
+</div></div>
+<div class="result">Leiter: freie Elektronen, E innen = 0 · Isolator: Dipol-Ausrichtung, E nur geschwächt</div>`,
+prompt:`Ich übe die Unterscheidung von Influenz (Leiter) und Polarisation (Isolator) (Physik-LK Klasse 12, AFB III). Erstelle 3 Aufgaben mit Alltagsphänomenen (Alufolie, Wasserstrahl, Papierschnipsel, Haare), bei denen ich den Mechanismus zuordnen und die Vorzeichenunabhängigkeit begründen muss. Musterantworten in Fachsprache.`},
+
+k1:{title:"Kapazität aus Ladung und Spannung (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Ein Elektrolytkondensator wird an eine einstellbare Gleichspannungsquelle gelegt.</p>
+  <div class="given-box">Bei U = 10 V nimmt er Q = 4,7 mC auf.</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die Kapazität.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Welche Ladung speichert er bei \\(U = 6{,}0\\,\\text{V}\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Welche Spannung ist nötig für \\(Q = 3{,}0\\,\\text{mC}\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Erläutern Sie in einem Satz, was &bdquo;1 Farad&ldquo; bedeutet.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(C = \\dfrac{Q}{U} = \\dfrac{4{,}7 \\cdot 10^{-3}\\,\\text{C}}{10\\,\\text{V}} = 4{,}7 \\cdot 10^{-4}\\,\\text{F} = 470\\,\\text{\\mu F}\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(Q = C \\cdot U = 4{,}7\\cdot10^{-4} \\cdot 6{,}0 = 2{,}82 \\cdot 10^{-3}\\,\\text{C} = 2{,}82\\,\\text{mC}\\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\(U = \\dfrac{Q}{C} = \\dfrac{3{,}0\\cdot10^{-3}}{4{,}7\\cdot10^{-4}} = 6{,}4\\,\\text{V}\\)
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Ein Kondensator mit 1 F nimmt bei 1 V die Ladung 1 C = 1 As auf. Das ist enorm viel — übliche Bauteile liegen bei &micro;F oder nF.
+</div></div>
+<div class="result">C = 470 µF  |  Q = 2,82 mC  |  U = 6,4 V</div>`,
+prompt:`Ich übe C = Q/U (Physik-LK Klasse 12, AFB I). Erstelle 4 Aufgaben, in denen abwechselnd C, Q und U gesucht sind, mit realistischen Bauteilwerten (pF, nF, µF, Superkondensator mit F) und sauberen Vorsilbenumrechnungen. Vollständige Lösungen mit Umstellschritt und Einheiten in Zehnerpotenzschreibweise.`},
+
+k2:{title:"C aus dem Steigungsdreieck im Q(U)-Diagramm (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>In G2 wurde die beim Entladen abgegebene Ladung \\(Q\\) (Fläche unter der Stromkurve) für verschiedene Ladespannungen bestimmt. Auf dem Elko steht &bdquo;100 &micro;F&ldquo;.</p>
+  <div class="given-box">U / V&nbsp;&nbsp;&nbsp; = 5,0&nbsp;&nbsp;&nbsp; 6,0&nbsp;&nbsp;&nbsp; 7,0&nbsp;&nbsp;&nbsp; 8,0&nbsp;&nbsp; 10,0<br>Q / &micro;C = 570&nbsp;&nbsp; 680&nbsp;&nbsp; 790&nbsp;&nbsp; 940&nbsp; 1140</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Zeichnen Sie das \\(Q(U)\\)-Diagramm und begründen Sie, dass \\(Q \\sim U\\) gilt.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Bestimmen Sie \\(C\\) mit einem Steigungsdreieck.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Begründen Sie, warum die Gerade durch den Ursprung gehen <em>muss</em>.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Bewerten Sie Ihr Ergebnis gegenüber dem Aufdruck 100 &micro;F.</span></div>
+  </div>
+  <div class="hint-box"><strong>Tipp:</strong> Steigungsdreieck möglichst groß wählen — über die ganze Messreihe, nicht zwischen Nachbarpunkten.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  Die Messpunkte liegen auf einer Geraden durch den Ursprung. Das Verhältnis \\(Q/U\\) ist für alle Messpunkte etwa gleich (114 bis 118 &micro;C/V, der 8-V-Wert liegt leicht darüber), also liegt im Rahmen der Messstreuung Proportionalität vor.
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Steigungsdreieck über die ganze Messreihe: \\(C = \\dfrac{\\Delta Q}{\\Delta U} = \\dfrac{(1140 - 570)\\,\\mu\\text{C}}{(10{,}0 - 5{,}0)\\,\\text{V}} = \\dfrac{570\\,\\mu\\text{C}}{5{,}0\\,\\text{V}} = 114\\,\\dfrac{\\mu\\text{C}}{\\text{V}} = \\textbf{114 }\\mu\\text{F}\\). (Eine Regression über alle fünf Punkte liefert 116 &micro;F.)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Ohne Spannung ist der Kondensator ungeladen: \\(U = 0 \\Rightarrow Q = 0\\). Ein Achsenabschnitt wäre physikalisch nicht deutbar und ein <em>Prüfzeichen</em> für einen systematischen Fehler — etwa eine verschobene Nulllinie oder ein zu kurzes Integrationsfenster. Hier liegt er bei &minus;11 &micro;C, im Rahmen der Unsicherheit also null: die Auswertung ist sauber.
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  114 &micro;F liegen rund <strong>+16 %</strong> über dem Aufdruck. Das ist kein Messfehler: bei Elektrolytkondensatoren sind Toleranzen von typisch &minus;10 % bis +50 % üblich, der Aufdruck ist ein <em>Mindestwert</em>. Für alle weiteren Rechnungen gilt deshalb der <strong>gemessene</strong> Wert, nicht der aufgedruckte.
+</div></div>
+<div class="result">C = 114 µF aus der Steigung (Regression 116 µF) — rund +16 % über dem Aufdruck 100 µF</div>`,
+prompt:`Ich übe die Bestimmung der Kapazität aus einem Q(U)-Diagramm (Physik-LK Klasse 12, AFB II). Erstelle 2 Aufgaben mit konsistenten Messtabellen (eine davon mit leichter Streuung), bei denen ich die Proportionalität prüfen und C per Steigungsdreieck bestimmen muss, plus eine Bewertung gegenüber dem Bauteilaufdruck inklusive Elko-Toleranz (typisch −10 % bis +50 %). Lösungen mit Steigungsrechnung und Einheitenkontrolle.`},
+
+k3:{title:"Kapazität aus der Bauform (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Ein selbstgebauter Plattenkondensator aus zwei Blechen.</p>
+  <div class="given-box">A = 400 cm&sup2;<br>d = 0,50 mm<br>&epsilon;&#8320; = 8,854 &middot; 10&#8315;&#185;&sup2; As/(Vm)</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die Kapazität bei Luft als Dielektrikum.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Wie ändert sich \\(C\\), wenn eine Kunststofffolie mit \\(\\varepsilon_r = 2{,}2\\) eingelegt wird?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Welche Plattenfläche bräuchte man für \\(C = 470\\,\\text{\\mu F}\\) bei gleichem Abstand und Luft?</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Erläutern Sie, wie ein realer 470-&micro;F-Elko diese Kapazität trotzdem erreicht.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(C = \\varepsilon_0 \\dfrac{A}{d} = 8{,}854\\cdot10^{-12} \\cdot \\dfrac{0{,}0400\\,\\text{m}^2}{5{,}0\\cdot10^{-4}\\,\\text{m}} = 7{,}08 \\cdot 10^{-10}\\,\\text{F} = 708\\,\\text{pF}\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(C' = \\varepsilon_r \\cdot C = 2{,}2 \\cdot 708\\,\\text{pF} = 1{,}56\\,\\text{nF}\\) — das Dielektrikum schwächt das Feld, bei gleicher Ladung sinkt \\(U\\), also steigt \\(C = Q/U\\).
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\(A = \\dfrac{C \\cdot d}{\\varepsilon_0} = \\dfrac{4{,}7\\cdot10^{-4} \\cdot 5{,}0\\cdot10^{-4}}{8{,}854\\cdot10^{-12}} = 2{,}65 \\cdot 10^{4}\\,\\text{m}^2\\) — rund 26&nbsp;500 m&sup2;, also etwa vier Fußballfelder.
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Drei Hebel: (1) die Folien werden <strong>gewickelt</strong>, dadurch passen viele Quadratmeter in ein kleines Gehäuse; (2) die Isolierschicht ist beim Elko eine nur <strong>Nanometer dünne</strong> Oxidschicht, also \\(d\\) winzig; (3) das Dielektrikum hat ein großes \\(\\varepsilon_r\\). Der Preis ist die geringe zulässige Spannung und die Polung.
+</div></div>
+<div class="result">C = 708 pF  |  1,56 nF mit Folie  |  26 500 m² für 470 µF</div>`,
+prompt:`Ich übe C = ε0·εr·A/d (Physik-LK Klasse 12, AFB II). Erstelle 4 Aufgaben: Kapazität aus Bauform, Einfluss von Verdopplung der Fläche bzw. Halbierung des Abstands, Dielektrikum einfügen, und eine Rückrechnung auf die nötige Fläche mit Bewertung der Größenordnung. Nutze ε0 = 8,854·10⁻¹² As/(Vm). Vollständige Lösungen mit Einheitenkontrolle.`},
+
+k4:{title:"Vorsilben und Einheiten sicher umrechnen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Rechnen Sie um bzw. vereinfachen Sie. Diese Fehlerquelle kostet in der Klausur die meisten Punkte.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">470 &micro;F in F, 2,2 nF in pF, 0,33 mC in &micro;C, 63 F in mF.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Zeigen Sie, dass \\(1\\,\\text{F} \\cdot 1\\,\\text{V} = 1\\,\\text{C}\\) ist.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Zeigen Sie, dass \\(1\\,\\Omega \\cdot 1\\,\\text{F} = 1\\,\\text{s}\\) ist.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Zeigen Sie, dass \\(1\\,\\text{F} \\cdot 1\\,\\text{V}^2 = 1\\,\\text{J}\\) ist.</span></div>
+  </div>
+  <div class="hint-box"><strong>Tipp:</strong> Trick für alle drei Nachweise: F durch As/V ersetzen, dann kürzen.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(470\\,\\text{\\mu F} = 4{,}70\\cdot10^{-4}\\,\\text{F}\\); \\(2{,}2\\,\\text{nF} = 2200\\,\\text{pF}\\); \\(0{,}33\\,\\text{mC} = 330\\,\\text{\\mu C}\\); \\(63\\,\\text{F} = 6{,}3\\cdot10^{4}\\,\\text{mF}\\).
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(1\\,\\text{F} = 1\\,\\tfrac{\\text{As}}{\\text{V}}\\), also \\(\\text{F}\\cdot\\text{V} = \\tfrac{\\text{As}}{\\text{V}}\\cdot\\text{V} = \\text{As} = \\text{C}\\). ✔
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\(\\Omega \\cdot \\text{F} = \\tfrac{\\text{V}}{\\text{A}} \\cdot \\tfrac{\\text{As}}{\\text{V}} = \\text{s}\\). ✔ Deshalb ist \\(\\tau = RC\\) eine Zeit.
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  \\(\\text{F}\\cdot\\text{V}^2 = \\tfrac{\\text{As}}{\\text{V}} \\cdot \\text{V}^2 = \\text{AsV} = \\text{Ws} = \\text{J}\\). ✔ Deshalb liefert \\(\\tfrac{1}{2}CU^2\\) eine Energie.
+</div></div>
+<div class="result">1 F·V = 1 C · 1 Ω·F = 1 s · 1 F·V² = 1 J</div>`,
+prompt:`Ich übe Vorsilben und Einheitennachweise in der Elektrik (Physik-LK Klasse 12, AFB I). Erstelle 10 kurze Umrechnungsaufgaben (pF/nF/µF/mF/F, µC/mC/C, Ω/kΩ/MΩ) und 4 Einheitennachweise (F·V = C, Ω·F = s, F·V² = J, A·s = C). Lösungen in Zehnerpotenzschreibweise mit jedem Kürzungsschritt.`},
+
+e1:{title:"Energie auf drei Wegen (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Ein Kondensator ist vollständig geladen.</p>
+  <div class="given-box">C = 470 &micro;F<br>U = 8,5 V</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die gespeicherte Ladung.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie die Energie mit \\(\\tfrac{1}{2}CU^2\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Bestätigen Sie das Ergebnis mit \\(\\tfrac{1}{2}QU\\) und mit \\(\\dfrac{Q^2}{2C}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Um welchen Faktor steigt \\(W\\), wenn \\(U\\) verdoppelt wird?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(Q = CU = 4{,}70\\cdot10^{-4} \\cdot 8{,}5 = 4{,}00 \\cdot 10^{-3}\\,\\text{C} = 4{,}00\\,\\text{mC}\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(W = \\tfrac{1}{2}CU^2 = 0{,}5 \\cdot 4{,}70\\cdot10^{-4} \\cdot 8{,}5^2 = 1{,}70 \\cdot 10^{-2}\\,\\text{J} = 17{,}0\\,\\text{mJ}\\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\(\\tfrac{1}{2}QU = 0{,}5 \\cdot 4{,}00\\cdot10^{-3} \\cdot 8{,}5 = 1{,}70\\cdot10^{-2}\\,\\text{J}\\) ✔ und \\(\\dfrac{Q^2}{2C} = \\dfrac{(4{,}00\\cdot10^{-3})^2}{2 \\cdot 4{,}70\\cdot10^{-4}} = 1{,}70\\cdot10^{-2}\\,\\text{J}\\) ✔
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Faktor <strong>4</strong>, weil \\(W \\sim U^2\\). Aus 17,0 mJ werden dann 67,9 mJ.
+</div></div>
+<div class="result">Q = 4,00 mC  |  W = 17,0 mJ  |  U verdoppeln → 4-fache Energie</div>`,
+prompt:`Ich übe die Energie des Kondensators W = ½CU² = ½QU = Q²/(2C) (Physik-LK Klasse 12, AFB I). Erstelle 5 Aufgaben, in denen abwechselnd W, C, U und Q gesucht sind, davon zwei mit dem Hinweis, welche der drei Formeln am wenigsten Rechenschritte braucht. Realistische Bauteilwerte, Vorsilben, vollständige Lösungen mit Einheitenkontrolle.`},
+
+e2:{title:"Warum steht da ein Faktor ½? (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Ein Mitschüler rechnet die Energie eines Kondensators als \\(W = Q \\cdot U\\) und wundert sich über den Faktor ½ im Buch.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Erläutern Sie, welche Voraussetzung in \\(W = qU\\) steckt und warum sie beim Laden <em>nicht</em> erfüllt ist.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Argumentieren Sie mit dem ersten und dem letzten Elektron.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Begründen Sie über das Streifenargument \\(\\Delta W = U \\cdot \\Delta Q\\), welche Größe die Fläche unter der \\(Q(U)\\)-Geraden ist, und prüfen Sie die Einheit.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Geben Sie an, welche Spannung man in \\(W = QU\\) hätte einsetzen müssen.</span></div>
+  </div>
+  <div class="hint-box"><strong>Tipp:</strong> Dieselbe Denkfigur wie bei der Fläche unter \\(i(t)\\): viele kleine Streifen addieren.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(W = qU\\) gilt nur für <strong>konstante</strong> Spannung. Beim Laden ist aber \\(U = Q/C\\) und wächst mit der bereits gespeicherten Ladung. Die Spannung ist also keine Konstante, sondern die Variable.
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Das erste Elektron wird bei \\(U = 0\\) transportiert und braucht keine Arbeit, das letzte bei der vollen Endspannung \\(U_\\text{end}\\). \\(Q \\cdot U_\\text{end}\\) rechnet so, als hätte <em>jedes</em> Elektron die Endspannung durchlaufen — das ist eine <strong>obere Schranke</strong>, kein Ergebnis.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Für einen schmalen Streifen ist \\(U\\) nahezu konstant, also \\(\\Delta W = U \\cdot \\Delta Q\\) = Streifenfläche. Summation über alle Streifen ergibt die Gesamtfläche: \\(W = \\sum U_i \\Delta Q_i\\). Die Fläche unter der \\(Q(U)\\)-Geraden ist also die <strong>Energie</strong>. Einheitenprobe: \\(\\text{V} \\cdot \\text{C} = \\text{V} \\cdot \\text{As} = \\text{Ws} = \\text{J}\\) ✔
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Die <strong>mittlere</strong> Spannung \\(\\bar U = \\tfrac{1}{2}U_\\text{end}\\) — daher kommt der Faktor ½. Geometrisch: die Gerade schließt ein <em>Dreieck</em> ein, nicht ein Rechteck.
+</div></div>
+<div class="result">Fläche unter Q(U) = Energie; Faktor ½ = mittlere Spannung ½U</div>`,
+prompt:`Ich übe die Begründung des Faktors ½ in W = ½CU² (Physik-LK Klasse 12, AFB II). Erstelle 3 Begründungsaufgaben: Streifenargument an der Q(U)-Geraden, Vergleich Rechteck vs. Dreieck, und eine Fehlersuche in einer vorgelegten falschen Schülerrechnung mit W = QU. Musterantworten in Fachsprache mit Einheitenkontrolle.`},
+
+e3:{title:"470 µF aufgedruckt, 583 µF gemessen (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Unser Praktikums-Elko trägt den Aufdruck 470 &micro;F. Aus drei unabhängigen Messungen (Zeitkonstante, Ladungsintegral, Energiebilanz) ergab sich \\(C = 583\\,\\text{\\mu F}\\). Geladen wurde auf 8,5 V.</p>
+  <div class="given-box">C_Aufdruck = 470 &micro;F<br>C_gemessen = 583 &micro;F<br>U = 8,5 V</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die Energie mit beiden Kapazitätswerten.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Um wie viel Prozent hätte man sich mit dem Aufdruck verschätzt?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Auf welche Spannung müsste man ein <em>echtes</em> 470-&micro;F-Bauteil laden, um dieselbe Energie zu speichern?</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Bewerten Sie, ob die Abweichung ein Messfehler ist.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(W_{470} = 0{,}5 \\cdot 4{,}70\\cdot10^{-4} \\cdot 8{,}5^2 = 17{,}0\\,\\text{mJ}\\); \\(W_{583} = 0{,}5 \\cdot 5{,}83\\cdot10^{-4} \\cdot 8{,}5^2 = 21{,}1\\,\\text{mJ}\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(\\dfrac{21{,}1 - 17{,}0}{21{,}1} = 0{,}19\\) — man hätte die Energie um rund <strong>19 %</strong> zu niedrig angesetzt. (Bezogen auf den Aufdruckwert: +24 %.) Der Fehler überträgt sich <em>linear</em>, weil \\(W \\sim C\\).
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\(U = \\sqrt{\\dfrac{2W}{C}} = \\sqrt{\\dfrac{2 \\cdot 2{,}11\\cdot10^{-2}}{4{,}70\\cdot10^{-4}}} = 9{,}5\\,\\text{V}\\)
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Nein. Drei <em>unabhängige</em> Verfahren ergeben denselben Wert, ein Messfehler würde nicht dreifach gleich ausfallen. Elektrolytkondensatoren haben Toleranzen von typisch &minus;10 % bis +50 %; +24 % liegt also im Spezifikationsbereich. Konsequenz: <strong>für Rechnungen den gemessenen Wert nehmen</strong>, der Aufdruck ist nur ein Nennwert.
+</div></div>
+<div class="result">17,0 mJ vs. 21,1 mJ → 19 % Unterschätzung  |  U = 9,5 V  |  Toleranz, kein Messfehler</div>`,
+prompt:`Ich übe die Bewertung von Bauteiltoleranzen bei Kondensatoren und deren Auswirkung auf die Energie (Physik-LK Klasse 12, AFB II). Erstelle 3 Aufgaben, in denen Aufdruckwert und Messwert abweichen: Energie mit beiden Werten, prozentuale Abweichung mit korrekter Bezugsgröße, Rückrechnung auf eine Ersatzspannung. Nutze Elko-Toleranzen von −10 % bis +50 % in der Bewertung. Vollständige Lösungen.`},
+
+e4:{title:"Kamerablitz: warum überhaupt ein Kondensator? (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Im Blitzgerät wird ein Kondensator über 4 s aus dem Akku geladen und in 1,2 ms entladen.</p>
+  <div class="given-box">C = 300 &micro;F<br>U = 330 V<br>Ladezeit 4,0 s<br>Blitzdauer 1,2 ms<br>Akku 3,7 V / 1500 mAh, Ladeelektronik 60 %</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die gespeicherte Energie.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie die mittlere Ladeleistung und die mittlere Blitzleistung.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Bilden Sie das Verhältnis beider Leistungen und erläutern Sie daran, warum man den Kondensator braucht.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Wie viele Blitze liefert eine Akkuladung?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(W = \\tfrac{1}{2}CU^2 = 0{,}5 \\cdot 3{,}00\\cdot10^{-4} \\cdot 330^2 = 16{,}3\\,\\text{J}\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(P_\\text{lade} = \\dfrac{16{,}3\\,\\text{J}}{4{,}0\\,\\text{s}} = 4{,}1\\,\\text{W}\\); \\(P_\\text{blitz} = \\dfrac{16{,}3\\,\\text{J}}{1{,}2\\cdot10^{-3}\\,\\text{s}} = 1{,}36 \\cdot 10^{4}\\,\\text{W} \\approx 13{,}6\\,\\text{kW}\\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Verhältnis \\(\\approx 3300\\). Der Akku kann 4 W dauerhaft liefern, aber keine 13,6 kW — dafür wäre sein Innenwiderstand viel zu groß. Der Kondensator wirkt als <strong>Energiespeicher mit sehr hoher Entladeleistung</strong>: er sammelt langsam und gibt in Millisekunden ab.
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Akkuinhalt \\(W_\\text{Akku} = 3{,}7\\,\\text{V} \\cdot 1{,}5\\,\\text{Ah} = 5{,}55\\,\\text{Wh} = 2{,}0\\cdot10^{4}\\,\\text{J}\\). Nutzbar bei 60 %: \\(1{,}2\\cdot10^{4}\\,\\text{J}\\). Anzahl: \\(1{,}2\\cdot10^{4} / 16{,}3 \\approx \\textbf{730 Blitze}\\).
+</div></div>
+<div class="result">W = 16,3 J  |  4,1 W laden vs. 13,6 kW blitzen (Faktor ≈ 3300)  |  ≈ 730 Blitze</div>`,
+prompt:`Ich übe technische Anwendungen der Kondensatorenergie mit Leistungsvergleich (Physik-LK Klasse 12, AFB II). Erstelle 3 Kontextaufgaben (Kamerablitz, Defibrillator mit 256 J und 32 µF, Netzteil-Zwischenkreis 220 µF bei 400 V): Energie, Lade- und Entladeleistung, Verhältnis, Vergleich mit einem Alltagsgerät, Energievorrat einer Akkuladung. Vollständige Lösungen mit Zwischenwerten.`},
+
+e5:{title:"Supercap im Hybridbus (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Ein Hybridbus speichert Bremsenergie in einem Kondensatormodul. Entladen wird nur bis zur <em>halben</em> Spannung, weil die Leistungselektronik darunter nicht mehr arbeitet.</p>
+  <div class="given-box">C = 63 F<br>U&#8321; = 125 V, U&#8322; = 62,5 V<br>Bus 12 t aus 50 km/h</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die vollständig gespeicherte und die nutzbare Energie.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Welcher Anteil der gespeicherten Energie ist nutzbar?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie die kinetische Energie des Busses und den Anteil, den das Modul aufnehmen kann.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Aus welcher Geschwindigkeit könnte der Bus vollständig verlustfrei abgebremst werden?</span></div>
+  </div>
+  <div class="hint-box"><strong>Tipp:</strong> 50 km/h sind 13,9 m/s — <em>immer</em> erst umrechnen.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(W_1 = \\tfrac{1}{2} \\cdot 63 \\cdot 125^2 = 4{,}92 \\cdot 10^{5}\\,\\text{J} = 492\\,\\text{kJ}\\); \\(W_2 = \\tfrac{1}{2} \\cdot 63 \\cdot 62{,}5^2 = 123\\,\\text{kJ}\\); nutzbar \\(\\Delta W = 492 - 123 = \\textbf{369 kJ}\\).
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(\\dfrac{369}{492} = 0{,}75 = \\textbf{75 \\%}\\). Allgemein: halbe Spannung bedeutet ein Viertel der Energie, also bleiben drei Viertel nutzbar — unabhängig von \\(C\\) und \\(U_1\\).
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\(v = 50\\,\\tfrac{\\text{km}}{\\text{h}} = 13{,}9\\,\\tfrac{\\text{m}}{\\text{s}}\\); \\(E_\\text{kin} = \\tfrac{1}{2} \\cdot 1{,}2\\cdot10^{4}\\,\\text{kg} \\cdot 13{,}9^2 = 1{,}16 \\cdot 10^{6}\\,\\text{J} = 1{,}16\\,\\text{MJ}\\). Aufnehmbar: \\(369/1160 = \\textbf{32 \\%}\\).
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  \\(v = \\sqrt{\\dfrac{2 \\cdot 3{,}69\\cdot10^{5}}{1{,}2\\cdot10^{4}}} = 7{,}8\\,\\tfrac{\\text{m}}{\\text{s}} = \\textbf{28 km/h}\\). Oberhalb davon muss die mechanische Bremse mithelfen.
+</div></div>
+<div class="result">492 kJ gespeichert, 369 kJ nutzbar (75 %)  |  32 % von E_kin  |  28 km/h</div>`,
+prompt:`Ich übe Teilentladung ΔW = ½C(U₁²−U₂²) in Bremsenergie-Rückgewinnung (Physik-LK Klasse 12, AFB II). Erstelle 3 Aufgaben mit Supercap-Modulen: nutzbarer Anteil bei Entladung auf die halbe bzw. ein Drittel der Spannung (allgemein begründen), Vergleich mit kinetischer Energie eines Fahrzeugs, Rückrechnung auf eine Grenzgeschwindigkeit. km/h-Umrechnung einbauen. Vollständige Lösungen.`},
+
+e6:{title:"Warum fährt kein Auto mit Kondensatoren? (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Ein Supercap-Modul mit 63 F / 125 V wiegt 63 kg. Ein E-Auto braucht etwa 40 kWh.</p>
+  <div class="given-box">nutzbare Energie 369 kJ<br>Modulmasse 63 kg<br>Li-Ion: 180 Wh/kg<br>Bedarf 40 kWh</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die nutzbare Energiedichte des Moduls in Wh/kg.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Welche Masse an Supercaps wäre für 40 kWh nötig?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Welche Masse an Li-Ion-Zellen wäre nötig?</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Bewerten Sie und nennen Sie, wofür Supercaps dann <em>sinnvoll</em> sind.</span></div>
+  </div>
+  <div class="hint-box"><strong>Tipp:</strong> 1 Wh = 3600 J.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(369\\,\\text{kJ} = \\dfrac{3{,}69\\cdot10^{5}}{3600}\\,\\text{Wh} = 102{,}5\\,\\text{Wh}\\), also \\(\\dfrac{102{,}5}{63} = \\textbf{1,6}\\,\\tfrac{\\text{Wh}}{\\text{kg}}\\).
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(m = \\dfrac{40\\,000\\,\\text{Wh}}{1{,}6\\,\\text{Wh/kg}} = 2{,}5 \\cdot 10^{4}\\,\\text{kg} = \\textbf{25 t}\\) — das Vielfache des Fahrzeuggewichts, also ausgeschlossen.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\(m = \\dfrac{40\\,000}{180} = \\textbf{222 kg}\\) — etwa ein Hundertstel der Supercap-Masse.
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Die Energiedichte ist um rund den Faktor 110 schlechter. Beachten Sie: die 46 <em>Zellen</em> wiegen nur 23,5 kg, das fertige <em>Modul</em> 63 kg — Gehäuse, Kühlung und die Balancing-Elektronik für 46 Einzelspannungen wiegen mehr als die Zellen selbst. Supercaps sind keine Energie-, sondern <strong>Leistungsspeicher</strong>: sehr hohe Lade-/Entladeleistung, Hunderttausende Zyklen, kaum Alterung, funktioniert auch bei Kälte. Sinnvoll also für <em>kurze, häufige, kräftige</em> Vorgänge: Bremsenergie im Linienbus, Anfahrhilfe, Pufferung von Lastspitzen, Notstrom für Sekunden — nicht für Reichweite.
+</div></div>
+<div class="result">1,6 Wh/kg vs. 180 Wh/kg → 25 t statt 222 kg: Leistungs-, kein Energiespeicher</div>`,
+prompt:`Ich übe Energiedichtevergleiche Kondensator vs. Akku (Physik-LK Klasse 12, AFB II). Erstelle 2 Bewertungsaufgaben mit Umrechnung J ↔ Wh, Massenabschätzung für einen gegebenen Energiebedarf und einer begründeten Bewertung, warum Supercaps Leistungsspeicher und keine Energiespeicher sind. Vollständige Lösungen mit Größenordnungsvergleich.`},
+
+e7:{title:"★ Die Falle im Quadrat (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Um 125 V zu erreichen, werden 46 Supercap-Zellen in Reihe geschaltet. Man könnte meinen, die höhere Spannung bringe wegen \\(U^2\\) überproportional viel Energie.</p>
+  <div class="given-box">pro Zelle: U_Z = 2,7 V, C_Z = 3000 F, m = 0,51 kg<br>n = 46 in Reihe</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die Gesamtkapazität und die Gesamtspannung.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie die Gesamtenergie und vergleichen Sie mit \\(n\\)-mal der Energie einer Zelle.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Zeigen Sie <em>allgemein</em> mit \\(n\\), dass das Stapeln aus dem \\(U^2\\) nichts zusätzlich herausholt.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Erläutern Sie, warum man dann überhaupt in Reihe schaltet.</span></div>
+  </div>
+  <div class="hint-box"><strong>Tipp:</strong> Bei Reihenschaltung addieren sich die <em>Kehrwerte</em> der Kapazitäten — anders als bei Widerständen.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(\\dfrac{1}{C_\\text{ges}} = \\dfrac{n}{C_Z} \\Rightarrow C_\\text{ges} = \\dfrac{3000\\,\\text{F}}{46} = \\textbf{65,2 F}\\); \\(U_\\text{ges} = n \\cdot U_Z = 46 \\cdot 2{,}7 = \\textbf{124,2 V}\\) — in den vorigen Aufgaben wurde das auf die Nennspannung 125 V gerundet.
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(W = \\tfrac{1}{2} \\cdot 65{,}2 \\cdot 124{,}2^2 = 5{,}03 \\cdot 10^{5}\\,\\text{J} = 503\\,\\text{kJ}\\). Eine Zelle: \\(\\tfrac{1}{2} \\cdot 3000 \\cdot 2{,}7^2 = 1{,}09\\cdot10^{4}\\,\\text{J} = 10{,}9\\,\\text{kJ}\\); \\(46 \\cdot 10{,}9\\,\\text{kJ} = 503\\,\\text{kJ}\\) — <strong>identisch</strong>.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\(W = \\tfrac{1}{2} C_\\text{ges} U_\\text{ges}^2 = \\tfrac{1}{2} \\cdot \\dfrac{C_Z}{n} \\cdot (nU_Z)^2 = \\tfrac{1}{2} \\cdot \\dfrac{C_Z}{n} \\cdot n^2 U_Z^2 = n \\cdot \\tfrac{1}{2} C_Z U_Z^2\\). Das \\(n^2\\) aus dem Quadrat wird vom \\(1/n\\) der Kapazität exakt zur <em>einfachen</em> Proportionalität reduziert: die Energie wächst nur <strong>linear</strong> mit der Zellenzahl — wie bei jedem Stapel, in dem man \\(n\\)-mal dieselbe Energie unterbringt. Energie kommt aus dem Material, nicht aus der Schaltungsalgebra.
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Wegen der <strong>Spannung</strong>, nicht wegen der Energie. Eine einzelne Zelle verträgt nur 2,7 V; Motoren und Leistungselektronik brauchen über 100 V, sonst wären die Ströme und damit die \\(I^2R\\)-Verluste in den Leitungen unvertretbar hoch.
+</div></div>
+<div class="result">C = 65,2 F, U = 124,2 V, W = 503 kJ = 46 · 10,9 kJ — Energie wächst nur linear mit n</div>`,
+prompt:`Ich übe Reihen- und Parallelschaltung von Kondensatoren samt Energiebilanz (Physik-LK Klasse 12, AFB III). Erstelle 3 Aufgaben: n gleiche Zellen in Reihe (C_ges, U_ges, W_ges und der allgemeine Beweis W = n·W_Zelle), dieselbe Zahl parallel im Vergleich, und eine gemischte Schaltung. Nutze 1/C_ges = Σ 1/C_i. Vollständige Lösungen mit allgemeiner Rechnung in n.`},
+
+r1:{title:"Zeitkonstante und Halbwertszeit (AFB I)",
+aufgabe:`<div class="task-box">
+  <p>Ein Kondensator wird über einen Widerstand entladen.</p>
+  <div class="given-box">R = 22 k&Omega;<br>C = 47 &micro;F<br>U&#8320; = 10 V</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(\\tau\\) und weisen Sie nach, dass \\(\\Omega \\cdot \\text{F} = \\text{s}\\) gilt.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Welche Spannung liegt nach \\(t = \\tau\\) noch an? Nach \\(5\\tau\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie die Halbwertszeit.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Welches \\(R\\) wäre für \\(\\tau = 10\\,\\text{s}\\) nötig?</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(\\tau = 2{,}2\\cdot10^{4}\\,\\Omega \\cdot 4{,}7\\cdot10^{-5}\\,\\text{F} = \\textbf{1,03 s}\\). Einheiten: \\(\\Omega \\cdot \\text{F} = \\tfrac{\\text{V}}{\\text{A}} \\cdot \\tfrac{\\text{As}}{\\text{V}} = \\text{s}\\) ✔
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Nach \\(\\tau\\): \\(u = U_0 e^{-1} = 0{,}368 \\cdot 10\\,\\text{V} = \\textbf{3,7 V}\\) (37 %-Regel). Nach \\(5\\tau\\): \\(u = 10 \\cdot e^{-5} = 0{,}067\\,\\text{V}\\), also unter 1 % — praktisch entladen.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\(T_H = \\tau \\ln 2 = 1{,}03\\,\\text{s} \\cdot 0{,}693 = \\textbf{0,72 s}\\)
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  \\(R = \\dfrac{\\tau}{C} = \\dfrac{10\\,\\text{s}}{4{,}7\\cdot10^{-5}\\,\\text{F}} = 2{,}13 \\cdot 10^{5}\\,\\Omega \\approx \\textbf{213 k}\\Omega\\)
+</div></div>
+<div class="result">τ = 1,03 s  |  3,7 V nach τ, <1 % nach 5τ  |  T_H = 0,72 s  |  213 kΩ</div>`,
+prompt:`Ich übe die Zeitkonstante τ = RC (Physik-LK Klasse 12, AFB I). Erstelle 6 Aufgaben: τ aus R und C für verschiedene Kombinationen (auch Reihe/Parallel von zwei Kondensatoren bzw. Widerständen), Einheitenbeweis Ω·F = s, 37-%- und 63-%-Regel, Halbwertszeit T_H = τ·ln2, und Rückrechnung auf R bzw. C bei vorgegebenem τ. Vollständige Lösungen mit Vorsilben.`},
+
+r2:{title:"Exponentialgleichung auswerten und umstellen (AFB I/II)",
+aufgabe:`<div class="task-box">
+  <p>Entladung eines Kondensators über einen Widerstand.</p>
+  <div class="given-box">U&#8320; = 10 V<br>R = 22 k&Omega;, C = 47 &micro;F (&tau; = 1,03 s)</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie \\(u_C\\) nach \\(t = 2{,}0\\,\\text{s}\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie den Anfangsstrom \\(i_0\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Nach welcher Zeit ist \\(u_C = 1{,}0\\,\\text{V}\\)?</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Beim <em>Laden</em>: nach welcher Zeit sind 90 % von \\(U_0\\) erreicht?</span></div>
+  </div>
+  <div class="hint-box"><strong>Tipp:</strong> Umstellen immer in dieser Reihenfolge: Exponentialterm freistellen, dann \\(\\ln\\) auf beide Seiten, dann nach \\(t\\) auflösen.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(u_C = 10\\,\\text{V} \\cdot e^{-2{,}0/1{,}03} = 10 \\cdot e^{-1{,}93} = 10 \\cdot 0{,}145 = \\textbf{1,45 V}\\)
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(i_0 = \\dfrac{U_0}{R} = \\dfrac{10\\,\\text{V}}{2{,}2\\cdot10^{4}\\,\\Omega} = 4{,}55 \\cdot 10^{-4}\\,\\text{A} = \\textbf{455 }\\mu\\text{A}\\)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\(1{,}0 = 10 \\cdot e^{-t/\\tau} \\Rightarrow 0{,}10 = e^{-t/\\tau} \\Rightarrow \\ln 0{,}10 = -t/\\tau \\Rightarrow t = -\\tau \\ln 0{,}10 = 1{,}03 \\cdot 2{,}303 = \\textbf{2,38 s}\\)
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  \\(0{,}90 = 1 - e^{-t/\\tau} \\Rightarrow e^{-t/\\tau} = 0{,}10 \\Rightarrow t = \\tau \\ln 10 = \\textbf{2,38 s}\\) — dasselbe Ergebnis, weil 90 % geladen genau 10 % Restspannung über dem Widerstand bedeutet.
+</div></div>
+<div class="result">u(2 s) = 1,45 V  |  i₀ = 455 µA  |  t(1 V) = 2,38 s  |  t(90 %) = 2,38 s</div>`,
+prompt:`Ich übe das Auswerten und Umstellen der RC-Exponentialgleichungen (Physik-LK Klasse 12, AFB I/II). Erstelle 8 Aufgaben: u_C(t) beim Entladen und Laden berechnen, i(t) berechnen, nach t umstellen (Entladung auf einen gegebenen Wert, Ladung auf einen Prozentsatz — dabei erst die Klammer freistellen), Halbwertszeit herleiten. Zeige in jeder Lösung den Logarithmierschritt einzeln.`},
+
+r3:{title:"Warum eine Exponentialfunktion? (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Ein geladener Kondensator wird über einen Widerstand entladen. Beobachtung: der Strom ist am Anfang am größten und wird immer kleiner.</p>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Begründen Sie mit \\(i = \\dfrac{u_C}{R}\\), warum der Entladestrom immer kleiner wird, je weiter der Kondensator entladen ist.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Erläutern Sie, warum die Spannung dadurch theoretisch <em>nie</em> exakt null wird — und warum man in der Praxis trotzdem nach \\(5\\tau\\) von &bdquo;entladen&ldquo; spricht.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Die Rechnung liefert \\(u_C = U_0 \\, e^{-t/\\tau}\\) mit \\(\\tau = RC\\). Lesen Sie an der Gleichung ab, welcher Bruchteil nach \\(t = \\tau\\) noch übrig ist, und begründen Sie, warum ein größeres \\(R\\) den Vorgang verlangsamt.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Begründen Sie, warum der Strom beim Entladen <em>negativ</em> gezählt wird.</span></div>
+  </div>
+  <div class="hint-box"><strong>Tipp:</strong> Die entscheidende Eigenschaft: die Änderungsrate ist proportional zum Wert, der gerade noch da ist.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  Der Entladestrom wird allein von der noch vorhandenen Kondensatorspannung getrieben: \\(i = u_C/R\\). Je weniger Spannung übrig ist, desto kleiner der Strom — und der Strom ist genau das, was die Ladung abtransportiert. Also wird auch die <em>Abnahme</em> immer langsamer. Kurz: die Änderungsrate ist proportional zu dem, was noch da ist. Genau diese Eigenschaft hat nur die Exponentialfunktion.
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Weil mit jedem Schritt nur ein fester <em>Anteil</em> verschwindet, nicht ein fester Betrag: nach jeder Zeitspanne \\(\\tau\\) bleiben wieder 37 % des vorigen Werts übrig. Ein fester Bruchteil von etwas Positivem ist nie null. Praktisch sind nach \\(5\\tau\\) aber nur noch \\(0{,}37^5 \\approx 0{,}7\\,\\%\\) übrig — das liegt unter der Messgenauigkeit, deshalb gilt der Kondensator dann als entladen.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Für \\(t = \\tau\\) steht im Exponenten \\(-1\\), also \\(u_C = U_0 \\cdot e^{-1} = 0{,}37 \\cdot U_0\\) — rund <strong>37 %</strong> sind noch übrig, unabhängig davon, wie groß \\(U_0\\) war. Ein größeres \\(R\\) vergrößert \\(\\tau = RC\\), der Exponent \\(-t/\\tau\\) wächst langsamer: alles zieht sich zeitlich in die Länge. Anschaulich drosselt der größere Widerstand den Strom, also fließt die Ladung langsamer ab.
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Die Zählrichtung wird beim Laden festgelegt (der Strom fließt <em>in</em> den Kondensator hinein). Beim Entladen fließt er genau umgekehrt, hat in derselben Zählrichtung also das umgekehrte Vorzeichen. Im \\(i\\)-\\(t\\)-Diagramm liegt die Entladekurve daher unterhalb der Nulllinie; für die Ladung nimmt man den Betrag der Fläche.
+</div></div>
+<div class="result">Änderungsrate ∝ noch vorhandener Wert → e-Funktion · nach τ noch 37 % · größeres R → größeres τ</div>`,
+prompt:`Ich möchte verstehen (nicht herleiten), warum beim Laden und Entladen eines Kondensators eine Exponentialfunktion auftritt (Physik-LK Klasse 12, AFB II). Erstelle 3 Verständnisaufgaben: qualitativ begründen warum der Strom immer kleiner wird, die 37-Prozent-Regel an der Gleichung u_C = U_0·e^(-t/tau) ablesen und deuten, und den Einfluss von R und C auf die Dauer diskutieren. WICHTIG: KEINE Differentialgleichung aufstellen, NICHT ableiten und NICHT durch Einsetzen beweisen — rein argumentativ mit i = u_C/R und tau = R·C. Vollständige Lösungen in ausformulierten Sätzen.`},
+
+r4:{title:"τ durch Logarithmieren bestimmen — Auswertung G1 (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Entladekurve eines Kondensators, aufgenommen mit dem CASSY. Bekannt ist \\(R = 47\\,\\text{k}\\Omega\\).</p>
+  <div class="given-box">t / s&nbsp;&nbsp;&nbsp;&nbsp; = 0&nbsp;&nbsp;&nbsp;&nbsp; 2&nbsp;&nbsp;&nbsp;&nbsp; 4&nbsp;&nbsp;&nbsp;&nbsp; 6&nbsp;&nbsp;&nbsp;&nbsp; 8&nbsp;&nbsp;&nbsp; 10<br>u_C / V = 10,0&nbsp; 6,5&nbsp; 4,3&nbsp; 2,8&nbsp; 1,8&nbsp; 1,2</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Zeigen Sie, dass \\(\\ln u_C = \\ln U_0 - \\dfrac{1}{\\tau}t\\) gilt, und ordnen Sie \\(y\\), \\(x\\), \\(m\\) und \\(b\\) zu.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Ergänzen Sie die Zeile \\(\\ln(u_C/\\text{V})\\) und zeichnen Sie das Diagramm.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Bestimmen Sie \\(\\tau\\) per Steigungsdreieck.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Berechnen Sie \\(C\\) und kontrollieren Sie \\(U_0\\) über den Achsenabschnitt.</span></div>
+  </div>
+  <div class="hint-box"><strong>Tipp:</strong> Linearisieren heißt: Hilfsgröße ausrechnen, in ein <em>normales</em> Achsenkreuz eintragen, Steigung per Steigungsdreieck. Kein Logarithmenpapier!</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(u_C = U_0 e^{-t/\\tau}\\), \\(\\ln\\) auf beide Seiten: \\(\\ln u_C = \\ln U_0 + \\ln e^{-t/\\tau} = \\ln U_0 - \\dfrac{t}{\\tau}\\). Vergleich mit \\(y = b + mx\\): \\(y = \\ln u_C\\), \\(x = t\\), \\(m = -1/\\tau\\), \\(b = \\ln U_0\\).
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(\\ln(u_C/\\text{V})\\) = 2,303 | 1,872 | 1,459 | 1,030 | 0,588 | 0,182. Die Punkte liegen auf einer fallenden Geraden.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Steigungsdreieck über die ganze Messreihe: \\(m = \\dfrac{0{,}182 - 2{,}303}{10{,}0\\,\\text{s} - 0} = -0{,}212\\,\\text{s}^{-1}\\), also \\(\\tau = -\\dfrac{1}{m} = \\textbf{4,72 s}\\).
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  \\(C = \\dfrac{\\tau}{R} = \\dfrac{4{,}72\\,\\text{s}}{4{,}7\\cdot10^{4}\\,\\Omega} = 1{,}00 \\cdot 10^{-4}\\,\\text{F} = \\textbf{100 }\\mu\\text{F}\\). Kontrolle: \\(U_0 = e^{b} = e^{2{,}303} = 10{,}0\\,\\text{V}\\) ✔ — passt zum ersten Messwert, die Auswertung ist konsistent.
+</div></div>
+<div class="result">m = −0,212 1/s → τ = 4,72 s → C = 100 µF; Achsenabschnitt bestätigt U₀ = 10 V</div>`,
+prompt:`Ich übe die Bestimmung von τ durch ln-Linearisierung einer Entladekurve (Physik-LK Klasse 12, AFB II). Erstelle 3 Aufgaben mit je einer Messtabelle (t, u_C), bei denen ich die Zeile ln u_C ergänzen, auf NORMALEM linearem Achsenkreuz zeichnen (keine logarithmischen Achsen!), die Steigung per Steigungsdreieck bestimmen, τ = −1/m und daraus C bei bekanntem R berechnen und U₀ über den Achsenabschnitt kontrollieren muss. Vollständige Lösungen mit allen ln-Werten.`},
+
+r5:{title:"Die Fläche unter dem Entladestrom — Auswertung G2 (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Beim Entladen wird der Strom gemessen (CASSY <em>in Reihe</em> als niederohmiges Amperemeter).</p>
+  <div class="given-box">U&#8320; = 10 V<br>R = 1,0 k&Omega;<br>C = 100 &micro;F</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Begründen Sie aus \\(i = \\dfrac{\\Delta Q}{\\Delta t}\\), warum die Fläche unter der \\(i\\)-\\(t\\)-Kurve die Ladung ist, und prüfen Sie die Einheit.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie \\(i_0\\) und \\(\\tau\\) und zeigen Sie, dass das Produkt \\(i_0 \\cdot \\tau\\) die Ladung ergibt.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Begründen Sie, warum \\(Q\\) <em>nicht</em> von \\(R\\) abhängt.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Erläutern Sie, warum man in der Auswertung den Betrag der Fläche nimmt.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  Für einen schmalen Streifen gilt \\(\\Delta Q = i \\cdot \\Delta t\\) = Streifenfläche. Summation über alle Streifen ergibt \\(Q = \\sum i \\Delta t = \\int i\\,\\mathrm{d}t\\) = Gesamtfläche. Einheit: \\(\\text{A} \\cdot \\text{s} = \\text{C}\\) ✔
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(i_0 = \\dfrac{U_0}{R} = \\dfrac{10\\,\\text{V}}{1000\\,\\Omega} = 1{,}0\\cdot10^{-2}\\,\\text{A}\\); \\(\\tau = RC = 1000 \\cdot 1{,}0\\cdot10^{-4} = 1{,}0\\cdot10^{-1}\\,\\text{s}\\). Produkt: \\(i_0\\tau = 1{,}0\\cdot10^{-3}\\,\\text{C} = \\textbf{1,0 mC}\\). Kontrolle: \\(Q = CU_0 = 1{,}0\\cdot10^{-4} \\cdot 10 = 1{,}0\\cdot10^{-3}\\,\\text{C}\\) ✔ (Die Fläche unter einer Exponentialkurve ist genau \\(i_0 \\cdot \\tau\\).)
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Allgemein \\(i_0 \\tau = \\dfrac{U_0}{R} \\cdot RC = C U_0\\) — das \\(R\\) <strong>kürzt sich heraus</strong>. Anschaulich: ein doppelt so großes \\(R\\) halbiert den Anfangsstrom, verdoppelt aber die Zeitkonstante. Die Kurve wird flacher <em>und</em> länger, die Fläche bleibt gleich. Die gespeicherte Ladung ist eine Eigenschaft von \\(C\\) und \\(U_0\\), nicht des Entladewegs.
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Der Entladestrom fließt der festgelegten Zählrichtung entgegen, ist also negativ; die Fläche liegt unterhalb der Nulllinie und das Integral kommt negativ heraus. Das Vorzeichen beschreibt nur die <em>Richtung</em>; die gespeicherte Ladungsmenge ist der Betrag.
+</div></div>
+<div class="result">i₀ = 10 mA, τ = 0,10 s → Q = i₀·τ = 1,0 mC = C·U₀ — R kürzt sich heraus</div>`,
+prompt:`Ich übe die Ladung als Fläche unter der i(t)-Kurve (Physik-LK Klasse 12, AFB II). Erstelle 3 Aufgaben: Fläche per Streifenargument begründen und Einheit prüfen, i₀·τ = C·U₀ nachrechnen und allgemein zeigen dass R sich herauskürzt, und eine Aufgabe mit zwei Entladekurven verschiedener Widerstände, bei der ich begründen muss warum beide dieselbe Fläche haben. Vollständige Lösungen.`},
+
+r6:{title:"Das Messgerät belastet die Schaltung (AFB II/III)",
+aufgabe:`<div class="task-box">
+  <p>Der CASSY-Spannungseingang hat einen Innenwiderstand von 1,0 M&Omega; und liegt in G1 <em>parallel</em> zum Kondensator.</p>
+  <div class="given-box">U&#8320; = 10 V<br>R = 47 k&Omega;<br>C = 100 &micro;F<br>R_CASSY = 1,0 M&Omega;</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Zeichnen Sie das Ersatzschaltbild und berechnen Sie die Endspannung beim Laden.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie den wirksamen Widerstand beim Entladen und das zugehörige \\(\\tau\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Um wie viel Prozent weicht \\(\\tau\\) vom erwarteten Wert ab? Nach welcher Seite?</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Beurteilen Sie, welche Eigenschaft ein ideales Spannungsmessgerät haben müsste.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(R_\\text{CASSY}\\) liegt parallel zu \\(C\\), bildet also mit \\(R\\) einen Spannungsteiler: \\(U_\\text{end} = U_0 \\dfrac{R_\\text{CASSY}}{R + R_\\text{CASSY}} = 10\\,\\text{V} \\cdot \\dfrac{10^{6}}{4{,}7\\cdot10^{4} + 10^{6}} = \\textbf{9,55 V}\\) statt 10 V.
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Beim Entladen liegen \\(R\\) und \\(R_\\text{CASSY}\\) parallel: \\(R_\\text{eff} = \\dfrac{4{,}7\\cdot10^{4} \\cdot 10^{6}}{4{,}7\\cdot10^{4} + 10^{6}} = 4{,}49\\cdot10^{4}\\,\\Omega = 44{,}9\\,\\text{k}\\Omega\\), also \\(\\tau_\\text{eff} = 4{,}49\\,\\text{s}\\) statt 4,70 s.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\(\\dfrac{4{,}70 - 4{,}49}{4{,}70} = 0{,}045\\) — rund <strong>4,5 % zu klein</strong>. Das ist ein <em>systematischer</em> Fehler: er geht bei allen Gruppen in dieselbe Richtung, weil der zusätzliche Parallelpfad die Entladung immer <em>beschleunigt</em>. Bei zwei Widerständen in Reihe (94 kΩ) wäre der Effekt entsprechend größer.
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Ein ideales Voltmeter hätte einen <strong>unendlich großen</strong> Innenwiderstand, zöge also keinen Strom und würde die Schaltung nicht verändern. Faustregel: \\(R_\\text{Mess} \\gg R\\) der Schaltung. Beim Amperemeter (G2) ist es umgekehrt — dort ist ein möglichst <em>kleiner</em> Innenwiderstand nötig.
+</div></div>
+<div class="result">U_end = 9,55 V  |  R_eff = 44,9 kΩ → τ = 4,49 s, 4,5 % zu klein (systematisch)</div>`,
+prompt:`Ich übe die Rückwirkung des Messgeräts auf die Schaltung (Physik-LK Klasse 12, AFB II/III). Erstelle 3 Aufgaben mit einem Voltmeter von 1 MΩ Innenwiderstand parallel zum Kondensator: Endspannung über den Spannungsteiler, R_eff und τ_eff über die Parallelschaltung, prozentuale Abweichung mit Richtungsangabe, und eine Aufgabe zum niederohmigen Amperemeter in Reihe. Begründe jeweils ob der Fehler systematisch oder zufällig ist. Vollständige Lösungen.`},
+
+r7:{title:"Wo bleibt die Hälfte der Energie? — Praktikum G3, Teil 1 (AFB II/III)",
+aufgabe:`<div class="task-box">
+  <p>Ein Kondensator wird über einen Widerstand mit einem <em>Spannungssprung</em> von 0 auf \\(U_0\\) geladen.</p>
+  <div class="given-box">U&#8320; = 10 V<br>C = 470 &micro;F</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie die von der Quelle gelieferte Ladung und daraus die von der Quelle abgegebene Energie \\(W_Q = Q U_0\\).</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Berechnen Sie die im Kondensator gespeicherte Energie und den Wirkungsgrad \\(\\eta = W_C/W_Q\\).</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Zeigen Sie, dass \\(\\eta\\) <em>unabhängig</em> von \\(R\\) und \\(C\\) ist, und erläutern Sie, wo die fehlende Energie bleibt.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Deuten Sie das Ergebnis im \\(Q\\)-\\(U\\)-Diagramm (Rechteck gegen Dreieck).</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  \\(Q = CU_0 = 4{,}70\\cdot10^{-4} \\cdot 10 = 4{,}70\\,\\text{mC}\\). Die Quelle liefert diese Ladung bei der <em>konstanten</em> Spannung \\(U_0\\): \\(W_Q = QU_0 = CU_0^2 = 4{,}70\\cdot10^{-2}\\,\\text{J} = \\textbf{47,0 mJ}\\).
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(W_C = \\tfrac{1}{2}CU_0^2 = \\textbf{23,5 mJ}\\), also \\(\\eta = \\dfrac{\\tfrac{1}{2}CU_0^2}{CU_0^2} = \\textbf{50 \\%}\\).
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  In \\(\\eta = \\dfrac{\\frac{1}{2}CU_0^2}{CU_0^2} = \\dfrac{1}{2}\\) kürzen sich \\(C\\) und \\(U_0\\) vollständig heraus, \\(R\\) kommt gar nicht vor. Die andere Hälfte wird im Widerstand in <strong>Wärme</strong> umgesetzt: \\(W_R = 23{,}5\\,\\text{mJ}\\). Ein kleineres \\(R\\) macht den Strom größer, aber die Zeit kürzer — \\(W_R = \\int i^2R\\,\\mathrm{d}t\\) bleibt gleich. Man kann die Verluste also nicht durch Bauteilwahl wegoptimieren, nur durch eine <em>andere Ladekurve</em> (siehe nächste Kompetenz).
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Die Quelle arbeitet bei konstantem \\(U_0\\): ihr Beitrag ist das <strong>Rechteck</strong> \\(Q \\cdot U_0\\). Im Kondensator steigt \\(U\\) erst mit der Ladung an: gespeichert ist das <strong>Dreieck</strong> \\(\\tfrac{1}{2}QU_0\\) unter der \\(Q(U)\\)-Geraden. Die Differenz — das zweite Dreieck oberhalb — ist die Verlustwärme. Genau das halbe Rechteck.
+</div></div>
+<div class="result">W_Q = 47,0 mJ, W_C = 23,5 mJ → η = 50 %, unabhängig von R und C</div>`,
+prompt:`Ich übe die Energiebilanz beim Laden eines Kondensators über einen Widerstand (Physik-LK Klasse 12, AFB II/III). Erstelle 3 Aufgaben: Wirkungsgrad beim Spannungssprung allgemein zu 50 % zeigen, Unabhängigkeit von R begründen (einmal über die Formel, einmal anschaulich über Strom und Zeit), und die Deutung im Q-U-Diagramm als Rechteck gegen Dreieck. Vollständige Musterlösungen mit allgemeiner Rechnung.`},
+
+r8:{title:"★ Langsam laden ist sparsam — Praktikum G3, Teil 2 (AFB III)",
+aufgabe:`<div class="task-box">
+  <p>Statt eines Sprungs wird die Quellenspannung als <strong>Rampe</strong> in der Zeit \\(T\\) von 0 auf \\(U_0\\) hochgefahren. Für \\(T \\gg \\tau\\) gilt \\(\\eta = \\dfrac{1}{1 + 2\\tau/T}\\). Messwerte aus dem Praktikum (gemessenes \\(R_2 = 2213\\,\\Omega\\)):</p>
+  <div class="given-box">T / s&nbsp;&nbsp; = 10,0&nbsp;&nbsp; 16,7&nbsp;&nbsp; 25,0<br>&eta;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = 0,796&nbsp; 0,874&nbsp; 0,912</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Zeigen Sie, dass \\(\\dfrac{1}{\\eta} = 1 + 2\\tau \\cdot \\dfrac{1}{T}\\) eine Geradengleichung ist, und geben Sie \\(y\\), \\(x\\), \\(m\\), \\(b\\) an.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Tabellieren Sie \\(1/T\\) und \\(1/\\eta\\) und bestimmen Sie die Steigung.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Berechnen Sie \\(\\tau\\) und mit \\(R_2\\) die Kapazität \\(C\\).</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Welchen Wert muss der Achsenabschnitt haben? Was prüft man damit?</span></div>
+    <div class="subtask"><span class="subtask-label">e)</span><span class="subtask-body">Schätzen Sie ab, wo die Voraussetzung \\(T \\gg \\tau\\) versagt.</span></div>
+  </div>
+  <div class="hint-box"><strong>Tipp:</strong> Dieselbe Technik wie bei \\(\\ln u_C\\) über \\(t\\) und \\(\\tan\\alpha\\) über \\(1/d\\): Hilfsgröße bilden, normales Achsenkreuz, Steigungsdreieck.</div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  Kehrwert bilden: \\(\\dfrac{1}{\\eta} = 1 + \\dfrac{2\\tau}{T} = 1 + 2\\tau \\cdot \\dfrac{1}{T}\\). Vergleich mit \\(y = b + mx\\): \\(y = 1/\\eta\\), \\(x = 1/T\\), \\(m = 2\\tau\\), \\(b = 1\\).
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  \\(1/T\\) = 0,1000 | 0,0599 | 0,0400 s⁻¹ und \\(1/\\eta\\) = 1,256 | 1,144 | 1,096. Steigungsdreieck über die Randpunkte: \\(m = \\dfrac{1{,}256 - 1{,}096}{0{,}1000 - 0{,}0400} = \\dfrac{0{,}160}{0{,}0600} = \\textbf{2,66 s}\\).
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  \\(\\tau = \\dfrac{m}{2} = \\textbf{1,33 s}\\); \\(C = \\dfrac{\\tau}{R_2} = \\dfrac{1{,}33\\,\\text{s}}{2213\\,\\Omega} = 6{,}02\\cdot10^{-4}\\,\\text{F} = \\textbf{602 }\\mu\\text{F}\\) — deutlich über dem Aufdruck 470 µF, passend zu den anderen Messverfahren (570–640 µF).
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Der Achsenabschnitt muss \\(b = 1\\) sein, denn \\(1/T \\to 0\\) (unendlich langsames Laden) bedeutet \\(\\eta \\to 1\\), also \\(1/\\eta \\to 1\\). Hier: \\(b = 1{,}256 - 2{,}66 \\cdot 0{,}1000 = 0{,}99\\) ✔ Der Achsenabschnitt ist damit eine <strong>Messkontrolle</strong>, kein Fitparameter: läge er merklich daneben, stimmte etwas an der Messung oder der Integration nicht.
+</div></div>
+<div class="sol-step"><div class="snum">e</div><div>
+  Die Formel setzt einen nahezu <em>konstanten</em> Ladestrom \\(i = CU_0/T\\) voraus; das gilt nur, wenn der Einschwingvorgang am Rampenanfang (Dauer einige \\(\\tau\\)) gegen \\(T\\) klein ist. Mit \\(\\tau = 1{,}33\\,\\text{s}\\) ist das bei \\(T = 25\\,\\text{s}\\) gut (\\(T/\\tau \\approx 19\\)), bei \\(T = 10\\,\\text{s}\\) nur noch mäßig (\\(\\approx 7{,}5\\)). Abweichen würde der Punkt mit dem <strong>größten</strong> \\(1/T\\), also der schnellsten Rampe — und zwar nach <em>oben</em>, weil der reale Wirkungsgrad dort schlechter ist als die Formel vorhersagt (Grenzfall Sprung: \\(1/\\eta = 2\\)).
+</div></div>
+<div class="result">m = 2,66 s → τ = 1,33 s → C = 602 µF; Achsenabschnitt 0,99 ≈ 1 ✔</div>`,
+prompt:`Ich übe die Linearisierung 1/η über 1/T beim Laden eines Kondensators mit einer Spannungsrampe (Physik-LK Klasse 12, AFB III). Erstelle 2 Aufgaben mit je einer Messtabelle (Rampendauer T, Wirkungsgrad η): Geradengleichung 1/η = 1 + 2τ·(1/T) zuordnen, Hilfsgrößen tabellieren, Steigung per Steigungsdreieck auf NORMALEM Achsenkreuz, τ und C berechnen, Achsenabschnitt als Messkontrolle auf den Wert 1 prüfen, und Gültigkeitsgrenze T ≫ τ diskutieren. Vollständige Lösungen mit allen Kehrwerten.`},
+
+p3:{title:"Vier Werte für eine Kapazität (AFB II/III)",
+aufgabe:`<div class="task-box">
+  <p>Für <em>denselben</em> Elko mit dem Aufdruck 470 &micro;F liegen vier unabhängig gewonnene Werte vor.</p>
+  <div class="given-box">Steigung 1/&eta; über 1/T: 602 &micro;F<br>Entladekurve (&tau; = 1,41 s): 637 &micro;F<br>Kondensatorenergie: 572 &micro;F<br>Energiebilanz Teil 1: 576 &micro;F</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Berechnen Sie Mittelwert und Streubreite.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Vergleichen Sie mit dem Aufdruck und bewerten Sie.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Begründen Sie, warum vier <em>unabhängige</em> Verfahren mehr wert sind als eine vierfach wiederholte Messung.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Geben Sie ein begründetes Endergebnis an.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  Mittelwert \\(\\bar C = \\dfrac{602 + 637 + 572 + 576}{4}\\,\\mu\\text{F} = \\textbf{597 }\\mu\\text{F}\\). Spannweite 572 bis 637 µF, also \\(\\pm 33\\,\\mu\\text{F}\\) um die Mitte — rund \\(\\pm 5{,}5\\,\\%\\).
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  Gegenüber dem Aufdruck 470 µF sind das \\(\\dfrac{597 - 470}{470} = +27\\,\\%\\). Elkos haben Toleranzen von typisch &minus;10 % bis +50 %; der Wert liegt also innerhalb der Spezifikation. Der Aufdruck ist ein <strong>Nennwert</strong>, kein Messwert — für Rechnungen ist der gemessene Wert zu verwenden.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Eine vierfach wiederholte <em>gleiche</em> Messung verkleinert nur den <strong>zufälligen</strong> Fehler; ein systematischer Fehler der Methode (Offset, Messgerätbelastung, falscher Vorwiderstand) wird dabei viermal gleich mitgeschleppt und bleibt unsichtbar. Verschiedene Verfahren haben <em>verschiedene</em> systematische Fehler. Stimmen sie trotzdem überein, ist das ein starkes Argument für den Wert — weichen sie ab, zeigt die Streuung die wahre Unsicherheit.
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  \\(C = (597 \\pm 33)\\,\\mu\\text{F}\\), gerundet \\(C \\approx 600\\,\\mu\\text{F}\\), also etwa 27 % über dem Aufdruck. Mehr als drei signifikante Stellen sind nicht zu rechtfertigen; der Wert liegt sicher im Bereich 570–640 µF.
+</div></div>
+<div class="result">C = (597 ± 33) µF ≈ 600 µF, +27 % über dem Aufdruck — innerhalb der Elko-Toleranz</div>`,
+prompt:`Ich übe den Vergleich mehrerer unabhängiger Messergebnisse für dieselbe Größe (Physik-LK Klasse 12, AFB II/III). Erstelle 2 Aufgaben mit je drei bis vier Werten aus verschiedenen Verfahren: Mittelwert und Streubreite, Vergleich mit einem Nennwert inklusive Toleranzbewertung, Begründung warum unabhängige Verfahren systematische Fehler aufdecken, und ein begründetes Endergebnis mit sinnvoller Rundung. Vollständige Lösungen.`},
+
+p4:{title:"Linearisieren — immer dasselbe Werkzeug (AFB II)",
+aufgabe:`<div class="task-box">
+  <p>Im Unterricht wurde viermal dieselbe Technik verwendet.</p>
+  <div class="given-box">&bull; T&sup2; über l (Fadenpendel)<br>&bull; ln u_C über t (G1)<br>&bull; tan &alpha; über 1/d (E-Feld)<br>&bull; 1/&eta; über 1/T (G3)</div>
+  <div class="subtasks">
+    <div class="subtask"><span class="subtask-label">a)</span><span class="subtask-body">Geben Sie für jeden Fall die Hilfsgröße, die Steigung und deren physikalische Bedeutung an.</span></div>
+    <div class="subtask"><span class="subtask-label">b)</span><span class="subtask-body">Beschreiben Sie das Verfahren in fünf Schritten.</span></div>
+    <div class="subtask"><span class="subtask-label">c)</span><span class="subtask-body">Erläutern Sie, wofür der Achsenabschnitt gut ist, und nennen Sie die beiden Fälle, in denen er 0 bzw. 1 sein muss.</span></div>
+    <div class="subtask"><span class="subtask-label">d)</span><span class="subtask-body">Begründen Sie, warum man das Steigungsdreieck groß wählt und keine Nachbarpunkte verwendet.</span></div>
+  </div>
+</div>`,
+loesung:`<div class="sol-step"><div class="snum">a</div><div>
+  Pendel: \\(y = T^2\\), \\(x = l\\), \\(m = 4\\pi^2/g\\) → daraus \\(g\\). G1: \\(y = \\ln u_C\\), \\(x = t\\), \\(m = -1/\\tau\\) → \\(\\tau\\), mit \\(R\\) dann \\(C\\). E-Feld: \\(y = \\tan\\alpha\\), \\(x = 1/d\\), \\(m = qU/(mg)\\) → daraus \\(q\\). G3: \\(y = 1/\\eta\\), \\(x = 1/T\\), \\(m = 2\\tau = 2RC\\) → \\(\\tau\\) und \\(C\\).
+</div></div>
+<div class="sol-step"><div class="snum">b</div><div>
+  1. Gleichung so umformen, dass sie die Gestalt \\(y = b + mx\\) hat. 2. Zuordnen, was \\(y\\), \\(x\\), \\(m\\) und \\(b\\) bedeuten. 3. Hilfsgröße in einer <strong>neuen Tabellenzeile</strong> ausrechnen. 4. In ein <strong>normales, linear geteiltes</strong> Achsenkreuz eintragen und die Ausgleichsgerade nach Augenmaß legen. 5. Steigung per Steigungsdreieck ablesen und in die physikalische Größe zurückrechnen.
+</div></div>
+<div class="sol-step"><div class="snum">c</div><div>
+  Der Achsenabschnitt ist eine <strong>Messkontrolle</strong>: sein theoretischer Wert ist bekannt, also prüft man die Messung an ihm, statt ihn anzupassen. Er muss <em>0</em> sein, wenn die Beziehung eine echte Proportionalität ist (\\(Q\\) über \\(U\\), \\(\\tan\\alpha\\) über \\(1/d\\): bei \\(U = 0\\) keine Ladung, keine Auslenkung). Er muss <em>1</em> sein bei \\(1/\\eta\\) über \\(1/T\\), weil unendlich langsames Laden \\(\\eta = 1\\) ergibt. Ein deutlich abweichender Achsenabschnitt weist auf einen systematischen Fehler hin (schiefes Stativ, Restladung, Offset).
+</div></div>
+<div class="sol-step"><div class="snum">d</div><div>
+  Jeder einzelne Punkt trägt seinen Ablesefehler. Bei zwei <em>benachbarten</em> Punkten ist \\(\\Delta x\\) klein, der Ablesefehler aber genauso groß wie sonst — der <em>relative</em> Fehler der Steigung wird dadurch groß. Über die ganze Messreihe hinweg ist \\(\\Delta x\\) maximal und der Fehler fällt kaum ins Gewicht. Außerdem: die Punkte für das Dreieck auf der <strong>Ausgleichsgeraden</strong> ablesen, nicht an Messpunkten festmachen.
+</div></div>
+<div class="result">Hilfsgröße → normales Achsenkreuz → Ausgleichsgerade → großes Steigungsdreieck; Achsenabschnitt = Kontrolle</div>`,
+prompt:`Ich übe Linearisieren als allgemeines Auswertewerkzeug (Physik-LK Klasse 12, AFB II). Erstelle 4 Aufgaben, in denen jeweils eine andere Gleichung auf die Form y = b + mx gebracht werden muss (z. B. T² über l, ln u über t, tan α über 1/d, 1/η über 1/T, 1/f über 1/g), mit Zuordnung von y, x, m, b und Angabe, welche physikalische Größe aus der Steigung folgt und welchen Wert der Achsenabschnitt haben muss. WICHTIG: immer normales linear geteiltes Achsenkreuz, niemals logarithmische Achsen. Vollständige Lösungen.`},
+
+};
+
+// ─────────────────────────────────────────────
+// STATE
+// ─────────────────────────────────────────────
+const KEY  = 'elektrik-kondensator-12np';
+const KEYO = 'elektrik-kondensator-12np-open';
+const SECS = ['feld', 'spannung', 'influenz', 'kapazitaet', 'energie', 'rc', 'praktikum'];
+const state = {};
+let openSecs = {};
+let curId = null;
+
+function loadState(){
+  try{ Object.assign(state, JSON.parse(sessionStorage.getItem(KEY)||'{}')); }catch(e){}
+  try{ openSecs = JSON.parse(sessionStorage.getItem(KEYO)||'null') || {}; }catch(e){ openSecs = {}; }
+}
+function saveState(){
+  try{ sessionStorage.setItem(KEY, JSON.stringify(state)); }catch(e){}
+}
+function saveOpen(){
+  try{ sessionStorage.setItem(KEYO, JSON.stringify(openSecs)); }catch(e){}
+}
+
+// ─────────────────────────────────────────────
+// AKKORDEON
+// ─────────────────────────────────────────────
+function toggleSec(sec){
+  const el = document.getElementById('s-'+sec);
+  if(!el) return;
+  el.classList.toggle('open');
+  openSecs[sec] = el.classList.contains('open');
+  saveOpen();
+  updateHint();
+  if(el.classList.contains('open') && window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise([el]).catch(e=>console.log(e));
+  }
+}
+function setAll(open){
+  SECS.forEach(s=>{
+    const el = document.getElementById('s-'+s);
+    if(el) el.classList.toggle('open', open);
+    openSecs[s] = open;
+  });
+  saveOpen();
+  updateHint();
+  if(open && window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise([document.querySelector('main')]).catch(e=>console.log(e));
+  }
+}
+function openAll(){ setAll(true); }
+function closeAll(){ setAll(false); }
+
+function resetAll(){
+  if(!confirm('Alle Häkchen zurücksetzen?')) return;
+  Object.keys(state).forEach(k=>delete state[k]);
+  document.querySelectorAll('.comp-card.done').forEach(c=>c.classList.remove('done'));
+  saveState();
+  updateProgress();
+  SECS.forEach(s=>updateCnt(s));
+}
+
+function updateHint(){
+  const n = SECS.filter(s=>openSecs[s]).length;
+  const el = document.getElementById('toolbar-hint');
+  if(el) el.textContent = n+' von '+SECS.length+' Blöcken offen';
+}
+
+// ─────────────────────────────────────────────
+// TOGGLE
+// ─────────────────────────────────────────────
+function toggle(checkArea){
+  const card = checkArea.closest('.comp-card');
+  card.classList.toggle('done');
+  state[card.dataset.id] = card.classList.contains('done');
+  saveState();
+  updateProgress();
+  updateCnt(card.dataset.sec);
+}
+
+// ─────────────────────────────────────────────
+// PROGRESS
+// ─────────────────────────────────────────────
+function updateProgress(){
+  const all = document.querySelectorAll('.comp-card').length;
+  const done = document.querySelectorAll('.comp-card.done').length;
+  const pct = all ? done/all*100 : 0;
+  document.getElementById('prog-fill').style.width = pct+'%';
+  document.getElementById('prog-text').textContent = done+' von '+all+' Kompetenzen';
+}
+function updateCnt(sec){
+  const all  = document.querySelectorAll(`[data-sec="${sec}"]`).length;
+  const done = document.querySelectorAll(`[data-sec="${sec}"].done`).length;
+  const el   = document.getElementById('cnt-'+sec);
+  if(el) el.textContent = done+'/'+all;
+  const mini = document.getElementById('mini-'+sec);
+  if(mini) mini.style.width = (all ? done/all*100 : 0)+'%';
+}
+function initState(){
+  loadState();
+  document.querySelectorAll('.comp-card').forEach(c=>{
+    if(state[c.dataset.id]) c.classList.add('done');
+  });
+  // Beim ersten Aufruf: nur der erste Block offen
+  if(Object.keys(openSecs).length === 0){ openSecs = {}; openSecs[SECS[0]] = true; saveOpen(); }
+  SECS.forEach(s=>{
+    const el = document.getElementById('s-'+s);
+    if(el) el.classList.toggle('open', !!openSecs[s]);
+  });
+  updateProgress();
+  SECS.forEach(s=>updateCnt(s));
+  updateHint();
+}
+
+// ─────────────────────────────────────────────
+// MODAL
+// ─────────────────────────────────────────────
+function openModal(id){
+  curId = id;
+  const d = T[id];
+  if(!d) return;
+
+  document.getElementById('m-title').textContent = d.title;
+
+  document.getElementById('tp0').innerHTML =
+    d.aufgabe +
+    `<button class="sol-toggle" onclick="toggleSol()">💡 Lösung anzeigen</button>
+     <div class="sol-box" id="sol-box">${d.loesung}</div>`;
+
+  document.getElementById('tp1').innerHTML =
+    `<div class="sol-box open">${d.loesung}</div>`;
+
+  document.getElementById('tp2').innerHTML =
+    `<p style="font-size:.8rem;color:var(--text-muted);margin-bottom:10px">Prompt für weitere Übungsaufgaben:</p>
+     <div class="prompt-box">${d.prompt}</div>
+     <div class="ai-btns">
+       <button class="ai-btn copy" onclick="copyPrompt()">📋 Kopieren</button>
+       <a class="ai-btn" href="https://gemini.google.com" target="_blank">🚀 Google AI</a>
+       <a class="ai-btn" href="https://chatgpt.com" target="_blank">💬 ChatGPT</a>
+     </div>`;
+
+  document.querySelectorAll('.mtab').forEach((t,i)=>t.classList.toggle('active',i===0));
+  document.querySelectorAll('.tab-panel').forEach((p,i)=>p.classList.toggle('active',i===0));
+
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  if(window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise([document.getElementById('overlay')]).catch(e=>console.log(e));
+  }
+}
+
+function closeModal(){
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function overlayClick(e){ if(e.target===document.getElementById('overlay')) closeModal(); }
+
+function switchTab(i){
+  document.querySelectorAll('.mtab').forEach((t,j)=>t.classList.toggle('active',i===j));
+  document.querySelectorAll('.tab-panel').forEach((p,j)=>p.classList.toggle('active',i===j));
+  if(window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise([document.getElementById('tp'+i)]).catch(e=>console.log(e));
+  }
+}
+
+function toggleSol(){
+  const b = document.getElementById('sol-box');
+  const btn = b.previousElementSibling;
+  b.classList.toggle('open');
+  btn.textContent = b.classList.contains('open') ? '🙈 Lösung ausblenden' : '💡 Lösung anzeigen';
+  if(b.classList.contains('open') && window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise([b]).catch(e=>console.log(e));
+  }
+}
+
+function copyPrompt(){
+  if(!T[curId]) return;
+  navigator.clipboard.writeText(T[curId].prompt).then(()=>{
+    const btn = document.querySelector('.copy');
+    btn.textContent = '✅ Kopiert!';
+    setTimeout(()=>btn.textContent='📋 Kopieren', 2000);
+  });
+}
+
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
+
+// ─────────────────────────────────────────────
+// INIT
+// ─────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', ()=>{
+  initState();
+  if(window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise().catch(e=>console.log(e));
+  }
+});
+</script>
+
+</body>
+</html>
