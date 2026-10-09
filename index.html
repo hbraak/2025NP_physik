@@ -169,6 +169,26 @@
         
         <div class="material-grid">
 
+            <a href="AB_Energie_Kondensator_Anwendungen.pdf" class="material-card" data-url="AB_Energie_Kondensator_Anwendungen.pdf">
+                <div class="card-header">
+                    <div class="card-icon blue">&#x1F50B;</div>
+                    <div class="card-title">Energie im Kondensator &mdash; Anwendungen</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            F&uuml;nf Anwendungsaufgaben zu W = &frac12;CU&sup2;: unser eigener Elko aus G3 (583&nbsp;&micro;F statt 470&nbsp;&micro;F auf dem Aufdruck), der Kamerablitz als Leistungsverst&auml;rker, Bremsenergie eines Hybridbusses im Supercap, die Frage warum kein Auto mit Kondensatoren f&auml;hrt, und der Zwischenkreis-Elko im Netzteil. PDF.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Kondensator</span>
+                            <span class="tag">Energie</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-abkondanw"></div>
+                </div>
+            </a>
+
             <a href="entladestrom-flaeche.html" class="material-card" data-url="entladestrom-flaeche.html">
                 <div class="card-header">
                     <div class="card-icon blue">&#x1F4C9;</div>
@@ -1219,6 +1239,7 @@
         
         // QR-Codes generieren wenn Seite geladen
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-abkondanw', 'AB_Energie_Kondensator_Anwendungen.pdf');
             generateQR('qr-entladeflaeche', 'entladestrom-flaeche.html');
             generateQR('qr-hinweise-kond', 'hinweise-kondensator.html');
             generateQR('qr-abkond', 'AB_Kapazitaet_Energie.pdf');
