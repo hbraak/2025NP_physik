@@ -169,6 +169,28 @@
         
         <div class="material-grid">
 
+            <a href="AB_WDH_Elektrisches_Feld.pdf" class="material-card" data-url="AB_WDH_Elektrisches_Feld.pdf">
+                <div class="card-header">
+                    <div class="card-icon blue">&#x1F504;</div>
+                    <div class="card-title">Wiederholung: Das elektrische Feld</div>
+                </div>
+                <div class="card-content">
+                    <div class="card-text">
+                        <div class="card-description">
+                            Wiedereinstieg nach Projekttagen, Tag der offenen T&uuml;r und Klassenfahrt: sechs Richtig-Falsch-Aussagen zum Schnellcheck (getrennter Kondensator, Wegunabh&auml;ngigkeit, Dielektrikum, &tau; und die 63&nbsp;%, Energie, Influenz), eine durchgerechnete Plattenkondensator-Aufgabe mit Entladung, die Analogie Querfeld&ndash;waagerechter Wurf in Worten, ein Zahlenbeispiel zur Ablenkr&ouml;hre und die offene Frage, warum e und m<sub>e</sub> aus der Bahngleichung herausfallen. Zusatzaufgabe: zwei geladene Kugeln als Einstieg ins Coulombgesetz. PDF, 2 Seiten.
+                        </div>
+                        <div class="card-tags">
+                            <span class="tag">Elektrisches Feld</span>
+                            <span class="tag">Kondensator</span>
+                            <span class="tag">Querfeld</span>
+                            <span class="tag">Wiederholung</span>
+                            <span class="tag">NEU</span>
+                        </div>
+                    </div>
+                    <div class="qr-code" id="qr-wdh-efeld"></div>
+                </div>
+            </a>
+
             <a href="lernliste-elektrik-kondensator.html" class="material-card" data-url="lernliste-elektrik-kondensator.html">
                 <div class="card-header">
                     <div class="card-icon purple">&#x1F4CB;</div>
@@ -1260,6 +1282,7 @@
         
         // QR-Codes generieren wenn Seite geladen
         document.addEventListener('DOMContentLoaded', function() {
+            generateQR('qr-wdh-efeld', 'AB_WDH_Elektrisches_Feld.pdf');
             generateQR('qr-lernliste-elektrik', 'lernliste-elektrik-kondensator.html');
             generateQR('qr-abkondanw', 'AB_Energie_Kondensator_Anwendungen.pdf');
             generateQR('qr-entladeflaeche', 'entladestrom-flaeche.html');
